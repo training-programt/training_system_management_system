@@ -1,0 +1,1 @@
+(window.webpackJsonp=window.webpackJsonp||[]).push([[1],{Vtdi:function(e,n,t){"use strict";t.r(n);t("L/Qf");var r=t("2/Rp"),a=t("q1tI"),l=t.n(a),o=t("i8i4"),i=function(){return l.a.createElement("h1",null,"hello world ",l.a.createElement(r.a,{type:"primary"},"www"))};t.n(o).a.render(l.a.createElement(i,null),document.getElementById("root"))}},[["Vtdi",2,0,3]]]);
