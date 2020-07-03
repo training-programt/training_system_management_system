@@ -50,7 +50,7 @@
 ├── .gitignore              // git 忽略配置
 ├── .postcssrc.js           // postcss配置
 ├── package.json            // 依赖包配置
-└── README.md               // 项目说明
+└── README.md               // 项目说明 
 ```
 
 ## CLI 构建命令
