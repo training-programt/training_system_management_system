@@ -15,6 +15,7 @@ const renderMenuItem = routes => {
             key={item.path}
             title={
               <div>
+                <span><i className={'menu-icon iconfont ' + item.icon}></i></span>
                 <span>{item.name}</span>
               </div>
             }
@@ -27,6 +28,7 @@ const renderMenuItem = routes => {
         <Menu.Item key={item.path}>
           <Link to={item.path}>
             <span>
+            <span><i className={'menu-icon iconfont ' + item.icon}></i></span>
               <span>{item.name}</span>
             </span>
           </Link> 
