@@ -43,16 +43,19 @@ const config = [{
         {
           path: '/major',
           name: '专业管理',
+          icon: 'icon-user',
           childRoutes: [
             {
               path: '/major/add',
               name: '添加专业',
+              icon: 'icon-icon-test',
               exact: true,
               component: lazy(() => import('@/pages/Major/Add')),
             },
             {
               path: '/major/del',
               name: '删除专业',
+              icon: 'icon-icon-test1',
               exact: true,
               component: lazy(() => import('@/pages/Major/Del')),
             }
@@ -61,12 +64,14 @@ const config = [{
         {
           path: '/class',
           name: '班级管理',
+          icon: 'icon-icon-test18',
           exact: true, 
           component: lazy(() => import('@/pages/Class')),
         },
         {
           path: '/course',
           name: '课程管理',
+          icon: 'icon-home',
           exact: true,
           component: lazy(() => import('@/pages/Course')),
         },
