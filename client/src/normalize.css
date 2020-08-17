@@ -347,3 +347,5 @@ template {
 [hidden] {
   display: none;
 }
+
+@import './public/icons/iconfont.css'

@@ -4,8 +4,6 @@ import {
 
 import user from './user'
 
-const rootReducer = combineReducers({
+export default combineReducers({
   user,
-})
-
-export default rootReducer;
+});
