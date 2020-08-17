@@ -10,7 +10,7 @@ const devMode = process.env.NODE_ENV !== 'production';
 
 module.exports = {
   entry: {
-    main: path.join(__dirname, '../src/app.js'),
+    main: path.join(__dirname, '../src/index.js'),
   },
   output: {
     path: path.join(__dirname, '../dist'),
