@@ -13,9 +13,7 @@ const config = [{
       name: '登录', // 菜单名称
       roles: ['001', '002', '003', '004'], // 权限等级  001: 教学领导 002：教务处主任  003：课程负责人 004：授课教师
       component:  lazy(() => import('@/pages/Login')), // 懒加载, 路由组件
-      // component: Login,
     },
-    
     {
       path: '/',
       component: BasicLayout,
@@ -23,9 +21,8 @@ const config = [{
       childRoutes: [
         // 子路由
         {
-          path: '/',
+          path: '/home',
           exact: true,
-          // redirect: '/home',
           roles: ['001', '002', '003', '004'],
           component: lazy(() => import('@/pages/Home'))
         },

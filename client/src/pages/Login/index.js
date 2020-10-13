@@ -1,109 +1,92 @@
-import React from 'react'
-import { Card, Form, Input, Button, Checkbox, message } from 'antd';
-import { UserOutlined, LockOutlined } from '@ant-design/icons';
+import React, { useState } from 'react';
+import { Card, Spin, Input, Button, Checkbox, message } from 'antd';
+import { UserOutlined, LockOutlined, KeyOutlined } from '@ant-design/icons';
 import { useHistory } from 'react-router-dom';
 import './index.less'
 import { useDispatch } from 'redux-react-hook';
 
 const Login = () => {
-  const [form] = Form.useForm();
+  const [userName, setUserName] = useState('');
+  const [password, setPassword] = useState('');
+  const [number, setNumber] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
   const history = useHistory();
 
   const dispatch = useDispatch();
-  const onSubmit = () => {
+  // const checkLogin = () => {
+  //   setIsLoading(true);
+  //       if(!userName){
+  //           message.error('用户名不能为空')
+  //           setTimeout(()=>{
+  //               setIsLoading(false)
+  //           },500)
+  //           return false
+  //       }else if(!password){
+  //           message.error('密码不能为空')
+  //           setTimeout(()=>{
+  //               setIsLoading(false)
+  //           },500)
+  //           return false
+  //       }
+  //       let dataProps = {
+  //           'userName':userName,
+  //           'password':password
+  //       }
+  //   setTimeout(() => {
+  //     history.push('/home');
+  //   }, 1000)
+  // }
+  const checkLogin = () => {
     dispatch({
       type: 'LOGIN_SUCCESS',
+      isLogin: true,
+      roles: ['001'],
+      isLoading: true,
     })
     message.success('登录成功');
     setTimeout(() => {
-      history.push('/')
+      history.push('/home')
     }, 2000);
   }
-
   return (
-    <div style={{display: 'flex', justifyContent: 'center', alignItems: 'center', alignContent: 'center', height: '100vh'}}>
-      <Card
-        bordered={false}
-        style={{backgroundColor: '#ccc'}}
-      >
-        <div className="login-container">
-          <Form
-            form={form}
-            className="login-form"
-            initialValues={{
-              remember: true,
-            }}
-            // onFinish={onFinish}
-          >
-            <h2>登录</h2>
-            <Form.Item
-              name="username"
-              rules={[
-                {
-                  required: true,
-                  message: '请输入用户名'
-                }
-              ]}
-            >
-              <Input
-                type='text'
-                placeholder="用户名"
-              />
-            </Form.Item>
-            <Form.Item
-              name="password"
-              rules={[
-                {
-                  required: true,
-                  message: '请输入密码'
-                }
-              ]}
-            >
-              <Input
-                type="password"
-                placeholder="密码"
-              />
-            </Form.Item>
-            <Form.Item
-              name="code"
-              rules={[
-                {
-                  required: true,
-                  message: '请输入验证码'
-                },
-                {
-                  // validator: this.handleConfirm
-                }
-              ]}
-            >
-              <Input
-                type="text"
-                style={{ width: '60%', float: 'left' }}
-              />
-            </Form.Item>
-            <Form.Item className="pwd-setting">
-              <Form.Item name="remember" valuePropName="checked" noStyle >
-                <Checkbox
-                  style={{ float: 'left' }}
-                >
-                  记住密码
-                </Checkbox>
-              </Form.Item>
-              <a className="login-form-forgot" href="https://www.baidu.com">
-                忘记密码
-              </a>
-            </Form.Item>
-            <Button
-              htmlType='submit'
-              type="primary"
-              onClick={onSubmit}
-            >
-              立即登录
-            </Button>
-
-          </Form>
-        </div>
-      </Card>
+    <div className="login-div">
+      <div className="wrapper">
+      <Spin tip="Loading..." spinning={isLoading}>
+        <Card title="用户登录" bordered={true} style={{ width: 400 }} >
+          <Input
+            id="userName"
+            size="large"
+            placeholder="Enter your userName"
+            prefix={<UserOutlined style={{ color: 'rgba(0,0,0,.25)' }} />}
+            onChange={(e) => { setUserName(e.target.value) }}
+          />
+          <br /><br />
+          <Input.Password
+            id="password"
+            size="large"
+            placeholder="Enter your password"
+            prefix={<LockOutlined style={{ color: 'rgba(0,0,0,.25)' }} />}
+            onChange={(e) => { setPassword(e.target.value) }}
+          />
+          <br /><br />
+          <Input
+            id="code"
+            size="large"
+            placeholder="61+57=?"
+            prefix={<KeyOutlined style={{ color: 'rgba(0,0,0,.25)' }} />}
+            onChange={(e) => { setNumber(e.target.value) }}
+          />
+          <br /><br />
+          <div className="pwd-setting">
+          <Checkbox defaultChecked="true">记住密码</Checkbox>
+          <a className="login-form-forgot" href="#">
+            忘记密码?
+          </a>
+          </div>
+          <Button type="primary" size="large" block onClick={checkLogin} > Login in </Button>
+        </Card>
+      </Spin>
+    </div>
     </div>
   )
 }

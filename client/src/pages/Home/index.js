@@ -28,13 +28,11 @@ const Home = () => {
     })
   }
 
-  return ( 
+  return (
     <Card
       title={user.user}
     >
-      {/* <h1> {user} </h1>  */}
-      
-      <Button onClick = {btnClick} > dianji </Button> 
+      <Button onClick={btnClick} > 点击 </Button>
     </Card>
   )
 }

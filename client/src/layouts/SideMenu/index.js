@@ -1,6 +1,7 @@
 import React, { useState, useCallback } from 'react';
 import { Link } from 'react-router-dom';
-import { Layout, Menu, Row } from 'antd';
+import { Layout, Menu, Row ,Button} from 'antd';
+import {MenuUnfoldOutlined , MenuFoldOutlined} from '@ant-design/icons'
 import Logo from '../../public/images/logo.png';
 import Logo_1 from '../../public/images/logo_1.png';
 
@@ -35,6 +36,7 @@ const renderMenuItem = routes => {
             </span>
           </Link> 
         </Menu.Item>
+        
       )
     })
 }
@@ -52,7 +54,6 @@ const SideMenu = ({routes}) => {
   }), [typeColor])
 
   const { typeColor } = useMappedState(mapSate);
-
   return (
     <Layout.Sider
       className='main-left-slider'
@@ -73,6 +74,7 @@ const SideMenu = ({routes}) => {
       </Menu>
     </Layout.Sider>
   )
+ 
 }
 
 export default SideMenu;

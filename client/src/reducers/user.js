@@ -7,6 +7,7 @@ const initState = {
   isLogin,
   isLoading: false,
   typeColor: true,
+  navFlod: false,
   roles: ['001'],
 }
 
