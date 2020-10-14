@@ -16,8 +16,8 @@ const BasicLayout = ({route, children}) => {
   const { isLogin, roles } = useMappedState(mapState);
 
   return (
-    isLogin
-    ? 
+    // isLogin
+    // ? 
       <Layout className='main-layout'>
         <SideMenu routes={ route.childRoutes } />
         <Layout className='main-layout-right'>
@@ -27,7 +27,7 @@ const BasicLayout = ({route, children}) => {
           </Layout.Content>
         </Layout>
       </Layout>
-    : <Redirect to='/login' />
+    // : <Redirect to='/login' />
   )  
 }
 
