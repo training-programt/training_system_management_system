@@ -1,12 +1,13 @@
 import actionTypes from '../actions/actionTypes'
+import { getSession } from '../utils'
 
-const isLogin = Boolean(window.localStorage.getItem('token')) || Boolean(window.sessionStorage.getItem('token'))
+const isLogin = Boolean(getSession('token'))
 
 const initState = {
-  user: '',
+  user: 'aa',
   isLogin,
-  isLoading: false,
   typeColor: true,
+  isLoading: false,
   roles: ['001'],
 }
 
@@ -29,7 +30,12 @@ export default (state = initState, action) => {
         isLoading: false,
         roles: ['001'],
       }
-
+    case actionTypes.LOGOUT:
+      return {
+        isLogin: false,
+        isLoading: false,
+        roles: ['001'],
+      }
     case actionTypes.CHANGE_TYPE: {
       return {
         ...state,
@@ -38,7 +44,6 @@ export default (state = initState, action) => {
     }
 
     default:
-      console.log('====================')
       return state
   }
 }

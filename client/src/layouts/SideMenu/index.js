@@ -1,11 +1,11 @@
-import React, { useState, useCallback } from 'react';
+import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { Layout, Menu, Row } from 'antd';
 import Logo from '../../public/images/logo.png';
 import Logo_1 from '../../public/images/logo_1.png';
 
 import './index.less'
-import { useMappedState } from 'redux-react-hook';
+import { useSelector } from 'react-redux';
 
 const renderMenuItem = routes => {
   return routes
@@ -30,16 +30,16 @@ const renderMenuItem = routes => {
         <Menu.Item key={item.path}>
           <Link to={item.path}>
             <span>
-            <span><i className={'menu-icon iconfont ' + item.icon}></i></span>
+              <span><i className={'menu-icon iconfont ' + item.icon}></i></span>
               <span>{item.name}</span>
             </span>
-          </Link> 
+          </Link>
         </Menu.Item>
       )
     })
 }
 
-const SideMenu = ({routes}) => {
+const SideMenu = ({ routes }) => {
 
   const [openKeys, setOpenKeys] = useState([]);
 
@@ -47,11 +47,7 @@ const SideMenu = ({routes}) => {
     setOpenKeys(keys);
   }
 
-  const mapSate = useCallback(state => ({
-    typeColor: state.user.typeColor
-  }), [typeColor])
-
-  const { typeColor } = useMappedState(mapSate);
+  const typeColor = useSelector(state => state.user.typeColor);
 
   return (
     <Layout.Sider

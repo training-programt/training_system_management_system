@@ -2,7 +2,8 @@ import React from 'react';
 import ReactDom from 'react-dom';
 import moment from 'moment';
 import { ConfigProvider} from 'antd';
-import { StoreContext }from 'redux-react-hook';
+// import { StoreContext }from 'redux-react-hook';
+import { Provider }from 'react-redux';
 import zhCN from 'antd/es/locale/zh_CN';
 import { makeStore } from './store';
 import 'moment/locale/zh-cn';
@@ -17,9 +18,9 @@ const store = makeStore();
 
 const App = () => (
   <ConfigProvider locale={zhCN}>
-    <StoreContext.Provider value={store}>
+    <Provider store={store}>
       <AppRouter />
-    </StoreContext.Provider>
+    </Provider>
   </ConfigProvider>
 );
 

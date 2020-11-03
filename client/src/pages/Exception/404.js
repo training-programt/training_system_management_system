@@ -9,7 +9,7 @@ export default () => {
       title="404"
       subTitle="抱歉，你访问的页面不存在！"
       extra={
-        <Link to="/">
+        <Link to="/home">
           <Button type="primary">返回首页</Button>
         </Link>
       }
