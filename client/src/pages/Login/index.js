@@ -26,7 +26,7 @@ const Login = () => {
         setIsLoading(false)
       }, 500)
       return false
-    } else if (!password) {
+    } else if (!passWord) {
       message.error('密码不能为空')
       setTimeout(() => {
         setIsLoading(false)
@@ -65,7 +65,7 @@ const Login = () => {
             <Input.Password
               id="passWord"
               size="large"
-              placeholder="Enter your password"
+              placeholder="Enter your passWord"
               prefix={<LockOutlined style={{ color: 'rgba(0,0,0,.25)' }} />}
               onChange={(e) => { setPassword(e.target.value) }}
             />

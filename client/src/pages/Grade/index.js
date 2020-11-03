@@ -1,13 +1,13 @@
 import React from 'react';
 import { Card } from 'antd';
 
-const Class = () => {
+const Grade = () => {
   return (
     <Card
-      title='班级管理'
+      title='年级管理'
     >
     </Card>
   )
 }
 
-export default Class;
+export default Grade;
