@@ -43,32 +43,17 @@ const config = [{
           name: '专业管理',
           icon: 'icon-major',
           roles: ['004','001'], // 权限等级  001: 教学领导 002：教务处主任  003：课程负责人 004：授课教师
-          childRoutes: [
-            {
-              path: '/major/add',
-              name: '添加专业',
-              icon: 'icon-increase',
-              roles: ['004','001'],
-              exact: true,
-              component: lazy(() => import('@/pages/Major/Add')),
-            },
-            {
-              path: '/major/del',
-              name: '删除专业',
-              icon: 'icon-del',
-              roles: ['004','001'],
-              exact: true,
-              component: lazy(() => import('@/pages/Major/Del')),
-            },
-            {
-              path: '/major/show',
-              name: '查看专业',
-              icon: 'icon-show',
-              roles: ['004','001'],
-              exact: true,
-              component: lazy(() => import('@/pages/Major/Show')),
-            }
-          ]
+          component: lazy(() => import('@/pages/Major/index')),
+          // childRoutes: [
+          //   {
+          //     path: '/major/add',
+          //     name: '添加专业',
+          //     icon: 'icon-increase',
+          //     roles: ['004','001'],
+          //     exact: true,
+          //     component: lazy(() => import('@/pages/Major/Add')),
+          //   },
+          // ]
         },
         {
           path: '/grade',
