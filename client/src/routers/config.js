@@ -24,9 +24,10 @@ const routesConfig = [{
       roles: 1,
       childRoutes: [
         // 子路由
+        ...major,
         ...teacher,
         ...course,
-        ...major,
+        
 
 
 
