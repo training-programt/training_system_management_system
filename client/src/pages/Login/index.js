@@ -13,21 +13,28 @@ const Login = () => {
 
   const handleLogin = (e) => {
     e.preventDefault();
-
-    dispatch({ type: 'START_LOGIN' })
+    let userInfo;
+    dispatch({ type: 'START_LOGIN' });
     api.getToken(form.getFieldsValue())
       .then(res => {
         if (res && res.isSucceed) {
+          userInfo = res.data.userInfo;
           setSession('token', res.data.token.token_type + ' ' + res.data.token.access_token);
-          setSession('userInfo', JSON.stringify(res.data.userInfo))
+          setSession('userInfo', JSON.stringify(userInfo));
+        } else {
+          dispatch({ type: 'LOGIN_FAILED'});
+          message.error(res.message);
         }
       })
-    dispatch({ type: 'LOGIN_SUCCESS' })
-    message.success("登录成功")
-    history.push('/home')
+      .then(() => {
+        dispatch({ type: 'LOGIN_SUCCESS', payload: { userInfo } });
+        message.success("登录成功");
+        history.push('/home');
+      })
+
   }
 
-  const isLoading = useSelector(state => state.user.isLoading)
+  const isLoading = useSelector(state => state.user.isLoading);
 
   return (
     <div className="container">

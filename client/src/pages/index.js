@@ -1,7 +1,7 @@
 import Login from './login';
-import Major from './Major';
-import Class from './Class';
+import Teacher from './Teacher';
 import Course from './Course';
+import Major from './Major';
 import Home from './Home';
 import UserInfo from './UserInfo';
 import Notification from './Notification'
@@ -9,10 +9,9 @@ import Notification from './Notification'
 export {
   Login,
   Home,
-  Major,
-  Class,
+  Teacher,
   Course,
   UserInfo,
   Notification,
-  
+  Major,
 }

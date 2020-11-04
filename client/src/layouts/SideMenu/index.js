@@ -28,7 +28,7 @@ const renderMenuItem = routes => {
       }
       return (
         <Menu.Item key={item.path}>
-          <Link to={item.path}>
+          <Link to={item.path} replace>
             <span>
               <span><i className={'menu-icon iconfont ' + item.icon}></i></span>
               <span>{item.name}</span>
@@ -54,7 +54,7 @@ const SideMenu = ({ routes }) => {
       className='main-left-slider'
       theme={typeColor ? 'light' : 'dark'}
     >
-      <Link to="/">
+      <Link to="/home">
         <Row type="flex" align="middle" className="main-logo">
           <img className='logo' src={typeColor ? Logo : Logo_1} alt='攀枝花学院' />
         </Row>

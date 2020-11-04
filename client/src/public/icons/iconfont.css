@@ -1,11 +1,11 @@
 @font-face {
   font-family: 'iconfont';  /* project id 1994225 */
-  src: url('//at.alicdn.com/t/font_1994225_4nny80xa74f.eot');
-  src: url('//at.alicdn.com/t/font_1994225_4nny80xa74f.eot?#iefix') format('embedded-opentype'),
-  url('//at.alicdn.com/t/font_1994225_4nny80xa74f.woff2') format('woff2'),
-  url('//at.alicdn.com/t/font_1994225_4nny80xa74f.woff') format('woff'),
-  url('//at.alicdn.com/t/font_1994225_4nny80xa74f.ttf') format('truetype'),
-  url('//at.alicdn.com/t/font_1994225_4nny80xa74f.svg#iconfont') format('svg');
+  src: url('//at.alicdn.com/t/font_1994225_d1hbjcjtcf.eot');
+  src: url('//at.alicdn.com/t/font_1994225_d1hbjcjtcf.eot?#iefix') format('embedded-opentype'),
+  url('//at.alicdn.com/t/font_1994225_d1hbjcjtcf.woff2') format('woff2'),
+  url('//at.alicdn.com/t/font_1994225_d1hbjcjtcf.woff') format('woff'),
+  url('//at.alicdn.com/t/font_1994225_d1hbjcjtcf.ttf') format('truetype'),
+  url('//at.alicdn.com/t/font_1994225_d1hbjcjtcf.svg#iconfont') format('svg');
 }
 
 .iconfont {
@@ -14,6 +14,70 @@
   font-style: normal;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+}
+
+.icon-me:before {
+  content: "\e6bb";
+}
+
+.icon-del:before {
+  content: "\e612";
+}
+
+.icon-show:before {
+  content: "\e606";
+}
+
+.icon-UserSettings:before {
+  content: "\e600";
+}
+
+.icon-teacher:before {
+  content: "\e60b";
+}
+
+.icon-modify:before {
+  content: "\e655";
+}
+
+.icon-Group:before {
+  content: "\e7dd";
+}
+
+.icon-me1:before {
+  content: "\e61f";
+}
+
+.icon-course:before {
+  content: "\e72b";
+}
+
+.icon-search:before {
+  content: "\e601";
+}
+
+.icon-student:before {
+  content: "\e613";
+}
+
+.icon-add:before {
+  content: "\e646";
+}
+
+.icon-Student:before {
+  content: "\e678";
+}
+
+.icon-major:before {
+  content: "\e602";
+}
+
+.icon-grade:before {
+  content: "\e8d6";
+}
+
+.icon-class:before {
+  content: "\e623";
 }
 
 .icon-user:before {
@@ -247,4 +311,3 @@
 .icon-share:before {
   content: "\e6ee";
 }
-
