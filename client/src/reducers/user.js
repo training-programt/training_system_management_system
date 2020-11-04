@@ -2,13 +2,13 @@ import actionTypes from '../actions/actionTypes'
 import { getSession } from '../utils'
 
 const isLogin = Boolean(getSession('token'))
+const userInfo = JSON.parse(getSession('userInfo'))
 
 const initState = {
-  user: 'aa',
   isLogin,
-  typeColor: true,
   isLoading: false,
-  roles: ['001'],
+  roles: 1,
+  ...userInfo,
 }
 
 export default (state = initState, action) => {
@@ -19,8 +19,10 @@ export default (state = initState, action) => {
         isLoading: true
       }
     case actionTypes.LOGIN_SUCCESS:
+      console.log(action.payload.userInfo);
       return {
         ...state,
+        ...action.payload.userInfo,
         isLoading: false,
         isLogin: true
       }
@@ -28,13 +30,13 @@ export default (state = initState, action) => {
       return {
         isLogin: false,
         isLoading: false,
-        roles: ['001'],
+        roles: 1,
       }
     case actionTypes.LOGOUT:
       return {
         isLogin: false,
         isLoading: false,
-        roles: ['001'],
+        roles: 1,
       }
     case actionTypes.CHANGE_TYPE: {
       return {

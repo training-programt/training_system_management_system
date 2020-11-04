@@ -18,7 +18,9 @@ const BasicLayout = ({ route, children }) => {
         <Layout className='main-layout-right'>
           <MainHeader />
           <Layout.Content className='main-layout-content'>
-            {children}
+            <div className="content-box">
+              {children}
+            </div>
           </Layout.Content>
         </Layout>
       </Layout>
