@@ -5,6 +5,7 @@ import exception from './exception'
 import major from './major';
 import publish from './publish';
 import teacher from './teacher';
+import infoView from './infoView';
 
 const routesConfig = [{
   path: '/',
@@ -27,7 +28,7 @@ const routesConfig = [{
         ...major,
         ...teacher,
         ...course,
-        
+        ...infoView,
 
 
 

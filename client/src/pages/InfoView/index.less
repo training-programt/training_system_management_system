@@ -1,0 +1,30 @@
+@width: 100vw/1920px;
+@height: 100vh/960px;
+
+.container {
+  // padding: 20px * @height 36px * @width;
+  height: 100%;
+  width: 100%;
+
+  .tab-box {
+    height: 100%;
+    width: 100%;
+    display: flex;
+  }
+
+  .tab-box .tree-container {
+    flex: 1;
+    height: 100%;
+    border: 1px solid #ccc;
+    margin-right: 20px * @width;
+  }
+  .tab-box .data-container {
+    flex: 6;
+    height: 100%;
+    border: 1px solid #ccc;
+  }
+}
+
+.ant-tabs, .ant-tabs-content {
+  height: 100%;
+}
