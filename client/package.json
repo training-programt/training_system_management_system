@@ -46,7 +46,7 @@
     "webpack-merge": "^4.2.2"
   },
   "dependencies": {
-    "antd": "^4.4.0",
+    "antd": "^4.8.2",
     "axios": "^0.19.2",
     "echarts": "^4.9.0",
     "moment": "^2.27.0",
