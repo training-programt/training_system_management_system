@@ -6,6 +6,7 @@ import major from './major';
 import publish from './publish';
 import teacher from './teacher';
 import infoView from './infoView';
+import teachingResearchSection from './teachingResearchSection';
 
 const routesConfig = [{
   path: '/',
@@ -29,8 +30,7 @@ const routesConfig = [{
         ...teacher,
         ...course,
         ...infoView,
-
-
+        ...teachingResearchSection,
 
 
         ...publish,

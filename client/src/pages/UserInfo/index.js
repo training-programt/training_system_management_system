@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Tabs, Form, Input, Image, Button, Upload, Select, message } from 'antd'
 import postJSON from '@/public/json/post.json'
+import educationJSON from '@/public/json/education.json'
 import './index.less'
 
 const { TabPane } = Tabs;
@@ -28,7 +29,6 @@ const UserInfo = () => {
   const [random, setRandom] = useState();
   const [loading, setLoading] = useState(false);
   const [imageUrl, setImageUrl] = useState(false);
-  const [inputBorder, setInputBorder] = useState(false);
 
   const formItemLayout = {
     labelCol: {
@@ -68,21 +68,22 @@ const UserInfo = () => {
     { type: 'text', label: '出生年月', name: 'birthday', required: true },
     { type: 'text', label: '拟授课程', name: 'course', disabled: true },
     { type: 'text', label: '专职/兼职', name: 'fulltime', required: true },
-    { type: 'select', label: '专业技术职务', name: 'post', required: true },
-    { type: 'select', label: '学历', name: 'education', required: true },
+    { type: 'select', label: '专业技术职务', name: 'post', required: true, option: postJSON.post },
+    { type: 'select', label: '学历', name: 'education', required: true, option: educationJSON.education },
     { type: 'text', label: '最后学历毕业学校', name: 'lastSchool' },
     { type: 'text', label: '最后学历毕业专业', name: 'lastMajor' },
-    { type: 'text', label: '最后学历毕业学历', name: 'lastEducation', required: true },
+    { type: 'select', label: '最后学历毕业学历', name: 'lastEducation', required: true, option: postJSON.post },
     { type: 'text', label: '研究领域', name: 'researchField' },
   ]
 
   const baseInfo = [
-    { type: 'text', label: '电话', name: 'tel' },
-    { type: 'text', label: '教师编号', name: 'number' },
-    { type: 'text', label: '邮箱', name: 'email' },
+    { type: 'text', label: '电话', name: 'tel', required: true },
+    { type: 'text', label: '教师编号', name: 'number', required: true },
+    { type: 'text', label: '邮箱', name: 'email', required: true },
   ]
 
-  const operations = <Button type="primary" onClick={() => setInputBorder(true)}>编辑</Button>
+  const operations = <Button type="primary">编辑</Button>
+
   function onChange(value) {
     console.log(`selected ${value}`);
   }
@@ -98,10 +99,11 @@ const UserInfo = () => {
   function onSearch(val) {
     console.log('search:', val);
   }
+
   return (
     <div className="userInfo-container">
       <Tabs defaultActiveKey="1" tabBarExtraContent={operations}>
-        <TabPane tab="个人信息" key="1" className="container-box">
+        <TabPane tab="个人信息" key="1" className="container-info">
           <div className="left-container">
             <Form
               {...formItemLayout}
@@ -121,7 +123,7 @@ const UserInfo = () => {
                           },
                         ]}
                       >
-                        <Input bordered={inputBorder} disabled={item.disabled} />
+                        <Input disabled={item.disabled} />
                       </Form.Item>
                     )
                   } else if (item.type == 'select') {
@@ -133,7 +135,7 @@ const UserInfo = () => {
                       >
                         <Select
                           showSearch
-                          style={{ width: 200 }}
+                          style={{ width: 400 }}
                           placeholder="Select a person"
                           optionFilterProp="children"
                           onChange={onChange}
@@ -144,9 +146,11 @@ const UserInfo = () => {
                             option.children.toLowerCase().indexOf(input.toLowerCase()) >= 0
                           }
                         >
-                          <Option key='0' value="jack">Jack</Option>
-                          <Option key='1' value="lucy">Lucy</Option>
-                          <Option key='2' value="tom">Tom</Option>
+                          {
+                            item.option.map((c, index) => {
+                              return <Option key={index} value={c.id}>{c.name}</Option>
+                            })
+                          }
                         </Select>
                       </Form.Item>
                     )
@@ -218,8 +222,12 @@ const UserInfo = () => {
             </div>
           </div>
         </TabPane>
-        <TabPane tab="修改密码" key="2">
-          师生信息
+        <TabPane tab="修改密码" key="2" className="container-password">
+          <Form {...formItemLayout}>
+            <Form.Item name="password" label="旧密码"><Input /></Form.Item>
+            <Form.Item name="newPassword" label="新密码"><Input /></Form.Item>
+            <Form.Item name="reNewPassword" label="确认新密码"><Input /></Form.Item>
+          </Form>
       </TabPane>
       </Tabs>
     </div>

@@ -19,6 +19,10 @@
   content: "\e648";
 }
 
+.icon-teach-info:before {
+  content: "\e62d";
+}
+
 .icon-me:before {
   content: "\e6bb";
 }
