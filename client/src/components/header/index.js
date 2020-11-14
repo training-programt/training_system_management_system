@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import './index.less'
 
-const Header = (props) => {
+const HeaderComponent = (props) => {
 
   const [nowtime, setNowTime] = useState(new Date().toLocaleString());
 
@@ -19,4 +19,4 @@ const Header = (props) => {
   )
 }
 
-export default Header
+export default HeaderComponent

@@ -1,7 +1,7 @@
 import React from 'react'
 import { Pagination } from 'antd'
 import './index.less'
-const Pagenation = (props) => {
+const PaginationComponent = (props) => {
   return (
     <Pagination
       total={props.pageparams.total}
@@ -16,4 +16,4 @@ const Pagenation = (props) => {
   )
 }
 
-export default Pagenation
+export default PaginationComponent
