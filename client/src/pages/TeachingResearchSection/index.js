@@ -18,6 +18,7 @@ const TeachingResearchSection = () => {
       id: '51038475841701',
       name: "软件工程教研室",
       major: '软件工程',
+      type: 0,
       teacherCount: 20,
       fullTeacher: 16
     },
@@ -25,6 +26,7 @@ const TeachingResearchSection = () => {
       id: '51038475841702',
       name: "软件工程教研室",
       major: '软件工程',
+      type: 1,
       teacherCount: 20,
       fullTeacher: 16
     },
@@ -32,6 +34,7 @@ const TeachingResearchSection = () => {
       id: '51038475841703',
       name: "软件工程教研室",
       major: '软件工程',
+      type: 2,
       teacherCount: 20,
       fullTeacher: 16
     },
@@ -39,6 +42,7 @@ const TeachingResearchSection = () => {
       id: '51038475841704',
       name: "软件工程教研室",
       major: '软件工程',
+      type: 0,
       teacherCount: 20,
       fullTeacher: 16
     },
@@ -46,6 +50,7 @@ const TeachingResearchSection = () => {
       id: '51038475841705',
       name: "软件工程教研室",
       major: '软件工程',
+      type: 0,
       teacherCount: 20,
       fullTeacher: 16
     },
@@ -53,6 +58,7 @@ const TeachingResearchSection = () => {
       id: '51038475841706',
       name: "软件工程教研室",
       major: '软件工程',
+      type: 1,
       teacherCount: 20,
       fullTeacher: 16
     },
@@ -60,6 +66,7 @@ const TeachingResearchSection = () => {
       id: '51038475841707',
       name: "软件工程教研室",
       major: '软件工程',
+      type: 2,
       teacherCount: 20,
       fullTeacher: 16
     },
@@ -67,6 +74,7 @@ const TeachingResearchSection = () => {
       id: '51038475841708',
       name: "软件工程教研室",
       major: '软件工程',
+      type: 1,
       teacherCount: 20,
       fullTeacher: 16
     },
@@ -74,6 +82,7 @@ const TeachingResearchSection = () => {
       id: '51038475841709',
       name: "软件工程教研室",
       major: '软件工程',
+      type: 0,
       teacherCount: 20,
       fullTeacher: 16
     },
@@ -82,6 +91,7 @@ const TeachingResearchSection = () => {
       id: '51038475841710',
       name: "软件工程教研室",
       major: '软件工程',
+      type: 0,
       teacherCount: 20,
       fullTeacher: 16
     },
@@ -89,6 +99,7 @@ const TeachingResearchSection = () => {
       id: '51038475841711',
       name: "软件工程教研室",
       major: '软件工程',
+      type: 2,
       teacherCount: 20,
       fullTeacher: 16
     },
@@ -96,6 +107,7 @@ const TeachingResearchSection = () => {
       id: '51038475841712',
       name: "软件工程教研室",
       major: '软件工程',
+      type: 0,
       teacherCount: 20,
       fullTeacher: 16
     },
@@ -103,10 +115,11 @@ const TeachingResearchSection = () => {
   ];
 
   const column = [
-    { width: 50, render:(text,record,index)=>`${index + 1 + (tableSetting.page - 1) * tableSetting.rows}`},
+    { width: 50, render: (text, record, index) => `${index + 1 + (tableSetting.page - 1) * tableSetting.rows}` },
     { title: 'id', dataIndex: 'id', key: 'id' },
     { title: '名称', dataIndex: 'name', key: 'name' },
     { title: '专业', dataIndex: 'major', key: 'major' },
+    { title: '类型', dataIndex: 'type', key: 'type', render: (text, record) => text == 0 ? '专业类' : text == 1 ? '学科类' : '管理类' },
     { title: '教师人数', dataIndex: 'teacherCount', key: 'teacherCount' },
     { title: '专任教师', dataIndex: 'fullTeacher', key: 'fullTeacher' },
     {
@@ -129,7 +142,7 @@ const TeachingResearchSection = () => {
   const tableSetting = {
     page: 1,
     rows: 12,
-    isIndexColumn: true,
+    isMultiple: true,
   }
 
   const handlePage = (v) => {
