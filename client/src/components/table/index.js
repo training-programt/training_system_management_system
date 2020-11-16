@@ -17,14 +17,14 @@ const TableComponent = (props) => {
       loading={loading}
       onRow={record => {
         return {
-          onClick: event => { }, // 点击行
-          onDoubleClick: event => { },
-          onContextMenu: event => { },
-          onMouseEnter: event => { }, // 鼠标移入行
-          onMouseLeave: event => { },
+          onClick: event => { console.log(event); }, // 点击行
+          onDoubleClick: event => { console.log(event); },
         };
       }}
     >
+      {/* {
+        (settings.isMultiple && column.length) ? <Column filterMultiple /> : ''
+      } */}
       {
         column.map((item, index) => {
           return (

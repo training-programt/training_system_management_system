@@ -44,7 +44,7 @@ const TeachingResearchSection = () => {
   const tableSetting = {
     page: 1,
     rows: 12,
-    isIndexColumn: true,
+    isMultiple: true,
   }
 
   const pageparams = {
