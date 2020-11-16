@@ -6,15 +6,15 @@ const { Column } = Table;
 
 const TableComponent = (props) => {
 
-  const { data, column, settings } = props;
-
+  const { data, column, settings, loading } = props;
+  
   return (
     <Table
       dataSource={data}
       pagination={false}
       bordered
       rowKey="id"
-      loading={props.loading}
+      loading={loading}
       onRow={record => {
         return {
           onClick: event => { }, // 点击行

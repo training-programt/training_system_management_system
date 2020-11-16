@@ -1,7 +1,7 @@
 import React from 'react'
 import { Card, Form, Input, Button, Checkbox, message, Spin } from 'antd';
 import { useDispatch, useSelector } from 'react-redux'
-import api from '../../apis'
+import api from '../../apis/publish'
 import './index.less'
 import { setSession } from '../../utils';
 import { useHistory } from 'react-router-dom';
