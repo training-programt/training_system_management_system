@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useMemo } from 'react';
+import React, { useState, useMemo } from 'react';
 import { Input, Select, Space, Button } from 'antd';
 import PaginationComponent from '../../components/pagination'
 import HeaderComponent from '../../components/header'
@@ -53,8 +53,13 @@ const TeachingResearchSection = () => {
     total: total,
   }
 
+  const selectData = [
+    { id: 1, name: '专业类' },
+    { id: 2, name: '管理类' },
+    { id: 3, name: '学科类' },
+  ]
 
-  useEffect(() => {
+  useMemo(() => {
     const fetchData = async () => {
       const params = {
         page: pageparams.page,
@@ -68,9 +73,9 @@ const TeachingResearchSection = () => {
       setTotal(res.total);
       setLoading(false);
     }
-    
+
     fetchData();
-    
+
   }, [type, query, page])
 
   return (
@@ -81,17 +86,16 @@ const TeachingResearchSection = () => {
           <div className="filter-type">
             <span>教研室分类：</span>
             <Select className="select-type" defaultValue={type} onChange={value => setType(value)}>
-              <Option value="0">全部</Option>
-              <Option value="1">专业类</Option>
-              <Option value="2">管理类</Option>
-              <Option value="3">学科类</Option>
+              <Option value='0'>全部</Option>
+              {
+                selectData.map(item => (<Option key={item.id} value={item.id}>{item.name}</Option>))
+              }
             </Select>
           </div>
           <div className="search-box">
             <Input.Search placeholder="请输入教研室名称" onSearch={value => setQuery(value)} allowClear enterButton />
           </div>
         </div>
-
         <div className="table-container">
           <TableComponent data={tableData} column={column} settings={tableSetting} loading={loading} />
         </div>
