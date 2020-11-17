@@ -7,7 +7,7 @@ const { Column } = Table;
 const TableComponent = (props) => {
 
   const { data, column, settings, loading } = props;
-  
+
   return (
     <Table
       dataSource={data}
@@ -15,16 +15,8 @@ const TableComponent = (props) => {
       bordered
       rowKey="id"
       loading={loading}
-      onRow={record => {
-        return {
-          onClick: event => { console.log(event); }, // 点击行
-          onDoubleClick: event => { console.log(event); },
-        };
-      }}
+      rowSelection={settings.rowSelection}
     >
-      {/* {
-        (settings.isMultiple && column.length) ? <Column filterMultiple /> : ''
-      } */}
       {
         column.map((item, index) => {
           return (
