@@ -4,4 +4,6 @@ export default {
 
 
   getDepartmentList: '/getDepartmentList', // 教研室列表
+
+  getTeacherList: '/getTeacherList', // 教师列表
 }
