@@ -88,11 +88,12 @@ const MainHeader = () => {
           } */}
 
         </Col>
-        <Col style={{ marginRight: '-30px' }}>
-          <span style={{ marginRight: '24px' }}>
+        
+        <Col className="avatar-content">
+          <span>
             <Link to='/notification'>
               <Badge count={10} overflowCount={9}>
-                <Avatar size="defult" icon={<BellFilled />} style={{ backgroundColor: '#fff', color: '#000', border: '1px solid #ccc' }} />
+                <Avatar size="defult" icon={<BellFilled />} className="notice" />
               </Badge>
             </Link>
           </span>

@@ -5,6 +5,8 @@ import exception from './exception'
 import major from './major';
 import publish from './publish';
 import teacher from './teacher';
+import infoView from './infoView';
+import teachingResearchSection from './teachingResearchSection';
 
 const routesConfig = [{
   path: '/',
@@ -24,11 +26,11 @@ const routesConfig = [{
       roles: 1,
       childRoutes: [
         // 子路由
+        ...major,
         ...teacher,
         ...course,
-        ...major,
-
-
+        ...infoView,
+        ...teachingResearchSection,
 
 
         ...publish,

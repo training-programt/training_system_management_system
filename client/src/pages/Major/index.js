@@ -1,32 +1,36 @@
 import React from 'react';
-import { Table } from 'antd';
-const { Column } = Table;
+import { Form, Button, Input } from "antd";
+
+import './index.less'
 
 const Major = () => {
-  const data = [
-    {
-      professional_id: '1',
-      professional_code: '03211171',
-      professional_name: '软件工程',
-      professional_introduce: "红红火火恍恍惚惚",
-      professional_count: '181',
-    },
-    {
-      professional_id: '2',
-      professional_code: '03211172',
-      professional_name: '计算机科学与技术',
-      professional_introduce: "红红火火恍恍惚惚",
-      professional_count: '80',
-    },
-  ];
+
+  const filterInput = [
+    { prop: 'majorName', label: '专业名称', minWidth: '300' },
+  ]
+
   return (
-    <Table dataSource={data}>
-      <Column title="专业id" dataIndex="professional_id" key="professional_id" />
-      <Column title="专业编码号" dataIndex="professional_code" key="professional_code" />
-      <Column title="专业名字" dataIndex="professional_name" key="professional_name" />
-      <Column title="专业介绍" dataIndex="professional_introduce" key="professional_introduce" />
-      <Column title="专业学生人数" dataIndex="professional_count" key="professional_count" />
-    </Table>
+    <div className="container">
+      <div className="container-header">
+        <Form>
+
+          {
+            filterInput.map((item, index) => {
+              <Form.Item label={item.label} key={index} name={item.prop}>
+                <Input></Input>
+              </Form.Item>
+            })
+          }
+          <Form.Item>
+            <Button type='primary' htmlType="submit" style={{ marginRight: '1rem' }}>搜索</Button>
+            <Button htmlType="button">重置</Button>
+          </Form.Item>
+        </Form>
+      </div>
+      <div className="container-body">
+        表格
+      </div>
+    </div>
   )
 }
 

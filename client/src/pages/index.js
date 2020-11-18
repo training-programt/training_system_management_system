@@ -5,6 +5,8 @@ import Major from './Major';
 import Home from './Home';
 import UserInfo from './UserInfo';
 import Notification from './Notification'
+import InfoView from "./InfoView";
+import TeachingResearchSection from "./TeachingResearchSection";
 
 export {
   Login,
@@ -14,4 +16,6 @@ export {
   UserInfo,
   Notification,
   Major,
+  InfoView,
+  TeachingResearchSection,
 }

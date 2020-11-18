@@ -1,0 +1,45 @@
+@width: 100vw/1920px;
+@height: 100vh/960px;
+@height1: 60px * @height;
+
+.teach-section {
+  height: 100%;
+  width: 100%;
+
+  .body-wrap {
+    position: relative;
+    width: 100%;
+    height: calc(100% - @height1);
+    background-color: #fff;
+    padding: 0 24px * @height 16px * @width ;
+    overflow: hidden;
+
+    .filter-container {
+      width: 100%;
+      height: 80px * @height;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      font-size: 16px * @width;
+
+      .filter-type {
+        flex: 4;
+        height: 60px * @height;
+        line-height: 60px * @height;
+
+        .select-type {
+          width: 250px * @width;
+          font-size: 14px * @width;
+        }
+
+        >span {
+          margin-right: 20px * @width;
+        }
+      }
+
+      .search-box {
+        flex: 1;
+      }
+    }
+  }
+}
