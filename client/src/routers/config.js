@@ -5,6 +5,7 @@ import exception from './exception'
 import major from './major';
 import publish from './publish';
 import teacher from './teacher';
+import grade from './grade';
 
 const routesConfig = [{
   path: '/',
@@ -27,13 +28,10 @@ const routesConfig = [{
         ...teacher,
         ...course,
         ...major,
-
-
-
-
+        ...grade,
         ...publish,
         ...exception,
-        
+
       ]
     },
     

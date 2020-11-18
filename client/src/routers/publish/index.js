@@ -12,7 +12,8 @@ export default [
   {
     path: '/userInfo',
     exact: true,
-    roles: 1,UserInfo
+    roles: 1,
+    component:UserInfo
   },
   {
     path: '/notification',

@@ -30,7 +30,7 @@ axios.interceptors.request.use(
     return Promise.reject(error);
   }
 )
-
+//响应拦截
 axios.interceptors.response.use(
   response => {
     if (response && response.data.code !== 200 && response.data.code !== 1) {

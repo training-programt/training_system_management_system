@@ -4,7 +4,9 @@ import Course from './Course';
 import Major from './Major';
 import Home from './Home';
 import UserInfo from './UserInfo';
-import Notification from './Notification'
+import Notification from './Notification';
+import Grade from './Grade';
+
 
 export {
   Login,
@@ -14,4 +16,5 @@ export {
   UserInfo,
   Notification,
   Major,
+  Grade,
 }
