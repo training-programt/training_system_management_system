@@ -1,0 +1,23 @@
+@width: 100vw/1920px;
+@height: 100vh/960px;
+
+.title-container {
+  height: 60px * @height;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+
+  .header-title {
+    font-size: 20px * @width;
+    font-family: PingFangSC-Medium, PingFang SC;
+    font-weight: 600;
+    color: #000000;
+  }
+  .header-time {
+    font-size: 14px * @width;
+    font-family: PingFangSC-Regular, PingFang SC;
+    font-weight: 400;
+    color: #909399;
+    position: relative;
+  }
+}

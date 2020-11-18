@@ -1,4 +1,3 @@
-import { lazy } from 'react';
 import { Home, UserInfo, Notification } from "@/pages";
 
 export default [

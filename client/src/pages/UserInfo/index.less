@@ -1,0 +1,59 @@
+@width: 100vw/1920px;
+@height: 100vh/960px;
+
+.userInfo-container {
+  height: 100%;
+  width: 100%;
+
+  .container-info {
+    display: flex;
+    height: 100%;
+    width: 100%;
+  }
+
+  .left-container {
+    flex: 2;
+    height: 100%;
+  }
+
+  .right-container {
+    height: 100%;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    
+    .avatar {
+      width: 100%;
+    }
+    .avatar-box .image-box {
+
+      .ant-image-img {
+        border-radius: 50%;
+      }
+    }
+
+    .avatar-box .upload-box {
+      margin-top: 30px * @height;
+      width: 100%;
+      height: 40px * @height;
+      line-height: 40px * @height;
+      display: flex;
+      justify-content: space-around;
+      align-items: center;
+    }
+
+    .baseinfo-box {
+      width: 100%;
+      margin-top: 40px * @height;
+    }
+
+  }
+
+  .container-info {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+
+}
