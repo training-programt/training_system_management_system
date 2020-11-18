@@ -33,6 +33,8 @@ const routesConfig = [{
         ...grade,
         ...infoView,
         ...teachingResearchSection,
+
+        
         ...publish,
         ...exception,
 
