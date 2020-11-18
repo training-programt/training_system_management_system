@@ -30,7 +30,6 @@ const routesConfig = [{
         ...major,
         ...teacher,
         ...course,
-        ...major,
         ...grade,
         ...infoView,
         ...teachingResearchSection,
