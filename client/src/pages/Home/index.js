@@ -1,25 +1,18 @@
 import React, {
-  useCallback
 } from 'react';
 import {
   Card,
   Button
 } from 'antd';
 import {
-  useDispatch,
-  useMappedState
-} from 'redux-react-hook'
+  useSelector, useDispatch
+} from 'react-redux'
 
-import shallowequal from 'shallowequal';
 
 const Home = () => {
 
-  const mapState = useCallback(state => ({
-    user: state.user
-  }), [])
-  const {
-    user
-  } = useMappedState(mapState, shallowequal)
+  const user = useSelector(state => state.user)
+
   const dispatch = useDispatch()
   const btnClick = () => {
     dispatch({
@@ -31,8 +24,8 @@ const Home = () => {
   return (
     <Card
       title={user.user}
-    >
-      <Button onClick={btnClick} > 点击 </Button>
+    >      
+      <Button onClick = {() => dispatch({type: 'SET_USER', user: 'admin'})} > dianji </Button> 
     </Card>
   )
 }

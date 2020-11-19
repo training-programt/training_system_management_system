@@ -1,10 +1,8 @@
-import React, { Suspense, useCallback } from 'react';
+import React from 'react';
 import { HashRouter as Router, Route, Switch, Redirect } from 'react-router-dom';
-import { useMappedState } from 'redux-react-hook';
+import { useSelector } from 'react-redux';
 
-import LoadingPage from '../components/LoadingPage';
-import config from './config';
-import Utils from '../utils'
+import routesConfig from './config';
 
 const renderRoutes = (routes, roles) => {
   if (!Array.isArray(routes)) return null;
@@ -31,13 +29,9 @@ const renderRoutes = (routes, roles) => {
             strict={route.strict}
             render={() => {
               const renderChildRoutes = renderRoutes(route.childRoutes, roles);
-              let hasPermission = Utils.isSubArray(roles, route.roles);
+              let hasPermission = roles >= route.roles;
               if (route.component) {
-                return (
-                  <Suspense fallback={<LoadingPage />}>
-                    {hasPermission ? <route.component route={route}>{renderChildRoutes}</route.component>: <Redirect to='/exception/403' />}
-                  </Suspense>
-                );
+                return hasPermission ? <route.component route={route}>{renderChildRoutes}</route.component> : <Redirect to='/exception/403' />
               }
               return renderChildRoutes;
             }}
@@ -49,11 +43,10 @@ const renderRoutes = (routes, roles) => {
 };
 
 const AppRouter = () => {
-  const mapState = useCallback(state => ({
-    roles: state.user.roles,
-  }), [roles])
-  const { roles } = useMappedState(mapState);
-  return <Router>{renderRoutes(config, roles)}</Router>;
+
+  const roles = useSelector(state => state.user.roles);
+  
+  return <Router>{renderRoutes(routesConfig, roles)}</Router>;
 };
 
 export default AppRouter;

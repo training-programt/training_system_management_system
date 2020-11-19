@@ -1,20 +1,23 @@
-import Login from './login';//登录
-import Major from './Major';//专业
-import Grade from './Grade';//年级
-import Course from './Course';//课程
-import Home from './Home';//主页
+import Login from './login';
+import Teacher from './Teacher';
+import Course from './Course';
+import Major from './Major';
+import Home from './Home';
 import UserInfo from './UserInfo';
+import Grade from './Grade';
 import Notification from './Notification'
-import Teacher from './Teacher'
-
+import InfoView from "./InfoView";
+import TeachingResearchSection from "./TeachingResearchSection";
 
 export {
   Login,
   Home,
-  Major,
-  Grade,
+  Teacher,
   Course,
   UserInfo,
   Notification,
-  Teacher,
+  Major,
+  Grade,
+  InfoView,
+  TeachingResearchSection,
 }

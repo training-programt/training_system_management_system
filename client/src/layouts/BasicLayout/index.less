@@ -1,3 +1,6 @@
+@width: 100vw/1920px;
+@height: 100vh/960px;
+
 .main-layout {
   height: 100vh;
 
@@ -7,8 +10,15 @@
 
   .main-layout-content {
     height: 100%;
-    background-color: 'rgba(0, 0, 0, .1)';
-    overflow: auto;
-    padding: 1rem;
+    background-color: rgba(255, 255, 255, .1);
+    padding: 10px * @height 24px * @width 4px * @height;
+
+    .content-box {
+      height: 100%;
+      width: 100%;
+      overflow-y: auto;
+    }
   }
 }
+
+

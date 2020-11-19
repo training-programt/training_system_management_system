@@ -1,4 +1,4 @@
-import React, { useState, useCallback } from 'react';
+import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { Layout, Menu, Row ,Button} from 'antd';
 import {MenuUnfoldOutlined , MenuFoldOutlined} from '@ant-design/icons'
@@ -6,7 +6,7 @@ import Logo from '../../public/images/logo.png';
 import Logo_1 from '../../public/images/logo_1.png';
 
 import './index.less'
-import { useMappedState } from 'redux-react-hook';
+import { useSelector } from 'react-redux';
 
 const renderMenuItem = routes => {
   return routes
@@ -29,19 +29,19 @@ const renderMenuItem = routes => {
       }
       return (
         <Menu.Item key={item.path}>
-          <Link to={item.path}>
+          <Link to={item.path} replace>
             <span>
-            <span><i className={'menu-icon iconfont ' + item.icon}></i></span>
+              <span><i className={'menu-icon iconfont ' + item.icon}></i></span>
               <span>{item.name}</span>
             </span>
-          </Link> 
+          </Link>
         </Menu.Item>
         
       )
     })
 }
 
-const SideMenu = ({routes}) => {
+const SideMenu = ({ routes }) => {
 
   const [openKeys, setOpenKeys] = useState([]);
 
@@ -49,17 +49,14 @@ const SideMenu = ({routes}) => {
     setOpenKeys(keys);
   }
 
-  const mapSate = useCallback(state => ({
-    typeColor: state.user.typeColor
-  }), [typeColor])
+  const typeColor = useSelector(state => state.user.typeColor);
 
-  const { typeColor } = useMappedState(mapSate);
   return (
     <Layout.Sider
       className='main-left-slider'
       theme={typeColor ? 'light' : 'dark'}
     >
-      <Link to="/">
+      <Link to="/home">
         <Row type="flex" align="middle" className="main-logo">
           <img className='logo' src={typeColor ? Logo : Logo_1} alt='攀枝花学院' />
         </Row>

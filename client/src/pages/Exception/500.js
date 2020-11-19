@@ -9,7 +9,7 @@ export default () => {
       title="500"
       subTitle="抱歉，服务器出错了。"
       extra={
-        <Link to="/">
+        <Link to="/home">
           <Button type="primary">返回首页</Button>
         </Link>
       }

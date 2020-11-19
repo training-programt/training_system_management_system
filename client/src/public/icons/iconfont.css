@@ -15,6 +15,77 @@
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
+.icon-tongji:before {
+  content: "\e648";
+}
+
+.icon-teach-info:before {
+  content: "\e62d";
+}
+
+.icon-me:before {
+  content: "\e6bb";
+}
+
+.icon-del:before {
+  content: "\e612";
+}
+
+.icon-show:before {
+  content: "\e606";
+}
+
+.icon-UserSettings:before {
+  content: "\e600";
+}
+
+.icon-teacher:before {
+  content: "\e60b";
+}
+
+.icon-modify:before {
+  content: "\e655";
+}
+
+.icon-Group:before {
+  content: "\e7dd";
+}
+
+.icon-me1:before {
+  content: "\e61f";
+}
+
+.icon-course:before {
+  content: "\e72b";
+}
+
+.icon-search:before {
+  content: "\e601";
+}
+
+.icon-student:before {
+  content: "\e613";
+}
+
+.icon-add:before {
+  content: "\e646";
+}
+
+.icon-Student:before {
+  content: "\e678";
+}
+
+.icon-major:before {
+  content: "\e602";
+}
+
+.icon-grade:before {
+  content: "\e8d6";
+}
+
+.icon-class:before {
+  content: "\e623";
+}
 
 .icon-me:before {
   content: "\e6bb";
@@ -311,4 +382,3 @@
 .icon-share:before {
   content: "\e6ee";
 }
-

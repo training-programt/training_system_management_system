@@ -1,9 +1,10 @@
-import React, { useState } from 'react';
-import { Card, Spin, Input, Button, Checkbox, message } from 'antd';
-import { UserOutlined, LockOutlined, KeyOutlined } from '@ant-design/icons';
-import { useHistory } from 'react-router-dom';
+import React from 'react'
+import { Card, Form, Input, Button, Checkbox, message, Spin } from 'antd';
+import { useDispatch, useSelector } from 'react-redux'
+import api from '../../apis/publish'
 import './index.less'
-import { useDispatch } from 'redux-react-hook';
+import { setSession } from '../../utils';
+import { useHistory } from 'react-router-dom';
 
 const Login = () => {
   const [userName, setUserName] = useState('');
@@ -11,83 +12,98 @@ const Login = () => {
   const [code, setNumber] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const history = useHistory();
-
   const dispatch = useDispatch();
-  const checkLogin = () => {
-    dispatch({
-      type: 'LOGIN_SUCCESS',
-      isLogin: true,
-      roles: ['001'],
-      isLoading: true,
-    })
-    if (!userName) {
-      message.error('用户名不能为空')
-      setTimeout(() => {
-        setIsLoading(false)
-      }, 500)
-      return false
-    } else if (!passWord) {
-      message.error('密码不能为空')
-      setTimeout(() => {
-        setIsLoading(false)
-      }, 500)
-      return false
-    }else if(!code){
-      message.error('验证码不能为空')
-      setTimeout(() => {
-        setIsLoading(false)
-      }, 500)
-      return false
-    }
-    let dataProps = {
-      'userName': userName,
-      'password': passWord
-    }
-    setIsLoading(true);
-    message.success('登录成功');
-    setTimeout(() => {
-      history.push('/home');
-    }, 2000)
+
+  const handleLogin = (e) => {
+    e.preventDefault();
+    let userInfo;
+    dispatch({ type: 'START_LOGIN' });
+    api.getToken(form.getFieldsValue())
+      .then(res => {
+        if (res && res.isSucceed) {
+          userInfo = res.data.userInfo;
+          setSession('token', res.data.token.token_type + ' ' + res.data.token.access_token);
+          setSession('userInfo', JSON.stringify(userInfo));
+        } else {
+          dispatch({ type: 'LOGIN_FAILED'});
+          message.error(res.message);
+        }
+      })
+      .then(() => {
+        dispatch({ type: 'LOGIN_SUCCESS', payload: { userInfo } });
+        message.success("登录成功");
+        history.push('/home');
+      })
+
   }
+
+  const isLoading = useSelector(state => state.user.isLoading);
+
   return (
-    <div className="login-div">
-      <div className="wrapper">
-        <Spin tip="Loading..." spinning={isLoading}>
-          <Card title="用户登录" bordered={true} style={{ width: 400 }} >
-            <Input
-              id="userName"
-              size="large"
-              placeholder="Enter your userName"
-              prefix={<UserOutlined style={{ color: 'rgba(0,0,0,.25)' }} />}
-              onChange={(e) => { setUserName(e.target.value) }}
-            />
-            <br /><br />
-            <Input.Password
-              id="passWord"
-              size="large"
-              placeholder="Enter your passWord"
-              prefix={<LockOutlined style={{ color: 'rgba(0,0,0,.25)' }} />}
-              onChange={(e) => { setPassword(e.target.value) }}
-            />
-            <br /><br />
-            <Input
-              id="code"
-              size="large"
-              placeholder="61+57=?"
-              prefix={<KeyOutlined style={{ color: 'rgba(0,0,0,.25)' }} />}
-              onChange={(e) => { setNumber(e.target.value) }}
-            />
-            <br /><br />
-            <div className="pwd-setting">
-              <Checkbox defaultChecked="true">记住密码</Checkbox>
-              <a className="login-form-forgot" href="#">
-                忘记密码?
-          </a>
-            </div>
-            <Button type="primary" size="large" block onClick={checkLogin} > Login in </Button>
-          </Card>
-        </Spin>
-      </div>
+    <div className="container">
+      <Spin tip="loading..." spinning={isLoading}>
+        <Card bordered={false} >
+          <div className="login-container">
+            <Form
+              form={form}
+              className="login-form"
+              initialValues={{
+                remember: true,
+              }}
+            >
+              <h2>登录</h2>
+              <Form.Item
+                name="account"
+                rules={[
+                  {
+                    required: true,
+                    message: '请输入账号'
+                  }
+                ]}
+              >
+                <Input
+                  type='text'
+                  placeholder="账号"
+                />
+              </Form.Item>
+              <Form.Item
+                name="password"
+                rules={[
+                  {
+                    required: true,
+                    message: '请输入密码'
+                  }
+                ]}
+              >
+                <Input
+                  type="password"
+                  placeholder="密码"
+                />
+              </Form.Item>
+              <Form.Item className="pwd-setting">
+                <Form.Item name="remember" valuePropName="checked" noStyle >
+                  <Checkbox
+                    style={{ float: 'left' }}
+                  >
+                    记住密码
+                </Checkbox>
+                </Form.Item>
+                <a className="login-form-forgot" href="https://www.baidu.com">
+                  忘记密码
+              </a>
+              </Form.Item>
+              <Button
+                htmlType='submit'
+                type="primary"
+
+                onClick={handleLogin}
+              >
+                立即登录
+            </Button>
+            </Form>
+          </div>
+        </Card>
+      </Spin>
     </div>
   )
 }
