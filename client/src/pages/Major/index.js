@@ -1,37 +1,36 @@
-import React, { useState } from 'react';
+import React, { useState, useMemo } from 'react';
 import { Table, Space, Input, Button, Modal, Form, InputNumber, Popconfirm, Descriptions } from 'antd';
 import { SearchOutlined, PlusOutlined } from '@ant-design/icons';
+import HeaderComponent from '../../components/header'
 import { useSelector } from 'react-redux';
 import './index.less'
+import api from '../../apis/major'
 
 const Major = () => {
+  const [name, setName] = useState('');
+  const [code, setCode] = useState('');
+  const [tableData, setTableData] = useState([]);
+  const [loading, setLoading] = useState(false);
   const [visible, setVisible] = useState(false);
   const [confirmLoading, setConfirmLoading] = useState(false);
+
   // const role = useSelector(state => state.user.roles);//??不会
-  const role = 1
-  const professData = [
-    {
-      key: '1',
-      name: '软件工程',
-      code: '10032',
-      introduce: '嘿嘿嘿嘿嘿嘿嘿',
-      count: 182
-    },
-    {
-      key: '2',
-      name: '计算机科学与技术',
-      code: '10033',
-      introduce: '哈哈哈哈哈哈哈哈哈',
-      count: 88
-    },
-  ];
+  const role = 1;
+  useMemo(() => {
+    const fetchData = async () => {
+      const params = {
+        name: "",
+        code: "",
+      }
+      setLoading(true);
+      const res = await api.getMajorList(params);
+      setTableData(res.data);
+      setLoading(false);
+    }
+    fetchData();
+  }, [name, code])
 
   const professColumns = [
-    {
-      title: '专业序号',
-      dataIndex: 'key',
-      key: 'key',
-    },
     {
       title: '专业名字',
       dataIndex: 'name',
@@ -46,6 +45,7 @@ const Major = () => {
       title: '专业介绍',
       dataIndex: 'introduce',
       key: 'introduce',
+      ellipsis: true,
     },
     {
       title: '专业人数',
@@ -89,10 +89,12 @@ const Major = () => {
   const handleCancel = () => {
     setVisible(false);
   };
-  if (role==1) {
+  if (role == 1) {
     return (
       // 教学领导
       <div className="insLeader">
+        <HeaderComponent title="专业管理" />
+        <div className="body-wrap">
         <div className="queryContent">
           <div className="inputContent">
             <Input placeholder="请输入专业名" />
@@ -101,6 +103,16 @@ const Major = () => {
           <Button type="primary" icon={<SearchOutlined />} >查询</Button>
           <Button type="primary" icon={<PlusOutlined />} onClick={showAdd}>新增</Button>
         </div>
+        <Table
+          dataSource={tableData}
+          columns={professColumns}
+          loading={loading}
+          expandable={{
+            expandedRowRender: record => <p style={{ margin: 0 }}>专业介绍：{record.introduce}</p>,
+            rowExpandable: record => record.name !== 'Not Expandable',
+          }}
+        >
+        </Table>
         <Modal
           title="新增专业"
           visible={visible}
@@ -123,15 +135,7 @@ const Major = () => {
             </Form.Item>
           </Form>
         </Modal>
-        <Table
-          dataSource={professData}
-          columns={professColumns}
-          expandable={{
-            expandedRowRender: record => <p style={{ margin: 0 }}>专业介绍：{record.introduce}</p>,
-            rowExpandable: record => record.name !== 'Not Expandable',
-          }}
-        >
-        </Table>
+        </div>
       </div>
     )
   } else {

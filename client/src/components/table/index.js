@@ -6,7 +6,7 @@ const { Column } = Table;
 
 const TableComponent = (props) => {
 
-  const { data, column, settings, loading } = props;
+  const { data, column, settings, loading,expandable } = props;
 
   return (
     <Table
