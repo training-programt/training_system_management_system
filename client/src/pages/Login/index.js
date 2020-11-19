@@ -7,10 +7,7 @@ import { setSession } from '../../utils';
 import { useHistory } from 'react-router-dom';
 
 const Login = () => {
-  const [userName, setUserName] = useState('');
-  const [passWord, setPassword] = useState('');
-  const [code, setNumber] = useState(false);
-  const [isLoading, setIsLoading] = useState(false);
+  const [form] = Form.useForm();
   const history = useHistory();
   const dispatch = useDispatch();
 
