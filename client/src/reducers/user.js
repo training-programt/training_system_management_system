@@ -10,7 +10,6 @@ const initState = {
   roles: 1,
   ...userInfo,
 }
-
 export default (state = initState, action) => {
   switch (action.type) {
     case actionTypes.START_LOGIN:

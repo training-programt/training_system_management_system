@@ -2,9 +2,9 @@
 @height: 100vh/960px;
 @height1: 60px * @height;
 
-.insLeader {
-    // height: 100%;
-    // width: 100%;
+.majorInsLeader {
+    height: 100%;
+    width: 100%;
 
     .body-wrap {
         position: relative;
@@ -20,22 +20,24 @@
             .inputContent {
                 display: flex;
                 justify-content: center;
-                width: 50%;
+                width: 40%;
 
                 .ant-input {
-                    border-radius: 5px*@height;
                     margin-top: 15px*@height;
+                    &:nth-child(2){
+                        margin-left: 10px*@width;
+                    }
                 }
+                
             }
 
             .ant-btn {
-                margin-left: 10px*@height;
-                margin-top: 15px*@height;
-                border-radius: 5px*@height;
+                margin-left: 10px*@width;
+                margin-top: 15px*@width;
             }
         }
         .ant-table-wrapper{
-            margin-top: 10px *@height;
+            margin-top: 15px *@height;
         }
     }
 }

@@ -69,6 +69,7 @@ const Teacher = () => {
     }
     fetchData();
   }, [])
+  
 
   useMemo(() => {
     const fetchData = async () => {

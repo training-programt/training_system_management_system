@@ -8,4 +8,7 @@ export default {
   getTeacherList: '/getTeacherList', // 教师列表
 
   getMajorList:'/getMajorList',//专业列表
+
+  getCourseList:'/getCourseList',//课程列表
+
 }
