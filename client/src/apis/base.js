@@ -11,4 +11,8 @@ export default {
 
   getCourseList:'/getCourseList',//课程列表
 
+  getSemesterList:'/getSemesterList',//学期列表
+  
+  getGradeList:'/getGradeList',//年级列表
+
 }
