@@ -6,4 +6,18 @@ module.exports = {
   // static: {
   //   enable: true,
   // }
+  mongoose: {
+    enable: true,
+    package: 'egg-mongoose'
+  },
+
+  cors: {
+    enable: true,
+    package: 'egg-cors'
+  },
+
+  qiniu: {
+    enable: true,
+    package: 'qiniu'
+  }
 };

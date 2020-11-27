@@ -23,8 +23,40 @@ module.exports = appInfo => {
     // myAppName: 'egg',
   };
 
+  config.mongoose = {
+    client: {
+      url: 'mongodb://127.0.0.1:27017/tsms',
+      options: {
+        useNewUrlParser: true,
+        useCreateIndex: true,
+        useUnifiedTopology: true,
+      },
+    },
+  }
+
+  // File模式
+  config.multipart = {
+    mode: 'file'
+  }
+
+  // 安全
+  config.security = {
+    csrf: false
+  }
+
+  // 跨域
+  config.cors = {
+    credentials: true
+  }
+
+  // 七牛
+  config.qiniuKey = {
+    accessKey: '8-I_J1XYGKnmCXAhGVCiazW3bcOD_CWORqvTE0j9',
+    secretKey: 'ILIkDDJe6cNo6usq01f80Nvgt8c9RJrF8c1ctt1i'
+  }
+
   return {
     ...config,
-    ...userConfig,
+    ...userConfig
   };
 };
