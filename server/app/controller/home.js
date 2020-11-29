@@ -7,19 +7,18 @@ class HomeController extends Controller {
   async index() {
     const { ctx } = this;
 
-    // let res = await ctx.model.College.aggregate([
-    //   {
-    //     $lookup: {
-    //       from: 'major',
-    //       localField: 'id',
-    //       foreignField: 'college',
-    //       as: 'major'
-    //     }
-    //   },
-    // ])
+    let scope = 'upload-egg-test';
 
-    let res = await ctx.model.Teacher.find()
+    let uploadToken = await ctx.service.qiniu.getToken(scope);
+
+    console.log(uploadToken);
+
+    let filePath = '/JavaWeb/training_system_management_system/server/README.md';
+
+    let res = await ctx.service.qiniu.uploadFile(uploadToken, filePath);
+
     ctx.body = res;
+
   }
 
   async upload() {
