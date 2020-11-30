@@ -1,25 +1,41 @@
+@width: 100vw/1920px;
+@height: 100vh/960px;
+@height1: 60px * @height;
+
 .insLeader {
-    margin-top: 10px;
+    // height: 100%;
+    // width: 100%;
 
-    .queryContent {
-        display: flex;
+    .body-wrap {
+        position: relative;
+        width: 100%;
+        height: calc(100% - @height1);
+        background-color: #fff;
+        padding: 0 24px * @height 16px * @width ;
+        overflow: hidden;
 
-        .inputContent {
+        .queryContent {
             display: flex;
-            justify-content: center;
-            width: 60%;
 
-            .ant-input {
-                border-radius: 5px;
-                margin-left: 10px;
-                margin-top: 15px;
+            .inputContent {
+                display: flex;
+                justify-content: center;
+                width: 50%;
+
+                .ant-input {
+                    border-radius: 5px*@height;
+                    margin-top: 15px*@height;
+                }
+            }
+
+            .ant-btn {
+                margin-left: 10px*@height;
+                margin-top: 15px*@height;
+                border-radius: 5px*@height;
             }
         }
-
-        .ant-btn {
-            margin-left: 10px;
-            margin-top: 15px;
-            border-radius: 5px;
+        .ant-table-wrapper{
+            margin-top: 10px *@height;
         }
     }
 }
