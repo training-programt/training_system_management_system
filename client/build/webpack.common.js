@@ -69,6 +69,7 @@ module.exports = {
       filename: "[name].[contenthash:8].css",
       chunkFilename: "chunk/[id].[contenthash:8].css"
     }),
+    // 开启 happypack 的线程池
     new HappyPack({
       id: "happybabel",
       loaders: ["babel-loader?cacheDirectory=true"],

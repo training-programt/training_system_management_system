@@ -1,0 +1,17 @@
+@width: 100vw/1920px;
+@height: 100vh/960px;
+@height1: 60px * @height;
+
+.gradeInsLeader {
+    height: 100%;
+    width: 100%;
+
+    .body-wrap {
+        position: relative;
+        width: 100%;
+        height: calc(100% - @height1);
+        background-color: #fff;
+        padding: 0 24px * @height 16px * @width ;
+        overflow: hidden;
+    }
+}

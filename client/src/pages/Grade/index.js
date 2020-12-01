@@ -1,99 +1,130 @@
-import React, { useState } from 'react';
-import { Table, Card,Space, Input, Button, Modal, Form, InputNumber, Popconfirm } from 'antd';
-import { SearchOutlined, PlusOutlined } from '@ant-design/icons';
+import React, { useState, useMemo } from 'react';
+import { Table, Button, Tabs, Popconfirm, } from 'antd';
+const { TabPane } = Tabs;
+import HeaderComponent from '../../components/header'
+import { useSelector } from 'react-redux';
 import './index.less'
-
+import api from '../../apis/grade'
 const Grade = () => {
-    const [visible, setVisible] = useState(false);
-  const [confirmLoading, setConfirmLoading] = useState(false);
-  // const role = useSelector(state => state.user.roles);
-  const role = 1
-  const professData = [
+  const [visible, setVisible] = useState(false);//弹窗新增和编辑
+  const [loading, setLoading] = useState(false);
+  const [gradeData, setGradeData] = useState([]);
+  const [semesterData, setsemesterData] = useState([])
+  const [tabKey, setTabKey] = useState('tab1')
+  const gradeColumns = [
     {
-      key: '1',
-      name: '软件工程',
-      code: '10032',
-      introduce: '嘿嘿嘿嘿嘿嘿嘿',
-      count: 182
-    },
-    {
-      key: '2',
-      name: '计算机科学与技术',
-      code: '10033',
-      introduce: '哈哈哈哈哈哈哈哈哈',
-      count: 88
-    },
-  ];
-
-  const professColumns = [
-    {
-      title: '专业序号',
+      title: '序号',
       dataIndex: 'key',
       key: 'key',
     },
     {
-      title: '专业名字',
+      title: '年级名字',
       dataIndex: 'name',
       key: 'name',
     },
     {
-      title: '专业编码',
-      dataIndex: 'code',
-      key: 'code',
-    },
-    {
-      title: '专业介绍',
-      dataIndex: 'introduce',
-      key: 'introduce',
-    },
-    {
-      title: '专业人数',
-      dataIndex: 'count',
-      key: 'count',
+      title: '年级人数',
+      dataIndex: 'studentNumber',
+      key: 'studentNumber'
     },
     {
       title: '操作',
       dataIndex: 'operation',
       key: 'operation',
-      render: () => (
-        <Space size="middle">
-          <Button type="link" onClick={edit}>Edit</Button>
+      render: (text, record) => (
+        <div>
+          <Button type="link" onClick={edit}>编辑</Button>
           <Popconfirm title="确定删除？" okText="确定" cancelText="取消">
-            <Button type="link" onClick={del}>Delete</Button>
+            <Button type="link" onClick={del}>删除</Button>
           </Popconfirm>
-        </Space>
+        </div>
       ),
     },
   ];
-  //新增
-  const showAdd = () => {
-    setVisible(true);
+  const semesterColumns = [
+    {
+      title: '序号',
+      dataIndex: 'key',
+      key: 'key',
+    },
+    {
+      title: '学期名字',
+      dataIndex: 'name',
+      key: 'name',
+    },
+    {
+      title: '操作',
+      dataIndex: 'operation',
+      key: 'operation',
+      render: (text, record) => (
+        <div>
+          <Button type="link" onClick={edit}>编辑</Button>
+          <Popconfirm title="确定删除？" okText="确定" cancelText="取消">
+            <Button type="link" onClick={del}>删除</Button>
+          </Popconfirm>
+        </div>
+      ),
+    },
+  ];
+  const del = () => {
   };
   //编辑
   const edit = () => {
     setVisible(true);
   };
-  //删除
-  const del = () => {
+  const add = () => {
 
-  };
-  const handleOk = () => {
-    setConfirmLoading(true);
-    setTimeout(() => {
-      setVisible(false);
-      setConfirmLoading(false);
-    }, 2000);
-  };
-
-  const handleCancel = () => {
-    setVisible(false);
-  };
-    return (
-        <Card
-            title='年级管理'
-        >
-        </Card>
-    )
+  }
+  useMemo(() => {
+    const fetchData = async () => {
+      const params = {
+      }
+      setLoading(true);
+      const res = await api.getGradeList(params);
+      setGradeData(res.data);
+      setLoading(false);
+    }
+    fetchData();
+  }, [])
+  useMemo(() => {
+    const fetchData = async () => {
+      setLoading(true);
+      const res = await api.getSemesterList();
+      setsemesterData(res.data);
+      setLoading(false);
+    }
+    fetchData();
+  }, [])
+  const callback=(key)=>{
+    // console.log(key);
+  }
+  return (
+    <div className="gradeInsLeader">
+      <HeaderComponent title="年级管理" />
+      <div className="body-wrap">
+        <Tabs defaultActiveKey="1" onChange={callback}>
+          <TabPane tab="年级管理" key="1">
+            <Table
+              dataSource={gradeData}
+              columns={gradeColumns}
+              loading={loading}
+              bordered
+            >
+            </Table>
+          </TabPane>
+          <TabPane tab="学期管理" key="2">
+            <Table
+              dataSource={semesterData}
+              columns={semesterColumns}
+              loading={loading}
+              bordered
+            >
+            </Table>
+          </TabPane>
+        </Tabs>
+      </div>
+    </div>
+  )
 }
 
 export default Grade;

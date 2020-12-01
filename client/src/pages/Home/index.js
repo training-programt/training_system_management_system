@@ -21,7 +21,7 @@ const Home = () => {
     })
   }
 
-  return ( 
+  return (
     <Card
       title={user.user}
     >      

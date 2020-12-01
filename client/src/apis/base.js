@@ -9,4 +9,11 @@ export default {
   getTeacherDetail: '/getTeacherDetail', // 教师详情
 
   getMajorList:'/getMajorList',//专业列表
+
+  getCourseList:'/getCourseList',//课程列表
+
+  getSemesterList:'/getSemesterList',//学期列表
+  
+  getGradeList:'/getGradeList',//年级列表
+
 }
