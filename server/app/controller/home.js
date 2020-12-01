@@ -1,40 +1,28 @@
 'use strict';
-
 const Controller = require('egg').Controller;
-const fs = require('mz/fs');
 
 class HomeController extends Controller {
   async index() {
     const { ctx } = this;
 
-    let scope = 'upload-egg-test';
-
-    let uploadToken = await ctx.service.qiniu.getToken(scope);
-
-    console.log(uploadToken);
-
-    let filePath = '/JavaWeb/training_system_management_system/server/README.md';
-
-    let res = await ctx.service.qiniu.uploadFile(uploadToken, filePath);
-
-    ctx.body = res;
-
+    ctx.body = 'home'
   }
 
   async upload() {
-    const { ctx } = this;
-    const file = ctx.request.files[0];
-    const name = 'egg-multipart-test/' + path.basename(file.filename);
-    let result;
-    try {
-      result = await ctx.oss.put(name, file.filepath);
-    } finally {
-      await fs.unlink(file.filepath);
+    const { ctx, config } = this;
+    const uploadToken = await ctx.service.qiniu.getToken(config.qiniuConfig.dataDucket);
+    const data = await ctx.service.qiniu.uploadFiles(uploadToken);
+    if(data) {
+      ctx.body = {
+        "message": '上传成功',
+        "isSucceed": true,
+      }
+    } else {
+      ctx.body = {
+        "message": "上传失败",
+        "isSucceed": false,
+      }
     }
-    ctx.body = {
-      url: result.url,
-      requestBody: ctx.request.body
-    };
   }
 }
 

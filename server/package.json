@@ -11,8 +11,10 @@
     "egg-cors": "^2.2.3",
     "egg-mongoose": "^3.3.1",
     "egg-scripts": "^2.11.0",
+    "md5": "^2.3.0",
     "mz": "^2.7.0",
-    "qiniu": "^7.3.2"
+    "qiniu": "^7.3.2",
+    "stream-wormhole": "^1.1.0"
   },
   "devDependencies": {
     "autod": "^3.0.1",
