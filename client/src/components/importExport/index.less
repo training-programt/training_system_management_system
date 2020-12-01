@@ -1,0 +1,221 @@
+@width: 100vw/1920px;
+@height: 100vh/960px;
+@height1: 54px * @height;
+
+.body-container {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  position: relative;
+
+  .line {
+    height: 200px;
+    width: 0;
+    border-left: 1px dashed rgba(51, 51, 51, 1);
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    top: 0;
+    margin: auto;
+  }
+
+  .history {
+    position: absolute;
+    top: 20px * @height;
+    right: 20px * @width;
+    cursor: pointer;
+    color: #2652fe;
+    font-size: 14px * @width;
+    font-weight: 600;
+    height: 24px * @height;
+
+    img {
+      padding-bottom: 2px * @height;
+    }
+  }
+
+  .button-container {
+    width: 50%;
+    text-align: center;
+
+    p {
+      font-size: 14px * @width;
+      font-family: PingFangSC-Medium, PingFang SC;
+      font-weight: 600;
+      color: rgba(51, 51, 51, 1);
+      line-height: 20px * @height;
+      margin-bottom: 30px * @height;
+    }
+
+    img {
+      width: 72px * @width;
+      height: 72px * @height;
+      margin-bottom: 12px * @height;
+    }
+
+    p:nth-child(3) {
+      font-weight: 400;
+      color: rgba(102, 102, 102, 1);
+    }
+
+    .btn,
+    &>div {
+      width: 98px * @width;
+      height: 40px * @height;
+      background-color: rgba(255, 255, 255, 1);
+      border-radius: 4px;
+      border: 1px * @height solid rgba(38, 82, 254, 1);
+      font-size: 14px * @width;
+      font-family: PingFangSC-Medium, PingFang SC;
+      font-weight: 600;
+      color: rgba(38, 82, 254, 1);
+      margin: 0 auto;
+      cursor: pointer;
+    }
+
+    &>div {
+      line-height: 40px * @height;
+    }
+  }
+}
+
+
+.upload-result {
+  width: 100%;
+  height: 100%;
+  position: relative;
+  text-align: center;
+  overflow: hidden;
+
+  .again-btn {
+    width: 98px * @width;
+    height: 40px * @height;
+    border-radius: 4px;
+    font-size: 14px * @width;
+    font-family: PingFangSC-Regular, PingFang SC;
+    text-align: center;
+    cursor: pointer;
+    line-height: 40px * @height;
+    background: #2652fe;
+    border: none;
+    color: #fff;
+    margin: 30px * @height auto 0;
+  }
+
+  .result-title {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-top: 74px * @height;
+    margin-bottom: 31px * @height;
+
+    img {
+      width: 32px * @width;
+      height: 32px * @width;
+      margin-right: 12px * @width;
+    }
+
+    span {
+      font-size: 20px * @width;
+      font-family: PingFangSC-Medium, PingFang SC;
+      font-weight: 600;
+      color: rgba(67, 67, 67, 1);
+    }
+  }
+
+  .result-text {
+    font-size: 14px * @width;
+    font-family: PingFangSC-Regular, PingFang SC;
+    color: rgba(51, 51, 51, 1);
+    line-height: 24px;
+
+    .oringe {
+      color: #fb602d;
+    }
+  }
+
+  .table-box {
+    margin-top: 50px * @height;
+    height: 260px * @height;
+
+    thead {
+      color: #333;
+
+      .red-text {
+        color: #333;
+      }
+    }
+
+    .red-text {
+      color: #d20d24;
+    }
+  }
+}
+
+.success-result {
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+
+  .result-title {
+    margin-top: 0;
+  }
+
+  .result-text {
+    font-weight: bold;
+  }
+}
+
+.history-box {
+  width: 100%;
+
+  .history-list {
+    padding: 36px * @width;
+
+    .history-back {
+      position: absolute;
+      top: 14px * @height;
+      left: 20px * @width;
+
+      img {
+        cursor: pointer;
+        width: 24px * @width;
+        height: 24px * @height;
+      }
+    }
+  }
+  .history-pageation {
+    width: 100%;
+    padding-left: 24px * @width;
+  }
+}
+
+.ant-modal {
+  width: 960px * @width  !important;
+
+  .ant-modal-content {
+    height: 640px * @height;
+    border-radius: 4px;
+    overflow: hidden;
+
+    .ant-modal-header {
+      height: 54px * @height;
+
+      .ant-modal-title {
+        font-size: 16px * @width;
+        font-family: PingFangSC-Medium, PingFang SC;
+        font-weight: 600;
+        color: rgba(51, 51, 51, 1);
+      }
+    }
+
+    .ant-modal-body {
+      padding: 0;
+      position: relative;
+      height: calc(100% - @height1);
+      overflow: hidden;
+    }
+  }
+}
