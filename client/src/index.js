@@ -7,12 +7,19 @@ import { Provider }from 'react-redux';
 import zhCN from 'antd/es/locale/zh_CN';
 import { makeStore } from './store';
 import 'moment/locale/zh-cn';
-
+import axios from './https';
 import './normalize.css';
 
 import AppRouter from './routers'
 
 moment.locale('zh-cn');
+
+React.$axios = () => {
+  get: (api, data) =>{
+    console.log(api, data)
+  };
+}
+
 
 const store = makeStore();
 

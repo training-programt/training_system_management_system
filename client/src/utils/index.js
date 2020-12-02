@@ -1,3 +1,4 @@
+const LOGIN_COOKIE_NAME = 'Authorization';
 
 // 判断是否为子数组
 export const isSubArray = (arr1, arr2) => {
@@ -44,4 +45,12 @@ export function dateFormat(date, fmt) {
     }
   }
   return fmt
+}
+
+export function isAuthenticated() {
+  return getSession('Authorization');
+}
+
+export function authenticateSuccess(token) {
+  setSession('Authorization', token)
 }

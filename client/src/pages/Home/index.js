@@ -1,13 +1,7 @@
-import React, {
-} from 'react';
-import {
-  Card,
-  Button
-} from 'antd';
-import {
-  useSelector, useDispatch
-} from 'react-redux'
-
+import React, { useEffect} from 'react';
+import { Card, Button } from 'antd';
+import { useSelector, useDispatch } from 'react-redux'
+import axios from '../../https'
 
 const Home = () => {
 
@@ -20,6 +14,8 @@ const Home = () => {
       user: 'admin',
     })
   }
+
+  
 
   return (
     <Card
