@@ -11,7 +11,7 @@ module.exports = app => {
       state: { type: Boolean }
     }],
 
-    schoolyear: {
+    schoolyear_id: {
       type: Schema.Types.ObjectId,
       ref: 'Schoolyear'
     }

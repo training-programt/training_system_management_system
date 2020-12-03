@@ -9,11 +9,11 @@ module.exports = app => {
       description: { type: String },
       state: { type: Boolean },
     }],
-    schoolRequirement: {
+    schoolRequirement_id: {
       type: Schema.Types.ObjectId,
       ref: 'SchoolRequirement'
     },
-    schoolyear: {
+    schoolyear_id: {
       type: Schema.Types.ObjectId,
       ref: 'Schoolyear'
     }

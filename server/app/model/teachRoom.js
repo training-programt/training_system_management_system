@@ -9,12 +9,12 @@ module.exports = app => {
       ref: 'Teacher'
     },
     type: { type: String},
-    college: {
-      type: String,
+    college_id: {
+      type: Schema.Types.ObjectId,
       ref: 'College'
     },
-    major: {
-      type: String,
+    major_id: {
+      type: Schema.Types.ObjectId,
       ref: 'Major'
     },
     introduce: { type: String},
@@ -22,7 +22,7 @@ module.exports = app => {
 
   TeachRoomSchema.virtual('teacherList', {
     localField: '_id',
-    foreignField: 'teachRoom',
+    foreignField: 'teachRoom_id',
     justOne: false,
     ref: 'Teacher'
   })

@@ -3,13 +3,13 @@ module.exports = app => {
   const mongoose = app.mongoose;
   const Schema = mongoose.Schema;
   const CourseSchema = new Schema({
-    id: { type: Number, unique: true },
+    code: { type: String, unique: true, required: true },
     name: { type: String },
-    unit: {
+    unit_id: {
       type: Schema.Types.ObjectId,
       ref: 'College'
     },
-    header: {
+    header_id: {
       type: Schema.Types.ObjectId,
       ref: 'Teacher'
     },

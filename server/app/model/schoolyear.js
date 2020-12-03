@@ -7,7 +7,7 @@ module.exports = app => {
 
   SchoolyearSchema.virtual('schoolyearRequirement', {
     localField: '_id',
-    foreignField: 'schoolyear',
+    foreignField: 'schoolyear_id',
     justOne: false,
     ref: 'SchoolRequirement'
   })

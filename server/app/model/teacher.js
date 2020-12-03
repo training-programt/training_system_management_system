@@ -3,27 +3,27 @@ module.exports = app => {
   const mongoose = app.mongoose;
   const Schema = mongoose.Schema;
   const TeacherSchema = new Schema({
-    id: { type: String, unique: true },
+    code: { type: String, unique: true },
     name: { type: String },
     role: { type: Number, default: 1 },
-    position: {
+    position_id: {
       type: Schema.Types.ObjectId,
       ref: 'Education'
     },
-    education: {
+    education_id: {
       type: Schema.Types.ObjectId,
       ref: 'Education'
     },
-    post: {
+    post_id: {
       type: Schema.Types.ObjectId,
       ref: 'Post'
     },
-    teachRoom: {
+    teachRoom_id: {
       type: Schema.Types.ObjectId,
       ref: 'TeachRoom'
     },
-    major: {
-      type: String,
+    major_id: {
+      type: Schema.Types.ObjectId,
       ref: 'Major'
     }
   })

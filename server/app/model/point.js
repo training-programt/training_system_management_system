@@ -4,13 +4,13 @@ module.exports = app => {
   const Schema = mongoose.Schema;
   const PointSchema = new Schema({
     content: {type: String},
-    course: [
+    course_id: [
       {
         type: Schema.Types.ObjectId,
         ref: 'Course'
       }
     ],
-    graducationRequirement: {
+    graduationRequirement_id: {
       type: Schema.Types.ObjectId,
       ref: 'GraducationRequirement'
     }

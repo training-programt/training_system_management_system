@@ -8,14 +8,14 @@ module.exports = app => {
 
   EducationSchema.virtual('teacherList', {
     localField: '_id',
-    foreignField: 'education',
+    foreignField: 'education_id',
     justOne: false,
     ref: 'Teacher'
   })
 
   EducationSchema.virtual('teacherList', {
     localField: '_id',
-    foreignField: 'position',
+    foreignField: 'position_id',
     justOne: false,
     ref: 'Teacher'
   })

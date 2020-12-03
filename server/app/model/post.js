@@ -6,7 +6,7 @@ module.exports = app => {
 
   PostSchema.virtual('teacherList', {
     localField: '_id',
-    foreignField: 'post',
+    foreignField: 'post_id',
     justOne: false,
     ref: 'Teacher'
   })

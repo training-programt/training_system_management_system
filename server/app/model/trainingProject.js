@@ -4,27 +4,27 @@ module.exports = app => {
   const Schema = mongoose.Schema;
   const TrainingProjectSchema = new Schema({
     name: {type: String},
-    major: {
+    major_id: {
       type: Schema.Types.ObjectId,
       ref: 'Major'
     },
-    writer: {
+    writer_id: {
       type: Schema.Types.ObjectId,
       ref: 'Teacher'
     },
-    schoolyear: {
+    schoolyear_id: {
       type: Schema.Types.ObjectId,
       ref: 'Schoolyear'
     },
-    schoolRequirement: {
+    schoolRequirement_id: {
       type: Schema.Types.ObjectId,
       ref: 'SchoolRequirement'
     },
-    graducationRequirement: {
+    graducationRequirement_id: {
       type: Schema.Types.ObjectId,
       ref: 'GraducationRequirement'
     },
-    trainingObjective: {
+    trainingObjective_id: {
       type: Schema.Types.ObjectId,
       ref: 'TrainingObjective'
     },
