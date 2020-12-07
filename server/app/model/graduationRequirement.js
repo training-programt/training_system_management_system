@@ -1,15 +1,20 @@
 'use strict'
+//毕业要求表
 module.exports = app => {
   const mongoose = app.mongoose;
   const Schema = mongoose.Schema;
   const GraduationRequirementSchema = new Schema({
-    name: {type: String},
+    id: {type:Schema.Types.ObjectId,required: true},
     description: {type: String},
     analysis: {type: String},
-    schoolRequirement: {
+    nationalRequirement: [{//国家毕业要求 怎么没在word里面看见这个？
       type: Schema.Types.ObjectId,
-      ref: 'SchoolRequirement'
-    }
+      ref: 'NationalRequirement'
+    }],
+    majorRequirement: [{//专业毕业要求 12个
+      type: Schema.Types.ObjectId,
+      ref: 'MajorRequirement'
+    }]
   })
 
   GraduationRequirementSchema.virtual('pointList', {

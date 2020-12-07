@@ -1,30 +1,31 @@
 'use strict'
+//教研室
 module.exports = app => {
   const mongoose = app.mongoose;
   const Schema = mongoose.Schema;
   const TeachRoomSchema = new Schema({
-    name: {type: String},
+    id: { type: Schema.Types.ObjectId, required: true },
+    name: { type: String },
+    count: { type: Number },
+    //教研室主任是被指定？？？？怎么写？？
     director: {
       type: String,
-      ref: 'Teacher'
+      // ref: 'Teacher'
     },
-    type: { type: String},
     college: {
       type: String,
       ref: 'College'
     },
     major: {
-      type: String,
+      type: Schema.Types.ObjectId,
       ref: 'Major'
     },
-    introduce: { type: String},
-  })
-
-  TeachRoomSchema.virtual('teacherList', {
-    localField: '_id',
-    foreignField: 'teachRoom',
-    justOne: false,
-    ref: 'Teacher'
+    introduce: { type: String },
+    //教研室教师一对多
+    teachers: [{
+      type: Schema.Types.ObjectId,
+      ref: "teacher"
+    }]
   })
 
   return mongoose.model('TeachRoom', TeachRoomSchema, 'teachRoom');

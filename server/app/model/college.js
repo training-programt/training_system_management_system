@@ -1,4 +1,5 @@
 'use strict'
+//学院表
 module.exports = app => {
   const mongoose = app.mongoose;
   const Schema = mongoose.Schema;
@@ -21,10 +22,10 @@ module.exports = app => {
     justOne: false,
     ref: 'TeachRoom'
   })
-
+//学院和课程相关联
   CollegeSchema.virtual('courseList', {
     localField: '_id',
-    foreignField: 'college',
+    foreignField: 'unit',
     justOne: false,
     ref: 'Course'
   })

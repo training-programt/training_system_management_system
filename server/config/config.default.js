@@ -34,12 +34,18 @@ module.exports = appInfo => {
 
   // 安全
   config.security = {
-    csrf: false
+    csrf:{
+      enable:false
+    },
+    domainWhiteList:['*']
   }
 
   // 跨域
   config.cors = {
-    credentials: true
+    origin: 'http://localhost:9000',
+    credentials: true,
+
+    allowMethods: 'GET,HEAD,PUT,POST,DELETE,PATCH,OPTIONS',
   }
 
   // 七牛

@@ -24,6 +24,12 @@ class HomeController extends Controller {
       }
     }
   }
+  // 得到major表所有数据 测试
+  async getMajorList(){
+    const ctx = this.ctx;
+    var aa = await ctx.service.mongodb.find({})
+    ctx.body = aa
+  }
 }
 
 module.exports = HomeController;
