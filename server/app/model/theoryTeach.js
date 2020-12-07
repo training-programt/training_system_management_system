@@ -7,7 +7,7 @@ module.exports = app => {
     id:{type: Schema.Types.ObjectId, required: true},
     unit:{type:String},//教学单元
     content:{type:String},//教学内容
-    requirements:{type:Text},//分成的几点，写入数据库成为一段话
+    requirements:{type:String},//分成的几点，写入数据库成为一段话
     within:{//有一些信息可以从课程拿到,怎么联系和课程联系？
         type:Schema.Types.ObjectId,
         ref:'Course'

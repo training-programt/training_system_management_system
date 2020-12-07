@@ -21,9 +21,9 @@ module.exports = app => {
       type:Schema.Types.ObjectId,
         ref:'PracticeTeach'
     }],//实践教学
-    assessment:{type:Text},//考核方式
-    reference:{type:Text},//建意教材及教学参考书
-    instructions:{type:Text},//大纲执行说明
+    assessment:{type:String},//考核方式
+    reference:{type:String},//建意教材及教学参考书
+    instructions:{type:String},//大纲执行说明
     writer:{type:String},//执笔人
     reviewer:{type:String},//审核人
     modify_data:{type:Date},//修改时间

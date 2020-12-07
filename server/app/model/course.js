@@ -16,7 +16,7 @@ module.exports = app => {
     unit: {//所属学院
       type: Schema.Types.ObjectId,
       ref: 'College'
-    },//感觉课程应该和专业相关联，为什么数据库表上写的是学院
+    },
     semester: {
       type: Schema.Types.ObjectId,
       ref: 'Semester'
@@ -32,8 +32,7 @@ module.exports = app => {
     },//课程体系
     nature: { type: String },//课程性质
     attribute: { type: String },//选修必修限选
-    category: { type: String },
-    semester: { type: Schema.Types.ObjectId, ref: 'SchoolYear' },//课程开课学期
+    category: { type: String },//理论课 实验课
     degree: { type: Boolean },//是否学位课
     direction: { type: String },//所属方向
     course_selection_group: { type: String },//分配选课组

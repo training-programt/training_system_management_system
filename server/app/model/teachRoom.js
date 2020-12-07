@@ -7,13 +7,12 @@ module.exports = app => {
     id: { type: Schema.Types.ObjectId, required: true },
     name: { type: String },
     count: { type: Number },
-    //教研室主任是被指定？？？？怎么写？？
     director: {
-      type: String,
-      // ref: 'Teacher'
+      type: Schema.Types.ObjectId,
+      ref: 'Teacher'
     },
     college: {
-      type: String,
+      type: Schema.Types.ObjectId,
       ref: 'College'
     },
     major: {
@@ -24,7 +23,7 @@ module.exports = app => {
     //教研室教师一对多
     teachers: [{
       type: Schema.Types.ObjectId,
-      ref: "teacher"
+      ref: "Teacher"
     }]
   })
 

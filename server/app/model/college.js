@@ -4,7 +4,7 @@ module.exports = app => {
   const mongoose = app.mongoose;
   const Schema = mongoose.Schema;
   const CollegeSchema = new Schema({
-    id: { type: String, unique: true, required: true },
+    // id: { type: String, unique: true, required: true },
     name: { type: String },
     introduce: { type: String },
   })

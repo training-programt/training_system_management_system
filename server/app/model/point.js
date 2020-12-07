@@ -6,7 +6,7 @@ module.exports = app => {
   const PointSchema = new Schema({
     id:{type: Schema.Types.ObjectId, required: true},
     content: {type: String},
-    course: [//课程这里因为是一个指标点对应多个课程，可是直接ref会全部课程相连？
+    course: [//课程这里因为是一个指标点对应多个课程
       {
         type: Schema.Types.ObjectId,
         ref: 'Course'

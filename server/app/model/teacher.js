@@ -18,14 +18,14 @@ module.exports = app => {
     },
     lastInfo:{type:String},//最后学历
     graduateSchool:{type:String},//毕业院校
-    researchDirection:{type:Text},//研究领域
+    researchDirection:{type:String},//研究领域
     professional:{type:String},//最后的专业
     teachRoom: {//所属教研室
       type: Schema.Types.ObjectId,
       ref: 'TeachRoom'
     },
     major: {
-      type: String,
+      type: Schema.Types.ObjectId,
       ref: 'Major'
     }
   })

@@ -24,10 +24,10 @@ class HomeController extends Controller {
       }
     }
   }
-  // 得到major表所有数据 测试
-  async getMajorList(){
+  // 得到某表所有数据 测试
+  async getList(){
     const ctx = this.ctx;
-    var aa = await ctx.service.mongodb.find({})
+    var aa = await ctx.service.test.find({});
     ctx.body = aa
   }
 }
