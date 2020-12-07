@@ -16,4 +16,8 @@ export default {
   
   getGradeList:'/getGradeList',//年级列表
 
+
+  getPermissionList: '/getPermission', // 获取权限列表
+  updatePermission: '/updatePermission', // 创建/更新权限
+
 }

@@ -1,9 +1,8 @@
 import React from 'react'
 import { Card, Form, Input, Button, Checkbox, message, Spin } from 'antd';
 import { useDispatch, useSelector } from 'react-redux'
-import api from '../../apis/publish'
 import './index.less'
-import { setSession, authenticateSuccess  } from '../../utils';
+import { setSession, authenticateSuccess } from '../../utils';
 import { useHistory } from 'react-router-dom';
 import axios from '../../https';
 
@@ -23,7 +22,7 @@ const Login = () => {
       console.log(res)
       authenticateSuccess(res.data.token.token_type + ' ' + res.data.token.access_token);
       setSession('userInfo', JSON.stringify(res.data.userInfo));
-      dispatch({ type: 'LOGIN_SUCCESS'});
+      dispatch({ type: 'LOGIN_SUCCESS' });
       history.push('/')
       message.success("登录成功");
     } else {

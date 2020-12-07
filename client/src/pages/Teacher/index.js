@@ -102,7 +102,7 @@ const Teacher = () => {
 
   return (
     <div className="teacher-management">
-      <HeaderComponent title="教师管理" />
+      {/* <HeaderComponent title="教师管理" /> */}
 
       <div className="body-wrap">
         <div className="filter-container">
@@ -112,7 +112,7 @@ const Teacher = () => {
               <Select className="select-type" defaultValue='' onChange={value => setSelect({ ...select, section: value })}>
                 <Option value=''>全部</Option>
                 {
-                  sectionData.map(item => (<Option key={item.id} value={item.id}>{item.name}</Option>))
+                  sectionData && sectionData.map(item => (<Option key={item.id} value={item.id}>{item.name}</Option>))
                 }
               </Select>
             </div>
