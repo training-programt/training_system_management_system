@@ -4,7 +4,7 @@ import { Layout, Row, Col, Menu, Dropdown, Avatar, Badge, message } from 'antd'
 import { UserOutlined, BellFilled } from '@ant-design/icons';
 import { useDispatch } from 'react-redux';
 import './index.less'
-import { delSession, getSession } from '../../utils';
+import { logout, getSession } from '../../utils';
 
 const linkLists = [
   // {
@@ -28,13 +28,7 @@ const MainHeader = () => {
   }
 
   const handleLogout = () => {
-    delSession('token');
-    delSession('userInfo');
-
-    dispatch({
-      type: 'LOGOUT',
-    })
-    
+    logout();
     message.success('退出登录')
     history.push('/login')
   }
@@ -71,10 +65,10 @@ const MainHeader = () => {
   return (
     <Layout.Header className='main-layout-header'>
       <Row type='flex' className='header-content'>
-        <Col style={{ flex: 1 }}>
+        {/* <Col style={{ flex: 1 }}>
           <Link to='/home'>
             <span className='nav-items'>我的主页</span>
-          </Link>
+          </Link> */}
 
           { /* 路由tab导航 */}
           {/* {
@@ -87,7 +81,7 @@ const MainHeader = () => {
             })
           } */}
 
-        </Col>
+        {/* </Col> */}
         
         <Col className="avatar-content">
           <span>

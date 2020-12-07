@@ -1,5 +1,3 @@
-const LOGIN_COOKIE_NAME = 'Authorization';
-
 // 判断是否为子数组
 export const isSubArray = (arr1, arr2) => {
   let flag = false;
@@ -52,5 +50,10 @@ export function isAuthenticated() {
 }
 
 export function authenticateSuccess(token) {
-  setSession('Authorization', token)
+  setSession('Authorization', token);
+}
+
+export function logout() {
+  delSession('userInfo');
+  delSession('Authorization')
 }
