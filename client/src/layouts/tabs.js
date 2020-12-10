@@ -21,6 +21,7 @@ export default {
   Major: <Major />,
   Teacher: <Teacher />,
   TeachRoom: <TeachRoom />,
+  TeachRoom2: <Role />,
   Role: <Role/>,
 };
 

@@ -26,16 +26,25 @@ class HomeController extends Controller {
 
     // await ctx.model.Menu.create(data);
 
-    let res = await ctx.model.Menu.aggregate([
-      {
-        $lookup: {
-          from: 'permission',
-          localField: 'permission_id',
-          foreignField: '_id',
-          as: 'permission'
-        }
-      },
-    ])
+    // let res = await ctx.model.Menu.aggregate([
+    //   {
+    //     $lookup: {
+    //       from: 'permission',
+    //       localField: 'permission_id',
+    //       foreignField: '_id',
+    //       as: 'permission'
+    //     }
+    //   },
+    // ])
+
+
+    const res = await ctx.model.Teacher
+      .find()
+      .populate('role')
+      .populate('position_id')
+      .populate('education_id')
+      .populate('post_id')
+      .populate('teachRoom_id')
 
     ctx.body = res
   }

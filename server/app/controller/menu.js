@@ -15,18 +15,23 @@ class SettingService extends Service {
     //     },
     //   },
     // ])
-
+    const data = ctx.request.query
     const res = await ctx.model.Menu
-      .find({ level: '1' })
+      .find({
+        $or: [
+          { level: '1', type: 1 },
+          { type: 2, role: data.role }
+        ]
+      })
       .populate('permission')
       .populate('children')
       .sort('sort')
+
     ctx.body = {
       total: res.length,
       data: res,
       code: 200,
       isSucceed: true,
-      newPrimaryKeys: {}
     }
   }
 
@@ -49,7 +54,6 @@ class SettingService extends Service {
       data: res,
       code: 200,
       isSucceed: true,
-      newPrimaryKeys: {}
     }
   }
 
@@ -58,6 +62,7 @@ class SettingService extends Service {
   async addMenu() {
     const { ctx } = this;
     const params = ctx.request.body;
+
     const newMenu = await ctx.model.Menu.create(params);
     if (params.parent) {
       const res = await ctx.model.Menu.findByIdAndUpdate(
@@ -72,8 +77,8 @@ class SettingService extends Service {
         total: 0,
         data: res,
         code: 200,
+        message: '新增成功',
         isSucceed: true,
-        newPrimaryKeys: {}
       }
     }
 
@@ -81,8 +86,8 @@ class SettingService extends Service {
       total: 0,
       data: newMenu,
       code: 200,
+      message: '新增成功',
       isSucceed: true,
-      newPrimaryKeys: {}
     }
   }
 }

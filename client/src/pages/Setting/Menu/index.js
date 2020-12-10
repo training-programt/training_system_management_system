@@ -1,78 +1,5 @@
 import React, { useState, useMemo } from 'react'
-import { Table, Form, message, Select, InputNumber, TreeSelect, Input, Button, Modal, Popconfirm } from 'antd';
-
-const menuIcon = {
-  color: '#000',
-  fontWeight: 700,
-  fontSize: '16px',
-  marginRight: '12px',
-}
-
-const columns = [
-  {
-    title: '菜单类型',
-    dataIndex: 'level',
-    align: 'center',
-    render: (text, record) => {
-      return record.children === undefined || record.children.length === 0 ? '菜单' : '目录'
-    }
-  },
-  {
-    title: '组键页面',
-    dataIndex: 'key',
-    align: 'center'
-  },
-  {
-    title: '名称',
-    dataIndex: 'name',
-    align: 'center'
-  },
-  {
-    title: '图标',
-    dataIndex: 'icon',
-    align: 'center',
-    render: text => {
-      return (
-        <div>
-          <span><i style={menuIcon} className={'iconfont ' + text}></i></span>
-                  &emsp;
-          {text}
-        </div>
-      )
-    }
-  },
-  // {
-  //     title: '权限名称',
-  //     dataIndex: 'permission',
-  //     align: 'center',
-  //     render: text =>{
-  //        return text.permissionName
-  //     }
-  // },
-  {
-    title: '排序',
-    dataIndex: 'sort',
-    align: 'center'
-  },
-  {
-    title: '操作',
-    key: 'active',
-    align: 'center',
-    width: '20%',
-    render: (text, record) => (
-      <div style={{ textAlign: 'center' }}>
-        <Button type="primary" onClick={() => this.showEditModal(record)}>编辑</Button>
-              &emsp;
-        <Popconfirm title='您确定删除当前数据吗？' onConfirm={() => this.singleDelete(record)}>
-          <Button type="danger">
-
-            删除
-                  </Button>
-        </Popconfirm>
-      </div>
-    )
-  },
-];
+import { Table, Form, message, Radio, Select, InputNumber, TreeSelect, Input, Button, Modal, Popconfirm } from 'antd';
 
 const Menu = () => {
   const [form] = Form.useForm();
@@ -84,6 +11,79 @@ const Menu = () => {
   const [permission, setPermission] = useState([]);
   const [menuId, setMenuId] = useState('');
   const [level, setLevel] = useState(0);
+  const [isEdit, setIsEdit] = useState(false);
+  const [radioValue, setRadioValue] = useState(1);
+  const [roleData, setRoleData] = useState([]);
+  const [roleRadioValue, setRoleRadioValue] = useState();
+
+  const columns = [
+    {
+      title: '菜单类型',
+      dataIndex: 'level',
+      align: 'center',
+      render: (text, record) => {
+        return record.children === undefined || record.children.length === 0 ? '菜单' : '目录'
+      }
+    },
+    {
+      title: '组键页面',
+      dataIndex: 'key',
+      align: 'center'
+    },
+    {
+      title: '名称',
+      dataIndex: 'name',
+      align: 'center'
+    },
+    {
+      title: '图标',
+      dataIndex: 'icon',
+      align: 'center',
+      render: text => {
+        return (
+          <div>
+            <span><i style={menuIcon} className={'iconfont ' + text}></i></span>
+                    &emsp;
+            {text}
+          </div>
+        )
+      }
+    },
+    // {
+    //     title: '权限名称',
+    //     dataIndex: 'permission',
+    //     align: 'center',
+    //     render: text =>{
+    //        return text.permissionName
+    //     }
+    // },
+    {
+      title: '排序',
+      dataIndex: 'sort',
+      align: 'center'
+    },
+    {
+      title: '操作',
+      key: 'active',
+      align: 'center',
+      width: '20%',
+      render: (text, record) => (
+        <div style={{ textAlign: 'center' }}>
+          <Button type="primary" onClick={() => showEditModal(record)}>编辑</Button>
+                &emsp;
+          <Popconfirm title='您确定删除当前数据吗？' onConfirm={() => singleDelete(record)}>
+            <Button type="danger">删除</Button>
+          </Popconfirm>
+        </div>
+      )
+    },
+  ];
+  const menuIcon = {
+    color: '#000',
+    fontWeight: 700,
+    fontSize: '16px',
+    marginRight: '12px',
+  }
 
   useMemo(() => {
     const fetchData = async () => {
@@ -113,9 +113,37 @@ const Menu = () => {
     fetchData();
   }, [page, isModalVisible])
 
+  useMemo(() => {
+    const fetchData = async () => {
+      const res = await React.$axios.get('/getRole')
+      setRoleData(res.data);
+    }
+    fetchData();
+  }, [])
+
   const showModal = () => {
+    form.resetFields()
     setIsModalVisible(true);
+    setIsEdit(false)
   };
+
+  const showEditModal = (record) => {
+    console.log(record)
+    form.resetFields()
+    setRoleRadioValue()
+    setIsModalVisible(true)
+    setIsEdit(true)
+    setLevel(record.level - 1)
+    let data = {
+      _id: record._id,
+      name: record.name,
+      key: record.key,
+      icon: record.icon,
+      permission: record.permission._id || record.permission,
+      sort: record.sort
+    }
+    form.setFieldsValue(data)
+  }
 
   const handleOk = async (e) => {
     e.preventDefault();
@@ -124,9 +152,9 @@ const Menu = () => {
       ...form.getFieldValue(),
       level: level + 1,
       parent: menuId,
-
+      roleRadioValue,
     }
-    const res = await axios.post(
+    const res = await React.$axios.post(
       '/addMenu',
       params,
     );
@@ -172,12 +200,12 @@ const Menu = () => {
   return (
     <>
       <Button type="primary" onClick={showModal}>新增</Button>
-      <Table columns={columns} dataSource={tableData} loading={loading} rowKey='_id' />
+      <Table columns={columns} pagination={false} dataSource={tableData} loading={loading} rowKey='_id' />
 
       <Modal
         visible={isModalVisible}
         width={550}
-        title='创建菜单'
+        title={isEdit ? '编辑菜单' : '创建菜单'}
         centered
         maskClosable={true}
         destroyOnClose
@@ -186,11 +214,24 @@ const Menu = () => {
             取消
           </Button>,
           <Button key="submit" type="primary" loading={loading} onClick={handleOk}>
-            创建
+            确认
           </Button>
         ]}
       >
-        <Form {...formItemLayout} form={form}>
+        <Form {...formItemLayout} form={form} initialValues={{ belong: radioValue }}>
+          {
+            isEdit ? (
+              <Form.Item
+                name="_id"
+                label="ID"
+              >
+                <Input
+                  maxLength={32}
+                  disabled
+                />
+              </Form.Item>
+            ) : ''
+          }
           <Form.Item
             name="parent"
             label="上级菜单"
@@ -223,6 +264,37 @@ const Menu = () => {
               placeholder="请输入菜单"
             />
           </Form.Item>
+          <Form.Item
+            label='页面所属'
+            name="type"
+            rules={[
+              { required: true },
+            ]}
+          >
+            <Radio.Group onChange={e => setRadioValue(e.target.value)}>
+              <Radio value={1}>公共页面</Radio>
+              <Radio value={2}>角色页面</Radio>
+            </Radio.Group>
+          </Form.Item>
+          {
+            radioValue == 2
+              ? (
+                <Form.Item
+                  label='页面角色'
+                  name="role"
+                  rules={[
+                    { required: true },
+                  ]}
+                >
+                  <Radio.Group onChange={e => setRoleRadioValue(e.target.value)}>
+                    {
+                      roleData.map(item => <Radio value={item._id}>{item.roleName}</Radio>)
+                    }
+                  </Radio.Group>
+                </Form.Item>
+              )
+              : ''
+          }
           <Form.Item
             label='组件页面'
             name="key"

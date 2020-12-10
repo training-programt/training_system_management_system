@@ -20,7 +20,7 @@ const Permission = () => {
     const fetchData = async () => {
       const params = {
         page: page,
-        pageSize: 2,
+        pageSize: pageparams.pageSize,
       }
       setLoading(true);
       const res = await React.$axios.get(
@@ -78,26 +78,32 @@ const Permission = () => {
   }
 
   const showModal = () => {
+    form.resetFields()
     setIsModalVisible(true);
+    setIsEdit(false)
   };
 
   const handleOk = async (e) => {
     e.preventDefault();
     setLoading(true);
-    const res = await axios.post(
-      '/addPermission',
+    const res = await React.$axios.post(
+      '/updatePermission',
       form.getFieldsValue(),
     );
 
     if (res && res.isSucceed) {
-      message.success('新增成功');
+      message.success(isEdit ? '修改成功' : '新增成功');
+    } else {
+      message.error(res.message);
     }
+    console.log(form.getFieldsValue())
     setLoading(false);
     setIsModalVisible(false);
   };
 
   const handleCancel = () => {
     setIsModalVisible(false);
+    setIsEdit(false)
   };
 
   const formItemLayout = {
@@ -108,7 +114,7 @@ const Permission = () => {
   return (
     <>
       <Button type="primary" onClick={showModal}>新增</Button>
-      <Table columns={columns} hideOnSinglePage={true}  dataSource={tableData} loading={loading} rowKey='_id' />
+      <Table columns={columns} hideOnSinglePage={true} dataSource={tableData} loading={loading} rowKey='_id' />
 
       <Modal
         visible={isModalVisible}
@@ -127,7 +133,20 @@ const Permission = () => {
         ]}
       >
         <Form {...formItemLayout} form={form}>
-          <Form.Item label={'权限'}
+          {
+            isEdit ? (
+              <Form.Item
+                name="_id"
+                label="ID"
+              >
+                <Input
+                  maxLength={32}
+                  disabled
+                />
+              </Form.Item>
+            ) : ''
+          }
+          <Form.Item 
             name="permission"
             label="权限"
             rules={[{ required: true, message: '行业不能为空' },]}

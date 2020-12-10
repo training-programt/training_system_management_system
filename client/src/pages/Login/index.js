@@ -14,8 +14,8 @@ const Login = () => {
   const handleLogin = async (e) => {
     e.preventDefault();
     dispatch({ type: 'START_LOGIN' });
-    const res = await axios.post(
-      '/oauth/token',
+    const res = await React.$axios.post(
+      '/login',
       form.getFieldsValue(),
     )
     if (res && res.isSucceed) {
@@ -26,6 +26,7 @@ const Login = () => {
       history.push('/')
       message.success("登录成功");
     } else {
+      dispatch({ type: 'LOGIN_FAILED'})
       message.error(res.message);
     }
 
@@ -61,9 +62,6 @@ const Login = () => {
             <Form
               form={form}
               className="login-form"
-              initialValues={{
-                remember: true,
-              }}
             >
               <h2>登录</h2>
               <Form.Item

@@ -11,7 +11,7 @@ class PermissionController extends Controller {
       page: parseInt(params.page) - 1,
     }
 
-    const total = await ctx.model.Permission.find().count();
+    const total = await ctx.model.Permission.find().countDocuments();
     const res = await ctx.model.Permission
       .find()
       .limit(data.pageSize)
@@ -26,19 +26,29 @@ class PermissionController extends Controller {
     }
   }
 
-  async addPermission() {
+  async createOrUpdatePermission() {
     const { ctx } = this;
     const params = ctx.request.body;
-    const res = await ctx.model.Permission.create(params);
-    ctx.body = {
-      total: 0,
-      data: res,
-      code: 200,
-      isSucceed: true,
-      newPrimaryKeys: {}
+    if (params._id) {
+      const res = await ctx.model.Permission.where({_id: params._id}).updateOne(params)
+      ctx.body = {
+        total: res.length,
+        data: res,
+        message: '修改成功',
+        code: 200,
+        isSucceed: true,
+      }
+    } else {
+      const res = await ctx.model.Permission.create(params);
+      ctx.body = {
+        total: 0,
+        data: res,
+        code: 200,
+        message: '新增成功',
+        isSucceed: true,
+      }
     }
   }
-
 }
 
 module.exports = PermissionController;

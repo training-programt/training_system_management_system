@@ -7,16 +7,20 @@ module.exports = app => {
   const { router, controller } = app;
   router.get('/', controller.home.index);
 
+  router.post('/login', controller.login.login)
+
   router.get('/menu', controller.menu.getMenu);
   router.post('/allMenu', controller.menu.getAllMenu);
   router.post('/addMenu', controller.menu.addMenu);
 
 
   router.get('/getPermission', controller.permission.getPermission);
-  router.post('/addPermission', controller.permission.addPermission);
+  router.post('/updatePermission', controller.permission.createOrUpdatePermission);
 
 
   router.get('/getRole', controller.role.getRole);
+
+  router.get('/addTeacher', controller.teacher.addTeacher);
 
 
   router.post('/upload', controller.home.upload);

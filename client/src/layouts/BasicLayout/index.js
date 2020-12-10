@@ -7,6 +7,7 @@ import MainHeader from '../MainHeader';
 import MainContent from '../MainContent';
 import axios from '../../https';
 import './index.less';
+import { getSession } from '../../utils';
 
 const BasicLayout = () => {
 
@@ -22,7 +23,7 @@ const BasicLayout = () => {
 
   useMemo(() => {
     const fetchData = async () => {
-      const res = await axios.get('/menu')
+      const res = await React.$axios.get(`/menu?role=${JSON.parse(getSession('userInfo')).role}`, )
       if (res && res.isSucceed) {
         setMenus(res.data)
         dispatch({

@@ -87,7 +87,7 @@ const Role = () => {
               bordered
               column={{ xxl: 4, xl: 3, lg: 3, md: 3, sm: 2, xs: 1 }}
             >
-              <Descriptions.Item label="拥有权限">
+              <Descriptions.Item label="拥有菜单">
                 <List
                   bordered
                   size='small'
