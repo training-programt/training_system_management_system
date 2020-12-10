@@ -15,6 +15,10 @@
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
+.icon-setting:before {
+  content: "\e640";
+}
+
 .icon-tongji:before {
   content: "\e648";
 }

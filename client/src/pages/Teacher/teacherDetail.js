@@ -41,7 +41,7 @@ const TeacherDetail = (props) => {
       onClose={() => setVisible(false)}
       visible={visible}
       width={600}
-      destroyOnClose={true}
+      destroyOnClose
     >
       {
         isLoading

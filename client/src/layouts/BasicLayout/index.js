@@ -1,30 +1,53 @@
-import React from 'react';
+import React, { useMemo, useState } from 'react';
 import { Layout } from 'antd';
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 import { Redirect } from 'react-router-dom';
 import SideMenu from '../SideMenu';
 import MainHeader from '../MainHeader';
-
+import MainContent from '../MainContent';
+import axios from '../../https';
 import './index.less';
+import { getSession } from '../../utils';
 
-const BasicLayout = ({ route, children }) => {
+const BasicLayout = () => {
 
-  const isLogin = useSelector(state => state.user.isLogin);
+  const dispatch = useDispatch();
+  const [panes, setPanes] = useState([]);
+  const [activeMenu, setActiveMenu] = useState('');
+  const [menus, setMenus] = useState([]);
+
+  const changeState = obj => {
+    setPanes(obj.panes);
+    setActiveMenu(obj.activeMenu);
+  }
+
+  useMemo(() => {
+    const fetchData = async () => {
+      const res = await React.$axios.get(`/menu?role=${JSON.parse(getSession('userInfo')).role}`, )
+      if (res && res.isSucceed) {
+        setMenus(res.data)
+        dispatch({
+          type: 'SET_MENUS',
+          menus: res.data
+        })
+      }
+    }
+    fetchData();
+  }, [])
+
   return (
-    isLogin
-      ?
-      <Layout className='main-layout'>
-        <SideMenu routes={route.childRoutes} />
-        <Layout className='main-layout-right'>
-          <MainHeader />
-          <Layout.Content className='main-layout-content'>
-            <div className="content-box">
-              {children}
-            </div>
-          </Layout.Content>
-        </Layout>
+    <Layout className='main-layout'>
+      <SideMenu menus={menus} panes={panes} activeMenu={activeMenu} changeState={changeState} />
+      <Layout className='main-layout-right'>
+        {/* <MainHeader /> */}
+        <Layout.Content className='main-layout-content'>
+          {/* <div className="content-box">
+            {children}
+          </div> */}
+          <MainContent style={{height: '100%', width: '100%'}} menus={menus} panes={panes} activeMenu={activeMenu} changeState={changeState} />
+        </Layout.Content>
       </Layout>
-      : <Redirect to='/login' />
+    </Layout>
   )
 }
 

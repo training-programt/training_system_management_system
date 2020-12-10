@@ -18,10 +18,9 @@ export default (state = initState, action) => {
         isLoading: true
       }
     case actionTypes.LOGIN_SUCCESS:
-      console.log(action.payload.userInfo);
       return {
         ...state,
-        ...action.payload.userInfo,
+        // ...action.payload.userInfo,
         isLoading: false,
         isLogin: true
       }

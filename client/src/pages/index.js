@@ -7,7 +7,7 @@ import UserInfo from './UserInfo';
 import Grade from './Grade';
 import Notification from './Notification'
 import InfoView from "./InfoView";
-import TeachingResearchSection from "./TeachingResearchSection";
+import TeachRoom from "./TeachRoom";
 
 export {
   Login,
@@ -19,5 +19,5 @@ export {
   Major,
   Grade,
   InfoView,
-  TeachingResearchSection,
+  TeachRoom,
 }

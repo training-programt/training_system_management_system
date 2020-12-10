@@ -5,4 +5,5 @@ export default {
   LOGOUT: 'LOGOUT',
   SET_USER: 'SET_USER',
   CHANGE_TYPE: 'CHANGE_TYPE', // 主题切换
+  SET_MENUS: 'SET_MENUS', // 设置菜单
 }

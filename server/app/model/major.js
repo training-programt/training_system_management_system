@@ -3,7 +3,6 @@ module.exports = app => {
   const mongoose = app.mongoose;
   const Schema = mongoose.Schema;
   const MajorSchema = new Schema({
-    id: { type: Schema.Types.ObjectId, required: true },
     name: { type: String },
     code: { type: String },
     introduce: { type: String },
@@ -32,7 +31,7 @@ module.exports = app => {
 
   MajorSchema.virtual('trainingProject', {
     localField: '_id',
-    foreignField: 'major',
+    foreignField: 'major_id',
     justOne: false,
     ref: 'TrainingProject'
   })

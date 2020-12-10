@@ -4,7 +4,6 @@ module.exports = app => {
   const mongoose = app.mongoose;
   const Schema = mongoose.Schema;
   const TrainingObjectiveSchema = new Schema({
-    id:{type: Schema.Types.ObjectId, required: true},
     school_training_objectives: { type: String },//学校培养目标
     professional_training_objectives: [{//专业培养目标文字？Text？
       title: { type: String },

@@ -1,52 +1,67 @@
 import React from 'react'
 import { Card, Form, Input, Button, Checkbox, message, Spin } from 'antd';
 import { useDispatch, useSelector } from 'react-redux'
-import api from '../../apis/publish'
 import './index.less'
-import { setSession } from '../../utils';
+import { setSession, authenticateSuccess } from '../../utils';
 import { useHistory } from 'react-router-dom';
+import axios from '../../https';
 
 const Login = () => {
   const [form] = Form.useForm();
   const history = useHistory();
   const dispatch = useDispatch();
 
-  const handleLogin = (e) => {
+  const handleLogin = async (e) => {
     e.preventDefault();
-    let userInfo;
     dispatch({ type: 'START_LOGIN' });
-    api.getToken(form.getFieldsValue())
-      .then(res => {
-        if (res && res.isSucceed) {
-          userInfo = res.data.userInfo;
-          setSession('token', res.data.token.token_type + ' ' + res.data.token.access_token);
-          setSession('userInfo', JSON.stringify(userInfo));
-        } else {
-          dispatch({ type: 'LOGIN_FAILED'});
-          message.error(res.message);
-        }
-      })
-      .then(() => {
-        dispatch({ type: 'LOGIN_SUCCESS', payload: { userInfo } });
-        message.success("登录成功");
-        history.push('/home');
-      })
+    const res = await React.$axios.post(
+      '/login',
+      form.getFieldsValue(),
+    )
+    if (res && res.isSucceed) {
+      console.log(res)
+      authenticateSuccess(res.data.token.token_type + ' ' + res.data.token.access_token);
+      setSession('userInfo', JSON.stringify(res.data.userInfo));
+      dispatch({ type: 'LOGIN_SUCCESS' });
+      history.push('/')
+      message.success("登录成功");
+    } else {
+      dispatch({ type: 'LOGIN_FAILED'})
+      message.error(res.message);
+    }
+
+    // let userInfo;
+    // dispatch({ type: 'START_LOGIN' });
+    // api.getToken(form.getFieldsValue())
+    //   .then(res => {
+    //     if (res && res.isSucceed) {
+    //       console.log(res)
+    //       userInfo = res.data.userInfo;
+    //       setSession('token', res.data.token.token_type + ' ' + res.data.token.access_token);
+    //       setSession('userInfo', JSON.stringify(userInfo));
+    //     } else {
+    //       dispatch({ type: 'LOGIN_FAILED'});
+    //       message.error(res.message);
+    //     }
+    //   })
+    //   .then(() => {
+    //     dispatch({ type: 'LOGIN_SUCCESS', payload: { userInfo } });
+    //     message.success("登录成功");
+    //     history.push('/home');
+    //   })
 
   }
 
   const isLoading = useSelector(state => state.user.isLoading);
 
   return (
-    <div className="container">
+    <div>
       <Spin tip="loading..." spinning={isLoading}>
         <Card bordered={false} >
           <div className="login-container">
             <Form
               form={form}
               className="login-form"
-              initialValues={{
-                remember: true,
-              }}
             >
               <h2>登录</h2>
               <Form.Item

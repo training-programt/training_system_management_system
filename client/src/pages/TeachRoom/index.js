@@ -9,7 +9,7 @@ import api from '../../apis/teachingSection'
 
 const { Option } = Select;
 
-const TeachingResearchSection = () => {
+const TeachRoom = () => {
 
   const [page, setPage] = useState(1);
   const [type, setType] = useState('0');
@@ -104,4 +104,4 @@ const TeachingResearchSection = () => {
     </div>
   )
 }
-export default TeachingResearchSection
+export default TeachRoom

@@ -4,9 +4,11 @@ module.exports = app => {
   const mongoose = app.mongoose;
   const Schema = mongoose.Schema;
   const TeacherSchema = new Schema({
-    id: { type: Schema.Types.ObjectId, required: true },
     name: { type: String },
-    role: { type: Number, default: 1 },//角色
+    role: {
+      type: Schema.Types.ObjectId,
+      ref: 'Role',
+    },
     password:{type:String},
     sex:{type:String},
     birthday:{type:String},

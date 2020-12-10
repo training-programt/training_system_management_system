@@ -70,9 +70,9 @@ const ImportExport = props => {
         maskClosable={true}
         onOk={() => setVisible(false)}
         onCancel={() => setVisible(false)}
-        footer={null}
+        // footer={null}
         centered
-        destroyOnClose={true}
+        destroyOnClose
       >
         {(() => {
           switch (process) {

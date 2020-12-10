@@ -19,7 +19,7 @@ module.exports = app => {
 
   GraduationRequirementSchema.virtual('pointList', {
     localField: '_id',
-    foreignField: 'graduationRequirement',
+    foreignField: 'graduationRequirement_id',
     justOne: false,
     ref: 'Point'
   })

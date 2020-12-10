@@ -1,5 +1,6 @@
 // 开发环境
-const developURL = 'http://rap2api.taobao.org/app/mock/269925/api';
+// const developURL = 'http://rap2api.taobao.org/app/mock/269925/api';
+const developURL = 'http://127.0.0.1:7001/';
 
 // 测试环境
 const testURL = '';
