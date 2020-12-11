@@ -20,7 +20,7 @@ module.exports = app => {
       type: Schema.Types.ObjectId,
       ref: 'PracticeTeach'
     }],//实践教学
-    assessment: { 
+    assessment: {
       type: Schema.Types.ObjectId,
       ref: 'AttendanceProportion'
     },//考核方式
