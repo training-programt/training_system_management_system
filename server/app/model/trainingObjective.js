@@ -5,11 +5,7 @@ module.exports = app => {
   const Schema = mongoose.Schema;
   const TrainingObjectiveSchema = new Schema({
     school_training_objectives: { type: String },//学校培养目标
-    professional_training_objectives: [{//专业培养目标文字？Text？
-      title: { type: String },
-      description: { type: String },
-      state: { type: Boolean },
-    }],
+    professional_training_objectives: {type:String},//专业培养目标总概括
     //专业具体培养目标
     specific_training_objectives: [{
       type: Schema.Types.ObjectId,

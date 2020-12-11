@@ -1,4 +1,5 @@
 'use strict'
+// 专业表
 module.exports = app => {
   const mongoose = app.mongoose;
   const Schema = mongoose.Schema;
@@ -8,7 +9,6 @@ module.exports = app => {
     introduce: { type: String },
     count: { 
       type: Number,
-      // ref:'Grade'
     },
 
     college: {

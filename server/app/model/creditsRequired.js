@@ -4,7 +4,6 @@ module.exports = app => {
   const mongoose = app.mongoose;
   const Schema = mongoose.Schema;
   const CreditsRequiredSchema = new Schema({
-    id:{type: Schema.Types.ObjectId, required: true},
     description:{type:String},
     course_system:[{
         type:Schema.Types.ObjectId,

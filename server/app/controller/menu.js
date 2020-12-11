@@ -16,6 +16,7 @@ class SettingService extends Service {
     //   },
     // ])
     const data = ctx.request.query
+    console.log(data)
     const res = await ctx.model.Menu
       .find({
         $or: [
@@ -26,7 +27,7 @@ class SettingService extends Service {
       .populate('permission')
       .populate('children')
       .sort('sort')
-
+    console.log(res)
     ctx.body = {
       total: res.length,
       data: res,

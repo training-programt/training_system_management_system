@@ -1,4 +1,5 @@
 'use strict'
+//角色表 1 2 3 4
 module.exports = app => {
   const mongoose = app.mongoose;
   const Schema = mongoose.Schema;

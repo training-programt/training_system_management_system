@@ -4,7 +4,6 @@ module.exports = app => {
   const mongoose = app.mongoose;
   const Schema = mongoose.Schema;
   const AttendanceProportionSchema = new Schema({
-    id:{type: Schema.Types.ObjectId, required: true},
     attendance:{type:Number},//考勤
     answer_question:{type:Number},//回答问题
     work_ordinary:{type:Number},//平时作业
