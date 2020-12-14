@@ -16,7 +16,7 @@ module.exports = app => {
 
   router.get('/getPermission', controller.permission.getPermission);
   router.post('/updatePermission', controller.permission.createOrUpdatePermission);
-
+  router.post('/deletePermission', controller.permission.deletePermission);
 
   router.get('/getRole', controller.role.getRole);
 

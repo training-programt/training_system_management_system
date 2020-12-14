@@ -11,7 +11,7 @@ module.exports = app => {
     type: { type: Number },
     key: { type: String },
     level: { type: Number },
-    name: { type: String },
+    title: { type: String },
     sort: { type: Number },
     role: { type: Schema.Types.ObjectId },
     permission: {

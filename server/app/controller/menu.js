@@ -5,16 +5,6 @@ class SettingService extends Service {
 
   async getMenu() {
     const { ctx } = this;
-    // const res = await ctx.model.Menu.aggregate([
-    //   {
-    //     $lookup: {
-    //       from: 'permission',
-    //       localField: 'permission_id',
-    //       foreignField: '_id',
-    //       as: 'permission'
-    //     },
-    //   },
-    // ])
     const data = ctx.request.query
     const res = await ctx.model.Menu
       .find({
