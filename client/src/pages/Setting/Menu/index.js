@@ -1,5 +1,10 @@
 import React, { useState, useMemo } from 'react'
 import { Table, Form, message, Radio, Select, InputNumber, TreeSelect, Input, Button, Modal, Popconfirm } from 'antd';
+import { PlusOutlined, DeleteOutlined, ExclamationCircleOutlined } from '@ant-design/icons';
+
+import PaginationComponent from '@/components/pagination'
+import TableComponent from '@/components/table'
+import './index.less'
 
 const Menu = () => {
   const [form] = Form.useForm();
@@ -9,13 +14,30 @@ const Menu = () => {
   const [total, setTotal] = useState(0);
   const [page, setPage] = useState(1);
   const [permission, setPermission] = useState([]);
+  const [pageSize, setPageSize] = useState(10);
   const [menuId, setMenuId] = useState('');
   const [level, setLevel] = useState(0);
   const [isEdit, setIsEdit] = useState(false);
   const [radioValue, setRadioValue] = useState(1);
+  const [deleteList, setDeleteList] = useState();
   const [roleData, setRoleData] = useState([]);
   const [roleRadioValue, setRoleRadioValue] = useState();
+  const pageparams = {
+    page: page,
+    pageSize: pageSize,
+    total: total,
+  }
 
+  const tableSetting = {
+    page: 1,
+    rows: 10,
+    rowSelection: {
+      type: 'checkbox',
+      onChange: (selectedRowKeys) => {
+        setDeleteList(selectedRowKeys)
+      },
+    }
+  }
   const columns = [
     {
       title: '菜单类型',
@@ -32,7 +54,7 @@ const Menu = () => {
     },
     {
       title: '名称',
-      dataIndex: 'name',
+      dataIndex: 'title',
       align: 'center'
     },
     {
@@ -49,14 +71,6 @@ const Menu = () => {
         )
       }
     },
-    // {
-    //     title: '权限名称',
-    //     dataIndex: 'permission',
-    //     align: 'center',
-    //     render: text =>{
-    //        return text.permissionName
-    //     }
-    // },
     {
       title: '排序',
       dataIndex: 'sort',
@@ -69,10 +83,10 @@ const Menu = () => {
       width: '20%',
       render: (text, record) => (
         <div style={{ textAlign: 'center' }}>
-          <Button type="primary" onClick={() => showEditModal(record)}>编辑</Button>
+          <Button type="link" onClick={() => showEditModal(record)}>编辑</Button>
                 &emsp;
           <Popconfirm title='您确定删除当前数据吗？' onConfirm={() => singleDelete(record)}>
-            <Button type="danger">删除</Button>
+            <Button type="link">删除</Button>
           </Popconfirm>
         </div>
       )
@@ -182,7 +196,7 @@ const Menu = () => {
       return (
         <TreeSelect.TreeNode
           value={v._id}
-          title={v.name}
+          title={v.title}
           key={v._id}
           level={v.level}
         >
@@ -197,10 +211,29 @@ const Menu = () => {
     wrapperCol: { span: 15 },
   };
 
+  const onShowSizeChange = (current, size) => {
+    console.log(current, size)
+    setPageSize(size)
+  }
+
   return (
-    <>
-      <Button type="primary" onClick={showModal}>新增</Button>
-      <Table columns={columns} pagination={false} dataSource={tableData} loading={loading} rowKey='_id' />
+    <div className="menu-container">
+      <div className="body-wrap">
+        <div className="filter-container">
+          <div className="search-box">
+            <Input.Search placeholder="请输入菜单名称" allowClear enterButton />
+          </div>
+          <div className="button-wrap">
+            <Button icon={<PlusOutlined />} type="primary" onClick={showModal}>新增菜单</Button>
+            <Button icon={<DeleteOutlined />} >批量删除</Button>
+          </div>
+        </div>
+        <div className="table-container">
+          <TableComponent data={tableData} column={columns} settings={tableSetting} loading={loading} />
+        </div>
+        <PaginationComponent pageparams={pageparams} onShowSizeChange={(current, size) => onShowSizeChange(current, size)} handlePage={v => setPage(v)} />
+      </div>
+      {/* <Table columns={columns} pagination={false} dataSource={tableData} loading={loading} rowKey='_id' /> */}
 
       <Modal
         visible={isModalVisible}
@@ -351,7 +384,7 @@ const Menu = () => {
 
         </Form>
       </Modal>
-    </>
+    </div>
   )
 }
 

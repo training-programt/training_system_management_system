@@ -1,11 +1,81 @@
 import React, { useState, useMemo } from 'react'
-import { Table, Button, Modal, Descriptions, List } from 'antd';
-
+import { Table, Button, Modal, Descriptions, List, Form, Input, Tree } from 'antd';
+const treeData = [
+  {
+    title: '0-0',
+    key: '0-0',
+    children: [
+      {
+        title: '0-0-0',
+        key: '0-0-0',
+        children: [
+          {
+            title: '0-0-0-0',
+            key: '0-0-0-0',
+          },
+          {
+            title: '0-0-0-1',
+            key: '0-0-0-1',
+          },
+          {
+            title: '0-0-0-2',
+            key: '0-0-0-2',
+          },
+        ],
+      },
+      {
+        title: '0-0-1',
+        key: '0-0-1',
+        children: [
+          {
+            title: '0-0-1-0',
+            key: '0-0-1-0',
+          },
+          {
+            title: '0-0-1-1',
+            key: '0-0-1-1',
+          },
+          {
+            title: '0-0-1-2',
+            key: '0-0-1-2',
+          },
+        ],
+      },
+      {
+        title: '0-0-2',
+        key: '0-0-2',
+      },
+    ],
+  },
+  {
+    title: '0-1',
+    key: '0-1',
+    children: [
+      {
+        title: '0-1-0-0',
+        key: '0-1-0-0',
+      },
+      {
+        title: '0-1-0-1',
+        key: '0-1-0-1',
+      },
+      {
+        title: '0-1-0-2',
+        key: '0-1-0-2',
+      },
+    ],
+  },
+  {
+    title: '0-2',
+    key: '0-2',
+  },
+];
 const Role = () => {
-
+  const [form] = Form.useForm();
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [loading, setLoading] = useState(false);
   const [tableData, setTableData] = useState([]);
+  const [treeData, setTreeData] = useState([]);
   const [total, setTotal] = useState(0);
   const [page, setPage] = useState(1);
   const pageparams = {
@@ -13,6 +83,14 @@ const Role = () => {
     pageSize: 10,
     total: total,
   }
+  useMemo(() => {
+    const fetchData = async () => {
+      const res = await React.$axios.post('/allMenu')
+
+      setTreeData(res.data)
+    }
+    fetchData()
+  }, [])
 
   useMemo(() => {
     const fetchData = async () => {
@@ -72,6 +150,30 @@ const Role = () => {
     setIsModalVisible(false);
   };
 
+  const formItemLayout = {
+    labelCol: { span: 4 },
+    wrapperCol: { span: 15 },
+  };
+
+  const [selectedKeys, setSelectedKeys] = useState([]);
+  const [checkedKeys, setCheckedKeys] = useState([]);
+
+  const onExpand = expandedKeys => {
+    console.log('onExpand', expandedKeys);
+    setExpandedKeys(expandedKeys);
+    setAutoExpandParent(false);
+  };
+
+  const onCheck = (checkedKeys, e) => {
+    console.log(e.checkedNodes)
+    setCheckedKeys(checkedKeys);
+  };
+
+  const onSelect = (selectedKeys, info) => {
+    console.log('onSelect', info);
+    setSelectedKeys(selectedKeys);
+  };
+
   return (
     <>
       <Button type="primary" onClick={showModal}>新增</Button>
@@ -122,7 +224,51 @@ const Role = () => {
             创建
           </Button>
         ]}
-      ></Modal>
+      >
+
+        <Form {...formItemLayout} form={form}>
+          <Form.Item
+            name="role"
+            label="角色"
+            rules={[{ required: true, message: '角色不能为空' },]}
+          >
+            <Input
+              maxLength={32}
+              placeholder="请输入角色"
+            />
+          </Form.Item>
+          <Form.Item
+            label='角色名称'
+            name="roleName"
+            rules={[{ required: true, message: '角色名称不能为空' },]}
+          >
+            <Input
+              maxLength={32}
+              placeholder="请输入角色名称"
+            />
+          </Form.Item>
+          <Form.Item
+            label='菜单'
+            name="menu"
+          >
+            <Tree
+              style={{ height: '200px', overflow: 'auto' }}
+              checkable
+              onExpand={onExpand}
+              defaultExpandAll
+              onCheck={onCheck}
+              onSelect={onSelect}
+              checkedKeys={checkedKeys}
+              selectedKeys={selectedKeys}
+              treeData={treeData}
+            />
+          </Form.Item>
+        </Form>
+
+
+
+
+      </Modal>
     </>
   )
 }

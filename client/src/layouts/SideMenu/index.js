@@ -6,40 +6,6 @@ import Logo from '../../public/images/logo.png';
 import Logo_1 from '../../public/images/logo_1.png';
 import './index.less'
 import tabs from '../tabs'
-// import axios from '../../https';
-
-// const renderMenuItem = routes => {
-//   return routes
-//     .filter(item => item.path && item.name)
-//     .map(item => {
-//       if (item.childRoutes !== undefined && !!item.childRoutes.find(child => child.path && child.name)) {
-//         return (
-//           <Menu.SubMenu
-//             key={item.path}
-//             title={
-//               <div>
-//                 <span><i className={'menu-icon iconfont ' + item.icon}></i></span>
-//                 <span>{item.name}</span>
-//               </div>
-//             }
-//           >
-//             {renderMenuItem(item.childRoutes)}
-//           </Menu.SubMenu>
-//         )
-//       }
-//       return (
-//         <Menu.Item key={item.path}>
-//           <Link to={item.path} replace>
-//             <span>
-//               <span><i className={'menu-icon iconfont ' + item.icon}></i></span>
-//               <span>{item.name}</span>
-//             </span>
-//           </Link>
-//         </Menu.Item>
-
-//       )
-//     })
-// }
 
 const SideMenu = props => {
 
@@ -52,9 +18,9 @@ const SideMenu = props => {
     //如果标签页不存在就添加一个
     if (!panes.find(i => i.key === activeMenu)) {
       panes.push({
-        name: item.name,
+        name: item.title,
         key: item.key,
-        content: tabs[item.key] || item.name
+        content: tabs[item.key] || item.title
       })
     }
     props.changeState({
@@ -68,11 +34,11 @@ const SideMenu = props => {
       return menus.map(item => {
         if (!item.children || !item.children.length) {
           return (
-            <Menu.Item key={item.key || item.name}>
+            <Menu.Item key={item.key || item.title}>
               <div onClick={() => addPane(item)}>
               {/* <div> */}
                 <span><i className={'menu-icon iconfont ' + item.icon}></i></span>
-                <span>{item.name}</span>
+                <span>{item.title}</span>
               </div>
             </Menu.Item>
           )
@@ -83,7 +49,7 @@ const SideMenu = props => {
               title={
                 <div>
                   <span><i className={'menu-icon iconfont ' + item.icon}></i></span>
-                  <span>{item.name}</span>
+                  <span>{item.title}</span>
                 </div>
               }
             >

@@ -29,7 +29,7 @@ const Teacher = () => {
   const detailRef = useRef();
 
   const column = [
-    { width: 50, render: (text, record, index) => `${index + 1 + (tableSetting.page - 1) * tableSetting.rows}` },
+    { title: '序号', width: 50, render: (text, record, index) => `${index + 1 + (tableSetting.page - 1) * tableSetting.rows}` },
     { title: '编号', dataIndex: 'id' },
     { title: '姓名', dataIndex: 'name' },
     { title: '教研室', dataIndex: 'section' },
