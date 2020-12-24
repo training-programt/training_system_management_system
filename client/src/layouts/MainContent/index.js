@@ -37,7 +37,7 @@ const MainContent = props => {
   const operations = <MainHeader />
 
   return (
-    <div style={{height: '100%', width: '100%', marginLeft: '10px'}}>
+    <div style={{height: '100%', width: '100%'}}>
       <Tabs
         style={{ height: '100%' }}
         tabBarStyle={{ background: '#fff', marginBottom: 0 }}
