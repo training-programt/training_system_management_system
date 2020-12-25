@@ -8,7 +8,7 @@ const Menu = () => {
   const [tableData, setTableData] = useState([]);
   const [total, setTotal] = useState(0);
   const [page, setPage] = useState(1);
-  const [permission, setPermission] = useState([]);
+  // const [permission, setPermission] = useState([]);
   const [menuId, setMenuId] = useState('');
   const [level, setLevel] = useState(0);
   const [isEdit, setIsEdit] = useState(false);
@@ -17,24 +17,30 @@ const Menu = () => {
   const [roleRadioValue, setRoleRadioValue] = useState();
 
   const columns = [
-    {
-      title: '菜单类型',
-      dataIndex: 'level',
-      align: 'center',
-      render: (text, record) => {
-        return record.children === undefined || record.children.length === 0 ? '菜单' : '目录'
-      }
-    },
-    {
-      title: '组键页面',
-      dataIndex: 'key',
-      align: 'center'
-    },
+    // {
+    //   title: '菜单类型',
+    //   dataIndex: 'level',
+    //   align: 'center',
+    //   render: (text, record) => {
+    //     return record.children === undefined || record.children.length === 0 ? '菜单' : '目录'
+    //   }
+    // },
     {
       title: '名称',
       dataIndex: 'name',
       align: 'center'
     },
+    {
+      title: '组件页面',
+      dataIndex: 'key',
+      align: 'center'
+    },
+    
+    // {
+    //   title: '角色',
+    //   dataIndex: 'role',
+    //   align: 'center'
+    // },
     {
       title: '图标',
       dataIndex: 'icon',
@@ -85,15 +91,15 @@ const Menu = () => {
     marginRight: '12px',
   }
 
-  useMemo(() => {
-    const fetchData = async () => {
-      const res = await React.$axios.get(
-        '/getPermission',
-      )
-      setPermission(res.data);
-    }
-    fetchData();
-  }, [isModalVisible])
+  // useMemo(() => {
+  //   const fetchData = async () => {
+  //     const res = await React.$axios.get(
+  //       '/getPermission',
+  //     )
+  //     setPermission(res.data);
+  //   }
+  //   fetchData();
+  // }, [isModalVisible])
 
   useMemo(() => {
     const fetchData = async () => {
@@ -128,7 +134,7 @@ const Menu = () => {
   };
 
   const showEditModal = (record) => {
-    console.log(record)
+    // console.log(record)
     form.resetFields()
     setRoleRadioValue()
     setIsModalVisible(true)
@@ -139,7 +145,8 @@ const Menu = () => {
       name: record.name,
       key: record.key,
       icon: record.icon,
-      permission: record.permission._id || record.permission,
+      role:record.role,
+      // permission: record.permission._id || record.permission,
       sort: record.sort
     }
     form.setFieldsValue(data)
@@ -202,7 +209,7 @@ const Menu = () => {
       <Button type="primary" onClick={showModal}>新增</Button>
       <Table columns={columns} pagination={false} dataSource={tableData} loading={loading} rowKey='_id' />
 
-      <Modal
+       {/* <Modal 
         visible={isModalVisible}
         width={550}
         title={isEdit ? '编辑菜单' : '创建菜单'}
@@ -350,7 +357,7 @@ const Menu = () => {
           </Form.Item>
 
         </Form>
-      </Modal>
+      </Modal> */}
     </>
   )
 }

@@ -15,7 +15,7 @@ class LoginController extends Controller {
     }
 
     const res = await ctx.model.Teacher.findOne({ name: data.name })
-    console.log(res)
+    // console.log(res)
     if (!res) {
       ctx.body = {
         message: '用户不存在',

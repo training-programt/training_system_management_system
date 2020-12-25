@@ -6,10 +6,10 @@ module.exports = app => {
   const RoleSchema = new Schema({
     role: { type: String },
     roleName: { type: String },
-    permission: [{
+    menu: [{
       type: Schema.Types.ObjectId,
-      ref: 'Permission',
-    }]
+      ref: 'Menu',
+    }] 
   })
 
   // RoleSchema.virtual('permissions', {

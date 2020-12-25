@@ -4,6 +4,7 @@ module.exports = app => {
   const mongoose = app.mongoose;
   const Schema = mongoose.Schema;
   const MenuSchema = new Schema({
+    name: { type: String },
     icon: { type: String },
     // key: [{
     //   role: { type: Schema.Types.ObjectId, ref: 'Role'},
@@ -12,13 +13,12 @@ module.exports = app => {
     type: { type: Number },
     key: { type: String },
     level: { type: Number },
-    name: { type: String },
     sort: { type: Number },
-    role: { type: Schema.Types.ObjectId },
-    permission: {
-      type: Schema.Types.ObjectId,
-      ref: 'Permission'
-    },
+    role: { type: Schema.Types.ObjectId,ref:'Role'},
+    // permission: {
+    //   type: Schema.Types.ObjectId,
+    //   ref: 'Permission'
+    // },
     children: [{
       type: Schema.Types.ObjectId,
       ref: 'Menu'
