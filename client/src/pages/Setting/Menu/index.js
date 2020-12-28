@@ -8,7 +8,6 @@ const Menu = () => {
   const [tableData, setTableData] = useState([]);
   const [total, setTotal] = useState(0);
   const [page, setPage] = useState(1);
-  // const [permission, setPermission] = useState([]);
   const [menuId, setMenuId] = useState('');
   const [level, setLevel] = useState(0);
   const [isEdit, setIsEdit] = useState(false);
@@ -17,29 +16,32 @@ const Menu = () => {
   const [roleRadioValue, setRoleRadioValue] = useState();
 
   const columns = [
-    // {
-    //   title: '菜单类型',
-    //   dataIndex: 'level',
-    //   align: 'center',
-    //   render: (text, record) => {
-    //     return record.children === undefined || record.children.length === 0 ? '菜单' : '目录'
-    //   }
-    // },
     {
       title: '名称',
       dataIndex: 'name',
       align: 'center'
     },
     {
-      title: '组件页面',
+      title: '菜单类型',
+      dataIndex: 'level',
+      align: 'center',
+      render: (text, record) => {
+        return record.level === 1 ? '一级目录' : '子目录'
+      }
+    },
+    {
+      title: '组件页面名称',
       dataIndex: 'key',
       align: 'center'
     },
-    
+
     // {
     //   title: '角色',
     //   dataIndex: 'role',
-    //   align: 'center'
+    //   align: 'center',
+    //   render: (text, record) => {
+    //     return record.role.roleName
+    //   }
     // },
     {
       title: '图标',
@@ -54,19 +56,6 @@ const Menu = () => {
           </div>
         )
       }
-    },
-    // {
-    //     title: '权限名称',
-    //     dataIndex: 'permission',
-    //     align: 'center',
-    //     render: text =>{
-    //        return text.permissionName
-    //     }
-    // },
-    {
-      title: '排序',
-      dataIndex: 'sort',
-      align: 'center'
     },
     {
       title: '操作',
@@ -90,16 +79,6 @@ const Menu = () => {
     fontSize: '16px',
     marginRight: '12px',
   }
-
-  // useMemo(() => {
-  //   const fetchData = async () => {
-  //     const res = await React.$axios.get(
-  //       '/getPermission',
-  //     )
-  //     setPermission(res.data);
-  //   }
-  //   fetchData();
-  // }, [isModalVisible])
 
   useMemo(() => {
     const fetchData = async () => {
@@ -134,19 +113,16 @@ const Menu = () => {
   };
 
   const showEditModal = (record) => {
-    // console.log(record)
+    console.log(record)
     form.resetFields()
-    setRoleRadioValue()
     setIsModalVisible(true)
     setIsEdit(true)
-    setLevel(record.level - 1)
     let data = {
       _id: record._id,
       name: record.name,
       key: record.key,
       icon: record.icon,
-      role:record.role,
-      // permission: record.permission._id || record.permission,
+      role: record.role.roleName,
       sort: record.sort
     }
     form.setFieldsValue(data)
@@ -161,13 +137,16 @@ const Menu = () => {
       parent: menuId,
       roleRadioValue,
     }
-    const res = await React.$axios.post(
-      '/addMenu',
-      params,
-    );
-
-    if (res && res.isSucceed) {
-      message.success('新增成功');
+    if(!isEdit){
+      const res = await React.$axios.post(
+        '/addMenu',
+        params,
+      );
+      if (res && res.isSucceed) {
+        message.success('新增成功');
+      }else{
+        message.error('新增失败');
+      }
     }
     setIsModalVisible(false);
   };
@@ -209,13 +188,15 @@ const Menu = () => {
       <Button type="primary" onClick={showModal}>新增</Button>
       <Table columns={columns} pagination={false} dataSource={tableData} loading={loading} rowKey='_id' />
 
-       {/* <Modal 
+      <Modal
         visible={isModalVisible}
         width={550}
-        title={isEdit ? '编辑菜单' : '创建菜单'}
+        title={isEdit ? '编辑菜单' : '新建菜单'}
         centered
         maskClosable={true}
         destroyOnClose
+        onOk={handleOk}
+        onCancel={handleCancel}
         footer={[
           <Button key="back" onClick={handleCancel}>
             取消
@@ -240,11 +221,27 @@ const Menu = () => {
             ) : ''
           }
           <Form.Item
+            label='选择账户'
+            name="role"
+            rules={[
+              { required: true },
+            ]}
+          >
+            <Select
+              style={{ width: 300 }}
+              placeholder="请选择账户"
+            >
+              {roleData.map(item => {
+                return <Select.Option value={item._id} key={item._id}>{item.roleName}</Select.Option>
+              })}
+            </Select>
+          </Form.Item>
+          <Form.Item
             name="parent"
             label="上级菜单"
           >
             <TreeSelect
-              style={{ width: '250px' }}
+              style={{ width: '300px' }}
               dropdownStyle={{ maxHeight: 200, overflow: 'auto' }}
               placeholder="请选择上级菜单"
               allowClear
@@ -254,9 +251,6 @@ const Menu = () => {
             >
               {renderTreeNode()}
             </TreeSelect>
-          </Form.Item>
-          <Form.Item label='当前类型'>
-            {level === 0 ? '1 级菜单' : level + 1 + '级菜单'}
           </Form.Item>
           <Form.Item
             label='菜单名称'
@@ -268,40 +262,10 @@ const Menu = () => {
           >
             <Input
               maxLength={32}
+              style={{ width: 300 }}
               placeholder="请输入菜单"
             />
           </Form.Item>
-          <Form.Item
-            label='页面所属'
-            name="type"
-            rules={[
-              { required: true },
-            ]}
-          >
-            <Radio.Group onChange={e => setRadioValue(e.target.value)}>
-              <Radio value={1}>公共页面</Radio>
-              <Radio value={2}>角色页面</Radio>
-            </Radio.Group>
-          </Form.Item>
-          {
-            radioValue == 2
-              ? (
-                <Form.Item
-                  label='页面角色'
-                  name="role"
-                  rules={[
-                    { required: true },
-                  ]}
-                >
-                  <Radio.Group onChange={e => setRoleRadioValue(e.target.value)}>
-                    {
-                      roleData.map(item => <Radio value={item._id}>{item.roleName}</Radio>)
-                    }
-                  </Radio.Group>
-                </Form.Item>
-              )
-              : ''
-          }
           <Form.Item
             label='组件页面'
             name="key"
@@ -312,7 +276,8 @@ const Menu = () => {
           >
             <Input
               maxLength={32}
-              placeholder="请输入组键页面"
+              style={{ width: 300 }}
+              placeholder="请输入组键页面名称"
             />
           </Form.Item>
           <Form.Item
@@ -324,32 +289,16 @@ const Menu = () => {
             ]}
           >
             <Input
+              style={{ width: 300 }}
               maxLength={32}
-              placeholder="请选择菜单图标"
+              placeholder="请输入菜单图标"
             />
           </Form.Item>
           <Form.Item
-            label='权限'
-            name="permission"
-            rules={[
-              { required: true, message: '权限不能为空' },
-              { pattern: '^[^ ]+$', message: '权限不能有空格' }
-            ]}
-          >
-            <Select
-              style={{ width: 200 }}
-              placeholder="请选择权限"
-            >
-              {permission.map(per => {
-                return <Select.Option value={per._id} key={per._id}>{per.permissionName}</Select.Option>
-              })}
-            </Select>
-          </Form.Item>
-          <Form.Item
-            label='排序'
+            label='位置'
             name="sort"
             rules={[
-              { required: true, message: '排序不能为空' }
+              { required: true, message: '位置不能为空' }
             ]}
             initialValue={0}
           >
@@ -357,7 +306,7 @@ const Menu = () => {
           </Form.Item>
 
         </Form>
-      </Modal> */}
+      </Modal>
     </>
   )
 }

@@ -8,15 +8,15 @@ const TeachRoom = LoadableComponent(import('../pages/TeachRoom'), true);
 const Home = LoadableComponent(import('../pages/Home'), true);
 const Setting = LoadableComponent(import('../pages/Setting/Menu'), true);
 const Menu = LoadableComponent(import('../pages/Setting/Menu'), true);
-// const Permission = LoadableComponent(import('../pages/Setting/Permission'), true);
+const User = LoadableComponent(import('../pages/Setting/User'), true);
 const Role = LoadableComponent(import('../pages/Setting/Role'), true);
 
 export default {
   Home: <Home />,
   Setting: <Setting />,
-  // Permission: <Permission/>,
   Menu: <Menu/>,
   Course: <Course />,
+  User:<User/>,
   Grade: <Grade />,
   Major: <Major />,
   Teacher: <Teacher />,

@@ -8,4 +8,5 @@ export default [
     roles: 2,
     component: Teacher
   },
+  
 ]

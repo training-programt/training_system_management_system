@@ -6,7 +6,6 @@ class MenuService extends Service {
     async getMenu() {
         const { ctx } = this;
         const data = ctx.request.query
-        // console.log(data)
         const result = await ctx.model.Menu
             .find({
                 role:data.role,

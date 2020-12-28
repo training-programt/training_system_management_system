@@ -4,8 +4,11 @@ class RoleService extends Service {
   async getRole() {
     const { ctx } = this;
     
-    const res = await ctx.model.Role.find().populate('menu')
-
+    const res = await ctx.model.Role
+    .find()
+    .populate('menu')
+    .populate('children')
+    .sort()
     ctx.body = {
       total: res.length,
       data: res,

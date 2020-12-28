@@ -1,5 +1,5 @@
 import React, { useState, useMemo } from 'react'
-import { Table, Button, Modal, Descriptions, List } from 'antd';
+import { Table, Button, Modal, Descriptions, List, Form, Input } from 'antd';
 
 const Role = () => {
 
@@ -8,12 +8,17 @@ const Role = () => {
   const [tableData, setTableData] = useState([]);
   const [total, setTotal] = useState(0);
   const [page, setPage] = useState(1);
+  const [form] = Form.useForm();
+
   const pageparams = {
     page: page,
     pageSize: 10,
     total: total,
   }
-
+  const layout = {
+    labelCol: { span: 5 },
+    wrapperCol: { span: 16 },
+  };
   useMemo(() => {
     const fetchData = async () => {
       const res = await React.$axios.get(
@@ -39,12 +44,12 @@ const Role = () => {
       }
     },
     {
-      title: '角色',
+      title: '账户',
       dataIndex: 'role',
       align: 'center'
     },
     {
-      title: '角色名称',
+      title: '账户名称',
       dataIndex: 'roleName',
       align: 'center'
     },
@@ -71,7 +76,9 @@ const Role = () => {
   const handleCancel = () => {
     setIsModalVisible(false);
   };
+  const showEditModal = () => {
 
+  }
   return (
     <>
       <Button type="primary" onClick={showModal}>新增</Button>
@@ -79,7 +86,7 @@ const Role = () => {
         columns={columns}
         dataSource={tableData}
         loading={loading}
-        rowKey='_id'
+        rowKey={record => record._id}
         expandRowByClick={true}
         expandedRowRender={record =>
           <div>
@@ -87,16 +94,16 @@ const Role = () => {
               bordered
               column={{ xxl: 4, xl: 3, lg: 3, md: 3, sm: 2, xs: 1 }}
             >
-              <Descriptions.Item label="拥有菜单">
+              <Descriptions.Item label="菜单展示">
                 <List
                   bordered
                   size='small'
-                  dataSource={record.permission}
-                  renderItem={permission => (
+                  dataSource={record.menu}
+                  renderItem={menu => (
                     <List.Item>
-                      {permission.permission}
+                      <span><i className={'menu-icon iconfont ' + menu.icon}></i></span>
                                   &emsp;&emsp;
-                      {permission.permissionName}
+                      {menu.name}
                     </List.Item>
                   )}
                 />
@@ -110,19 +117,30 @@ const Role = () => {
       <Modal
         visible={isModalVisible}
         width={550}
-        title='创建角色'
+        title='创建账户'
         centered
-        maskClosable={true}
+        maskClosable={false}
         destroyOnClose
+        onOk={handleOk}
+        onCancel={handleCancel}
         footer={[
           <Button key="back" onClick={handleCancel}>
             取消
           </Button>,
           <Button key="submit" type="primary" loading={loading} onClick={handleOk}>
-            创建
+            确定
           </Button>
         ]}
-      ></Modal>
+      >
+        <Form {...layout} form={form} name="control-hooks">
+          <Form.Item name="account" label="账户" rules={[{ required: true }]}>
+            <Input />
+          </Form.Item>
+          <Form.Item name="accountName" label="账户名称" rules={[{ required: true }]}>
+            <Input />
+          </Form.Item>
+        </Form>
+      </Modal>
     </>
   )
 }
