@@ -17,6 +17,15 @@ const User = () => {
     const [radioValue, setRadioValue] = useState(1);
     const [roleData, setRoleData] = useState([]);
     const [roleRadioValue, setRoleRadioValue] = useState();
+    useMemo(() => {
+        const fetchData = async () => {
+            const res = await React.$axios.get(
+                '/getTeacher',
+            )
+            setTableData(res.data);
+        }
+        fetchData();
+    }, [page, isModalVisible])
     const columns = [
         {
             title: '名字',
@@ -32,18 +41,21 @@ const User = () => {
             title: '角色',
             dataIndex: 'role',
             align: 'center',
-            //   render: (text, record) => {
-            //     return record.role.roleName
-            //   }
+            render: (text, record) => {
+                let sum = ''
+                for(let i = 0;i<record.role.length;i++){
+                    sum = sum + record.role[i].roleName+'、'
+                }
+                return sum
+            }
         },
         {
             title: '操作',
-            key: 'active',
             align: 'center',
             width: '20%',
             render: (text, record) => (
                 <div style={{ textAlign: 'center' }}>
-                    <Button type="primary">编辑</Button>
+                    <Button type="primary" onClick={() => this.showEditModal(record)}>编辑</Button>
                     &emsp;
                     <Popconfirm title='您确定删除当前数据吗？'>
                         <Button type="danger">删除</Button>
@@ -52,25 +64,43 @@ const User = () => {
             )
         },
     ];
-    useMemo(() => {
-        const fetchData = async () => {
-            const res = await React.$axios.get(
-                '/getTeacher',
-            )
-            setTableData(res.data);
-            console.log(res.data)
-        }
-        fetchData();
-    }, [page, isModalVisible])
+    const showEditModal = (record) => {
+
+    }
     return (
         <div>
             <Button type="primary">新增</Button>
-            <Table 
-            columns={columns} 
-            pagination={false} 
-            dataSource={tableData} 
-            loading={loading} 
-            rowKey={record => record._id} />
+            <Table
+                columns={columns}
+                pagination={false}
+                dataSource={tableData}
+                loading={loading}
+                rowKey={record => record._id}
+                expandRowByClick={true}
+                expandedRowRender={record =>
+                    <div>
+                        <Descriptions
+                            bordered
+                            column={{ xxl: 4, xl: 3, lg: 3, md: 3, sm: 2, xs: 1 }}
+                        >
+                            <Descriptions.Item label="菜单展示">
+                                <List
+                                    bordered
+                                    size='small'
+                                    dataSource={record.menu}
+                                    renderItem={menu => (
+                                        <List.Item>
+                                            <span><i className={'menu-icon iconfont ' + menu.icon}></i></span>
+                                  &emsp;&emsp;
+                                            {menu.name}
+                                        </List.Item>
+                                    )}
+                                />
+                            </Descriptions.Item>
+                        </Descriptions>
+                    </div>
+                }
+            />
         </div>
     )
 }

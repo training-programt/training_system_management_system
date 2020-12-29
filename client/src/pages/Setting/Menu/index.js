@@ -137,20 +137,32 @@ const Menu = () => {
       parent: menuId,
       roleRadioValue,
     }
-    if(!isEdit){
+    if (!isEdit) {
       const res = await React.$axios.post(
         '/addMenu',
         params,
       );
       if (res && res.isSucceed) {
         message.success('新增成功');
-      }else{
+      } else {
         message.error('新增失败');
       }
     }
     setIsModalVisible(false);
   };
 
+
+  const singleDelete = async (record) => {
+    const params = {
+      _id: record._id
+    }
+    const res = await React.$axios.post('/delMenu', params)
+    if (res && res.isSucceed) {
+      message.success('删除成功');
+    } else {
+      message.error('删除失败');
+    }
+  }
   const handleCancel = () => {
     setIsModalVisible(false);
   };

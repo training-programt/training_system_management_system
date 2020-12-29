@@ -8,8 +8,8 @@ class MenuService extends Service {
         const data = ctx.request.query
         const result = await ctx.model.Menu
             .find({
-                role:data.role,
-                level:1
+                role: {$in:data.role.split(",")},
+                level: 1
             })
             .populate('menu')
             .populate('role')
@@ -34,10 +34,17 @@ class MenuService extends Service {
             .sort('sort')
         return result;
     }
-    async addMenu() {
-        const { ctx } = this;
-        
-        // return 
+    //新建
+    async addMenu(params){
+        const {ctx} = this;
+        const result  = await ctx.model.Menu.create(params)
+        return result;
+    }
+    //删除
+    async delMenu(params){
+        const {ctx} = this;
+        const result = await ctx.model.Menu.remove(params)
+        return result
     }
 }
 module.exports = MenuService;
