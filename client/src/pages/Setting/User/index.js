@@ -1,22 +1,15 @@
 import React, { useState, useRef, useMemo } from 'react';
-import { Table, Form, message, Radio, Select, InputNumber, TreeSelect, Input, Button, Modal, Popconfirm } from 'antd';
+import { Table, Form, message, Radio, Descriptions, Select, InputNumber, TreeSelect, Input, Button, Modal, Popconfirm } from 'antd';
 import { PlusOutlined, DeleteOutlined, UploadOutlined, DownloadOutlined } from '@ant-design/icons';
 const { Option } = Select;
 
 const User = () => {
 
-    const [form] = Form.useForm();
     const [isModalVisible, setIsModalVisible] = useState(false);
     const [loading, setLoading] = useState(false);
     const [tableData, setTableData] = useState([]);
     const [total, setTotal] = useState(0);
     const [page, setPage] = useState(1);
-    const [menuId, setMenuId] = useState('');
-    const [level, setLevel] = useState(0);
-    const [isEdit, setIsEdit] = useState(false);
-    const [radioValue, setRadioValue] = useState(1);
-    const [roleData, setRoleData] = useState([]);
-    const [roleRadioValue, setRoleRadioValue] = useState();
     useMemo(() => {
         const fetchData = async () => {
             const res = await React.$axios.get(
@@ -43,8 +36,8 @@ const User = () => {
             align: 'center',
             render: (text, record) => {
                 let sum = ''
-                for(let i = 0;i<record.role.length;i++){
-                    sum = sum + record.role[i].roleName+'、'
+                for (let i = 0; i < record.role.length; i++) {
+                    sum = sum + record.role[i].roleName + '、'
                 }
                 return sum
             }
@@ -57,7 +50,7 @@ const User = () => {
                 <div style={{ textAlign: 'center' }}>
                     <Button type="primary" onClick={() => this.showEditModal(record)}>编辑</Button>
                     &emsp;
-                    <Popconfirm title='您确定删除当前数据吗？'>
+                    <Popconfirm title='您确定删除当前数据吗？' onConfirm={() => delTeacher(record)}>
                         <Button type="danger">删除</Button>
                     </Popconfirm>
                 </div>
@@ -67,9 +60,30 @@ const User = () => {
     const showEditModal = (record) => {
 
     }
+    const delTeacher = async (record) => {
+        const params = {
+            _id: record._id
+        }
+        const res = await React.$axios.post('/delTeacher', params)
+        if (res && res.isSucceed) {
+            message.success('删除成功');
+            const res = await React.$axios.get(
+                '/getTeacher',
+            )
+            setTableData(res.data);
+            setTotal(res.total);
+        } else {
+            message.error('删除失败');
+        }
+    }
     return (
         <div>
-            <Button type="primary">新增</Button>
+        <Button type="primary" icon={<DownloadOutlined />}>
+        导出
+        </Button>
+        <Button type="primary" icon={<UploadOutlined  />}>
+        导入
+        </Button>
             <Table
                 columns={columns}
                 pagination={false}
@@ -83,19 +97,11 @@ const User = () => {
                             bordered
                             column={{ xxl: 4, xl: 3, lg: 3, md: 3, sm: 2, xs: 1 }}
                         >
-                            <Descriptions.Item label="菜单展示">
-                                <List
-                                    bordered
-                                    size='small'
-                                    dataSource={record.menu}
-                                    renderItem={menu => (
-                                        <List.Item>
-                                            <span><i className={'menu-icon iconfont ' + menu.icon}></i></span>
-                                  &emsp;&emsp;
-                                            {menu.name}
-                                        </List.Item>
-                                    )}
-                                />
+                            <Descriptions.Item label="信息展示还没写">
+                                {record.lastInfo}
+                            </Descriptions.Item>
+                            <Descriptions.Item label="信息展示">
+                                {record.position}
                             </Descriptions.Item>
                         </Descriptions>
                     </div>

@@ -46,5 +46,11 @@ class MenuService extends Service {
         const result = await ctx.model.Menu.remove(params)
         return result
     }
+     //更新
+     async updataMenu(params){
+        const {ctx} = this;
+        const result = await ctx.model.Menu.findByIdAndUpdate(params)
+        return result
+    }
 }
 module.exports = MenuService;

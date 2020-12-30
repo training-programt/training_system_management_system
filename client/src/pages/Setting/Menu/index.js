@@ -1,6 +1,6 @@
 import React, { useState, useMemo } from 'react'
 import { Table, Form, message, Radio, Select, InputNumber, TreeSelect, Input, Button, Modal, Popconfirm } from 'antd';
-
+import { getSession } from '../../../utils';
 const Menu = () => {
   const [form] = Form.useForm();
   const [isModalVisible, setIsModalVisible] = useState(false);
@@ -34,15 +34,6 @@ const Menu = () => {
       dataIndex: 'key',
       align: 'center'
     },
-
-    // {
-    //   title: '角色',
-    //   dataIndex: 'role',
-    //   align: 'center',
-    //   render: (text, record) => {
-    //     return record.role.roleName
-    //   }
-    // },
     {
       title: '图标',
       dataIndex: 'icon',
@@ -112,7 +103,7 @@ const Menu = () => {
     setIsEdit(false)
   };
 
-  const showEditModal = (record) => {
+  const showEditModal =(record) => {
     console.log(record)
     form.resetFields()
     setIsModalVisible(true)
@@ -144,8 +135,32 @@ const Menu = () => {
       );
       if (res && res.isSucceed) {
         message.success('新增成功');
+        const res = await React.$axios.post(
+          '/allMenu',
+          params
+        )
+        setTableData(res.data);
+        setTotal(res.total);
+        // await React.$axios.get(`/menu?role=${JSON.parse(getSession('userInfo')).role}`)
       } else {
         message.error('新增失败');
+      }
+    }else{
+      const res = await React.$axios.post(
+        '/updataMenu',
+        params,
+      );
+      if (res && res.isSucceed) {
+        message.success('更新成功');
+        const res = await React.$axios.post(
+          '/allMenu',
+          params
+        )
+        setTableData(res.data);
+        setTotal(res.total);
+        // await React.$axios.get(`/menu?role=${JSON.parse(getSession('userInfo')).role}`)
+      } else {
+        message.error('更新失败');
       }
     }
     setIsModalVisible(false);
@@ -159,6 +174,13 @@ const Menu = () => {
     const res = await React.$axios.post('/delMenu', params)
     if (res && res.isSucceed) {
       message.success('删除成功');
+      const res = await React.$axios.post(
+        '/allMenu',
+        params
+      )
+      setTableData(res.data);
+      setTotal(res.total);
+      // await React.$axios.get(`/menu?role=${JSON.parse(getSession('userInfo')).role}`)
     } else {
       message.error('删除失败');
     }

@@ -5,5 +5,5 @@ module.exports = app => {
     router.post('/allMenu', controller.menu.getAllMenu);
     router.post('/addMenu', controller.menu.addMenu);
     router.post('/delMenu', controller.menu.delMenu);
-
+    router.post('/updataMenu', controller.menu.updataMenu);
 };

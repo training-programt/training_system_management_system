@@ -1,5 +1,5 @@
 import React, { useState, useMemo } from 'react'
-import { Table, Button, Modal, Descriptions, List, Form, Input } from 'antd';
+import { Table, Button, Modal, message, Descriptions, List, Form, Input } from 'antd';
 
 const Role = () => {
 
@@ -60,24 +60,56 @@ const Role = () => {
       width: '10%',
       render: (text, record) => (
         <div style={{ textAlign: 'center' }}>
-          <Button type="primary" onClick={() => this.showEditModal(record)}>编辑</Button>
+          <Button type="primary" onClick={() => delRole(record)}>删除</Button>
         </div>
       )
     },
   ];
   const showModal = () => {
+    form.resetFields()
     setIsModalVisible(true);
   };
 
   const handleOk = async (e) => {
+    e.preventDefault();
+
+    const params = {
+      ...form.getFieldValue(),
+      menu: [],
+    }
+      const res = await React.$axios.post(
+        '/addRole',
+        params,
+      );
+      if (res && res.isSucceed) {
+        message.success('新增成功');
+        const res = await React.$axios.get(
+          '/getRole',
+        )
+        setTableData(res.data);
+      } else {
+        message.error('新增失败');
+      }
     setIsModalVisible(false);
   };
 
   const handleCancel = () => {
     setIsModalVisible(false);
   };
-  const showEditModal = () => {
-
+  const delRole = async(record) => {
+    const params = {
+      _id: record._id
+    }
+    const res = await React.$axios.post('/delRole', params)
+    if (res && res.isSucceed) {
+      message.success('删除成功');
+      const res = await React.$axios.get(
+        '/getRole',
+      )
+      setTableData(res.data);
+    } else {
+      message.error('删除失败');
+    }
   }
   return (
     <>
@@ -133,10 +165,10 @@ const Role = () => {
         ]}
       >
         <Form {...layout} form={form} name="control-hooks">
-          <Form.Item name="account" label="账户" rules={[{ required: true }]}>
+          <Form.Item name="role" label="账户" rules={[{ required: true }]}>
             <Input />
           </Form.Item>
-          <Form.Item name="accountName" label="账户名称" rules={[{ required: true }]}>
+          <Form.Item name="roleName" label="账户名称" rules={[{ required: true }]}>
             <Input />
           </Form.Item>
         </Form>

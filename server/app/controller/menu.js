@@ -69,6 +69,31 @@ class SettingService extends Service {
       isSucceed: true,
     }
   }
+  async updataMenu(){
+    const { ctx } = this;
+    const params = ctx.request.body;
+    const res = await ctx.model.Menu.findByIdAndUpdate(
+      { _id: params._id },
+      {
+        $set: {
+          sort:params.sort,
+          name:params.name,
+          key:params.key,
+          icon:params.icon,
+          level:params.level,
+          role:params.role,
+          children:params.children
+        }
+      }
+    );
+    ctx.body = {
+      total: 0,
+      data: res,
+      code: 200,
+      message: '修改成功',
+      isSucceed: true,
+    }
+  }
 }
 
 module.exports = SettingService;

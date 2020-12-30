@@ -25,5 +25,16 @@ class RoleService extends Service {
       isSucceed: true,
     };
 }
+async delRole(){
+  const { ctx } = this;
+    const params = ctx.request.body;
+    const res = await ctx.service.role.delRole(params)
+    ctx.body = {
+      total: res.length,
+      data: res,
+      code: 200,
+      isSucceed: true,
+    };
+}
 }
 module.exports = RoleService;

@@ -17,5 +17,11 @@ class RoleService extends Service {
         const result  = await ctx.model.Role.create(params)
         return result;
     }
+    //删除
+    async delRole(params){
+        const {ctx} = this;
+        const result = await ctx.model.Role.remove(params)
+        return result
+    }
 }
 module.exports = RoleService;

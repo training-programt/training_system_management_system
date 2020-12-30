@@ -27,6 +27,17 @@ class TeacherController extends Controller {
     }
 
   }
+  async delTeacher() {
+    const { ctx } = this;
+    const params = ctx.request.body;
+    const res = await ctx.service.teacher.delTeacher(params)
+    ctx.body = {
+      total: res.length,
+      data: res,
+      code: 200,
+      isSucceed: true,
+    };
+  }
 }
  
 module.exports = TeacherController;
