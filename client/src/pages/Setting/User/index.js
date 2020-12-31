@@ -1,6 +1,7 @@
 import React, { useState, useRef, useMemo } from 'react';
 import { Table, Form, message, Radio, Descriptions, Select, InputNumber, TreeSelect, Input, Button, Modal, Popconfirm } from 'antd';
 import { PlusOutlined, DeleteOutlined, UploadOutlined, DownloadOutlined } from '@ant-design/icons';
+import ImportComponent from '../../../components/importExport/import'
 const { Option } = Select;
 
 const User = () => {
@@ -76,21 +77,19 @@ const User = () => {
             message.error('删除失败');
         }
     }
+  
     return (
         <div>
-        <Button type="primary" icon={<DownloadOutlined />}>
-        导出
-        </Button>
-        <Button type="primary" icon={<UploadOutlined  />}>
-        导入
-        </Button>
+            <ImportComponent/>
+            <Button type="primary" icon={<DownloadOutlined />}>
+                导出
+            </Button>
             <Table
                 columns={columns}
                 pagination={false}
                 dataSource={tableData}
                 loading={loading}
                 rowKey={record => record._id}
-                expandRowByClick={true}
                 expandedRowRender={record =>
                     <div>
                         <Descriptions

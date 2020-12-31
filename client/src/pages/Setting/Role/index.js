@@ -119,7 +119,6 @@ const Role = () => {
         dataSource={tableData}
         loading={loading}
         rowKey={record => record._id}
-        expandRowByClick={true}
         expandedRowRender={record =>
           <div>
             <Descriptions

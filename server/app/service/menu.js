@@ -40,6 +40,12 @@ class MenuService extends Service {
         const result  = await ctx.model.Menu.create(params)
         return result;
     }
+     //条件查询
+     async findMenu(params){
+        const {ctx} = this;
+        const result  = await ctx.model.Menu.find(params)
+        return result;
+    }
     //删除
     async delMenu(params){
         const {ctx} = this;

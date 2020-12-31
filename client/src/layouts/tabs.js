@@ -10,6 +10,9 @@ const Setting = LoadableComponent(import('../pages/Setting/Menu'), true);
 const Menu = LoadableComponent(import('../pages/Setting/Menu'), true);
 const User = LoadableComponent(import('../pages/Setting/User'), true);
 const Role = LoadableComponent(import('../pages/Setting/Role'), true);
+const UserInfo = LoadableComponent(import('../pages/UserInfo'), true);
+
+
 
 export default {
   Home: <Home />,
@@ -23,5 +26,7 @@ export default {
   TeachRoom: <TeachRoom />,
   TeachRoom2: <Role />,
   Role: <Role/>,
+  UserInfo:<UserInfo/>,
+
 };
 

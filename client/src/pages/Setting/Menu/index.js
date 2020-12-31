@@ -9,7 +9,7 @@ const Menu = () => {
   const [total, setTotal] = useState(0);
   const [page, setPage] = useState(1);
   const [menuId, setMenuId] = useState('');
-  const [level, setLevel] = useState(0);
+  const [level, setLevel] = useState(1);
   const [isEdit, setIsEdit] = useState(false);
   const [radioValue, setRadioValue] = useState(1);
   const [roleData, setRoleData] = useState([]);
@@ -104,7 +104,7 @@ const Menu = () => {
   };
 
   const showEditModal =(record) => {
-    console.log(record)
+    // console.log(record)
     form.resetFields()
     setIsModalVisible(true)
     setIsEdit(true)
@@ -145,7 +145,7 @@ const Menu = () => {
       } else {
         message.error('新增失败');
       }
-    }else{
+    }else if(isEdit){
       const res = await React.$axios.post(
         '/updataMenu',
         params,
@@ -190,8 +190,9 @@ const Menu = () => {
   };
 
   const onSelect = (selectedKeys, info) => {
+    console.log(info)
     setMenuId(info ? info.value : '');
-    setLevel(info ? info.level : 0)
+    setLevel(info ? info.level+1 : 1)
   }
 
   const renderTreeNode = (treeNode = tableData) => {
@@ -280,11 +281,16 @@ const Menu = () => {
               placeholder="请选择上级菜单"
               allowClear
               treeDefaultExpandAll
-              onChange={() => setLevel(0)}
+              onChange={() => setLevel(1)}
               onSelect={onSelect}
             >
               {renderTreeNode()}
             </TreeSelect>
+          </Form.Item>
+          <Form.Item
+          label='菜单级别'
+          name="level">
+            {level}级菜单
           </Form.Item>
           <Form.Item
             label='菜单名称'
