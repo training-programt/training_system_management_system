@@ -18,5 +18,11 @@ class TeacherService extends Service {
         const result = await ctx.model.Teacher.remove(params)
         return result
     }
+    //修改
+    async updataTeacher(params){
+        const { ctx } = this;
+        const result = await ctx.model.Teacher.findByIdAndUpdate(params)
+        return result
+    }
 }
 module.exports = TeacherService;

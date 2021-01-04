@@ -38,6 +38,25 @@ class TeacherController extends Controller {
       isSucceed: true,
     };
   }
+  async updataTeacher() {
+    const { ctx } = this;
+    const params = ctx.request.body;
+    const data = await ctx.model.Teacher.findByIdAndUpdate(
+      {_id:params._id},
+      {
+        $set: {
+          name: params.name,
+          password: params.password,
+          role: params.role,
+        }
+      })
+    ctx.body = {
+      total: data.length,
+      data: data,
+      code: 200,
+      isSucceed: true,
+    }
+  }
 }
  
 module.exports = TeacherController;

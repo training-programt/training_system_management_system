@@ -1,6 +1,6 @@
 'use strict';
-const Service = require('egg').Service;
-class RoleService extends Service {
+const Controller = require('egg').Controller;
+class RoleController extends Controller {
   //得到账户信息
   async getRole() {
     const { ctx } = this;
@@ -37,4 +37,4 @@ async delRole(){
     };
 }
 }
-module.exports = RoleService;
+module.exports = RoleController;

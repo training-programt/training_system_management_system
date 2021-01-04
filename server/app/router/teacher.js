@@ -3,7 +3,8 @@ module.exports = app => {
     const { router, controller } = app;
     router.get('/getTeacher', controller.teacher.getTeacher);
     router.get('/addTeacher', controller.teacher.addTeacher);
-    router.get('/delTeacher', controller.teacher.delTeacher);
+    router.post('/delTeacher', controller.teacher.delTeacher);
+    router.post('/updataTeacher', controller.teacher.updataTeacher);
 
 
 };

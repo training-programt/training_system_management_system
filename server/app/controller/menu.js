@@ -1,7 +1,7 @@
 'use strict';
-const Service = require('egg').Service;
+const Controller = require('egg').Controller;
 
-class SettingService extends Service {
+class MenuController extends Controller {
 
   async getMenu() {
     const { ctx } = this;
@@ -37,7 +37,7 @@ class SettingService extends Service {
       message: '删除成功',
       isSucceed: true,
     }
-   }
+  }
 
   async addMenu() {
     const { ctx } = this;
@@ -56,33 +56,35 @@ class SettingService extends Service {
         total: 0,
         data: res,
         code: 200,
-        message: '新增成功',
+        message: '新增子菜单成功',
+        isSucceed: true,
+      }
+    } else {
+      ctx.body = {
+        total: 0,
+        data: newMenu,
+        code: 200,
+        message: '新增菜单成功',
         isSucceed: true,
       }
     }
 
-    ctx.body = {
-      total: 0,
-      data: newMenu,
-      code: 200,
-      message: '新增成功',
-      isSucceed: true,
-    }
+
   }
-  async updataMenu(){
+  async updataMenu() {
     const { ctx } = this;
     const params = ctx.request.body;
-    const res = await ctx.model.Menu.findByIdAndUpdate(
+    const res = await ctx.service.menu.updataMenu(
       { _id: params._id },
       {
         $set: {
-          sort:params.sort,
-          name:params.name,
-          key:params.key,
-          icon:params.icon,
-          level:params.level,
-          role:params.role,
-          children:params.children
+          sort: params.sort,
+          name: params.name,
+          key: params.key,
+          icon: params.icon,
+          level: params.level,
+          role: params.role,
+          children: params.children
         }
       }
     );
@@ -96,4 +98,4 @@ class SettingService extends Service {
   }
 }
 
-module.exports = SettingService;
+module.exports = MenuController;

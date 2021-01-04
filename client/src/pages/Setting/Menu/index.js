@@ -11,9 +11,7 @@ const Menu = () => {
   const [menuId, setMenuId] = useState('');
   const [level, setLevel] = useState(1);
   const [isEdit, setIsEdit] = useState(false);
-  const [radioValue, setRadioValue] = useState(1);
   const [roleData, setRoleData] = useState([]);
-  const [roleRadioValue, setRoleRadioValue] = useState();
 
   const columns = [
     {
@@ -103,8 +101,7 @@ const Menu = () => {
     setIsEdit(false)
   };
 
-  const showEditModal =(record) => {
-    // console.log(record)
+  const showEditModal = (record) => {
     form.resetFields()
     setIsModalVisible(true)
     setIsEdit(true)
@@ -126,7 +123,6 @@ const Menu = () => {
       ...form.getFieldValue(),
       level: level + 1,
       parent: menuId,
-      roleRadioValue,
     }
     if (!isEdit) {
       const res = await React.$axios.post(
@@ -145,7 +141,7 @@ const Menu = () => {
       } else {
         message.error('新增失败');
       }
-    }else if(isEdit){
+    } else if (isEdit) {
       const res = await React.$axios.post(
         '/updataMenu',
         params,
@@ -192,7 +188,7 @@ const Menu = () => {
   const onSelect = (selectedKeys, info) => {
     console.log(info)
     setMenuId(info ? info.value : '');
-    setLevel(info ? info.level+1 : 1)
+    setLevel(info ? info.level + 1 : 1)
   }
 
   const renderTreeNode = (treeNode = tableData) => {
@@ -221,7 +217,12 @@ const Menu = () => {
   return (
     <>
       <Button type="primary" onClick={showModal}>新增</Button>
-      <Table columns={columns} pagination={false} dataSource={tableData} loading={loading} rowKey='_id' />
+      <Table
+        columns={columns}
+        pagination={false}
+        dataSource={tableData}
+        loading={loading}
+        rowKey={record => record._id} />
 
       <Modal
         visible={isModalVisible}
@@ -241,7 +242,7 @@ const Menu = () => {
           </Button>
         ]}
       >
-        <Form {...formItemLayout} form={form} initialValues={{ belong: radioValue }}>
+        <Form {...formItemLayout} form={form}>
           {
             isEdit ? (
               <Form.Item
@@ -281,15 +282,15 @@ const Menu = () => {
               placeholder="请选择上级菜单"
               allowClear
               treeDefaultExpandAll
-              onChange={() => setLevel(1)}
+              onChange={() => setLevel(level)}
               onSelect={onSelect}
             >
               {renderTreeNode()}
             </TreeSelect>
           </Form.Item>
           <Form.Item
-          label='菜单级别'
-          name="level">
+            label='菜单级别'
+            name="level">
             {level}级菜单
           </Form.Item>
           <Form.Item
