@@ -1,7 +1,7 @@
 import React, { useState, useRef, useMemo } from 'react';
 import { Table, Form, message, Radio, Descriptions, Select, InputNumber, TreeSelect, Input, Button, Modal, Popconfirm } from 'antd';
 import { PlusOutlined, DeleteOutlined, UploadOutlined, DownloadOutlined } from '@ant-design/icons';
-import ImportComponent from '../../../components/importExport/import'
+import ImportExportComponent from '../../../components/importExport/importExport'
 const { Option } = Select;
 
 const User = () => {
@@ -10,9 +10,12 @@ const User = () => {
     const [loading, setLoading] = useState(false);
     const [tableData, setTableData] = useState([]);
     const [total, setTotal] = useState(0);
-    const [page, setPage] = useState(1);
+    const [pageSize, setPageSize] = useState(12)
     const [roleData, setRoleData] = useState([]);
+    const [importData, setImportData] = useState();
 
+    const [showSizeChanger, setShowSizeChanger] = useState(true);
+    const [showQuickJumper, setShowQuickJumper] = useState(true)
     useMemo(() => {
         const fetchData = async () => {
             const res = await React.$axios.get(
@@ -21,7 +24,7 @@ const User = () => {
             setTableData(res.data);
         }
         fetchData();
-    }, [page, isModalVisible])
+    }, [pageSize, isModalVisible])
     useMemo(() => {
         const fetchData = async () => {
             const res = await React.$axios.get('/getRole')
@@ -71,6 +74,24 @@ const User = () => {
         labelCol: { span: 5 },
         wrapperCol: { span: 15 },
     };
+    //分页设置
+    const paginationProps = {
+        showSizeChanger,//设置每页显示数据条数
+        showQuickJumper,
+        pageSize,
+        total,  //数据的总的条数
+        onChange: (current) => changePage(current), //点击当前页码
+        onShowSizeChange: (current, pageSize) => {//设置每页显示数据条数，current表示当前页码，pageSize表示每页展示数据条数
+            onShowSizeChange(current, pageSize)
+        }
+    }
+    const changePage = (current) => {
+        //current参数表示是点击当前的页码，
+        // this.getData(current) //向后端发送请求
+    }
+    const onShowSizeChange = (current, pageSize) => {
+        setPageSize(pageSize)
+    }
     const showEditModal = (record) => {
         form.resetFields()
         console.log(record)
@@ -102,6 +123,36 @@ const User = () => {
     const handleCancel = () => {
         setIsModalVisible(false);
     };
+    const importHandle = async (data) => {
+        // console.log(data)
+        var params = []
+        data.forEach(element => {
+            params.push({
+                name: element['姓名'],
+                sex: element['性别'],
+                birthday: element['出生年月'],
+                job: element['专职/兼职'],
+                position: element['专业技术职务'],
+                lastInfo: element['学历'],
+                graduateSchool: element['最后学历毕业学校'],
+                professional: element['最后学历毕业专业'],
+                researchDirection: element['研究领域'],
+                degree: element['最后学历毕业学位']
+            })
+        })
+        // console.log(params)
+        const res = await React.$axios.post('/addTeacher', params);
+        if (res && res.isSucceed) {
+            message.success('添加成功');
+            const res = await React.$axios.get(
+                '/getTeacher',
+            )
+            setTableData(res.data);
+            setTotal(res.total);
+        } else {
+            message.error('添加失败');
+        }
+    };
     const handleOk = async (e) => {
         e.preventDefault();
 
@@ -127,7 +178,7 @@ const User = () => {
 
     return (
         <div>
-            <ImportComponent />
+            <ImportExportComponent onSucess={(data) => importHandle(data)} />
             <Button type="primary" icon={<DownloadOutlined />}>
                 导出
             </Button>
@@ -136,6 +187,10 @@ const User = () => {
                 pagination={false}
                 dataSource={tableData}
                 loading={loading}
+                pagination={paginationProps}
+                // scroll={{
+                //     y: 900
+                //   }}
                 rowKey={record => record._id}
                 expandedRowRender={record =>
                     <div>

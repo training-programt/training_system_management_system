@@ -22,6 +22,7 @@ module.exports = app => {
     graduateSchool:{type:String},//毕业院校
     researchDirection:{type:String},//研究领域
     professional:{type:String},//最后的专业
+    degree:{typr:String},//最后学历毕业学位
     teachRoom: {//所属教研室
       type: Schema.Types.ObjectId,
       ref: 'TeachRoom'

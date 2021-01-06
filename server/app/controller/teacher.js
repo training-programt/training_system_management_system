@@ -6,13 +6,19 @@ class TeacherController extends Controller {
     const { ctx } = this;
     
     const params = await ctx.request.body;
-    const role = await ctx.model.Role.find({role: 'TEACHER_DIRECTOR'})
+    // const role = await ctx.model.Role.find({role: 'TEACHER_DIRECTOR'})
 
-    params.role = role._id;
+    // params.role = role._id;
+    // console.log(params)
+    const teachers = await ctx.service.teacher.addTeacher(params)
+    // console.log(teachers)
 
-    const teacher = await ctx.model.Teacher.create(params)
-
-    ctx.body = teacher
+    ctx.body = {
+      total: teachers.length,
+      data: teachers,
+      code: 200,
+      isSucceed: true,
+    }
 
   }
   async getTeacher() {

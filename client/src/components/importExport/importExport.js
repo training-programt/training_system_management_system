@@ -1,9 +1,10 @@
-import React, { useState } from 'react';
+import React, { useState, useImperativeHandle, forwardRef } from 'react';
 import { Button, message, Input } from 'antd';
 import { UploadOutlined, DownloadOutlined } from '@ant-design/icons';
 import * as XLSX from 'xlsx';
-
-const Import = () => {
+import './importExport.less'
+const importExport = (props) => {
+    const { onSucess } = props
     const initColumn = [{
         title: '姓名',
         dataIndex: 'name',
@@ -20,19 +21,20 @@ const Import = () => {
     }];
 
 
-let attendanceInfoList = [
-    {
-        name:"张三",
-        grade:"2017级",
-        department:"前端部门"
+    let attendanceInfoList = [
+        {
+            name: "张三",
+            grade: "2017级",
+            department: "前端部门"
 
-    },
-    {
-        name:"李四",
-        grade:"2017级",
-        department:"程序部门"
+        },
+        {
+            name: "李四",
+            grade: "2017级",
+            department: "程序部门"
 
-    }];
+        }];
+
     const onImportExcel = file => {
         const { files } = file.target;
         const fileReader = new FileReader();
@@ -54,7 +56,9 @@ let attendanceInfoList = [
                 }
                 // 最终获取到并且格式化后的 json 数据
                 message.success('上传成功！')
-                console.log(data);
+                // console.log(data);
+                onSucess(data)  
+
             } catch (e) {
                 // 这里可以抛出文件类型错误不正确的相关提示
                 message.error('文件类型不正确！');
@@ -63,7 +67,7 @@ let attendanceInfoList = [
         // 以二进制方式打开文件
         fileReader.readAsBinaryString(files[0]);
     }
-    const exportExcel = (headers, data, fileName = '请假记录表.xlsx') => {
+    const exportExcel = (headers, data, fileName = '表.xlsx') => {
         const _headers = headers
             .map((item, i) => Object.assign({}, { key: item.key, title: item.title, position: String.fromCharCode(65 + i) + 1 }))
             .reduce((prev, next) => Object.assign({}, prev, { [next.position]: { key: next.key, v: next.title } }), {});
@@ -100,16 +104,17 @@ let attendanceInfoList = [
         // 导出 Excel
         XLSX.writeFile(wb, fileName);
     }
+    // useImperativeHandle(cRef, () => ({
+    //     onImportExcel
+    // }))
     return (
         <div>
-            <div>
-                <Button icon={<UploadOutlined />}>
-                    <input type='file' accept='.xlsx, .xls' onChange={onImportExcel} />
-                    <span>上传文件</span>
+            <div className="import">
+                <Button icon={<UploadOutlined />}>选择文件
+                <input className="change" type="file" onChange={onImportExcel} accept='.xlsx, .xls' />
                 </Button>
-                <p>支持 .xlsx、.xls 格式的文件</p>
             </div>
-            <div>
+            <div className="export">
                 {/* <Button icon={<DownloadOutlined />} onClick={exportExcel(initColumn, attendanceInfoList,"人员名单.xlsx")}>
                     <span>下载文件</span>
                 </Button> */}
@@ -118,5 +123,4 @@ let attendanceInfoList = [
     )
 
 }
-
-export default Import
+export default importExport
