@@ -4,4 +4,5 @@ module.exports = app => {
     router.get('/getRole', controller.role.getRole);
     router.post('/addRole', controller.role.addRole);
     router.post('/delRole', controller.role.delRole);
+    router.post('/updateRole', controller.role.updateRole);
 };

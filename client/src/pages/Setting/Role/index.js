@@ -1,5 +1,5 @@
 import React, { useState, useMemo } from 'react'
-import { Table, Button, Modal, message, Descriptions, List, Form, Input } from 'antd';
+import { Table, Button, Modal, message, Descriptions, List, Form, Input, Popconfirm } from 'antd';
 
 const Role = () => {
 
@@ -9,6 +9,7 @@ const Role = () => {
   const [total, setTotal] = useState(0);
   const [page, setPage] = useState(1);
   const [form] = Form.useForm();
+  const [isEdit, setIsEdit] = useState(false);
 
   const pageparams = {
     page: page,
@@ -57,10 +58,14 @@ const Role = () => {
       title: '操作',
       key: 'active',
       align: 'center',
-      width: '10%',
+      width: '20%',
       render: (text, record) => (
         <div style={{ textAlign: 'center' }}>
-          <Button type="primary" onClick={() => delRole(record)}>删除</Button>
+          <Button type="primary" onClick={() => showEditModal(record)}>编辑</Button>
+          &emsp;
+          <Popconfirm title='您确定删除当前数据吗？' onConfirm={() => delRole(record)}>
+            <Button type="danger">删除</Button>
+          </Popconfirm>
         </div>
       )
     },
@@ -68,8 +73,19 @@ const Role = () => {
   const showModal = () => {
     form.resetFields()
     setIsModalVisible(true);
+    setIsEdit(false)
   };
-
+  const showEditModal = (record) => {
+    setIsModalVisible(true);
+    form.resetFields()
+    setIsEdit(true)
+    let data = {
+      _id: record._id,
+      role: record.role,
+      roleName: record.roleName,
+    }
+    form.setFieldsValue(data)
+  }
   const handleOk = async (e) => {
     e.preventDefault();
 
@@ -77,6 +93,7 @@ const Role = () => {
       ...form.getFieldValue(),
       menu: [],
     }
+    if(!isEdit){
       const res = await React.$axios.post(
         '/addRole',
         params,
@@ -90,13 +107,29 @@ const Role = () => {
       } else {
         message.error('新增失败');
       }
+    }else{
+      const res = await React.$axios.post(
+        '/updateRole',
+        params,
+      );
+      if (res && res.isSucceed) {
+        message.success('修改成功');
+        const res = await React.$axios.get(
+          '/getRole',
+        )
+        setTableData(res.data);
+      } else {
+        message.error('修改失败');
+      }
+    }
+    
     setIsModalVisible(false);
   };
 
   const handleCancel = () => {
     setIsModalVisible(false);
   };
-  const delRole = async(record) => {
+  const delRole = async (record) => {
     const params = {
       _id: record._id
     }
@@ -148,7 +181,7 @@ const Role = () => {
       <Modal
         visible={isModalVisible}
         width={550}
-        title='创建账户'
+        title={isEdit ? '编辑账号' : '新增账号'}
         centered
         maskClosable={false}
         destroyOnClose

@@ -32,6 +32,36 @@ const User = () => {
         }
         fetchData();
     }, [])
+      // const initColumn = [{
+    //     title: '姓名',
+    //     dataIndex: 'name',
+    //     key: 'name',
+    //     className: 'text-monospace',
+    // }, {
+    //     title: '年级',
+    //     dataIndex: 'grade',
+    //     key: 'grade',
+    // }, {
+    //     title: '部门',
+    //     dataIndex: 'department',
+    //     key: 'department',
+    // }];
+
+
+    // let attendanceInfoList = [
+    //     {
+    //         name: "张三",
+    //         grade: "2017级",
+    //         department: "前端部门"
+
+    //     },
+    //     {
+    //         name: "李四",
+    //         grade: "2017级",
+    //         department: "程序部门"
+
+    //     }];
+
     const columns = [
         {
             title: '名字',
@@ -124,7 +154,6 @@ const User = () => {
         setIsModalVisible(false);
     };
     const importHandle = async (data) => {
-        // console.log(data)
         var params = []
         data.forEach(element => {
             params.push({
@@ -153,6 +182,10 @@ const User = () => {
             message.error('添加失败');
         }
     };
+    // const exportHandle= async(data)=>{
+    //     const res = await React.$axios.get('/getTeacher');
+    //     console.log(res)
+    // }
     const handleOk = async (e) => {
         e.preventDefault();
 
@@ -178,19 +211,13 @@ const User = () => {
 
     return (
         <div>
-            <ImportExportComponent onSucess={(data) => importHandle(data)} />
-            <Button type="primary" icon={<DownloadOutlined />}>
-                导出
-            </Button>
+            <ImportExportComponent onImport={(data) => importHandle(data)}/>
             <Table
                 columns={columns}
                 pagination={false}
                 dataSource={tableData}
                 loading={loading}
                 pagination={paginationProps}
-                // scroll={{
-                //     y: 900
-                //   }}
                 rowKey={record => record._id}
                 expandedRowRender={record =>
                     <div>

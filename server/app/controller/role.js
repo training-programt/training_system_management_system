@@ -36,5 +36,25 @@ async delRole(){
       isSucceed: true,
     };
 }
+async updateRole(){
+  const { ctx } = this;
+  const params = ctx.request.body;
+  const res = await ctx.model.Role.update(
+    {_id:params._id},
+    {
+      $set:{
+        role:params.role,
+        roleName:params.roleName
+      }
+    }
+    )
+  // console.log(res)
+  ctx.body = {
+    total: res.length,
+    data: res,
+    code: 200,
+    isSucceed: true,
+  };
+}
 }
 module.exports = RoleController;

@@ -1,4 +1,7 @@
 'use strict';
+
+const { consoleLevel } = require('egg-mock');
+
 const Controller = require('egg').Controller;
 
 class MenuController extends Controller {
@@ -28,8 +31,39 @@ class MenuController extends Controller {
   async delMenu() {
     const { ctx } = this;
     const params = ctx.request.body;
-    const res = await ctx.service.menu.delMenu(params);
-    console.log(res)
+    const res = await ctx.service.menu.delMenu({ _id: params._id });
+    if(res.ok==1){
+      // const roleInfo = await ctx.service.role.findRole({_id:params.role})
+      // const index = roleInfo[0].menu.findIndex(item =>item == params._id)
+      // const roleArr = [].concat([...roleInfo[0].menu.slice(0,index),...roleInfo[0].menu.slice(index+1)])
+      const delRole = await ctx.model.Role.update(
+        { _id: params.role },
+        {
+          // $set: {
+          //   menu:roleArr
+          // }
+          $pull:{
+            menu:params._id
+          }
+        }
+        )
+        if (params.parent) {
+          // const menuInfo = await ctx.service.menu.findMenu({_id:params.parent})
+          // const index = menuInfo[0].children.findIndex(item =>item == params._id)
+          // const newArr = [].concat([...menuInfo[0].children.slice(0,index),...menuInfo[0].children.slice(index+1)])
+          const meunDelete = await ctx.model.Menu.update(
+            {_id:params.parent},
+            {
+              // $set: {
+              //   children:newArr
+              // }
+              $pull:{
+                children:params._id
+              }
+            }
+          )
+        }
+    }
     ctx.body = {
       total: 0,
       data: res,
@@ -43,6 +77,16 @@ class MenuController extends Controller {
     const { ctx } = this;
     const params = ctx.request.body;
     const newMenu = await ctx.service.menu.addMenu(params);
+    // console.log(newMenu)
+    const roleAdd = await ctx.model.Role.findByIdAndUpdate(
+      { _id: params.role },
+      {
+        $push: {
+          menu: newMenu._id
+        }
+      }
+    )
+    // console.log(roleAdd)
     if (params.parent) {
       const res = await ctx.model.Menu.findByIdAndUpdate(
         { _id: params.parent },
@@ -74,7 +118,44 @@ class MenuController extends Controller {
   async updataMenu() {
     const { ctx } = this;
     const params = ctx.request.body;
-    const res = await ctx.service.menu.updataMenu(
+    const findMenu = await ctx.service.menu.findMenu({_id:params._id})
+    if(params.parent!==findMenu[0].parent){
+      const meunDelete = await ctx.model.Menu.update(
+        {_id:findMenu[0].parent},
+        {
+          $pull:{
+            children:params._id
+          }
+        }
+      )
+      const addMenu = await ctx.model.Menu.update(
+        {_id:params.parent},
+        {
+          $push:{
+            children:params._id
+          }
+        }
+      )
+    }
+   if(params.role!==findMenu[0].role){
+     const roleDelete = await ctx.model.Role.update(
+      {_id:findMenu[0].role},
+      {
+        $pull:{
+          children:params._id
+        }
+      }
+     )
+     const roleAdd = await ctx.model.Role.update(
+      {_id:params.role},
+      {
+        $push:{
+          children:params._id
+        }
+      }
+     )
+   }
+    const res = await ctx.model.Menu.update(
       { _id: params._id },
       {
         $set: {
@@ -84,17 +165,27 @@ class MenuController extends Controller {
           icon: params.icon,
           level: params.level,
           role: params.role,
-          children: params.children
+          parent:params.parent
         }
       }
     );
-    ctx.body = {
-      total: 0,
-      data: res,
-      code: 200,
-      message: '修改成功',
-      isSucceed: true,
+    console.log(res)
+    if(res.ok==1){
+      ctx.body = {
+        total: 0,
+        data: res,
+        code: 200,
+        message: '修改成功',
+        isSucceed: true,
+      }
+    }else{
+      ctx.body = {
+        code: 500,
+        message: '修改失败',
+        isSucceed: false,
+      }
     }
+    
   }
 }
 

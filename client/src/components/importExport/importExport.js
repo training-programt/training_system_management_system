@@ -4,37 +4,8 @@ import { UploadOutlined, DownloadOutlined } from '@ant-design/icons';
 import * as XLSX from 'xlsx';
 import './importExport.less'
 const importExport = (props) => {
-    const { onSucess } = props
-    const initColumn = [{
-        title: '姓名',
-        dataIndex: 'name',
-        key: 'name',
-        className: 'text-monospace',
-    }, {
-        title: '年级',
-        dataIndex: 'grade',
-        key: 'grade',
-    }, {
-        title: '部门',
-        dataIndex: 'department',
-        key: 'department',
-    }];
-
-
-    let attendanceInfoList = [
-        {
-            name: "张三",
-            grade: "2017级",
-            department: "前端部门"
-
-        },
-        {
-            name: "李四",
-            grade: "2017级",
-            department: "程序部门"
-
-        }];
-
+    const { onImport } = props
+  
     const onImportExcel = file => {
         const { files } = file.target;
         const fileReader = new FileReader();
@@ -57,7 +28,7 @@ const importExport = (props) => {
                 // 最终获取到并且格式化后的 json 数据
                 message.success('上传成功！')
                 // console.log(data);
-                onSucess(data)  
+                onImport(data)  
 
             } catch (e) {
                 // 这里可以抛出文件类型错误不正确的相关提示
@@ -109,12 +80,10 @@ const importExport = (props) => {
     // }))
     return (
         <div>
-            <div className="import">
+            <div className="importExport">
                 <Button icon={<UploadOutlined />}>选择文件
                 <input className="change" type="file" onChange={onImportExcel} accept='.xlsx, .xls' />
                 </Button>
-            </div>
-            <div className="export">
                 {/* <Button icon={<DownloadOutlined />} onClick={exportExcel(initColumn, attendanceInfoList,"人员名单.xlsx")}>
                     <span>下载文件</span>
                 </Button> */}

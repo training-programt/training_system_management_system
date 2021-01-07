@@ -90,6 +90,7 @@ const Menu = () => {
   useMemo(() => {
     const fetchData = async () => {
       const res = await React.$axios.get('/getRole')
+      // console.log(res)
       setRoleData(res.data);
     }
     fetchData();
@@ -121,8 +122,8 @@ const Menu = () => {
 
     const params = {
       ...form.getFieldValue(),
-      level: level + 1,
-      parent: menuId,
+      level: level,
+      // parent: menuId,
     }
     if (!isEdit) {
       const res = await React.$axios.post(
@@ -165,7 +166,10 @@ const Menu = () => {
 
   const singleDelete = async (record) => {
     const params = {
-      _id: record._id
+      _id: record._id,
+      // level:record.level,
+      // parent: menuId,
+      role: record.role
     }
     const res = await React.$axios.post('/delMenu', params)
     if (res && res.isSucceed) {
@@ -186,7 +190,7 @@ const Menu = () => {
   };
 
   const onSelect = (selectedKeys, info) => {
-    console.log(info)
+    // console.log(info)
     setMenuId(info ? info.value : '');
     setLevel(info ? info.level + 1 : 1)
   }

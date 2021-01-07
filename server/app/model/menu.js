@@ -23,6 +23,10 @@ module.exports = app => {
       type: Schema.Types.ObjectId,
       ref: 'Menu'
     }],
+    parent:{
+      type: Schema.Types.ObjectId,
+      ref: 'Menu'
+    }
   })
 
   // MenuSchema.virtual('children', {
