@@ -6,40 +6,6 @@ import Logo from '../../public/images/logo.png';
 import Logo_1 from '../../public/images/logo_1.png';
 import './index.less'
 import tabs from '../tabs'
-// import axios from '../../https';
-
-// const renderMenuItem = routes => {
-//   return routes
-//     .filter(item => item.path && item.name)
-//     .map(item => {
-//       if (item.childRoutes !== undefined && !!item.childRoutes.find(child => child.path && child.name)) {
-//         return (
-//           <Menu.SubMenu
-//             key={item.path}
-//             title={
-//               <div>
-//                 <span><i className={'menu-icon iconfont ' + item.icon}></i></span>
-//                 <span>{item.name}</span>
-//               </div>
-//             }
-//           >
-//             {renderMenuItem(item.childRoutes)}
-//           </Menu.SubMenu>
-//         )
-//       }
-//       return (
-//         <Menu.Item key={item.path}>
-//           <Link to={item.path} replace>
-//             <span>
-//               <span><i className={'menu-icon iconfont ' + item.icon}></i></span>
-//               <span>{item.name}</span>
-//             </span>
-//           </Link>
-//         </Menu.Item>
-
-//       )
-//     })
-// }
 
 const SideMenu = props => {
 

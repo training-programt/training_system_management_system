@@ -18,21 +18,16 @@ const Major = () => {
   const [pageSize,setPageSize] = useState(10)
   const [total,setTotal] = useState(80)
 
-  // const role = useSelector(state => state.user.roles);//??不会?
-  const role = 1;
   useMemo(() => {
     const fetchData = async () => {
-      const params = {
-        name: "",
-        code: "",
-      }
       setLoading(true);
-      const res = await api.getMajorList(params);
+      const res = await React.$axios.get('/getMajor');
+      console.log(res)
       setMajorData(res.data);
       setLoading(false);
     }
     fetchData();
-  }, [name, code])
+  },[])
 
   const professColumns = [
     {
@@ -112,9 +107,7 @@ const Major = () => {
     const onShowSizeChange=(current, pageSize)=> {
       setPageSize(pageSize)
   }
-  if (role == 1) {
     return (
-      // 教学领导
       <div className="majorInsLeader">
         <HeaderComponent title="专业管理" />
         <div className="body-wrap">
@@ -165,35 +158,35 @@ const Major = () => {
         </div>
       </div>
     )
-  } else {
-    return (
-      // 教研室主任
-      <div className="teachDirector">
-        <Descriptions
-          bordered
-          title="教研室主任-专业管理"
-          extra={<Button type="primary">编辑</Button>}
-        >
-          <Descriptions.Item label="专业名字">软件工程</Descriptions.Item>
-          <Descriptions.Item label="专业编码">10032</Descriptions.Item>
-          <Descriptions.Item label="专业人数">182</Descriptions.Item>
-          <Descriptions.Item label="专业介绍">
-            Data disk type: MongoDB
-            <br />
-            Database version: 3.4
-            <br />
-            Package: dds.mongo.mid
-            <br />
-            Storage space: 10 GB
-            <br />
-            Replication factor: 3
-            <br />
-            Region: East China 1<br />
-          </Descriptions.Item>
-        </Descriptions>
-      </div>
-    )
-  }
+  // } else {
+  //   return (
+  //     // 教研室主任
+  //     <div className="teachDirector">
+  //       <Descriptions
+  //         bordered
+  //         title="教研室主任-专业管理"
+  //         extra={<Button type="primary">编辑</Button>}
+  //       >
+  //         <Descriptions.Item label="专业名字">软件工程</Descriptions.Item>
+  //         <Descriptions.Item label="专业编码">10032</Descriptions.Item>
+  //         <Descriptions.Item label="专业人数">182</Descriptions.Item>
+  //         <Descriptions.Item label="专业介绍">
+  //           Data disk type: MongoDB
+  //           <br />
+  //           Database version: 3.4
+  //           <br />
+  //           Package: dds.mongo.mid
+  //           <br />
+  //           Storage space: 10 GB
+  //           <br />
+  //           Replication factor: 3
+  //           <br />
+  //           Region: East China 1<br />
+  //         </Descriptions.Item>
+  //       </Descriptions>
+  //     </div>
+  //   )
+  // }
 }
 
 export default Major;

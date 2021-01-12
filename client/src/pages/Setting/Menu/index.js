@@ -12,6 +12,7 @@ const Menu = () => {
   const [level, setLevel] = useState(1);
   const [isEdit, setIsEdit] = useState(false);
   const [roleData, setRoleData] = useState([]);
+  const [menuData, setMenuData] = useState([]);
 
   const columns = [
     {
@@ -46,6 +47,14 @@ const Menu = () => {
         )
       }
     },
+    // {
+    //   title: '角色',
+    //   dataIndex: 'role',
+    //   align: 'center',
+    //   render:(text,record)=>{
+    //     return record.role.role
+    //   }
+    // },
     {
       title: '操作',
       key: 'active',
@@ -90,8 +99,8 @@ const Menu = () => {
   useMemo(() => {
     const fetchData = async () => {
       const res = await React.$axios.get('/getRole')
-      // console.log(res)
       setRoleData(res.data);
+
     }
     fetchData();
   }, [])
@@ -167,8 +176,7 @@ const Menu = () => {
   const singleDelete = async (record) => {
     const params = {
       _id: record._id,
-      // level:record.level,
-      // parent: menuId,
+      parent: menuId,
       role: record.role
     }
     const res = await React.$axios.post('/delMenu', params)
@@ -190,15 +198,18 @@ const Menu = () => {
   };
 
   const onSelect = (selectedKeys, info) => {
-    // console.log(info)
     setMenuId(info ? info.value : '');
     setLevel(info ? info.level + 1 : 1)
   }
-
-  const renderTreeNode = (treeNode = tableData) => {
-    if (!treeNode || !treeNode.length) {
-      return;
+  const changeRole = async(selectedKeys, info) => {
+    const params = {
+      _id:selectedKeys
     }
+    const menu = await React.$axios.post('/menuData', params)
+    // setMenuData([])
+    setMenuData(menu.data)
+  }
+  const renderTreeNode = (treeNode = menuData) => {
     return treeNode.map((v, i) => {
       return (
         <TreeSelect.TreeNode
@@ -207,7 +218,7 @@ const Menu = () => {
           key={v._id}
           level={v.level}
         >
-          {v.children && renderTreeNode(v.children)}
+          {v.children.length!==0 && renderTreeNode(v.children)}
         </TreeSelect.TreeNode>
       );
     });
@@ -270,8 +281,9 @@ const Menu = () => {
             <Select
               style={{ width: 300 }}
               placeholder="请选择账户"
+              onSelect={changeRole}
             >
-              {roleData.map(item => {
+              {roleData.map((item,index) => {
                 return <Select.Option value={item._id} key={item._id}>{item.roleName}</Select.Option>
               })}
             </Select>

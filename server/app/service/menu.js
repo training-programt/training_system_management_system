@@ -34,6 +34,7 @@ class MenuService extends Service {
             .sort('sort')
         return result;
     }
+    
     //新建
     async addMenu(params) {
         const { ctx } = this;

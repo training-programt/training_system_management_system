@@ -1,11 +1,10 @@
-import React, {  } from 'react';
+import React, { } from 'react';
 import { Tabs } from 'antd';
 import { Home } from '../../pages'
 import './index.less'
 import MainHeader from '../MainHeader';
 const { TabPane } = Tabs;
 const MainContent = props => {
-
   const onChange = (activeKey) => {
     props.changeState({
       activeMenu: activeKey,
@@ -37,7 +36,7 @@ const MainContent = props => {
   const operations = <MainHeader />
 
   return (
-    <div style={{height: '100%', width: '100%'}}>
+    <div style={{ height: '100%', width: '100%' }}>
       <Tabs
         style={{ height: '100%' }}
         tabBarStyle={{ background: '#fff', marginBottom: 0 }}
@@ -50,10 +49,14 @@ const MainContent = props => {
       >
         <TabPane
           tab="首页"
-          closable={false}
-          style={{backgroundColor: '#fff'}}
+          closable={true}
+        // style={{backgroundColor: '#fff'}}
         >
-          <Home />
+          {/* <Home /> */}
+          <div style={{ height: '100%', width: '100%' }}>
+            <Home />
+          </div>
+          {/* helloooooo */}
         </TabPane>
         {
           props.panes.map(item => (
@@ -61,7 +64,7 @@ const MainContent = props => {
               key={item.key}
               tab={item.name}
               closable={true}
-              style={{height: '100%'}}
+              style={{ height: '100%' }}
             >
               <div style={{ height: '100%', width: '100%' }}>
                 {item.content}
