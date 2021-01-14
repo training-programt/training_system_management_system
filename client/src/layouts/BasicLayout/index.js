@@ -18,7 +18,7 @@ const BasicLayout = () => {
 
   const changeState = obj => {
     setSession('tabs', JSON.stringify(obj))
-    console.log(JSON.parse(getSession('tabs')))
+    // console.log(JSON.parse(getSession('tabs')))
     setPanes(obj.panes);
     setActiveMenu(obj.activeMenu);
   }

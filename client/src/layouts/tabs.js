@@ -2,7 +2,7 @@ import React from 'react'
 import LoadableComponent from '../utils/loadableComponent'
 const Course = LoadableComponent(import('../pages/Course'), true);
 const Grade = LoadableComponent(import('../pages/Grade'), true);
-const Major = LoadableComponent(import('../pages/Major'), true);
+const LeaderMajor = LoadableComponent(import('../pages/Major/leaderMajor'), true);
 const Teacher = LoadableComponent(import('../pages/Teacher'), true);
 const TeachRoom = LoadableComponent(import('../pages/TeachRoom'), true);
 const Home = LoadableComponent(import('../pages/Home'), true);
@@ -21,7 +21,7 @@ export default {
   Course: <Course />,
   User:<User/>,
   Grade: <Grade />,
-  Major: <Major />,
+  Major: <LeaderMajor />,
   Teacher: <Teacher />,
   TeachRoom: <TeachRoom />,
   TeachRoom2: <Role />,
