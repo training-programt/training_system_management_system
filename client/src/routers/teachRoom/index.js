@@ -1,5 +1,4 @@
 import { TeachRoom } from "@/pages";
-
 export default [
   {
     path: '/teachRoom',

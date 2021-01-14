@@ -23,6 +23,37 @@ export const delSession = name => {
   window.sessionStorage.removeItem(name)
 }
 
+// 防抖
+export const _debounce = function (fn, delay) {
+  var delay1 = delay || 500;
+  var timer;
+  return function () {
+    var th = this;
+    var args = arguments;
+    if (timer) {
+      clearTimeout(timer);
+    }
+    timer = setTimeout(function () {
+      timer = null;
+      fn.apply(th, args);
+    }, delay1);
+  };
+}
+
+//节流
+export const _throttle = function (func, wait) {
+  let previous = 0;
+  return function () {
+    let now = Date.now();
+    let context = this;
+    let args = arguments;
+    if (now - previous > wait) {
+      func.apply(context, args);
+      previous = now;
+    }
+  }
+}
+
 // 格式化时间为 'yyyy-MM-dd hh:mm:ss'
 export function dateFormat(date, fmt) {
   var o = {
