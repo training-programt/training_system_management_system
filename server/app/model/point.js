@@ -11,10 +11,14 @@ module.exports = app => {
         ref: 'Course'
       }
     ],
-    graducationRequirement: {//关联毕业要求指标点
+    graducationRequirement: {//关联毕业要求
       type: Schema.Types.ObjectId,
       ref: 'GraducationRequirement'
-    }
+    },
+    teachingGoal:[{//对应课程目标
+      type: Schema.Types.ObjectId,
+      ref: 'TeachingGoal'
+    }]
   })
 
   return mongoose.model('Point', PointSchema, 'point');

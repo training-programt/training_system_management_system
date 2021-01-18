@@ -1,97 +1,24 @@
 import React, { useState, useMemo } from 'react'
-import { Table, Button, Modal, Descriptions, List, Form, Input, Tree } from 'antd';
-const treeData = [
-  {
-    title: '0-0',
-    key: '0-0',
-    children: [
-      {
-        title: '0-0-0',
-        key: '0-0-0',
-        children: [
-          {
-            title: '0-0-0-0',
-            key: '0-0-0-0',
-          },
-          {
-            title: '0-0-0-1',
-            key: '0-0-0-1',
-          },
-          {
-            title: '0-0-0-2',
-            key: '0-0-0-2',
-          },
-        ],
-      },
-      {
-        title: '0-0-1',
-        key: '0-0-1',
-        children: [
-          {
-            title: '0-0-1-0',
-            key: '0-0-1-0',
-          },
-          {
-            title: '0-0-1-1',
-            key: '0-0-1-1',
-          },
-          {
-            title: '0-0-1-2',
-            key: '0-0-1-2',
-          },
-        ],
-      },
-      {
-        title: '0-0-2',
-        key: '0-0-2',
-      },
-    ],
-  },
-  {
-    title: '0-1',
-    key: '0-1',
-    children: [
-      {
-        title: '0-1-0-0',
-        key: '0-1-0-0',
-      },
-      {
-        title: '0-1-0-1',
-        key: '0-1-0-1',
-      },
-      {
-        title: '0-1-0-2',
-        key: '0-1-0-2',
-      },
-    ],
-  },
-  {
-    title: '0-2',
-    key: '0-2',
-  },
-];
+import { Table, Button, Modal, message, Descriptions, List, Form, Input, Popconfirm } from 'antd';
+
 const Role = () => {
   const [form] = Form.useForm();
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [loading, setLoading] = useState(false);
   const [tableData, setTableData] = useState([]);
-  const [treeData, setTreeData] = useState([]);
   const [total, setTotal] = useState(0);
   const [page, setPage] = useState(1);
+  const [isEdit, setIsEdit] = useState(false);
+
   const pageparams = {
     page: page,
     pageSize: 10,
     total: total,
   }
-  useMemo(() => {
-    const fetchData = async () => {
-      const res = await React.$axios.post('/allMenu')
-
-      setTreeData(res.data)
-    }
-    fetchData()
-  }, [])
-
+  const layout = {
+    labelCol: { span: 5 },
+    wrapperCol: { span: 16 },
+  };
   useMemo(() => {
     const fetchData = async () => {
       const res = await React.$axios.get(
@@ -117,12 +44,12 @@ const Role = () => {
       }
     },
     {
-      title: '角色',
+      title: '账户',
       dataIndex: 'role',
       align: 'center'
     },
     {
-      title: '角色名称',
+      title: '账户名称',
       dataIndex: 'roleName',
       align: 'center'
     },
@@ -130,50 +57,92 @@ const Role = () => {
       title: '操作',
       key: 'active',
       align: 'center',
-      width: '10%',
+      width: '20%',
       render: (text, record) => (
         <div style={{ textAlign: 'center' }}>
-          <Button type="primary" onClick={() => this.showEditModal(record)}>编辑</Button>
+          <Button type="primary" onClick={() => showEditModal(record)}>编辑</Button>
+          &emsp;
+          <Popconfirm title='您确定删除当前数据吗？' onConfirm={() => delRole(record)}>
+            <Button type="danger">删除</Button>
+          </Popconfirm>
         </div>
       )
     },
   ];
   const showModal = () => {
+    form.resetFields()
     setIsModalVisible(true);
+    setIsEdit(false)
   };
-
+  const showEditModal = (record) => {
+    setIsModalVisible(true);
+    form.resetFields()
+    setIsEdit(true)
+    let data = {
+      _id: record._id,
+      role: record.role,
+      roleName: record.roleName,
+    }
+    form.setFieldsValue(data)
+  }
   const handleOk = async (e) => {
+    e.preventDefault();
+
+    const params = {
+      ...form.getFieldValue(),
+      menu: [],
+    }
+    if(!isEdit){
+      const res = await React.$axios.post(
+        '/addRole',
+        params,
+      );
+      if (res && res.isSucceed) {
+        message.success('新增成功');
+        const res = await React.$axios.get(
+          '/getRole',
+        )
+        setTableData(res.data);
+      } else {
+        message.error('新增失败');
+      }
+    }else{
+      const res = await React.$axios.post(
+        '/updateRole',
+        params,
+      );
+      if (res && res.isSucceed) {
+        message.success('修改成功');
+        const res = await React.$axios.get(
+          '/getRole',
+        )
+        setTableData(res.data);
+      } else {
+        message.error('修改失败');
+      }
+    }
+    
     setIsModalVisible(false);
   };
 
   const handleCancel = () => {
     setIsModalVisible(false);
   };
-
-  const formItemLayout = {
-    labelCol: { span: 4 },
-    wrapperCol: { span: 15 },
-  };
-
-  const [selectedKeys, setSelectedKeys] = useState([]);
-  const [checkedKeys, setCheckedKeys] = useState([]);
-
-  const onExpand = expandedKeys => {
-    console.log('onExpand', expandedKeys);
-    setExpandedKeys(expandedKeys);
-    setAutoExpandParent(false);
-  };
-
-  const onCheck = (checkedKeys, e) => {
-    console.log(e.checkedNodes)
-    setCheckedKeys(checkedKeys);
-  };
-
-  const onSelect = (selectedKeys, info) => {
-    console.log('onSelect', info);
-    setSelectedKeys(selectedKeys);
-  };
-
+  const delRole = async (record) => {
+    const params = {
+      _id: record._id
+    }
+    const res = await React.$axios.post('/delRole', params)
+    if (res && res.isSucceed) {
+      message.success('删除成功');
+      const res = await React.$axios.get(
+        '/getRole',
+      )
+      setTableData(res.data);
+    } else {
+      message.error('删除失败');
+    }
+  }
   return (
     <>
       <Button type="primary" onClick={showModal}>新增</Button>
@@ -181,24 +150,23 @@ const Role = () => {
         columns={columns}
         dataSource={tableData}
         loading={loading}
-        rowKey='_id'
-        expandRowByClick={true}
+        rowKey={record => record._id}
         expandedRowRender={record =>
           <div>
             <Descriptions
               bordered
               column={{ xxl: 4, xl: 3, lg: 3, md: 3, sm: 2, xs: 1 }}
             >
-              <Descriptions.Item label="拥有菜单">
+              <Descriptions.Item label="菜单展示">
                 <List
                   bordered
                   size='small'
-                  dataSource={record.permission}
-                  renderItem={permission => (
+                  dataSource={record.menu}
+                  renderItem={menu => (
                     <List.Item>
-                      {permission.permission}
+                      <span><i className={'menu-icon iconfont ' + menu.icon}></i></span>
                                   &emsp;&emsp;
-                      {permission.permissionName}
+                      {menu.name}
                     </List.Item>
                   )}
                 />
@@ -212,62 +180,29 @@ const Role = () => {
       <Modal
         visible={isModalVisible}
         width={550}
-        title='创建角色'
+        title={isEdit ? '编辑账号' : '新增账号'}
         centered
-        maskClosable={true}
+        maskClosable={false}
         destroyOnClose
+        onOk={handleOk}
+        onCancel={handleCancel}
         footer={[
           <Button key="back" onClick={handleCancel}>
             取消
           </Button>,
           <Button key="submit" type="primary" loading={loading} onClick={handleOk}>
-            创建
+            确定
           </Button>
         ]}
       >
-
-        <Form {...formItemLayout} form={form}>
-          <Form.Item
-            name="role"
-            label="角色"
-            rules={[{ required: true, message: '角色不能为空' },]}
-          >
-            <Input
-              maxLength={32}
-              placeholder="请输入角色"
-            />
+        <Form {...layout} form={form} name="control-hooks">
+          <Form.Item name="role" label="账户" rules={[{ required: true }]}>
+            <Input />
           </Form.Item>
-          <Form.Item
-            label='角色名称'
-            name="roleName"
-            rules={[{ required: true, message: '角色名称不能为空' },]}
-          >
-            <Input
-              maxLength={32}
-              placeholder="请输入角色名称"
-            />
-          </Form.Item>
-          <Form.Item
-            label='菜单'
-            name="menu"
-          >
-            <Tree
-              style={{ height: '200px', overflow: 'auto' }}
-              checkable
-              onExpand={onExpand}
-              defaultExpandAll
-              onCheck={onCheck}
-              onSelect={onSelect}
-              checkedKeys={checkedKeys}
-              selectedKeys={selectedKeys}
-              treeData={treeData}
-            />
+          <Form.Item name="roleName" label="账户名称" rules={[{ required: true }]}>
+            <Input />
           </Form.Item>
         </Form>
-
-
-
-
       </Modal>
     </>
   )

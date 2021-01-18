@@ -32,7 +32,8 @@ module.exports = app => {
     core_curriculum:{type:String},//专业核心课程、一段画？？多选框勾选出来合并成一段话
     practical_teaching_link:{type:String},//主要实践性教学环节
     credits_required:{type:Schema.Types.ObjectId,ref:'CreditsRequired'},//学分要求表
-    //课程研修计划可以生成？那需不需要保存下来，放在表格里面，还有一个第二课程的文字表达
+    //课程研修计划可以生成
+    second_classroom:{type:String}//第二课堂文字
   })
 
   return mongoose.model('TrainingProject', TrainingProjectSchema, 'TrainingProject');

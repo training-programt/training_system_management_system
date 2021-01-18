@@ -18,6 +18,7 @@ const Login = () => {
       form.getFieldsValue(),
     )
     if (res && res.isSucceed) {
+      // console.log(res)
       authenticateSuccess(res.data.token.token_type + ' ' + res.data.token.access_token);
       setSession('userInfo', JSON.stringify(res.data.userInfo));
       dispatch({ type: 'LOGIN_SUCCESS' });

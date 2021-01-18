@@ -29,8 +29,8 @@ const Teacher = () => {
   const detailRef = useRef();
 
   const column = [
-    { title: '序号', width: 50, render: (text, record, index) => `${index + 1 + (tableSetting.page - 1) * tableSetting.rows}` },
-    { title: '编号', dataIndex: 'id' },
+    { width: 50, render: (text, record, index) => `${index + 1 + (tableSetting.page - 1) * tableSetting.rows}` },
+    { title: '编号', dataIndex: 'code' },
     { title: '姓名', dataIndex: 'name' },
     { title: '教研室', dataIndex: 'section' },
     { title: '联系方式', dataIndex: 'tel' },
@@ -92,7 +92,8 @@ const Teacher = () => {
         position: select.position,
       }
       setLoading(true);
-      const res = await api.getTeacherList(params);
+      // const res = await api.getTeacherList(params);
+      const res = await React.$axios.get('/getTeacher')
       setTableData(res.data);
       setTotal(res.total);
       setLoading(false);

@@ -49,7 +49,7 @@
     "antd": "^4.8.2",
     "axios": "^0.19.2",
     "echarts": "^4.9.0",
-    "moment": "^2.27.0",
+    "moment": "^2.29.1",
     "qs": "^6.9.4",
     "react": "^16.13.1",
     "react-dom": "^16.13.1",
@@ -61,6 +61,7 @@
     "redux": "^4.0.5",
     "redux-react-hook": "^4.0.1",
     "redux-thunk": "^2.3.0",
-    "shallowequal": "^1.1.0"
+    "shallowequal": "^1.1.0",
+    "xlsx": "^0.16.9"
   }
 }

@@ -1,11 +1,11 @@
 'use strict';
-const Service = require('egg').Service;
-class RoleService extends Service {
+const Controller = require('egg').Controller;
+class RoleController extends Controller {
+  //得到账户信息
   async getRole() {
     const { ctx } = this;
     
-    const res = await ctx.model.Role.find().populate('permission')
-
+    const res = await ctx.service.role.getRole()
     ctx.body = {
       total: res.length,
       data: res,
@@ -14,5 +14,47 @@ class RoleService extends Service {
       newPrimaryKeys: {}  
     };
   }
+  async addRole() {
+    const { ctx } = this;
+    const params = ctx.request.body;
+    const res = await ctx.service.role.addRole(params)
+    ctx.body = {
+      total: res.length,
+      data: res,
+      code: 200,
+      isSucceed: true,
+    };
 }
-module.exports = RoleService;
+async delRole(){
+  const { ctx } = this;
+    const params = ctx.request.body;
+    const res = await ctx.service.role.delRole(params)
+    ctx.body = {
+      total: res.length,
+      data: res,
+      code: 200,
+      isSucceed: true,
+    };
+}
+async updateRole(){
+  const { ctx } = this;
+  const params = ctx.request.body;
+  const res = await ctx.model.Role.update(
+    {_id:params._id},
+    {
+      $set:{
+        role:params.role,
+        roleName:params.roleName
+      }
+    }
+    )
+  // console.log(res)
+  ctx.body = {
+    total: res.length,
+    data: res,
+    code: 200,
+    isSucceed: true,
+  };
+}
+}
+module.exports = RoleController;

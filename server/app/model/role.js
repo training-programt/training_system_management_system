@@ -1,14 +1,15 @@
 'use strict'
+//角色表 1 2 3 4
 module.exports = app => {
   const mongoose = app.mongoose;
   const Schema = mongoose.Schema;
   const RoleSchema = new Schema({
     role: { type: String },
     roleName: { type: String },
-    permission: [{
+    menu: [{
       type: Schema.Types.ObjectId,
-      ref: 'Permission',
-    }]
+      ref: 'Menu',
+    }] 
   })
 
   // RoleSchema.virtual('permissions', {

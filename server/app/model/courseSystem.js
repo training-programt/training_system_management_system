@@ -4,7 +4,6 @@ module.exports = app => {
     const mongoose = app.mongoose;
     const Schema = mongoose.Schema;
     const CourseSystemSchema = new Schema({
-        id: { type: Schema.Types.ObjectId, required: true },
         name: { type: String },
         creditStructure: [
             {
@@ -12,10 +11,10 @@ module.exports = app => {
                 ref: 'CreditStructure'
             }
         ],
-        courses:[//课程体系和课程相关联，为了 本专业课程体系与毕业要求的关联度矩阵
+        courses: [//课程体系和课程相关联，为了 本专业课程体系与毕业要求的关联度矩阵
             {
                 type: Schema.Types.ObjectId,
-                ref: 'Course'  
+                ref: 'Course'
             }
         ]
     })

@@ -5,10 +5,10 @@ module.exports = app => {
   const Schema = mongoose.Schema;
   const TeacherSchema = new Schema({
     name: { type: String },
-    role: {
+    role: [{
       type: Schema.Types.ObjectId,
       ref: 'Role',
-    },
+    }],
     password:{type:String},
     sex:{type:String},
     birthday:{type:String},
@@ -22,6 +22,7 @@ module.exports = app => {
     graduateSchool:{type:String},//毕业院校
     researchDirection:{type:String},//研究领域
     professional:{type:String},//最后的专业
+    degree:{typr:String},//最后学历毕业学位
     teachRoom: {//所属教研室
       type: Schema.Types.ObjectId,
       ref: 'TeachRoom'

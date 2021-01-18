@@ -5,7 +5,7 @@ class TestService extends Service {
   // 查询全部
   async find() {
     const { ctx } = this;
-    const result = await ctx.model.College.find({});
+    const result = await ctx.model.Menu.find({});
     return result;
   }
 }

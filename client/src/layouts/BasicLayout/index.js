@@ -1,4 +1,4 @@
-import React, { useMemo, useState } from 'react';
+import React, { useMemo, useState, useEffect } from 'react';
 import { Layout } from 'antd';
 import { useDispatch } from 'react-redux';
 import SideMenu from '../SideMenu';
@@ -12,6 +12,19 @@ const BasicLayout = () => {
   const dispatch = useDispatch();
   const [menus, setMenus] = useState([]);
   const [collapsed, setCollapsed] = useState(false)
+
+  // useEffect(() => {
+  //   const router = JSON.parse(getSession('tabs'))
+  //   console.log(router)
+
+  //   setPanes(router.panes)
+  // }, [])
+  // useEffect(() => {
+  //   if (panes.length === 0) return
+  //   console.log(panes,JSON.parse(getSession('tabs')).activeMenu)
+  //   setActiveMenu(JSON.parse(getSession('tabs')).activeMenu)
+
+  // }, [panes])
 
   useMemo(() => {
     const fetchData = async () => {

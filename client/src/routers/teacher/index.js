@@ -7,4 +7,5 @@ export default [
     icon: 'icon-teacher',
     component: Teacher
   },
+  
 ]
