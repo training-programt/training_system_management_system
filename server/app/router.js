@@ -10,5 +10,6 @@ module.exports = app => {
   require('./router/role')(app)
   require('./router/teacher')(app)
   require('./router/test')(app)
+  require('./router/course')(app)
 
 };

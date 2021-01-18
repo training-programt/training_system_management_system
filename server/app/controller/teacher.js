@@ -2,37 +2,32 @@
 const Controller = require('egg').Controller;
  
 class TeacherController extends Controller {
-  async addTeacher() {
-    const { ctx } = this;
-    
-    const params = await ctx.request.body;
-    // const role = await ctx.model.Role.find({role: 'TEACHER_DIRECTOR'})
-
-    // params.role = role._id;
-    // console.log(params)
-    const teachers = await ctx.service.teacher.addTeacher(params)
-    // console.log(teachers)
-
-    ctx.body = {
-      total: teachers.length,
-      data: teachers,
-      code: 200,
-      isSucceed: true,
-    }
-
-  }
   async getTeacher() {
     const { ctx } = this;
     const data = await ctx.service.teacher.getTeacher()
-
     ctx.body = {
       total: data.length,
       data: data,
       code: 200,
       isSucceed: true,
     }
+  }
+  async addTeacher() {
+    const { ctx } = this;
+    
+    const params = await ctx.request.body;
+    const teachers = await ctx.service.teacher.addTeacher(params)
+    ctx.body = {
+      total: teachers.length,
+      data: teachers,
+      code: 200,
+      isSucceed: true,
+      message: '查找成功',
+
+    }
 
   }
+
   async delTeacher() {
     const { ctx } = this;
     const params = ctx.request.body;

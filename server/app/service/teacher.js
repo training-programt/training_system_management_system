@@ -9,6 +9,9 @@ class TeacherService extends Service {
             .find({
             })
             .populate('role')
+            .populate('teachRoom')
+            .populate('course')
+            .populate('major')
             .sort('sort');
         return result;
     }

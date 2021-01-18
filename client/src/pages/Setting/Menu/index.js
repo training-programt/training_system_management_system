@@ -47,14 +47,14 @@ const Menu = () => {
         )
       }
     },
-    // {
-    //   title: '角色',
-    //   dataIndex: 'role',
-    //   align: 'center',
-    //   render:(text,record)=>{
-    //     return record.role.role
-    //   }
-    // },
+    {
+      title: '角色',
+      dataIndex: 'role',
+      align: 'center',
+      render:(text,record)=>{
+        return record.role.role
+      }
+    },
     {
       title: '操作',
       key: 'active',
@@ -100,7 +100,6 @@ const Menu = () => {
     const fetchData = async () => {
       const res = await React.$axios.get('/getRole')
       setRoleData(res.data);
-
     }
     fetchData();
   }, [])
