@@ -31,7 +31,7 @@ class MenuController extends Controller {
     const { ctx } = this;
     const params = ctx.request.body;
     const result = await ctx.service.role.findRole({ _id: params._id });
-    const res = await ctx.model.Menu.find({ _id: { $in: result[0].menu },level:1})
+    const res = await ctx.model.Menu.find({ _id: { $in: result[0].menu }, level: 1 })
       .populate('role')
       .populate('children')
       .sort('sort');
@@ -123,6 +123,7 @@ class MenuController extends Controller {
     const { ctx } = this;
     const params = ctx.request.body;
     const findMenu = await ctx.service.menu.findMenu({ _id: params._id })
+    console.log(findMenu)
     if (params.parent !== findMenu[0].parent) {
       const meunDelete = await ctx.model.Menu.update(
         { _id: findMenu[0].parent },

@@ -30,7 +30,7 @@ const SideMenu = props => {
       <Menu.Item key={item.key}>
         <Link to={item.path}>
           <span><i style={styles.icon} className={'iconfont ' + item.icon}></i></span>
-          <span>{item.title}</span>
+          <span>{item.name}</span>
         </Link>
       </Menu.Item>
     )
@@ -38,7 +38,7 @@ const SideMenu = props => {
 
   const renderSubMenu = item => {
     return (
-      <Menu.SubMenu key={item.key} title={<span><i style={styles.icon} className={'iconfont ' + item.icon}></i><span>{item.title}</span></span>}>
+      <Menu.SubMenu key={item.key} title={<span><i style={styles.icon} className={'iconfont ' + item.icon}></i><span>{item.name}</span></span>}>
         {
           item.children && item.children.map(c => {
             return c.children && c.children.length > 0 ? renderSubMenu(c) : renderMenuItem(c)

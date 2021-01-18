@@ -1,5 +1,5 @@
 import React, { useState, useMemo } from 'react'
-import { Table, Form, message, Radio,Select, InputNumber, TreeSelect, Input, Button, Modal, Popconfirm } from 'antd';
+import { Table, Form, message, Radio, Select, InputNumber, TreeSelect, Input, Button, Modal, Popconfirm } from 'antd';
 import { getSession } from '../../../utils';
 const Menu = () => {
   const [form] = Form.useForm();
@@ -44,11 +44,6 @@ const Menu = () => {
       align: 'center'
     },
     {
-      title: '名称',
-      dataIndex: 'title',
-      align: 'center'
-    },
-    {
       title: '图标',
       dataIndex: 'icon',
       align: 'center',
@@ -62,14 +57,15 @@ const Menu = () => {
         )
       }
     },
-    // {
-    //   title: '角色',
-    //   dataIndex: 'role',
-    //   align: 'center',
-    //   render:(text,record)=>{
-    //     return record.role.role
-    //   }
-    // },
+    {
+      title: '角色',
+      dataIndex: 'role',
+      align: 'center',
+      render: (text, record) => {
+        console.log(record.role)
+        return record.role.role
+      }
+    },
     {
       title: '操作',
       key: 'active',
@@ -216,9 +212,9 @@ const Menu = () => {
     setMenuId(info ? info.value : '');
     setLevel(info ? info.level + 1 : 1)
   }
-  const changeRole = async(selectedKeys, info) => {
+  const changeRole = async (selectedKeys, info) => {
     const params = {
-      _id:selectedKeys
+      _id: selectedKeys
     }
     const menu = await React.$axios.post('/menuData', params)
     // setMenuData([])
@@ -229,11 +225,11 @@ const Menu = () => {
       return (
         <TreeSelect.TreeNode
           value={v._id}
-          title={v.title}
+          title={v.name}
           key={v._id}
           level={v.level}
         >
-          {v.children.length!==0 && renderTreeNode(v.children)}
+          {v.children.length !== 0 && renderTreeNode(v.children)}
         </TreeSelect.TreeNode>
       );
     });
@@ -303,7 +299,7 @@ const Menu = () => {
               placeholder="请选择账户"
               onSelect={changeRole}
             >
-              {roleData.map((item,index) => {
+              {roleData.map((item, index) => {
                 return <Select.Option value={item._id} key={item._id}>{item.roleName}</Select.Option>
               })}
             </Select>

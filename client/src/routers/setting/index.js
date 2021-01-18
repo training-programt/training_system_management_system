@@ -1,5 +1,6 @@
 import Menu from "@/pages/Setting/Menu";
 import Role from "@/pages/Setting/Role";
+import User from "@/pages/Setting/User";
 
 export default [
   {
@@ -10,8 +11,14 @@ export default [
   },
   {
     path: '/setting/role',
-    name: '用户管理',
+    name: '账户管理',
     icon: 'icon-role',
     component: Role,
+  },
+  {
+    path: '/setting/user',
+    name: '用户管理',
+    icon: 'icon-user',
+    component: User,
   }
 ]
