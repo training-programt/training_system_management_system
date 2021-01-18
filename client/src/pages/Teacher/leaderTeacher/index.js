@@ -32,16 +32,13 @@ const LeaderTeacher = () => {
       render: (text, record) => {
         // console.log(record.teachName.name)
         console.log(record)
-        const teachName = record.teachName
-        console.log(teachName)
-        return record
+        return record.teachName.name
       }
     },
     {
-      title: '所属专业', dataIndex: 'major.name', align: 'center',
+      title: '所属专业', dataIndex: 'major', align: 'center',
       render: (text, record) => {
-        const majorName = record.major
-        return majorName
+        return record.major.name
       }
     },
     {
