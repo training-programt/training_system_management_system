@@ -57,14 +57,14 @@ const Menu = () => {
         )
       }
     },
-    {
-      title: '角色',
-      dataIndex: 'role',
-      align: 'center',
-      render:(text,record)=>{
-        return record.role.role
-      }
-    },
+    // {
+    //   title: '角色',
+    //   dataIndex: 'role',
+    //   align: 'center',
+    //   render:(text,record)=>{
+    //     return record.role.role
+    //   }
+    // },
     {
       title: '操作',
       key: 'active',
@@ -124,12 +124,13 @@ const Menu = () => {
     form.resetFields()
     setIsModalVisible(true)
     setIsEdit(true)
+    console.log(record)
     let data = {
       _id: record._id,
       name: record.name,
       path: record.path,
       icon: record.icon,
-      role: record.role.roleName,
+      role: record.role._id,
       sort: record.sort
     }
     form.setFieldsValue(data)
@@ -211,6 +212,7 @@ const Menu = () => {
     setLevel(info ? info.level + 1 : 1)
   }
   const changeRole = async (selectedKeys, info) => {
+    // console.log(selectedKeys,info)
     const params = {
       _id: selectedKeys
     }
@@ -347,7 +349,7 @@ const Menu = () => {
           >
             <Input
               maxLength={32}
-              placeholder="请输入组键路由"
+              placeholder="请输入路由路径"
             />
           </Form.Item>
           <Form.Item
