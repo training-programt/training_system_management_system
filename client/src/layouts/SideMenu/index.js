@@ -27,7 +27,7 @@ const SideMenu = props => {
 
   const renderMenuItem = item => {
     return (
-      <Menu.Item key={item.key}>
+      <Menu.Item key={item.path}>
         <Link to={item.path}>
           <span><i style={styles.icon} className={'iconfont ' + item.icon}></i></span>
           <span>{item.name}</span>
@@ -38,7 +38,7 @@ const SideMenu = props => {
 
   const renderSubMenu = item => {
     return (
-      <Menu.SubMenu key={item.key} title={<span><i style={styles.icon} className={'iconfont ' + item.icon}></i><span>{item.name}</span></span>}>
+      <Menu.SubMenu key={item.path} title={<span><i style={styles.icon} className={'iconfont ' + item.icon}></i><span>{item.name}</span></span>}>
         {
           item.children && item.children.map(c => {
             return c.children && c.children.length > 0 ? renderSubMenu(c) : renderMenuItem(c)
