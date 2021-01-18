@@ -2,7 +2,7 @@ import { Home, UserInfo, Notification,  } from "@/pages";
 import Error404 from "@/pages/Exception/404"
 export default [
   {
-    path: '/',
+    path: '/home',
     component: Home
   },
   

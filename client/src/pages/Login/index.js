@@ -22,7 +22,7 @@ const Login = () => {
       authenticateSuccess(res.data.token.token_type + ' ' + res.data.token.access_token);
       setSession('userInfo', JSON.stringify(res.data.userInfo));
       dispatch({ type: 'LOGIN_SUCCESS' });
-      history.push('/')
+      history.push('/home')
       message.success("登录成功");
     } else {
       dispatch({ type: 'LOGIN_FAILED'})
