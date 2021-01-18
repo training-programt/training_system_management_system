@@ -48,8 +48,8 @@ const Menu = () => {
       }
     },
     {
-      title: '组键页面',
-      dataIndex: 'key',
+      title: '组键路由',
+      dataIndex: 'path',
       align: 'center'
     },
     {
@@ -151,7 +151,7 @@ const Menu = () => {
     let data = {
       _id: record._id,
       name: record.name,
-      key: record.key,
+      path: record.path,
       icon: record.icon,
       permission: record.permission._id || record.permission,
       sort: record.sort
@@ -330,15 +330,15 @@ const Menu = () => {
           }
           <Form.Item
             label='组件页面'
-            name="key"
+            name="path"
             rules={[
-              { required: true, message: '组键页面不能为空' },
-              { pattern: '^[^ ]+$', message: '组键页面不能有空格' }
+              { required: true, message: '组键路由不能为空' },
+              { pattern: '^[^ ]+$', message: '组键路由不能有空格' }
             ]}
           >
             <Input
               maxLength={32}
-              placeholder="请输入组键页面"
+              placeholder="请输入组键路由"
             />
           </Form.Item>
           <Form.Item

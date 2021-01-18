@@ -1,6 +1,6 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { Link, withRouter } from 'react-router-dom';
-import { Layout, Menu, Row } from 'antd';
+import { Menu } from 'antd';
 import { useSelector } from 'react-redux';
 import Logo from '../../public/images/logo.png';
 import Logo_1 from '../../public/images/logo_1.png';
@@ -11,23 +11,6 @@ const SideMenu = props => {
   const typeColor = useSelector(state => state.user.typeColor);
   const [openKeys, setOpenKeys] = useState([])
   const [selectedKeys, setSelectedKeys] = useState([])
-
-  // useEffect(() => {
-  //   const pathname = props.location.pathname
-  //   const rank = pathname.split('/')
-  //   switch (rank.length) {
-  //     case 2:
-  //       setSelectedKeys(pathname)
-  //       break;
-  //     case 5:
-  //       setSelectedKeys(pathname)
-  //       setOpenKeys(rank.slice(0, 3).join('/'), rank.slice(0, 4).join('/'))
-  //       break;
-  //     default:
-  //       setSelectedKeys(pathname)
-  //       setOpenKeys(pathname.substr(0, pathname.lastIndexOf('/')))
-  //   }
-  // });
 
   const onOpenChange = (openKeys) => {
     if (openKeys.length === 0 || openKeys.length === 1) {
@@ -46,7 +29,7 @@ const SideMenu = props => {
     return (
       <Menu.Item key={item.key}>
         <Link to={item.path}>
-          <span><i className={'menu-icon iconfont ' + item.icon}></i></span>
+          <span><i style={styles.icon} className={'iconfont ' + item.icon}></i></span>
           <span>{item.title}</span>
         </Link>
       </Menu.Item>
@@ -55,7 +38,7 @@ const SideMenu = props => {
 
   const renderSubMenu = item => {
     return (
-      <Menu.SubMenu key={item.key} title={<span><i className={'menu-icon iconfont ' + item.icon}></i><span>{item.title}</span></span>}>
+      <Menu.SubMenu key={item.key} title={<span><i style={styles.icon} className={'iconfont ' + item.icon}></i><span>{item.title}</span></span>}>
         {
           item.children && item.children.map(c => {
             return c.children && c.children.length > 0 ? renderSubMenu(c) : renderMenuItem(c)
@@ -74,6 +57,11 @@ const SideMenu = props => {
 
     img: {
       height: '32px',
+    },
+
+    icon: {
+      fontWeight: 700,
+      marginRight: '12px'
     }
   }
 

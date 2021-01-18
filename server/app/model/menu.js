@@ -9,7 +9,7 @@ module.exports = app => {
     //   component: { type: String}
     // }],
     type: { type: Number },
-    key: { type: String },
+    path: { type: String },
     level: { type: Number },
     title: { type: String },
     sort: { type: Number },
