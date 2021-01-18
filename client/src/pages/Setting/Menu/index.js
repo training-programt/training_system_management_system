@@ -1,5 +1,5 @@
 import React, { useState, useMemo } from 'react'
-import { Table, Form, message, Radio,Select, InputNumber, TreeSelect, Input, Button, Modal, Popconfirm } from 'antd';
+import { Table, Form, message, Radio, Select, InputNumber, TreeSelect, Input, Button, Modal, Popconfirm } from 'antd';
 import { getSession } from '../../../utils';
 const Menu = () => {
   const [form] = Form.useForm();
@@ -14,6 +14,16 @@ const Menu = () => {
   const [roleData, setRoleData] = useState([]);
   const [menuData, setMenuData] = useState([]);
 
+  const tableSetting = {
+    page: 1,
+    rows: 10,
+    rowSelection: {
+      type: 'checkbox',
+      onChange: (selectedRowKeys) => {
+        setDeleteList(selectedRowKeys)
+      },
+    }
+  }
   const columns = [
     {
       title: '名称',
@@ -29,8 +39,8 @@ const Menu = () => {
       }
     },
     {
-      title: '组件页面名称',
-      dataIndex: 'key',
+      title: '组键路由',
+      dataIndex: 'path',
       align: 'center'
     },
     {
@@ -62,10 +72,10 @@ const Menu = () => {
       width: '20%',
       render: (text, record) => (
         <div style={{ textAlign: 'center' }}>
-          <Button type="primary" onClick={() => showEditModal(record)}>编辑</Button>
+          <Button type="link" onClick={() => showEditModal(record)}>编辑</Button>
                 &emsp;
           <Popconfirm title='您确定删除当前数据吗？' onConfirm={() => singleDelete(record)}>
-            <Button type="danger">删除</Button>
+            <Button type="link">删除</Button>
           </Popconfirm>
         </div>
       )
@@ -117,7 +127,7 @@ const Menu = () => {
     let data = {
       _id: record._id,
       name: record.name,
-      key: record.key,
+      path: record.path,
       icon: record.icon,
       role: record.role.roleName,
       sort: record.sort
@@ -200,9 +210,9 @@ const Menu = () => {
     setMenuId(info ? info.value : '');
     setLevel(info ? info.level + 1 : 1)
   }
-  const changeRole = async(selectedKeys, info) => {
+  const changeRole = async (selectedKeys, info) => {
     const params = {
-      _id:selectedKeys
+      _id: selectedKeys
     }
     const menu = await React.$axios.post('/menuData', params)
     // setMenuData([])
@@ -217,7 +227,7 @@ const Menu = () => {
           key={v._id}
           level={v.level}
         >
-          {v.children.length!==0 && renderTreeNode(v.children)}
+          {v.children.length !== 0 && renderTreeNode(v.children)}
         </TreeSelect.TreeNode>
       );
     });
@@ -227,6 +237,11 @@ const Menu = () => {
     labelCol: { span: 4 },
     wrapperCol: { span: 15 },
   };
+
+  const onShowSizeChange = (current, size) => {
+    console.log(current, size)
+    setPageSize(size)
+  }
 
   return (
     <>
@@ -282,7 +297,7 @@ const Menu = () => {
               placeholder="请选择账户"
               onSelect={changeRole}
             >
-              {roleData.map((item,index) => {
+              {roleData.map((item, index) => {
                 return <Select.Option value={item._id} key={item._id}>{item.roleName}</Select.Option>
               })}
             </Select>
@@ -324,16 +339,15 @@ const Menu = () => {
           </Form.Item>
           <Form.Item
             label='组件页面'
-            name="key"
+            name="path"
             rules={[
-              { required: true, message: '组键页面不能为空' },
-              { pattern: '^[^ ]+$', message: '组键页面不能有空格' }
+              { required: true, message: '组键路由不能为空' },
+              { pattern: '^[^ ]+$', message: '组键路由不能有空格' }
             ]}
           >
             <Input
               maxLength={32}
-              style={{ width: 300 }}
-              placeholder="请输入组键页面名称"
+              placeholder="请输入组键路由"
             />
           </Form.Item>
           <Form.Item

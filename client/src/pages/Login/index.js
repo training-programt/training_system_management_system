@@ -4,7 +4,6 @@ import { useDispatch, useSelector } from 'react-redux'
 import './index.less'
 import { setSession, authenticateSuccess } from '../../utils';
 import { useHistory } from 'react-router-dom';
-import axios from '../../https';
 
 const Login = () => {
   const [form] = Form.useForm();

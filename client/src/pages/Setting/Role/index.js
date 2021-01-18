@@ -2,13 +2,12 @@ import React, { useState, useMemo } from 'react'
 import { Table, Button, Modal, message, Descriptions, List, Form, Input, Popconfirm } from 'antd';
 
 const Role = () => {
-
+  const [form] = Form.useForm();
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [loading, setLoading] = useState(false);
   const [tableData, setTableData] = useState([]);
   const [total, setTotal] = useState(0);
   const [page, setPage] = useState(1);
-  const [form] = Form.useForm();
   const [isEdit, setIsEdit] = useState(false);
 
   const pageparams = {

@@ -6,17 +6,6 @@ import { useDispatch } from 'react-redux';
 import './index.less'
 import { logout, getSession } from '../../utils';
 
-const linkLists = [
-  // {
-  //   path: '/class',
-  //   name: '课程管理',
-  // },
-  // {
-  //   path: '/major',
-  //   name: '专业管理',
-  // }
-]
-
 const MainHeader = () => {
   const history = useHistory();
   const dispatch = useDispatch()
@@ -65,24 +54,6 @@ const MainHeader = () => {
   return (
     <Layout.Header className='main-layout-header'>
       <Row type='flex' className='header-content'>
-        {/* <Col style={{ flex: 1 }}>
-          <Link to='/home'>
-            <span className='nav-items'>我的主页</span>
-          </Link> */}
-
-          { /* 路由tab导航 */}
-          {/* {
-            linkLists.map(item => {
-              return (
-                <Link to={item.path}>
-                  <span className='nav-items'>{item.name}</span>
-                </Link>
-              )
-            })
-          } */}
-
-        {/* </Col> */}
-        
         <Col className="avatar-content">
           <span>
             <Link to='/notification'>

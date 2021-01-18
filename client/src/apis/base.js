@@ -20,4 +20,8 @@ export default {
   getPermissionList: '/getPermission', // 获取权限列表
   updatePermission: '/updatePermission', // 创建/更新权限
 
+
+  getMenu: '/menu', // 获取菜单
+  getAllMenu: '/allMenu', //获取所有菜单
+
 }

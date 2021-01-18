@@ -1,27 +1,17 @@
 import React, { useMemo, useState, useEffect } from 'react';
 import { Layout } from 'antd';
-import { useSelector, useDispatch } from 'react-redux';
-import { Redirect } from 'react-router-dom';
+import { useDispatch } from 'react-redux';
 import SideMenu from '../SideMenu';
-import MainHeader from '../MainHeader';
 import MainContent from '../MainContent';
-import axios from '../../https';
 import './index.less';
-import { getSession, setSession } from '../../utils';
-
+import { getSession, setSession } from '@/utils';
+import MainHeader from '../MainHeader';
+const { Sider, Content } = Layout
 const BasicLayout = () => {
 
   const dispatch = useDispatch();
-  const [panes, setPanes] = useState([]);
-  const [activeMenu, setActiveMenu] = useState('');
   const [menus, setMenus] = useState([]);
-
-  const changeState = obj => {
-    setSession('tabs', JSON.stringify(obj))
-    // console.log(JSON.parse(getSession('tabs')))
-    setPanes(obj.panes);
-    setActiveMenu(obj.activeMenu);
-  }
+  const [collapsed, setCollapsed] = useState(false)
 
   // useEffect(() => {
   //   const router = JSON.parse(getSession('tabs'))
@@ -38,9 +28,10 @@ const BasicLayout = () => {
 
   useMemo(() => {
     const fetchData = async () => {
-      const res = await React.$axios.get(`/menu?role=${JSON.parse(getSession('userInfo')).role}`)
+      const res = await React.$axios.get(`/menu?role=${JSON.parse(getSession('userInfo')).role}`,)
       if (res && res.isSucceed) {
-        setMenus(res.data)
+        setSession('userMenu', res.data); // 将菜单存储到sessionStorage
+        setMenus(res.data);
         dispatch({
           type: 'SET_MENUS',
           menus: res.data
@@ -51,25 +42,14 @@ const BasicLayout = () => {
   }, [])
 
   return (
-    <Layout className='main-layout'>
-      <SideMenu
-        menus={menus}
-        panes={panes}
-        activeMenu={activeMenu}
-        changeState={changeState} />
-      <Layout className='main-layout-right'>
-        {/* <MainHeader /> */}
-        <Layout.Content className='main-layout-content'>
-          {/* <div className="content-box">
-            {children}
-          </div> */}
-          <MainContent 
-          style={{ height: '100%', width: '100%' }} 
-          menus={menus} 
-          panes={panes} 
-          activeMenu={activeMenu} 
-          changeState={changeState} />
-        </Layout.Content>
+    <Layout>
+      <Sider collapsible trigger={null} collapsed={collapsed} style={{ height: '100vh' }}><SideMenu menus={menus} />
+      </Sider>
+      <Layout>
+        <MainHeader />
+        <Content>
+          <MainContent menus={menus} />
+        </Content>
       </Layout>
     </Layout>
   )

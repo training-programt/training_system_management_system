@@ -1,0 +1,38 @@
+@width: 100vw/1920px;
+@height: 100vh/960px;
+@height1: 60px * @height;
+
+.permission-container {
+  width: 100%;
+  height: 100%;
+}
+
+.body-wrap {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  background-color: #fff;
+  padding: 0 24px * @height 16px * @width ;
+  overflow: hidden;
+
+  .filter-container {
+    width: 100%;
+    height: 80px * @height;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    font-size: 16px * @width;
+  }
+
+  .search-box {
+    width: 300px * @width;
+  }
+
+  .button-wrap button {
+    margin-right: 16px * @width;
+    border-radius: 4px;
+    :last-child {
+      margin-right: 0;
+    }
+  }
+}
