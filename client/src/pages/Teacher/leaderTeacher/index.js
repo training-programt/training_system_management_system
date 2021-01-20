@@ -1,44 +1,53 @@
 import React, { useState, useRef, useMemo, useEffect } from 'react';
-import { Input, Select, Space, Button, Table, Descriptions } from 'antd';
+import { Input, Select, Space, Button, Table, Drawer,Popconfirm, message,Form, Col, Row, DatePicker, Radio } from 'antd';
 import HeaderComponent from '../../../components/header'
 import postJSON from '@/public/json/post.json'
 import './index.less'
-import { PlusOutlined, DeleteOutlined, UploadOutlined, DownloadOutlined } from '@ant-design/icons';
+import { PlusOutlined, DeleteOutlined, UploadOutlined, DownloadOutlined, SearchOutlined } from '@ant-design/icons';
+import moment from 'moment';
 const { Option } = Select;
 
 const LeaderTeacher = () => {
 
   const [page, setPage] = useState(1);
-  const [select, setSelect] = useState({ job: '', section: '', position: '' });
-  const [query, setQuery] = useState('');
+  const [form] = Form.useForm();
+  const [teachRoomQuery, setTeachRoomQuery] = useState('');
+  const [jobQuery, setJobQuery] = useState('');
+  const [posQuery, setPosQuery] = useState('');
+  const [name, setName] = useState('');
   const [total, setTotal] = useState(0);
   const [loading, setLoading] = useState(false);
   const [tableData, setTableData] = useState([]);
-  const [sectionData, setSectionData] = useState([]);
+  const [roomData, setRoomData] = useState([]);
+  const [position, setPositionData] = useState([]);
   const [teacherDetail, setTeacherDetail] = useState({});
   const [pageSize, setPageSize] = useState(12)
   const [showSizeChanger, setShowSizeChanger] = useState(true);
-  const [showQuickJumper, setShowQuickJumper] = useState(true)
-
-  const importRef = useRef();
-  const detailRef = useRef();
-
+  const [showQuickJumper, setShowQuickJumper] = useState(true);
+  const [selectedRowKeys, setSelectedRowKeys] = useState([]);
+  const [drawerVisible, setDrawerVisible] = useState(false);
+  const [isEdit, setIsEdit] = useState(false);
+  const [sexValue, setSexValue] = useState('女');
+  const [jobValue, setJobValue] = useState('专职');
+  const [courseData, setCourseData] = useState([]);
+  const [majorData,setMajorData] = useState([]);
+  const monthFormat = 'YYYY-MM';
   const teacherColumns = [
-    { title: '姓名', dataIndex: 'name', align: 'center', },
+    { title: '序号', align: 'center', fixed: 'left', render: (text, record, index) => `${index + 1}` },
+    { title: '姓名', dataIndex: 'name', align: 'center', fixed: 'left', },
     { title: '性别', dataIndex: 'sex', align: 'center', },
-    { title: '密码', dataIndex: 'password', align: 'center', },
+    { title: '生日', dataIndex: 'birthday', algin: 'center' },
+    { title: '密码', dataIndex: 'password', align: 'center' },
     {
       title: '教研室', dataIndex: 'teachRoom', align: 'center',
       render: (text, record) => {
-        // console.log(record.teachName.name)
-        console.log(record)
-        return record.teachName.name
+        return record.teachRoom ? record.teachRoom.name : ''
       }
     },
     {
       title: '所属专业', dataIndex: 'major', align: 'center',
       render: (text, record) => {
-        return record.major.name
+        return record.major ? record.major.name : ''
       }
     },
     {
@@ -53,25 +62,139 @@ const LeaderTeacher = () => {
         return sum
       }
     },
-    // { title: '专职/兼职', dataIndex: 'job', render: text => text == 0 ? '专职' : '兼职' },
-    // { title: '职务', dataIndex: 'position' },
-    // { title: '学历', dataIndex: 'lastInfo' },
+    { title: '专职/兼职', dataIndex: 'job', algin: 'center' },
+    { title: '职务', dataIndex: 'position', algin: 'center' },
+    { title: '学历', dataIndex: 'lastInfo', algin: 'center' },
+    { title: '毕业院校', dataIndex: 'graduateSchool', algin: 'center' },
+    { title: '研究领域', dataIndex: 'researchDirection', algin: 'center' },
+    { title: '最后专业', dataIndex: 'professional', algin: 'center' },
     {
-      title: '操作', key: 'action',
+      title: '操作', key: 'action', fixed: 'right',
       render: (text, record) => (
         <Space size="middle">
-          <Button size="small" type="link">详情</Button>
-          <Button size="small" type="link">信息修改</Button>
-          <Button size="small" type="link">删除</Button>
+          <Button size="small" type="link" onClick={()=>showDrawer(record)}>信息修改</Button>
+          <Popconfirm title='您确定删除当前数据吗？' onConfirm={() => delTeacher(record)}>
+            <Button size="small" type="link">删除</Button>
+          </Popconfirm>
         </Space >
       )
     },
   ];
-
+  useEffect(() => {
+    setLoading(true)
+    const res = React.$axios.get('/getTeacher').then((teacherData) => {
+      // console.log(teacherData.data)
+      let pos = [];
+      teacherData.data.map((item) => {
+        pos.push(item.position)
+      })
+      // console.log(pos)
+      setPositionData([...new Set(pos)]);
+      setTableData(teacherData.data)
+      setTotal(teacherData.total)
+    })
+    setLoading(false)
+  }, [])
+  useEffect(() => {
+    const res = React.$axios.get('/getTeachRoom').then((roomData) => {
+      // console.log(roomData)
+      setRoomData(roomData.data)
+    })
+    const courses = React.$axios.get('/getCourse').then((res) => {
+      setCourseData(res.data)
+    })
+    const major = React.$axios.get('/getMajor').then((res)=>{
+      setMajorData(res.data)
+    })
+  }, [])
   const pageparams = {
     page: page,
     pageSize: 10,
     total: total,
+  }
+
+  const rowSelection = {
+    type: 'checkout',
+    onChange: (selectedRowKeys, selectedRows) => {
+      console.log(`selectedRowKeys: ${selectedRowKeys}`, 'selectedRows: ', selectedRows);
+    },
+  };
+
+  const onCloseDrawer = () => {
+    setDrawerVisible(false)
+  };
+  const addTeacherDrawer = () => {
+    setDrawerVisible(true);
+    form.resetFields()
+    setIsEdit(false)
+  }
+  const handleSub = async(e) => {
+    e.preventDefault();
+
+    const params = {
+      ...form.getFieldValue(),
+    }
+    if (!isEdit) {
+      const res = await React.$axios.post(
+        '/addTeacher',
+        params,
+      );
+      if (res && res.isSucceed) {
+        console.log(res)
+        message.success('新增成功');
+        const res = await React.$axios.get(
+          '/getTeacher',
+        )
+        setTableData(res.data);
+      } else {
+        message.error('新增失败');
+      }
+    } else if(isEdit){
+      
+    }
+    setDrawerVisible(false)
+  }
+  //删除存在分页问题
+  const delTeacher=async(record)=>{
+    const params = {
+      _id: record._id,
+    }
+    const del = await React.$axios.post('/delTeacher', params)
+    if (del && del.isSucceed) {
+      message.success('删除成功');
+      const res = await React.$axios.get(
+        '/getTeacher',
+      )
+      setTableData(res.data);
+    } else {
+      message.error('删除失败');
+    }
+  }
+  const showDrawer = (record) => {
+    form.resetFields()
+    setDrawerVisible(true)
+    setIsEdit(true)
+    console.log(record)
+    // let newBirthday = moment(record.birthday).format('YYYY-MM');
+    // console.log(birthday)
+    let data = {
+      _id: record._id,
+      name: record.name,
+      password:record.password,
+      sex:record.sex,
+      // birthday:newBirthday,
+      // course:record.course,
+      job:record.job,
+      position:record.position,
+      lastInfo:record.lastInfo,
+      graduateSchool:record.graduateSchool,
+      researchDirection:record.researchDirection,
+      professional:record.professional,
+      degree:record.degree,
+      // teachRoom:record.teachRoom.name,
+      // major:record.major.name
+    }
+    form.setFieldsValue(data)
   }
   //分页设置
   const paginationProps = {
@@ -95,61 +218,63 @@ const LeaderTeacher = () => {
     setTeacherDetail(text)
     // detailRef.current.showDetail(true);
   }
-  useEffect(() => {
-    setLoading(true)
-    const res = React.$axios.get('/getTeacher').then((teacherData) => {
-      setTableData(teacherData.data)
-      setTotal(teacherData.total)
-    })
+  //查询还有问题没有改
+  const queryData = async() => {
+    setLoading(true);
+    const params = {
+      teachRoom: teachRoomQuery,
+      job:jobQuery,
+      position:posQuery,
+      name:name
+    };
+    const res = await React.$axios.post('/queryTeacher', params);
+    setTableData(res.data)
     setLoading(false)
-  }, [])
+  }
+
   return (
     <div className="teacher-management">
       <HeaderComponent title="教师管理" />
-
       <div className="body-wrap">
         <div className="filter-container">
           <div className="filter-box">
             <div className="filter-item">
-              <span>教研室：</span>
-              {/* <Select className="select-type" defaultValue='' onChange={value => setSelect({ ...select, section: value })}>
-                <Option value=''>全部</Option>
+              <Select className="select-type" placeholder="教研室" onChange={(e)=>setTeachRoomQuery(e)} allowClear>
                 {
-                  sectionData && sectionData.map(item => (<Option key={item.id} value={item.id}>{item.name}</Option>))
+                  roomData && roomData.map(item => (<Option key={item._id} value={item._id}>{item.name}</Option>))
                 }
-              </Select> */}
+              </Select>
             </div>
             <div className="filter-item">
-              <span>专职/兼职：</span>
-              {/* <Select className="select-type" defaultValue='' onChange={value => setSelect({ ...select, job: value })}>
-                <Option value=''>全部</Option>
-                <Option value='0'>专职</Option>
-                <Option value='1'>兼职</Option>
-              </Select> */}
+              <Select className="select-type" placeholder="专职/兼职" onChange={(e)=>setJobQuery(e)} allowClear>
+                <Option value='专职'>专职</Option>
+                <Option value='兼职'>兼职</Option>
+              </Select>
             </div>
             <div className="filter-item">
-              <span>职务：</span>
-              {/* <Select
-                defaultValue=''
+              <Select
+                placeholder="职位"
                 className="select-type"
-                onChange={value => setSelect({ ...select, position: value })}
+                onChange={(e)=>setPosQuery(e)}
+                allowClear
               >
-                <Option value=''>全部</Option>
                 {
-                  postJSON.post.map((c, index) => {
-                    return <Option key={index} value={c.id}>{c.name}</Option>
+                  position && position.map((item, index) => {
+                    return <Option key={index} value={item}>{item}</Option>
                   })
                 }
-              </Select> */}
+              </Select>
             </div>
+            <div className="filter-item">
+              <Input className="select-type" placeholder="请输入教师姓名" onChange={e => setName(e.target.value)} allowClear />
+            </div>
+            <Button type="primary" icon={<SearchOutlined />} onClick={queryData}>查询</Button>
+            <Button icon={<PlusOutlined />} type="primary" onClick={addTeacherDrawer}>新增教师</Button>
           </div>
-          <div className="search-box">
-            <Input.Search placeholder="请输入教师编号或名称" onSearch={value => setQuery(value)} allowClear enterButton />
-          </div>
+
         </div>
 
         <div className="button-wrap">
-          <Button icon={<PlusOutlined />} type="primary">新增教师</Button>
           <Button icon={<DeleteOutlined />}>批量删除</Button>
           <Button icon={<UploadOutlined />}>批量导入</Button>
           <Button icon={<DownloadOutlined />}>批量导出</Button>
@@ -162,42 +287,199 @@ const LeaderTeacher = () => {
             rowKey={record => record._id}
             loading={loading}
             pagination={paginationProps}
-            expandedRowRender={record =>
-              <div>
-                <Descriptions
-                  bordered
-                  column={{ xs: 6, sm: 8, md: 8 }}
-                  title="教师详细信息"
-                >
-                  <Descriptions.Item label="出生日期">
-                    {record.birthday}
-                  </Descriptions.Item>
-                  <Descriptions.Item label="专职/兼职">
-                    {record.job}
-                  </Descriptions.Item>
-                  <Descriptions.Item label="职位">
-                    {record.position}
-                  </Descriptions.Item>
-                  <Descriptions.Item label="学历">
-                    {record.lastInfo}
-                  </Descriptions.Item>
-                  <Descriptions.Item label="毕业院校">
-                    {record.graduateSchool}
-                  </Descriptions.Item>
-                  <Descriptions.Item label="研究领域">
-                    {record.researchDirection}
-                  </Descriptions.Item>
-                  <Descriptions.Item label="最后专业">
-                    {record.professional}
-                  </Descriptions.Item>
-                  <Descriptions.Item label="最后学历毕业学位">
-                    {record.degree}
-                  </Descriptions.Item>
-                </Descriptions>
-              </div>
-            }
+            // scroll={{y: 1500}}
+            rowSelection={rowSelection}
           />
         </div>
+        <Drawer
+          title={isEdit ? '信息修改' : '新增老师'}
+          width={720}
+          onClose={onCloseDrawer}
+          visible={drawerVisible}
+          bodyStyle={{ paddingBottom: 80 }}
+          footer={
+            <div
+              style={{
+                textAlign: 'right',
+              }}
+            >
+              <Button onClick={onCloseDrawer} style={{ marginRight: 8 }}>
+                Cancel
+              </Button>
+              <Button onClick={handleSub} type="primary">
+                Submit
+              </Button>
+            </div>
+          }
+        >
+          <Form layout="vertical" hideRequiredMark form={form}>
+            <Row gutter={16}>
+              <Col span={12}>
+                <Form.Item
+                  name="name"
+                  label="姓名"
+                >
+                  <Input placeholder="请输入教师名字" />
+                </Form.Item>
+              </Col>
+              <Col span={12}>
+                <Form.Item
+                  name="password"
+                  label="密码"
+                >
+                  <Input
+                    placeholder="请输入教师密码"
+                  />
+                </Form.Item>
+              </Col>
+            </Row>
+            <Row gutter={16}>
+              {/* <Row> */}
+              <Col span={12}>
+                <Row gutter={8}>
+                  <Col span={12}>
+                    <Form.Item
+                      name="sex"
+                      label="性别"
+                    >
+                      <Radio.Group value={sexValue}>
+                        <Radio value='男'>男</Radio>
+                        <Radio value='女'>女</Radio>
+                      </Radio.Group>
+                    </Form.Item>
+                  </Col>
+                  <Col span={12}>
+                    <Form.Item
+                      name="job"
+                      label="专职/兼职"
+                    >
+                      <Radio.Group value={jobValue}>
+                        <Radio value='专职'>专职</Radio>
+                        <Radio value='兼职'>兼职</Radio>
+                      </Radio.Group>
+                    </Form.Item>
+                  </Col>
+                </Row>
+              </Col>
+              {/* </Row> */}
+              <Col span={12}>
+                <Form.Item
+                  name="position"
+                  label="职位"
+                >
+                  <Select
+                    placeholder="请选择职位"
+                  >
+                    {
+                      position && position.map((item, index) => {
+                        return <Option key={index} value={item}>{item}</Option>
+                      })
+                    }
+                  </Select>
+                </Form.Item>
+              </Col>
+            </Row>
+            <Row gutter={16}>
+              <Col span={12}>
+                <Form.Item
+                  name="birthday"
+                  label="出生年月"
+                >
+                  <DatePicker format={monthFormat} picker="month" style={{width:320}} />
+                </Form.Item>
+              </Col>
+              <Col span={12}>
+                <Form.Item
+                  name="degree"
+                  label="最后学历毕业学位"
+                >
+                  <Input placeholder="请输入教师最后学历毕业学位" />
+                </Form.Item>
+              </Col>
+            </Row>
+            <Row gutter={16}>
+              <Col span={12}>
+                <Form.Item
+                  name="course"
+                  label="拟授课程"
+                >
+                  <Select
+                    style={{ width: 320 }}
+                    placeholder="请选择拟授课程"
+                    mode="multiple"
+                    allowClear
+                  >
+                    {courseData && courseData.map(item => {
+                      return <Select.Option value={item._id} key={item._id}>{item.name}</Select.Option>
+                    })}
+                  </Select>
+                </Form.Item>
+              </Col>
+              <Col span={12}>
+                <Form.Item
+                  name="lastInfo"
+                  label="最后学历"
+                >
+                  <Input placeholder="请输入教师最后学历" />
+                </Form.Item>
+              </Col>
+            </Row>
+            <Row gutter={16}>
+              <Col span={12}>
+                <Form.Item
+                  name="graduateSchool"
+                  label="毕业院校"
+                >
+                  <Input placeholder="请输入教师毕业院校" />
+                </Form.Item>
+              </Col>
+              <Col span={12}>
+                <Form.Item
+                  name="researchDirection"
+                  label="研究领域"
+                >
+                  <Input placeholder="请输入教师研究领域" />
+                </Form.Item>
+              </Col>
+            </Row>
+            <Row gutter={16}>
+              <Col span={12}>
+                <Form.Item
+                  name="professional"
+                  label="最后的专业"
+                >
+                  <Input placeholder="请输入教师毕业最后的专业" />
+                </Form.Item>
+              </Col>
+              <Col span={12}>
+                <Form.Item
+                  name="major"
+                  label="所属专业"
+                >
+                 <Select placeholder="所属专业" onChange={(e)=>setTeachRoomQuery(e)} allowClear>
+                {
+                  majorData && majorData.map(item => (<Option key={item._id} value={item._id}>{item.name}</Option>))
+                }
+              </Select>
+                </Form.Item>
+              </Col>
+            </Row>
+            <Row gutter={16}>
+              <Col span={12}>
+                <Form.Item
+                  name="teachRoom"
+                  label="所属教研室"
+                >
+                  <Select placeholder="请选择所属教研室" allowClear>
+                {
+                  roomData && roomData.map(item => (<Option key={item._id} value={item._id}>{item.name}</Option>))
+                }
+              </Select>
+                </Form.Item>
+              </Col>
+            </Row>
+          </Form>
+        </Drawer>
       </div>
     </div>
   )

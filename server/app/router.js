@@ -11,5 +11,6 @@ module.exports = app => {
   require('./router/teacher')(app)
   require('./router/test')(app)
   require('./router/course')(app)
+  require('./router/teachRoom')(app)
 
 };
