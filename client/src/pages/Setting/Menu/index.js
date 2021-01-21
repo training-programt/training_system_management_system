@@ -1,6 +1,11 @@
 import React, { useState, useMemo } from 'react'
-import { Table, Form, message, Radio, Select, InputNumber, TreeSelect, Input, Button, Modal, Popconfirm } from 'antd';
-import { getSession } from '../../../utils';
+import { Table, Form, message, Select, InputNumber, TreeSelect, Input, Button, Modal, Popconfirm } from 'antd';
+import PaginationComponent from '@/components/pagination'
+import HeaderComponent from '@/components/header'
+import TableComponent from '@/components/table'
+import { PlusOutlined, DeleteOutlined } from '@ant-design/icons';
+import './index.less'
+
 const Menu = () => {
   const [form] = Form.useForm();
   const [isModalVisible, setIsModalVisible] = useState(false);
@@ -24,6 +29,13 @@ const Menu = () => {
       },
     }
   }
+
+  const pageparams = {
+    page: page,
+    pageSize: 4,
+    total: total,
+  }
+
   const columns = [
     {
       title: '名称',
@@ -82,6 +94,7 @@ const Menu = () => {
       )
     },
   ];
+
   const menuIcon = {
     color: '#000',
     fontWeight: 700,
@@ -183,7 +196,6 @@ const Menu = () => {
     setIsModalVisible(false);
   };
 
-
   const singleDelete = async (record) => {
     const params = {
       _id: record._id,
@@ -204,6 +216,7 @@ const Menu = () => {
       message.error('删除失败');
     }
   }
+
   const handleCancel = () => {
     setIsModalVisible(false);
   };
@@ -212,6 +225,7 @@ const Menu = () => {
     setMenuId(info ? info.value : '');
     setLevel(info ? info.level + 1 : 1)
   }
+
   const changeRole = async (selectedKeys, info) => {
     const params = {
       _id: selectedKeys
@@ -220,6 +234,7 @@ const Menu = () => {
     // setMenuData([])
     setMenuData(menu.data)
   }
+
   const renderTreeNode = (treeNode = menuData) => {
     return treeNode.map((v, i) => {
       return (
@@ -246,140 +261,151 @@ const Menu = () => {
   }
 
   return (
-    <>
-      <Button type="primary" onClick={showModal}>新增</Button>
-      <Table
-        columns={columns}
-        pagination={false}
-        dataSource={tableData}
-        loading={loading}
-        rowKey={record => record._id} />
+    <div className="menu-container">
+      <HeaderComponent title="菜单管理" />
+      <div className="body-wrap">
+        <div className="header-wrap">
+          <div className="search-box">
+            <Input.Search placeholder="请输入菜单名称" onSearch={value => setQuery(value)} allowClear enterButton />
+          </div>
+          <div className="operation-wrap">
+            <Button type="primary" icon={<PlusOutlined />} onClick={showModal}>新增菜单</Button>
+            <Button type="primary" icon={<DeleteOutlined />}>批量删除</Button>
+          </div>
+        </div>
 
-      <Modal
-        visible={isModalVisible}
-        width={550}
-        title={isEdit ? '编辑菜单' : '新建菜单'}
-        centered
-        maskClosable={true}
-        destroyOnClose
-        onOk={handleOk}
-        onCancel={handleCancel}
-        footer={[
-          <Button key="back" onClick={handleCancel}>
-            取消
+        <div className="table-wrap">
+          <TableComponent data={tableData} column={columns} settings={tableSetting} loading={loading} />
+        </div>
+        <PaginationComponent pageparams={pageparams} handlePage={v => setPage(v)} />
+        <Modal
+            visible={isModalVisible}
+            width={550}
+            title={isEdit ? '编辑菜单' : '新建菜单'}
+            centered
+            maskClosable={true}
+            destroyOnClose
+            onOk={handleOk}
+            onCancel={handleCancel}
+            footer={[
+              <Button key="back" onClick={handleCancel}>
+                取消
           </Button>,
-          <Button key="submit" type="primary" loading={loading} onClick={handleOk}>
-            确认
+              <Button key="submit" type="primary" loading={loading} onClick={handleOk}>
+                确认
           </Button>
-        ]}
-      >
-        <Form {...formItemLayout} form={form}>
-          {
-            isEdit ? (
+            ]}
+          >
+            <Form {...formItemLayout} form={form}>
+              {
+                isEdit ? (
+                  <Form.Item
+                    name="_id"
+                    label="ID"
+                  >
+                    <Input
+                      maxLength={32}
+                      disabled
+                    />
+                  </Form.Item>
+                ) : ''
+              }
               <Form.Item
-                name="_id"
-                label="ID"
+                label='选择账户'
+                name="role"
+                rules={[
+                  { required: true },
+                ]}
+              >
+                <Select
+                  style={{ width: 300 }}
+                  placeholder="请选择账户"
+                  onSelect={changeRole}
+                >
+                  {roleData.map((item, index) => {
+                    return <Select.Option value={item._id} key={item._id}>{item.roleName}</Select.Option>
+                  })}
+                </Select>
+              </Form.Item>
+              <Form.Item
+                name="parent"
+                label="上级菜单"
+              >
+                <TreeSelect
+                  style={{ width: '300px' }}
+                  dropdownStyle={{ maxHeight: 200, overflow: 'auto' }}
+                  placeholder="请选择上级菜单"
+                  allowClear
+                  treeDefaultExpandAll
+                  onChange={() => setLevel(level)}
+                  onSelect={onSelect}
+                >
+                  {renderTreeNode()}
+                </TreeSelect>
+              </Form.Item>
+              <Form.Item
+                label='菜单级别'
+                name="level">
+                {level}级菜单
+          </Form.Item>
+              <Form.Item
+                label='菜单名称'
+                name="name"
+                rules={[
+                  { required: true, message: '菜单不能为空' },
+                  { pattern: '^[^ ]+$', message: '菜单不能有空格' }
+                ]}
               >
                 <Input
                   maxLength={32}
-                  disabled
+                  style={{ width: 300 }}
+                  placeholder="请输入菜单"
                 />
               </Form.Item>
-            ) : ''
-          }
-          <Form.Item
-            label='选择账户'
-            name="role"
-            rules={[
-              { required: true },
-            ]}
-          >
-            <Select
-              style={{ width: 300 }}
-              placeholder="请选择账户"
-              onSelect={changeRole}
-            >
-              {roleData.map((item, index) => {
-                return <Select.Option value={item._id} key={item._id}>{item.roleName}</Select.Option>
-              })}
-            </Select>
-          </Form.Item>
-          <Form.Item
-            name="parent"
-            label="上级菜单"
-          >
-            <TreeSelect
-              style={{ width: '300px' }}
-              dropdownStyle={{ maxHeight: 200, overflow: 'auto' }}
-              placeholder="请选择上级菜单"
-              allowClear
-              treeDefaultExpandAll
-              onChange={() => setLevel(level)}
-              onSelect={onSelect}
-            >
-              {renderTreeNode()}
-            </TreeSelect>
-          </Form.Item>
-          <Form.Item
-            label='菜单级别'
-            name="level">
-            {level}级菜单
-          </Form.Item>
-          <Form.Item
-            label='菜单名称'
-            name="name"
-            rules={[
-              { required: true, message: '菜单不能为空' },
-              { pattern: '^[^ ]+$', message: '菜单不能有空格' }
-            ]}
-          >
-            <Input
-              maxLength={32}
-              style={{ width: 300 }}
-              placeholder="请输入菜单"
-            />
-          </Form.Item>
-          <Form.Item
-            label='组件页面'
-            name="path"
-            rules={[
-              { required: true, message: '组键路由不能为空' },
-              { pattern: '^[^ ]+$', message: '组键路由不能有空格' }
-            ]}
-          >
-            <Input
-              maxLength={32}
-              placeholder="请输入组键路由"
-            />
-          </Form.Item>
-          <Form.Item
-            label='菜单图标'
-            name="icon"
-            rules={[
-              { required: true, message: '菜单图标不能为空' },
-              { pattern: '^[^ ]+$', message: '菜单图标不能有空格' }
-            ]}
-          >
-            <Input
-              style={{ width: 300 }}
-              maxLength={32}
-              placeholder="请输入菜单图标"
-            />
-          </Form.Item>
-          <Form.Item
-            label='位置'
-            name="sort"
-            rules={[
-              { required: true, message: '位置不能为空' }
-            ]}
-            initialValue={0}
-          >
-            <InputNumber min={0} />
-          </Form.Item>
+              <Form.Item
+                label='组件页面'
+                name="path"
+                rules={[
+                  { required: true, message: '组件路由不能为空' },
+                  { pattern: '^[^ ]+$', message: '组件路由不能有空格' }
+                ]}
+              >
+                <Input
+                  maxLength={32}
+                  placeholder="请输入组件路由"
+                />
+              </Form.Item>
+              <Form.Item
+                label='菜单图标'
+                name="icon"
+                rules={[
+                  { required: true, message: '菜单图标不能为空' },
+                  { pattern: '^[^ ]+$', message: '菜单图标不能有空格' }
+                ]}
+              >
+                <Input
+                  style={{ width: 300 }}
+                  maxLength={32}
+                  placeholder="请输入菜单图标"
+                />
+              </Form.Item>
+              <Form.Item
+                label='位置'
+                name="sort"
+                rules={[
+                  { required: true, message: '位置不能为空' }
+                ]}
+                initialValue={0}
+              >
+                <InputNumber min={0} />
+              </Form.Item>
 
-        </Form>
-      </Modal>
-    </>
+            </Form>
+          </Modal>
+
+      </div>
+
+    </div>
   )
 }
 
