@@ -7,13 +7,6 @@
   width: 100%;
 
   .body-wrap {
-    position: relative;
-    width: 100%;
-    height: 100%;
-    background-color: #fff;
-    padding: 0 24px * @height 16px * @width ;
-    overflow: hidden;
-
     .filter-container {
       width: 100%;
       height: 80px * @height;
@@ -24,12 +17,10 @@
 
       .filter-box {
         flex: 4;
-        height: 60px * @height;
-        line-height: 60px * @height;
         display: flex;
 
         .filter-item {
-          margin: 0 16px * @width;
+          margin: 0 16px * @width 0 0;
 
           .select-type {
             width: 250px * @width;
@@ -37,68 +28,66 @@
           }
 
           >span {
-            margin-right: 20px * @width;
+            margin-right: 14px * @width;
           }
 
         }
-
+        button{
+        margin-right: 14px * @width;
+        border-radius: 4px;
+        }
 
       }
-
-      .search-box {
-        flex: 1;
-      }
+   
     }
 
     .button-wrap {
-      margin-bottom: 20px * @height;
+      margin-bottom: 10px * @height;
 
       button {
         margin-right: 16px * @width;
         border-radius: 4px;
-        height: 40px * @height;
       }
     }
-  }
 }
 
-.loading {
-  width: 100%;
-  height: 100%;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
+// .loading {
+//   width: 100%;
+//   height: 100%;
+//   display: flex;
+//   justify-content: center;
+//   align-items: center;
+// }
 
-.teacher-detail {
-  .site-description-item-profile-wrapper {
-    margin-bottom: 7px;
-    color: rgba(0, 0, 0, 0.65);
-    font-size: 14px;
-    line-height: 1.5715;
-  }
+// .teacher-detail {
+//   .site-description-item-profile-wrapper {
+//     margin-bottom: 7px;
+//     color: rgba(0, 0, 0, 0.65);
+//     font-size: 14px;
+//     line-height: 1.5715;
+//   }
 
-  [data-theme='compact'] .site-description-item-profile-wrapper {
-    font-size: 12px;
-    line-height: 1.66667;
-  }
+//   [data-theme='compact'] .site-description-item-profile-wrapper {
+//     font-size: 12px;
+//     line-height: 1.66667;
+//   }
 
-  .ant-drawer-body p.site-description-item-profile-p {
-    display: block;
-    margin-bottom: 16px;
-    color: rgba(0, 0, 0, 0.85);
-    font-size: 16px;
-    line-height: 1.5715;
-  }
+//   .ant-drawer-body p.site-description-item-profile-p {
+//     display: block;
+//     margin-bottom: 16px;
+//     color: rgba(0, 0, 0, 0.85);
+//     font-size: 16px;
+//     line-height: 1.5715;
+//   }
 
-  [data-theme='compact'] .ant-drawer-body p.site-description-item-profile-p {
-    font-size: 14px;
-    line-height: 1.66667;
-  }
+//   [data-theme='compact'] .ant-drawer-body p.site-description-item-profile-p {
+//     font-size: 14px;
+//     line-height: 1.66667;
+//   }
 
-  .site-description-item-profile-p-label {
-    display: inline-block;
-    margin-right: 8px;
-    color: rgba(0, 0, 0, 0.85);
-  }
+//   .site-description-item-profile-p-label {
+//     display: inline-block;
+//     margin-right: 8px;
+//     color: rgba(0, 0, 0, 0.85);
+//   }
 }
