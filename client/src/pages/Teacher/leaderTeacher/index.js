@@ -83,12 +83,10 @@ const LeaderTeacher = () => {
   useEffect(() => {
     setLoading(true)
     const res = React.$axios.get('/getTeacher').then((teacherData) => {
-      // console.log(teacherData.data)
       let pos = [];
       teacherData.data.map((item) => {
         pos.push(item.position)
       })
-      // console.log(pos)
       setPositionData([...new Set(pos)]);
       setTableData(teacherData.data)
       setTotal(teacherData.total)
@@ -97,7 +95,6 @@ const LeaderTeacher = () => {
   }, [])
   useEffect(() => {
     const res = React.$axios.get('/getTeachRoom').then((roomData) => {
-      // console.log(roomData)
       setRoomData(roomData.data)
     })
     const courses = React.$axios.get('/getCourse').then((res) => {
@@ -117,9 +114,22 @@ const LeaderTeacher = () => {
     type: 'checkout',
     onChange: (selectedRowKeys, selectedRows) => {
       console.log(`selectedRowKeys: ${selectedRowKeys}`, 'selectedRows: ', selectedRows);
+      setSelectedRowKeys([...selectedRowKeys])
     },
   };
-
+  const manyDelete = async()=>{
+    const res = await React.$axios.post('/manyDelete',selectedRowKeys);
+    console.log(res)
+    if (res && res.isSucceed) {
+      message.success('批量删除成功');
+      const res = await React.$axios.get(
+        '/getTeacher',
+      )
+      setTableData(res.data);
+    } else {
+      message.error('批量删除失败');
+    }
+  }
   const onCloseDrawer = () => {
     setDrawerVisible(false)
   };
@@ -140,7 +150,7 @@ const LeaderTeacher = () => {
         params,
       );
       if (res && res.isSucceed) {
-        console.log(res)
+        // console.log(res)
         message.success('新增成功');
         const res = await React.$axios.get(
           '/getTeacher',
@@ -150,7 +160,17 @@ const LeaderTeacher = () => {
         message.error('新增失败');
       }
     } else if(isEdit){
-      
+      const updata = await React.$axios.post('/updataTeacher',params);
+      if (updata && updata.isSucceed) {
+        // console.log(res)
+        message.success('修改成功');
+        const res = await React.$axios.get(
+          '/getTeacher',
+        )
+        setTableData(res.data);
+      } else {
+        message.error('修改失败');
+      }
     }
     setDrawerVisible(false)
   }
@@ -158,6 +178,8 @@ const LeaderTeacher = () => {
   const delTeacher=async(record)=>{
     const params = {
       _id: record._id,
+      teachRoom:record.teachRoom._id,
+      major:record.major._id
     }
     const del = await React.$axios.post('/delTeacher', params)
     if (del && del.isSucceed) {
@@ -174,16 +196,13 @@ const LeaderTeacher = () => {
     form.resetFields()
     setDrawerVisible(true)
     setIsEdit(true)
-    console.log(record)
-    // let newBirthday = moment(record.birthday).format('YYYY-MM');
-    // console.log(birthday)
     let data = {
       _id: record._id,
       name: record.name,
       password:record.password,
       sex:record.sex,
-      // birthday:newBirthday,
-      // course:record.course,
+      birthday:record.birthday,
+      course:record.course[0]._id,
       job:record.job,
       position:record.position,
       lastInfo:record.lastInfo,
@@ -191,8 +210,8 @@ const LeaderTeacher = () => {
       researchDirection:record.researchDirection,
       professional:record.professional,
       degree:record.degree,
-      // teachRoom:record.teachRoom.name,
-      // major:record.major.name
+      teachRoom:record.teachRoom._id,
+      major:record.major._id
     }
     form.setFieldsValue(data)
   }
@@ -239,7 +258,7 @@ const LeaderTeacher = () => {
         <div className="filter-container">
           <div className="filter-box">
             <div className="filter-item">
-              <Select className="select-type" placeholder="教研室" onChange={(e)=>setTeachRoomQuery(e)} allowClear>
+              <Select className="select-type" placeholder="教研室" onChange={(e)=>{setTeachRoomQuery(e)}} allowClear>
                 {
                   roomData && roomData.map(item => (<Option key={item._id} value={item._id}>{item.name}</Option>))
                 }
@@ -275,7 +294,7 @@ const LeaderTeacher = () => {
         </div>
 
         <div className="button-wrap">
-          <Button icon={<DeleteOutlined />}>批量删除</Button>
+          <Button icon={<DeleteOutlined />} onClick={manyDelete}>批量删除</Button>
           <Button icon={<UploadOutlined />}>批量导入</Button>
           <Button icon={<DownloadOutlined />}>批量导出</Button>
         </div>
@@ -318,6 +337,7 @@ const LeaderTeacher = () => {
                 <Form.Item
                   name="name"
                   label="姓名"
+                  rules={[{ required: true, message: '请输入教师名字!' }]}
                 >
                   <Input placeholder="请输入教师名字" />
                 </Form.Item>
@@ -385,7 +405,7 @@ const LeaderTeacher = () => {
                   name="birthday"
                   label="出生年月"
                 >
-                  <DatePicker format={monthFormat} picker="month" style={{width:320}} />
+                  <Input placeholder="请输入教师出生年月（1999-02）" />
                 </Form.Item>
               </Col>
               <Col span={12}>

@@ -6,6 +6,8 @@ module.exports = app => {
     router.post('/queryTeacher', controller.teacher.queryTeacher);
     router.post('/delTeacher', controller.teacher.delTeacher);
     router.post('/updataTeacher', controller.teacher.updataTeacher);
+    router.post('/manyDelete', controller.teacher.manyDelete);
+
 
 
 };
