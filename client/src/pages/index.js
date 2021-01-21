@@ -1,7 +1,8 @@
 import Login from './login';
-import Teacher from './Teacher';
+import LeaderTeacher from './Teacher/leaderTeacher';
 import Course from './Course';
-import Major from './Major/leaderMajor';
+import LeaderMajor from './Major/leaderMajor';
+import DirectorMajor from './Major/directorMajor';
 import Home from './Home';
 import UserInfo from './UserInfo';
 import Grade from './Grade';
@@ -12,11 +13,12 @@ import TeachRoom from "./TeachRoom";
 export {
   Login,
   Home,
-  Teacher,
+  LeaderTeacher,
   Course,
   UserInfo,
   Notification,
-  Major,
+  LeaderMajor,
+  DirectorMajor,
   Grade,
   InfoView,
   TeachRoom,

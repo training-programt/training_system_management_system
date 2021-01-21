@@ -3,7 +3,6 @@ import { HashRouter as Router, Route, Switch } from 'react-router-dom';
 import { Login } from '../pages';
 import { BasicLayout } from "../layouts";
 import PrivateRoute from '@/layouts/privateRoute';
-
 const AppRouter = () => {
   return (
     <Router>

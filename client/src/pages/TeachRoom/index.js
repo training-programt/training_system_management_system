@@ -5,7 +5,7 @@ import HeaderComponent from '../../components/header'
 import TableComponent from '../../components/table'
 import './index.less'
 
-import api from '../../apis/teachingSection'
+import api from '../../apis/teachRoom'
 
 const { Option } = Select;
 

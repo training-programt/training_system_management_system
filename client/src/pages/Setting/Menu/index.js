@@ -73,8 +73,7 @@ const Menu = () => {
       title: '角色',
       dataIndex: 'role',
       align: 'center',
-      render: (text, record) => {
-        console.log(record.role)
+      render:(text,record)=>{
         return record.role.role
       }
     },
@@ -124,7 +123,6 @@ const Menu = () => {
     const fetchData = async () => {
       const res = await React.$axios.get('/getRole')
       setRoleData(res.data);
-
     }
     fetchData();
   }, [])

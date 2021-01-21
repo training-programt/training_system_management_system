@@ -1,11 +1,11 @@
-import { Teacher } from "@/pages";
+import { LeaderTeacher } from "@/pages";
 
 export default [
   {
-    path: '/teacher',
+    path: '/leaderTeacher',
     name: '教师管理',
     icon: 'icon-teacher',
-    component: Teacher
+    component: LeaderTeacher
   },
   
 ]
