@@ -113,8 +113,8 @@ const LeaderTeacher = () => {
   const rowSelection = {
     type: 'checkout',
     onChange: (selectedRowKeys, selectedRows) => {
-      console.log(`selectedRowKeys: ${selectedRowKeys}`, 'selectedRows: ', selectedRows);
-      setSelectedRowKeys([...selectedRowKeys])
+      // console.log(`selectedRowKeys: ${selectedRowKeys}`, 'selectedRows: ', selectedRows);
+      setSelectedRowKeys([...selectedRows])
     },
   };
   const manyDelete = async()=>{
@@ -126,6 +126,7 @@ const LeaderTeacher = () => {
         '/getTeacher',
       )
       setTableData(res.data);
+      setTotal(res.total)
     } else {
       message.error('批量删除失败');
     }
@@ -156,6 +157,7 @@ const LeaderTeacher = () => {
           '/getTeacher',
         )
         setTableData(res.data);
+        setTotal(res.total)
       } else {
         message.error('新增失败');
       }
@@ -188,6 +190,7 @@ const LeaderTeacher = () => {
         '/getTeacher',
       )
       setTableData(res.data);
+      setTotal(res.total)
     } else {
       message.error('删除失败');
     }
