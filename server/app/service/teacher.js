@@ -33,5 +33,11 @@ class TeacherService extends Service {
         const result = await ctx.model.Teacher.insertMany(params);
         return result;
     }
+     //条件查询
+     async findTeacher(params) {
+        const { ctx } = this;
+        const result = await ctx.model.Teacher.find(params)
+        return result;
+    }
 }
 module.exports = TeacherService;
