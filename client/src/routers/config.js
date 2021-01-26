@@ -7,6 +7,7 @@ import grade from './grade';
 import setting from './setting';
 import infoView from './infoView';
 import teachRoom from './teachRoom';
+import trainingProject from './trainingProject';
 const routesConfig = [
   // 子路由
   ...major,
@@ -15,6 +16,7 @@ const routesConfig = [
   ...grade,
   ...infoView,
   ...teachRoom,
+  ...trainingProject,
   ...setting,
   ...publish,
   ...exception,
