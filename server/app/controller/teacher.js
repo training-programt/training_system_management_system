@@ -156,28 +156,31 @@ class TeacherController extends Controller {
   async manyDelete(){
     const {ctx} = this;
     const params = ctx.request.body;
-    // console.log(params)
     const deleteMany = await ctx.service.teacher.delTeacher({_id:{$in:params}})
-    // console.log(deleteMany)
-    // const teachRoom = await ctx.model.TeachRoom.update(
-    //   { _id: params.teachRoom },
-    //   {
-    //     $pull: {
-    //       teachers: params
-    //     }
-    //   },
-    //   { multi: true }
-    // )
-    // const major = await ctx.model.Major.update(
-    //   { _id: params.major },
-    //   {
-    //     $pull: {
-    //       teachers: params
-    //     }
-    //   },
-    //   { multi: true }
-    // )
-    console.log(teachRoom,major)
+   for(let i = 0;i<params.length;i++){
+    const teachRoom = await ctx.model.TeachRoom.update(
+      { _id: params[i].teachRoom._id },
+      {
+        // $pull: {
+        //   teachers:  {$each: params}
+        // }
+        $pull:{
+          teachers:params[i]._id
+        }
+      },
+      { multi: true }
+    )
+    const major = await ctx.model.Major.update(
+      { _id: params[i].major._id },
+      {
+        $pull: {
+          teachers:  params[i]._id
+        }
+      },
+      { multi: true }
+    )
+   }
+    
     if(deleteMany.ok==1){
       ctx.body = {
         total: deleteMany.length,
