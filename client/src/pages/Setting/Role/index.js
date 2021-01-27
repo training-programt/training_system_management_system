@@ -4,8 +4,6 @@ import PaginationComponent from '@/components/pagination'
 import HeaderComponent from '@/components/header'
 import { PlusOutlined, DeleteOutlined } from '@ant-design/icons';
 
-import '../index.less'
-
 const Role = () => {
   const [form] = Form.useForm();
   const [isModalVisible, setIsModalVisible] = useState(false);

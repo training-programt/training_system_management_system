@@ -1,5 +1,6 @@
 import React from 'react';
 import './index.less'
+import '@/public/css/page.less'
 import { withRouter, Switch, Route, Redirect } from 'react-router-dom'
 import routesConfig from '@/routers/config'
 

@@ -3,7 +3,6 @@ import { Table, Form, message, Radio, Descriptions, Select, InputNumber, TreeSel
 import { PlusOutlined, DeleteOutlined, UploadOutlined, DownloadOutlined } from '@ant-design/icons';
 import ImportExportComponent from '../../../components/importExport/importExport'
 import HeaderComponent from '@/components/header'
-import '../index.less'
 
 const { Option } = Select;
 

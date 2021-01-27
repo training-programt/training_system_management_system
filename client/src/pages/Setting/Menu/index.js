@@ -4,7 +4,6 @@ import PaginationComponent from '@/components/pagination'
 import HeaderComponent from '@/components/header'
 import TableComponent from '@/components/table'
 import { PlusOutlined, DeleteOutlined } from '@ant-design/icons';
-import '../index.less'
 
 const Menu = () => {
   const [form] = Form.useForm();
