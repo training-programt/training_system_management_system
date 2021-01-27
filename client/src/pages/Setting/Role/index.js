@@ -154,10 +154,10 @@ const Role = () => {
       <div className="body-wrap">
         <div className="header-wrap">
           <div className="search-box">
-            <Input.Search placeholder="请输入用户姓名" allowClear enterButton />
+            <Input.Search placeholder="请输入账户姓名" allowClear enterButton />
           </div>
           <div className="operation-wrap">
-            <Button type="primary" icon={<PlusOutlined />} onClick={showModal}>新增用户</Button>
+            <Button type="primary" icon={<PlusOutlined />} onClick={showModal}>新增账户</Button>
             <Button type="primary" icon={<DeleteOutlined />}>批量删除</Button>
           </div>
         </div>

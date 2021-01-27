@@ -2,6 +2,9 @@ import React, { useState, useRef, useMemo } from 'react';
 import { Table, Form, message, Radio, Descriptions, Select, InputNumber, TreeSelect, Input, Button, Modal, Popconfirm } from 'antd';
 import { PlusOutlined, DeleteOutlined, UploadOutlined, DownloadOutlined } from '@ant-design/icons';
 import ImportExportComponent from '../../../components/importExport/importExport'
+import HeaderComponent from '@/components/header'
+import '../index.less'
+
 const { Option } = Select;
 
 const User = () => {
@@ -32,7 +35,7 @@ const User = () => {
         }
         fetchData();
     }, [])
-      // const initColumn = [{
+    // const initColumn = [{
     //     title: '姓名',
     //     dataIndex: 'name',
     //     key: 'name',
@@ -210,31 +213,46 @@ const User = () => {
     };
 
     return (
-        <div>
-            <ImportExportComponent onImport={(data) => importHandle(data)}/>
-            <Table
-                columns={columns}
-                pagination={false}
-                dataSource={tableData}
-                loading={loading}
-                pagination={paginationProps}
-                rowKey={record => record._id}
-                expandedRowRender={record =>
-                    <div>
-                        <Descriptions
-                            bordered
-                            column={{ xxl: 4, xl: 3, lg: 3, md: 3, sm: 2, xs: 1 }}
-                        >
-                            <Descriptions.Item label="信息展示还没写">
-                                {record.lastInfo}
-                            </Descriptions.Item>
-                            <Descriptions.Item label="信息展示">
-                                {record.position}
-                            </Descriptions.Item>
-                        </Descriptions>
+        <div className="page-container">
+            <HeaderComponent title="用户管理" />
+            <div className="body-wrap">
+                <div className="header-wrap">
+                    <div className="search-box">
+                        <Input.Search placeholder="请输入用户姓名" allowClear enterButton />
                     </div>
-                }
-            />
+                    <div className="operation-wrap">
+                        <ImportExportComponent onImport={(data) => importHandle(data)} />
+                        <Button type="primary" icon={<PlusOutlined />}>新增用户</Button>
+                        <Button type="primary" icon={<DeleteOutlined />}>批量删除</Button>
+                    </div>
+                </div>
+
+                <div className="table-wrap">
+                    <Table
+                        columns={columns}
+                        pagination={false}
+                        dataSource={tableData}
+                        loading={loading}
+                        pagination={paginationProps}
+                        rowKey={record => record._id}
+                        expandedRowRender={record =>
+                            <div>
+                                <Descriptions
+                                    bordered
+                                    column={{ xxl: 4, xl: 3, lg: 3, md: 3, sm: 2, xs: 1 }}
+                                >
+                                    <Descriptions.Item label="信息展示还没写">
+                                        {record.lastInfo}
+                                    </Descriptions.Item>
+                                    <Descriptions.Item label="信息展示">
+                                        {record.position}
+                                    </Descriptions.Item>
+                                </Descriptions>
+                            </div>
+                        }
+                    />
+                </div>
+            </div>
             <Modal
                 visible={isModalVisible}
                 width={550}
