@@ -9,6 +9,9 @@ import Grade from './Grade';
 import Notification from './Notification'
 import InfoView from "./InfoView";
 import TeachRoom from "./TeachRoom";
+import TrainingProject from './TrainingProject';
+import AddTrainingProject from './TrainingProject/add';
+import EditTrainingProject from './TrainingProject/edit';
 
 export {
   Login,
@@ -22,4 +25,7 @@ export {
   Grade,
   InfoView,
   TeachRoom,
+  TrainingProject,
+  AddTrainingProject,
+  EditTrainingProject,
 }
