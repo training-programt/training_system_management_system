@@ -1,5 +1,10 @@
 import React, { useState, useMemo } from 'react'
 import { Table, Button, Modal, message, Descriptions, List, Form, Input, Popconfirm } from 'antd';
+import PaginationComponent from '@/components/pagination'
+import HeaderComponent from '@/components/header'
+import { PlusOutlined, DeleteOutlined } from '@ant-design/icons';
+
+import '../index.less'
 
 const Role = () => {
   const [form] = Form.useForm();
@@ -92,7 +97,7 @@ const Role = () => {
       ...form.getFieldValue(),
       menu: [],
     }
-    if(!isEdit){
+    if (!isEdit) {
       const res = await React.$axios.post(
         '/addRole',
         params,
@@ -106,7 +111,7 @@ const Role = () => {
       } else {
         message.error('新增失败');
       }
-    }else{
+    } else {
       const res = await React.$axios.post(
         '/updateRole',
         params,
@@ -121,7 +126,7 @@ const Role = () => {
         message.error('修改失败');
       }
     }
-    
+
     setIsModalVisible(false);
   };
 
@@ -144,39 +149,52 @@ const Role = () => {
     }
   }
   return (
-    <>
-      <Button type="primary" onClick={showModal}>新增</Button>
-      <Table
-        columns={columns}
-        dataSource={tableData}
-        loading={loading}
-        rowKey={record => record._id}
-        expandedRowRender={record =>
-          <div>
-            <Descriptions
-              bordered
-              column={{ xxl: 4, xl: 3, lg: 3, md: 3, sm: 2, xs: 1 }}
-            >
-              <Descriptions.Item label="菜单展示">
-                <List
-                  bordered
-                  size='small'
-                  dataSource={record.menu}
-                  renderItem={menu => (
-                    <List.Item>
-                      <span><i className={'menu-icon iconfont ' + menu.icon}></i></span>
-                                  &emsp;&emsp;
-                      {menu.name}
-                    </List.Item>
-                  )}
-                />
-              </Descriptions.Item>
-            </Descriptions>
+    <div className="page-container">
+      <HeaderComponent title="账户管理" />
+      <div className="body-wrap">
+        <div className="header-wrap">
+          <div className="search-box">
+            <Input.Search placeholder="请输入用户姓名" allowClear enterButton />
           </div>
-        }
-      />
-
-
+          <div className="operation-wrap">
+            <Button type="primary" icon={<PlusOutlined />} onClick={showModal}>新增用户</Button>
+            <Button type="primary" icon={<DeleteOutlined />}>批量删除</Button>
+          </div>
+        </div>
+        <div className="table-wrap">
+          <Table
+            bordered
+            columns={columns}
+            dataSource={tableData}
+            loading={loading}
+            rowKey={record => record._id}
+            expandedRowRender={record =>
+              <div>
+                <Descriptions
+                  bordered
+                  column={{ xxl: 4, xl: 3, lg: 3, md: 3, sm: 2, xs: 1 }}
+                >
+                  <Descriptions.Item label="菜单展示">
+                    <List
+                      bordered
+                      size='small'
+                      dataSource={record.menu}
+                      renderItem={menu => (
+                        <List.Item>
+                          <span><i className={'menu-icon iconfont ' + menu.icon}></i></span>
+                                  &emsp;&emsp;
+                          {menu.name}
+                        </List.Item>
+                      )}
+                    />
+                  </Descriptions.Item>
+                </Descriptions>
+              </div>
+            }
+          />
+        </div>
+        {/* <PaginationComponent onShowSizeChange={onShowSizeChange} pageparams={pageparams} handlePage={v => setPage(v)} /> */}
+      </div>
       <Modal
         visible={isModalVisible}
         width={550}
@@ -204,8 +222,8 @@ const Role = () => {
           </Form.Item>
         </Form>
       </Modal>
-    </>
+    </div>
   )
 }
 
-export default Role
+export default Role 

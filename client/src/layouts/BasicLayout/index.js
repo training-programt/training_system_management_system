@@ -47,7 +47,7 @@ const BasicLayout = () => {
       </Sider>
       <Layout>
         <MainHeader />
-        <Content>
+        <Content style={{ height: '80vh', marginTop: '56px' }}>
           <MainContent menus={menus} />
         </Content>
       </Layout>

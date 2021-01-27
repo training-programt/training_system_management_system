@@ -42,7 +42,7 @@ const MainContent = props => {
   };
 
   return (
-    <div style={{ height: '100%', width: '100%', padding: '0 10px'}}>
+    <div style={{ height: '100%', width: '100%', padding: '0 16px', overflow: 'auto' }}>
       {renderRoutes(routesConfig)}
     </div>
   )
