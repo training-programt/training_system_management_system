@@ -1,21 +1,20 @@
 import React, { useState } from 'react'
 import { Button, Steps, message } from 'antd'
 import { Link } from 'react-router-dom'
-import { ArrowLeftOutlined, ArrowRightOutlined, RollbackOutlined } from '@ant-design/icons';
+import { ArrowLeftOutlined, ArrowRightOutlined, RollbackOutlined, SaveOutlined } from '@ant-design/icons';
 import './index.less'
+
+import InitPage from './initPage'
+
 const { Step } = Steps;
 
 const AddTrainingProject = () => {
   const [current, setCurrent] = useState(0);
 
-  const initPage = (
-    <div>初始化页面</div>
-  )
-
   const steps = [
     {
-      title: '初始化',
-      content: initPage,
+      title: '基础信息',
+      content: <InitPage />,
     },
     {
       title: '培养目标',
@@ -74,6 +73,7 @@ const AddTrainingProject = () => {
           <Button type="primary" onClick={() => message.success('Processing complete!')}>提交审批</Button>
         )}
 
+        <Button icon={<SaveOutlined />}>暂存</Button>
         <Button icon={<RollbackOutlined />}><Link to="/trainingProject" style={{ color: '#000', marginLeft: '8px' }}>返回</Link></Button>
       </div>
 
