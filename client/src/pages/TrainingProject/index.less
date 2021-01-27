@@ -1,9 +1,32 @@
 @width: 100vw/1920px;
 @height: 100vh/960px;
-
+@height1: 60px * @height;
 .training-project {
   height: 100%;
   width: 100%;
-  
+  background-color: #fff;
+  padding: 10px * @height 24px * @width;
+  position: relative;
+  overflow: hidden;
 
+  .steps-content {
+    height: calc(100% - @height1);
+    width: 100%;
+    padding: 10px * @height 0;
+  }
+
+  .steps-action {
+    position: absolute;
+    bottom: 0;
+    height: @height1;
+    display: flex;
+    width: 100%;
+    align-items: center;
+    justify-content: center;
+
+    &>button {
+      width: 100px * @width;
+      margin: 0 10px * @width;
+    }
+  }
 }
