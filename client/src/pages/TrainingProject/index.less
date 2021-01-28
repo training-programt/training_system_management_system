@@ -48,5 +48,47 @@
   }
 
 
+  .train-object {
+    height: 100%;
+    width: 100%;
+    display: flex;
+
+    &>div {
+      flex: 1;
+      border: 1px solid #333;
+      padding: 0 10px * @width;
+    }
+
+    .title {
+      height: 30px * @height;
+      text-align: center;
+      font-size: 16px * @width;
+      font-weight: 700;
+      line-height: 30px * @height;
+    }
+
+    .content-wrap {
+
+
+      .item-box {
+        width: 100%;
+        height: 100px * @height;
+        border: 1px solid #ccc;
+        display: flex;
+        align-items: center;
+
+        .item-left {
+          width: 90%;
+          margin-right: 32px * @width;
+        }
+        .item-right {
+          flex: 1;
+        }
+
+      }
+    }
+
+  }
+
 
 }

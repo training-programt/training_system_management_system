@@ -5,6 +5,7 @@ import { ArrowLeftOutlined, ArrowRightOutlined, RollbackOutlined, SaveOutlined }
 import './index.less'
 
 import InitPage from './initPage'
+import TrainObject from './trainObject'
 
 const { Step } = Steps;
 
@@ -18,7 +19,7 @@ const AddTrainingProject = () => {
     },
     {
       title: '培养目标',
-      content: 'First-content',
+      content: <TrainObject />,
     },
     {
       title: '毕业要求',
