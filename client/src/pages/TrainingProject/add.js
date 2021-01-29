@@ -7,6 +7,8 @@ import './index.less'
 import InitPage from './initPage'
 import TrainObject from './trainObject'
 import Requirements from './requirements'
+import MatrixRelation from './matrixRelation'
+import StudyProgramme from './studyProgramme'
 
 const { Step } = Steps;
 
@@ -27,12 +29,16 @@ const AddTrainingProject = () => {
       content: <Requirements />,
     },
     {
+      title: '矩阵关系',
+      content: <MatrixRelation />,
+    },
+    {
       title: '课程修读计划',
-      content: 'Last-content',
+      content: <StudyProgramme />,
     },
     {
       title: '审批',
-      content: 'Last-content',
+      content: '选择审批人提交方案',
     },
   ];
 
