@@ -348,4 +348,20 @@ template {
   display: none;
 }
 
+::-webkit-scrollbar {
+  width: 6px;
+  height: 1px;
+}
+
+::-webkit-scrollbar-thumb {
+  border-radius: 10px;
+  background: #efefef;
+}
+
+::-webkit-scrollbar-track {
+  border-radius: 10px;
+}
+
+
+
 @import './public/icons/iconfont.css'
