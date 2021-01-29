@@ -1,12 +1,13 @@
 import React, { useState } from 'react'
 import { Link, useHistory } from 'react-router-dom';
 import { Layout, Row, Col, Menu, Dropdown, Avatar, Badge, message } from 'antd'
-import { UserOutlined, BellFilled } from '@ant-design/icons';
+import { UserOutlined, BellFilled, FullscreenOutlined, FullscreenExitOutlined } from '@ant-design/icons';
 import { useDispatch } from 'react-redux';
 import './index.less'
 import { logout, getSession } from '../../utils';
 
 const MainHeader = () => {
+  const [fullScreen, setFullScreen] = useState(false)
   const history = useHistory();
   const dispatch = useDispatch()
   const changeType = (type) => {
@@ -55,6 +56,9 @@ const MainHeader = () => {
     <Layout.Header className='main-layout-header'>
       <Row type='flex' className='header-content'>
         <Col className="avatar-content">
+          <span>
+            <Avatar className="notice" icon={fullScreen ? <FullscreenExitOutlined /> : <FullscreenOutlined />} />
+          </span>
           <span>
             <Link to='/notification'>
               <Badge count={10} overflowCount={9}>
