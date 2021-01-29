@@ -1,6 +1,6 @@
 import Login from './login';
 import LeaderTeacher from './Teacher/leaderTeacher';
-import Course from './Course';
+import LeaderCourse from './Course/leaderCourse';
 import LeaderMajor from './Major/leaderMajor';
 import DirectorMajor from './Major/directorMajor';
 import Home from './Home';
@@ -14,7 +14,7 @@ export {
   Login,
   Home,
   LeaderTeacher,
-  Course,
+  LeaderCourse,
   UserInfo,
   Notification,
   LeaderMajor,

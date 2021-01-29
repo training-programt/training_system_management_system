@@ -8,6 +8,13 @@ class CourseService extends Service {
         const result = await ctx.model.Course
             .find({
             })
+            .populate('header')
+            .populate('syllabus')
+            .populate('system')
+            .populate('point')
+            .populate('semester')
+            .populate('unit')
+            .populate('assessment')
             .sort('sort');
         return result;
     }

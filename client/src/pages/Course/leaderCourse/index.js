@@ -1,17 +1,15 @@
-import React, { useState, useMemo } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Drawer, Table, Row, Col, Input, Button, Modal, Form, InputNumber, Popconfirm, Divider } from 'antd';
-import { SearchOutlined, PlusOutlined } from '@ant-design/icons';
-import HeaderComponent from '../../components/header'
+import { PlusOutlined, DeleteOutlined, UploadOutlined, DownloadOutlined, SearchOutlined } from '@ant-design/icons';
+import HeaderComponent from '../../../components/header'
 
-import { useSelector } from 'react-redux';
 import './index.less'
-import api from '../../apis/course'
-
 
 const Course = () => {
   const [name, setName] = useState('');
   const [code, setCode] = useState('');
   const [courseData, setCourseData] = useState([]);
+  const [total, setTotal] = useState(0);
   const [loading, setLoading] = useState(false);
   const [visible, setVisible] = useState(false);//弹窗新增和编辑
   const [drawerVisible, setDrawerVisible] = useState(false);
@@ -19,43 +17,51 @@ const Course = () => {
   const [confirmLoading, setConfirmLoading] = useState(false);
 
   const courseColumns = [
-    {
-      title: '序号',
-      dataIndex: 'key',
-      key: 'key',
-    },
+    { title: '序号', align: 'center', fixed: 'left', render: (text, record, index) => `${index + 1}` },
     {
       title: '课程名字',
       dataIndex: 'name',
-      key: 'name',
+      align: 'center',
     },
     {
       title: '课程编码',
       dataIndex: 'code',
-      key: 'code',
-    },
-    {
-      title: '课程类别',
-      dataIndex: 'type',
-      key: 'type',
+      align: 'center',
     },
     {
       title: '课程负责人',
-      dataIndex: 'head',
-      key: 'head',
+      dataIndex: 'header',
+      align: 'center',
+      render:(text,record)=>{
+        return record.header ? record.header.name : ''
+      }
     },
     {
       title: '开课单位',
       dataIndex: 'unit',
-      key: 'unit',
+      align: 'center',
+    },
+    {
+      title: '开课学期',
+      dataIndex: 'semester',
+      align: 'center',
     },
     {
       title: '是否产教融合课程',
       dataIndex: 'flag_fuse',
-      key: 'flag_fuse',
+      align: 'center',
       render: text => text == true ? '是' : '否'
     },
-
+    {
+      title: '课程大纲',
+      dataIndex: 'syllabus',
+      align: 'center',
+      render: (text,record)=>(
+        <div>
+          <Button type="link">课程大纲查看</Button>
+        </div>
+      )
+    },
     {
       title: '操作',
       dataIndex: 'operation',
@@ -104,20 +110,15 @@ const Course = () => {
   const handleCancel = () => {
     setVisible(false);
   };
-  useMemo(() => {
-    const fetchData = async () => {
-      const params = {
-        name: "",
-        code: "",
-      }
-      setLoading(true);
-      const res = await api.getCourseList(params);
-      setCourseData(res.data);
-      // console.log(res.data)
-      setLoading(false);
-    }
-    fetchData();
-  }, [name, code])
+  useEffect(() => {
+    setLoading(true)
+    const res = React.$axios.get('/getCourse').then((courseData) => {
+      console.log(courseData)
+      setCourseData(courseData.data)
+      setTotal(courseData.total)
+    })
+    setLoading(false)
+  }, [])
 
   const DescriptionItem = ({ title, content }) => (
     <div className="site-description-item-profile-wrapper">
@@ -137,6 +138,9 @@ const Course = () => {
           </div>
           <Button type="primary" icon={<SearchOutlined />} >查询</Button>
           <Button type="primary" icon={<PlusOutlined />} onClick={showAdd}>新增</Button>
+          <Button icon={<DeleteOutlined />}>批量删除</Button>
+          <Button icon={<UploadOutlined />}>批量导入</Button>
+          <Button icon={<DownloadOutlined />}>批量导出</Button>
         </div>
         <Modal
           title="新增专业"
@@ -165,6 +169,7 @@ const Course = () => {
           dataSource={courseData}
           columns={courseColumns}
           bordered
+          rowKey={record=>record._id}
         >
         </Table>
         <Drawer
