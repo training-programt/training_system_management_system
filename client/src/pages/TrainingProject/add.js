@@ -6,6 +6,7 @@ import './index.less'
 
 import InitPage from './initPage'
 import TrainObject from './trainObject'
+import Requirements from './requirements'
 
 const { Step } = Steps;
 
@@ -23,19 +24,7 @@ const AddTrainingProject = () => {
     },
     {
       title: '毕业要求',
-      content: 'Second-content',
-    },
-    {
-      title: '学制与学位',
-      content: 'Last-content',
-    },
-    {
-      title: '主干学科与主要课程',
-      content: 'Last-content',
-    },
-    {
-      title: '毕业学分要求',
-      content: 'Last-content',
+      content: <Requirements />,
     },
     {
       title: '课程修读计划',
