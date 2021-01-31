@@ -88,3 +88,17 @@ export function logout() {
   delSession('userInfo');
   delSession('Authorization')
 }
+
+export function createColumns(firstData, rowData) {
+  return [{ title: firstData, dataIndex: 'first' }, ...rowData];
+}
+
+export function createRows(firstRow, tableData) {
+  const data = firstRow.map((item, index) => {
+    return {
+      ...tableData[index],
+      first: item.first
+    }
+  });
+  return data
+}

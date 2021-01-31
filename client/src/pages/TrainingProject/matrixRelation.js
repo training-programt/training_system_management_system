@@ -1,7 +1,10 @@
 import React, { useContext, useState, useEffect, useRef } from 'react';
-import {Tabs, Table, Input, Button, Popconfirm, Form } from 'antd';
+import { Tabs, Table, Input, Button, Popconfirm, Form } from 'antd';
 const EditableContext = React.createContext(null);
 const { TabPane } = Tabs;
+
+import { createColumns, createRows } from '@/utils'
+
 const EditableRow = ({ index, ...props }) => {
   const [form] = Form.useForm();
   return (
@@ -12,6 +15,7 @@ const EditableRow = ({ index, ...props }) => {
     </Form>
   );
 };
+
 const EditableCell = ({
   title,
   editable,
@@ -66,29 +70,111 @@ const EditableCell = ({
         <Input ref={inputRef} onPressEnter={save} onBlur={save} />
       </Form.Item>
     ) : (
-      <div
-        className="editable-cell-value-wrap"
-        style={{
-          paddingRight: 24,
-        }}
-        onClick={toggleEdit}
-      >
-        {children}
-      </div>
-    );
+        <div
+          className="editable-cell-value-wrap"
+          style={{
+            paddingRight: 24,
+          }}
+          onClick={toggleEdit}
+        >
+          {children}
+        </div>
+      );
   }
 
   return <td {...restProps}>{childNode}</td>;
 };
 
-
 const MatrixRelation = () => {
 
-  const columnsTable = [
+  const [tableData, setTableData] = useState([
     {
-      title: '毕业要求/培养目标',
-      dataIndex: 'first',
+      '1': ' ',
+      '2': 'H',
+      '3': ' ',
+      '4': 'M',
+      '5': ' ',
     },
+    {
+      '1': 'H',
+      '2': ' ',
+      '3': 'H',
+      '4': ' ',
+      '5': 'M',
+    },
+    {
+      '1': 'L',
+      '2': 'H',
+      '3': ' ',
+      '4': 'M',
+      '5': ' ',
+    },
+    {
+      '1': ' ',
+      '2': 'H',
+      '3': ' ',
+      '4': 'M',
+      '5': ' ',
+    },
+    {
+      '1': 'H',
+      '2': ' ',
+      '3': 'H',
+      '4': ' ',
+      '5': 'M',
+    },
+    {
+      '1': 'L',
+      '2': 'H',
+      '3': ' ',
+      '4': 'M',
+      '5': ' ',
+    },
+    {
+      '1': ' ',
+      '2': 'H',
+      '3': ' ',
+      '4': 'M',
+      '5': ' ',
+    },
+    {
+      '1': 'H',
+      '2': ' ',
+      '3': 'H',
+      '4': ' ',
+      '5': 'M',
+    },
+    {
+      '1': ' L',
+      '2': 'H',
+      '3': ' ',
+      '4': 'M',
+      '5': ' ',
+    },
+    {
+      '1': ' ',
+      '2': 'H',
+      '3': ' ',
+      '4': 'M',
+      '5': ' ',
+    },
+    {
+      '1': 'H',
+      '2': ' ',
+      '3': 'H',
+      '4': ' ',
+      '5': 'M',
+    },
+    {
+      '1': 'L',
+      '2': 'H',
+      '3': ' ',
+      '4': 'M',
+      '5': ' ',
+    },
+  ]);
+
+  const columnsTable = [
     {
       title: '培养目标1：人文素养',
       dataIndex: '1',
@@ -115,7 +201,8 @@ const MatrixRelation = () => {
       editable: true,
     },
   ]
-  const dataSource = [
+
+  const firstRow = [
     {
       first: '毕业要求1：工程知识',
     },
@@ -161,7 +248,7 @@ const MatrixRelation = () => {
     },
   };
 
-  const columns = columnsTable.map((col) => {
+  const columns = createColumns('毕业要求/培养目标', columnsTable).map((col) => {
     if (!col.editable) {
       return col;
     }
@@ -181,15 +268,19 @@ const MatrixRelation = () => {
     <div>
       <Tabs>
         <TabPane tab="专业培养目标与毕业要求关系矩阵" key="1">
-        <Table
-          components={components}
-          rowClassName={() => 'editable-row'}
-          bordered
-          dataSource={dataSource}
-          columns={columns}
-          pagination={false}
-          rowKey='first'
-        />
+          <Table
+            components={components}
+            rowClassName={() => 'editable-row'}
+            bordered
+            dataSource={createRows(firstRow, tableData)}
+            columns={columns}
+            pagination={false}
+            rowKey='first'
+          />
+          <div className="table-description">
+            <span>表格说明：</span>
+            <span>H表示毕业要求对培养目标进行强支撑；M表示毕业要求对培养目标进行中支撑；L表示毕业要求对培养目标进行弱支撑。</span>
+          </div>
         </TabPane>
         <TabPane tab="专业毕业要求与国家毕业要求覆盖情况" key="2">
           Content of tab 2
