@@ -9,6 +9,7 @@ import TrainObject from './trainObject'
 import Requirements from './requirements'
 import MatrixRelation from './matrixRelation'
 import StudyProgramme from './studyProgramme'
+import Examine from './examine'
 
 const { Step } = Steps;
 
@@ -38,7 +39,7 @@ const AddTrainingProject = () => {
     },
     {
       title: '审批',
-      content: '选择审批人提交方案',
+      content: <Examine />,
     },
   ];
 

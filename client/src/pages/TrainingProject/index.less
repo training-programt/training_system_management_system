@@ -1,6 +1,7 @@
 @width: 100vw/1920px;
 @height: 100vh/960px;
 @height1: 60px * @height;
+@height2: 90px * @height;
 
 .training-project {
   height: 100%;
@@ -11,9 +12,11 @@
   overflow: hidden;
 
   .steps-content {
-    height: calc(100% - @height1);
+    height: calc(100% - @height2);
     width: 100%;
-    padding: 20px * @height 0;
+    overflow: auto;
+    margin-top: 20px * @height;
+    padding-bottom: 20px * @height;
   }
 
   .steps-action {
@@ -103,7 +106,8 @@
 
 
 
-    .school-object, .major-object {
+    .school-object,
+    .major-object {
       padding: 12px * @height 0;
       border-bottom: 1px solid #f0f0f0;
 
@@ -120,7 +124,31 @@
         line-height: 1.5715;
       }
     }
+  }
 
+  .examine-wrap {
+
+    .file-watch {
+      font-size: 14px * @width;
+      font-weight: 600;
+    }
+
+    .pg-viewer-wrapper {
+      border: 1px solid #ccc;
+      border-radius: 6px * @width;
+
+      .document-container {
+        width: 100%;
+        display: flex;
+        padding: 16px * @height 16px *@width;
+        flex-direction: column;
+        align-content: center;
+      }
+
+      table {
+        border: 1px solid #ccc;
+      }
+    }
   }
 
   .table-description {
