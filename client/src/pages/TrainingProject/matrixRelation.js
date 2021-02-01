@@ -2,6 +2,7 @@ import React, { useContext, useState, useEffect, useRef } from 'react';
 import {Tabs, Table, Input, Button, Popconfirm, Form } from 'antd';
 const EditableContext = React.createContext(null);
 const { TabPane } = Tabs;
+
 const EditableRow = ({ index, ...props }) => {
   const [form] = Form.useForm();
   return (
@@ -12,6 +13,7 @@ const EditableRow = ({ index, ...props }) => {
     </Form>
   );
 };
+
 const EditableCell = ({
   title,
   editable,
@@ -81,7 +83,6 @@ const EditableCell = ({
   return <td {...restProps}>{childNode}</td>;
 };
 
-
 const MatrixRelation = () => {
 
   const columnsTable = [
@@ -115,6 +116,7 @@ const MatrixRelation = () => {
       editable: true,
     },
   ]
+  
   const dataSource = [
     {
       first: '毕业要求1：工程知识',
