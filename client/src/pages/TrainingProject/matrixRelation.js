@@ -1,5 +1,5 @@
 import React, { useContext, useState, useEffect, useRef } from 'react';
-import {Tabs, Table, Input, Button, Popconfirm, Form } from 'antd';
+import { Tabs, Table, Input, Button, Popconfirm, Form } from 'antd';
 const EditableContext = React.createContext(null);
 const { TabPane } = Tabs;
 
@@ -68,16 +68,16 @@ const EditableCell = ({
         <Input ref={inputRef} onPressEnter={save} onBlur={save} />
       </Form.Item>
     ) : (
-      <div
-        className="editable-cell-value-wrap"
-        style={{
-          paddingRight: 24,
-        }}
-        onClick={toggleEdit}
-      >
-        {children}
-      </div>
-    );
+        <div
+          className="editable-cell-value-wrap"
+          style={{
+            paddingRight: 24,
+          }}
+          onClick={toggleEdit}
+        >
+          {children}
+        </div>
+      );
   }
 
   return <td {...restProps}>{childNode}</td>;
@@ -116,7 +116,7 @@ const MatrixRelation = () => {
       editable: true,
     },
   ]
-  
+
   const dataSource = [
     {
       first: '毕业要求1：工程知识',
@@ -183,15 +183,15 @@ const MatrixRelation = () => {
     <div>
       <Tabs>
         <TabPane tab="专业培养目标与毕业要求关系矩阵" key="1">
-        <Table
-          components={components}
-          rowClassName={() => 'editable-row'}
-          bordered
-          dataSource={dataSource}
-          columns={columns}
-          pagination={false}
-          rowKey='first'
-        />
+          <Table
+            components={components}
+            rowClassName={() => 'editable-row'}
+            bordered
+            dataSource={dataSource}
+            columns={columns}
+            pagination={false}
+            rowKey='first'
+          />
         </TabPane>
         <TabPane tab="专业毕业要求与国家毕业要求覆盖情况" key="2">
           Content of tab 2

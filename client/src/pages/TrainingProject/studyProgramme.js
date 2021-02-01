@@ -1,21 +1,7 @@
 import React from 'react'
 import { Tabs, Table, Button } from 'antd';
 const { TabPane } = Tabs;
-const mergeCells = (text, data, key, index) => {
-  // 上一行该列数据是否一样
-  if (index !== 0 && text === data[index - 1][key]) {
-    return 0
-  }
-  let rowSpan = 1
-  // 判断下一行是否相等
-  for (let i = index + 1; i < data.length; i++) {
-    if (text !== data[i][key]) {
-      break
-    }
-    rowSpan++
-  }
-  return rowSpan
-}
+import { mergeCells } from '@/utils'
 const columns = [
   {
     title: '课程板块',
