@@ -57,6 +57,10 @@ module.exports = {
         use: ['url-loader'],
         include: [srcDir],
       },
+      {
+        test: /\.(pdf|svg|docx|doc)$/,
+        use: 'file-loader?name=[path][name].[ext]',
+      }
     ]
   },
   plugins: [

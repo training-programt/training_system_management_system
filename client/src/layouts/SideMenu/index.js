@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Link, withRouter } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import { Menu } from 'antd';
 import { useSelector } from 'react-redux';
 import Logo from '../../public/images/logo.png';
@@ -27,7 +27,7 @@ const SideMenu = props => {
 
   const renderMenuItem = item => {
     return (
-      <Menu.Item key={item.path}>
+      <Menu.Item key={item.path || item.id}>
         <Link to={item.path}>
           <span><i style={styles.icon} className={'iconfont ' + item.icon}></i></span>
           <span>{item.name}</span>
@@ -87,4 +87,4 @@ const SideMenu = props => {
 
 }
 
-export default withRouter(SideMenu);
+export default SideMenu

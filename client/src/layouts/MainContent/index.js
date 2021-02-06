@@ -1,5 +1,6 @@
 import React from 'react';
 import './index.less'
+import '@/public/css/page.less'
 import { withRouter, Switch, Route, Redirect } from 'react-router-dom'
 import routesConfig from '@/routers/config'
 
@@ -42,7 +43,7 @@ const MainContent = props => {
   };
 
   return (
-    <div style={{ height: '100%', width: '100%', padding: '0 10px'}}>
+    <div style={{ height: '100%', width: '100%', padding: '0 16px', overflow: 'auto' }}>
       {renderRoutes(routesConfig)}
     </div>
   )

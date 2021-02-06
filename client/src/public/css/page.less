@@ -2,7 +2,7 @@
 @height: 100vh/960px;
 @height1: 60px * @height;
 
-.menu-container {
+.page-container {
   width: 100%;
   height: 100%;
 }
@@ -10,10 +10,9 @@
 .body-wrap {
   position: relative;
   width: 100%;
-  height: 100%;
+  height: calc(100% - @height1);
   background-color: #fff;
   padding: 0 24px * @height 16px * @width ;
-  overflow: hidden;
 
   .header-wrap {
     width: 100%;
@@ -25,6 +24,11 @@
 
     .search-box {
       width: 300px * @width;
+    }
+
+    .operation-wrap {
+      display: flex;
+      align-items: center;
     }
 
     .operation-wrap button {

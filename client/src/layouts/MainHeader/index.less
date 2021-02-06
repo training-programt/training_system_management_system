@@ -1,5 +1,6 @@
 @width: 100vw/1920px;
 @height: 100vh/960px;
+@width1: 200px * @width;
 
 .main-layout-header {
   background-color: #fff;
@@ -9,11 +10,13 @@
   padding: 0 10px * @width;
   font-size: 16px * @width;
   text-align: left;
-  width: 100%;
-  margin-bottom:  10px * @height;
+  width: calc(100% - @width1);
+  margin-bottom: 10px * @height;
+  position: fixed;
 
   .header-content {
     width: 100%;
+    justify-content: flex-end;
 
     .nav-items {
       color: #333;
@@ -33,9 +36,10 @@
     }
 
     .avatar-content {
-      margin-right: -30px * @width;
+      display: flex;
+      align-items: center;
 
-      >span {
+      &>span:not(:last-child) {
         margin-right: 24px * @width;
       }
 
