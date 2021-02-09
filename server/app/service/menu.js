@@ -6,6 +6,7 @@ class MenuService extends Service {
     async getMenu() {
         const { ctx } = this;
         const data = ctx.request.query
+        console.log(data.role)
         const result = await ctx.model.Menu.find({
             role: {$in: data.role.split(",")},
             level: 1

@@ -5,6 +5,7 @@ class TeacherController extends Controller {
   async getTeacher() {
     const { ctx } = this;
     const data = await ctx.service.teacher.getTeacher()
+    // console.log(data)
     ctx.body = {
       total: data.length,
       data: data,
@@ -94,6 +95,7 @@ class TeacherController extends Controller {
   async updataTeacher() {
     const { ctx } = this;
     const params = ctx.request.body;
+    console.log(params)
     const data = await ctx.model.Teacher.findByIdAndUpdate(
       { _id: params._id },
       {
@@ -115,20 +117,13 @@ class TeacherController extends Controller {
           major: params.major
         }
       })
-    if(data.length>=0){
+    console.log(data)
       ctx.body = {
         total: data.length,
         data: data,
         code: 200,
         isSucceed: true,
       }
-    }else{
-      ctx.body = {
-        code: 500,
-        isSucceed: false,
-      }
-    }
-    
   }
   async queryTeacher() {
     const { ctx } = this;
