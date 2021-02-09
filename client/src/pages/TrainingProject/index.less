@@ -45,9 +45,22 @@
     &>div {
       flex: 1;
     }
+    &>div:first-child {
+      margin-right: 16px * @width;
+    }
 
-    .init-left {
-      padding-top: 16px;
+    .init-left, .init-right {
+      border: 1px solid #ccc;
+      border-radius: 6px;
+
+      .title {
+        padding: 10px * @height 16px * @width 0;
+        height: 42px * @height;
+        font-size: 16px * @width;
+        font-weight: 700;
+        border-bottom: 1px solid #efefef;
+        margin-bottom: 10px * @height;
+      }
     }
   }
 

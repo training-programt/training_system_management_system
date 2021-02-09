@@ -13,6 +13,7 @@ const InitPage = () => {
   return (
     <div className="init-page">
       <div className="init-left">
+        <div className='title'>方案初始数据</div>
         <Form
           {...layout}
           name="basic"
@@ -111,6 +112,7 @@ const InitPage = () => {
         </Form>
       </div>
       <div className="init-right">
+        <div className='title'>学制、学位、主干学科与课程</div>
         <Form
           {...layout}
           name="basic1"
@@ -137,7 +139,7 @@ const InitPage = () => {
               },
             ]}
           >
-            <Input />
+            <Input.TextArea />
           </Form.Item>
           <Form.Item
             label="主要实践性教学环节"
@@ -149,7 +151,7 @@ const InitPage = () => {
               },
             ]}
           >
-            <Input />
+            <Input.TextArea />
           </Form.Item>
         </Form>
       </div>

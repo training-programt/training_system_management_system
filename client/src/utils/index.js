@@ -101,7 +101,7 @@ export function createRows(firstRow, tableData) {
     }
   });
   return data
-
+}
 export function mergeCells(text, data, key, index) {
   // 上一行该列数据是否一样
   if (index !== 0 && text === data[index - 1][key]) {
