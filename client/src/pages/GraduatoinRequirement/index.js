@@ -1,9 +1,9 @@
 import React, { useState, useMemo } from 'react'
-import { Input, Button, Modal, Form, Space, List } from 'antd';
+import { Input, Button, Modal, Form, List, message } from 'antd';
 import HeaderComponent from '@/components/header'
-// import TableComponent from '@/components/table'
-import { PlusOutlined, DeleteOutlined } from '@ant-design/icons';
+import { PlusOutlined, DownloadOutlined } from '@ant-design/icons';
 import api from "@/apis/nationalRequirement";
+import { downloadFile } from '@/utils'
 
 const GraduationRequirement = () => {
   const [form] = Form.useForm();
@@ -13,43 +13,6 @@ const GraduationRequirement = () => {
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [isEdit, setIsEdit] = useState(false);
 
-  // const tableSetting = {
-  //   page: 1,
-  //   rows: 10,
-  //   rowSelection: {
-  //     type: 'checkbox',
-  //     onChange: (selectedRowKeys) => {
-  //       setDeleteList(selectedRowKeys)
-  //     },
-  //   }
-  // }
-
-  // const columns = [
-  //   {
-  //     title: '标题',
-  //     dataIndex: 'national_name',
-  //     width: 150,
-  //     align: 'center'
-  //   },
-  //   {
-  //     title: '描述',
-  //     dataIndex: 'nation_description',
-  //     ellipsis: 'true',
-  //   },
-  //   {
-  //     title: '操作',
-  //     key: 'active',
-  //     align: 'center',
-  //     width: 200,
-  //     render: (text, record) => (
-  //       <Space size='small'>
-  //         <Button onClick={() => showEditModal(record)} type="link">编辑</Button>
-  //         <Button type="link">删除</Button>
-  //       </Space>
-  //     )
-  //   },
-  // ];
-
   const formItemLayout = {
     labelCol: { span: 4 },
     wrapperCol: { span: 20 },
@@ -58,11 +21,13 @@ const GraduationRequirement = () => {
   useMemo(() => {
     const fetchData = async () => {
       setLoading(true);
+      const params = {
+        national_name: query
+      }
+      console.log(params)
       const res = await React.$axios.get(
-        api.getNationalRequirement,
+        `${api.getNationalRequirement}?${React.$qs.stringify(params)}`
       )
-      console.log('------------')
-      console.log(res)
       setTableData(res.data);
       setLoading(false);
     }
@@ -75,7 +40,6 @@ const GraduationRequirement = () => {
 
   const handleOk = async (e) => {
     e.preventDefault();
-
     const params = {
       ...form.getFieldValue(),
     }
@@ -84,9 +48,15 @@ const GraduationRequirement = () => {
         api.addNationalRequirement,
         params,
       );
-      console.log(res)
+      res && res.isSucceed && message.success(res.message)
     }
-
+    else {
+      const res = await React.$axios.post(
+        api.updateNationalRequirement,
+        params,
+      );
+      res && res.isSucceed && message.success(res.message)
+    }
     setIsModalVisible(false);
   }
 
@@ -94,7 +64,6 @@ const GraduationRequirement = () => {
     form.resetFields()
     setIsModalVisible(true)
     setIsEdit(true)
-    console.log(record)
     form.setFieldsValue(record)
   }
 
@@ -112,6 +81,26 @@ const GraduationRequirement = () => {
       api.delNationalRequirement,
       params,
     );
+    if (res && res.isSucceed) {
+      message.success(res.message)
+      setLoading(true);
+      const data = await React.$axios.get(
+        api.getNationalRequirement,
+      )
+      setTableData(data.data);
+      setLoading(false);
+    }
+  }
+
+  const downloadRequirement = async () => {
+    // const res = await React.$axios.post(
+    //   api.downloadRequirement
+    // )
+
+    // var blob = new Blob(['测试'], { type: 'application/vnd.openxmlformats-officedocument.wordprocessingml.document;charset=utf-8' });
+    // downloadFile(blob, 'example', 'docx')
+
+    // console.log(res)
   }
 
   const listStyle = {
@@ -129,18 +118,18 @@ const GraduationRequirement = () => {
           </div>
           <div className="operation-wrap">
             <Button type="primary" icon={<PlusOutlined />} onClick={showModal}>新增要求</Button>
-            <Button type="primary" icon={<DeleteOutlined />}>批量删除</Button>
+            <Button type="primary" icon={<DownloadOutlined />} onClick={downloadRequirement}>导出要求</Button>
           </div>
         </div>
         <div className='table-wrap' style={listStyle}>
-          {/* <TableComponent data={tableData} column={columns} settings={tableSetting} loading={loading} /> */}
           <List
+            loading={loading}
             itemLayout="horizontal"
             dataSource={tableData}
             renderItem={(item, index) => (
               <List.Item
                 actions={[
-                  <a key="list-loadmore-edit" onClick={() => showEditModal(item)}>编辑</a>, 
+                  <a key="list-loadmore-edit" onClick={() => showEditModal(item)}>编辑</a>,
                   <a key="list-loadmore-more" onClick={() => delRequirement(item)}>删除</a>
                 ]}
               >
