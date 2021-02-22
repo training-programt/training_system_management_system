@@ -1,18 +1,22 @@
-import { InfoView } from '@/pages'
+import { UserInfo,Syllabus,TrainingScheme } from '@/pages'
 
 export default [
   {
-    path: '/infoView',
-    name: '信息查看',
-    icon: 'icon-show',
-    childRoutes: [
-      {
-        path: '/infoView/statisticalList',
-        name: '统计名单',
-        icon: 'icon-tongji',
-        exact: true,
-        component: InfoView,
-      },
-    ]
-  }
+    path: '/infoView/syllabus',
+    name: '教学大纲',
+    icon: 'icon-icon-test7',
+    component: Syllabus,
+  },
+  {
+    path: '/infoView/trainingScheme',
+    name: '培养方案',
+    icon: 'icon-icon-test8',
+    component: TrainingScheme,
+  },
+  {
+    path: '/infoView/userInfo',
+    name: '个人信息',
+    icon: 'icon-user',
+    component: UserInfo,
+  },
 ]

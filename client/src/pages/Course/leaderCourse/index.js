@@ -13,7 +13,7 @@ const Course = () => {
   const [loading, setLoading] = useState(false);
   const [visible, setVisible] = useState(false);//弹窗新增和编辑
   const [drawerVisible, setDrawerVisible] = useState(false);
-  const [drawerData,setdrawerData] = useState('');
+  const [drawerData,setDrawerData] = useState({});
   const [confirmLoading, setConfirmLoading] = useState(false);
 
   const courseColumns = [
@@ -40,11 +40,17 @@ const Course = () => {
       title: '开课单位',
       dataIndex: 'unit',
       align: 'center',
+      render:(text,record)=>{
+        return record.unit ? record.unit.name : ''
+      }
     },
     {
       title: '开课学期',
       dataIndex: 'semester',
       align: 'center',
+      render:(text,record)=>{
+        return record.semester ? record.semester.name : ''
+      }
     },
     {
       title: '是否产教融合课程',
@@ -87,8 +93,30 @@ const Course = () => {
   };
   //详情查看
   const showDrawer = (record) => {
-    // console.log(record)
-    setdrawerData(record)
+    console.log(record)
+    setDrawerData({
+      _id: record._id,
+      name: record.name,
+      code:record.code,
+      header:record.header.name,
+      unit:record.unit.name,
+      type:record.type,
+      semester:record.semester.name,
+      weekly_hours:record.weekly_hours,
+      within:record.within,
+      outside:record.outside,
+      computer:record.computer,
+      other:record.other,
+      nature:record.nature,
+      attribute:record.attribute,
+      category:record.category,
+      degree:record.degree,
+      direction:record.direction,
+      introduce:record.introduce,
+      course_selection_group:record.course_selection_group,
+      assessment_method:record.assessment_method,
+      flag_fuse:record.flag_fuse
+    })
     setDrawerVisible(true)
   };
 
@@ -113,7 +141,6 @@ const Course = () => {
   useEffect(() => {
     setLoading(true)
     const res = React.$axios.get('/getCourse').then((courseData) => {
-      console.log(courseData)
       setCourseData(courseData.data)
       setTotal(courseData.total)
     })
@@ -196,7 +223,7 @@ const Course = () => {
               <DescriptionItem title="课程类别" content={drawerData.type} />
             </Col>
             <Col span={12}>
-              <DescriptionItem title="课程负责人" content={drawerData.head} />
+              <DescriptionItem title="课程负责人" content={drawerData.header} />
             </Col>
           </Row>
           <Row>
@@ -204,12 +231,12 @@ const Course = () => {
               <DescriptionItem title="开课单位" content={drawerData.unit} />
             </Col>
             <Col span={12}>
-              <DescriptionItem title="是否学位课" content={drawerData.name} />
+              <DescriptionItem title="是否学位课" content={drawerData.degree} />
             </Col>
           </Row>
           <Row>
             <Col span={24}>
-              <DescriptionItem title="考核方式" content={drawerData.method==1?"考核":"考查"} />
+              <DescriptionItem title="考核方式" content={drawerData.assessment_method} />
             </Col>
           </Row>
           <Divider />
