@@ -117,3 +117,14 @@ export function mergeCells(text, data, key, index) {
   }
   return rowSpan
 }
+
+export function downloadFile(blob, tagFileName, fileType) {
+  var downloadElement = document.createElement('a');
+  var href = window.URL.createObjectURL(blob);
+  downloadElement.href = href;
+  downloadElement.download = tagFileName + '.' + fileType; 
+  document.body.appendChild(downloadElement);
+  downloadElement.click();
+  document.body.removeChild(downloadElement);
+  window.URL.revokeObjectURL(href);
+}

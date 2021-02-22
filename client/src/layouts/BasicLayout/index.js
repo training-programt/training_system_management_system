@@ -13,19 +13,6 @@ const BasicLayout = () => {
   const [menus, setMenus] = useState([]);
   const [collapsed, setCollapsed] = useState(false)
 
-  // useEffect(() => {
-  //   const router = JSON.parse(getSession('tabs'))
-  //   console.log(router)
-
-  //   setPanes(router.panes)
-  // }, [])
-  // useEffect(() => {
-  //   if (panes.length === 0) return
-  //   console.log(panes,JSON.parse(getSession('tabs')).activeMenu)
-  //   setActiveMenu(JSON.parse(getSession('tabs')).activeMenu)
-
-  // }, [panes])
-
   useMemo(() => {
     const fetchData = async () => {
       const res = await React.$axios.get(`/menu?role=${JSON.parse(getSession('userInfo')).role}`,)
