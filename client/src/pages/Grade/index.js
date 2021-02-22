@@ -1,36 +1,37 @@
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo,useEffect } from 'react';
 import { Table, Button, Tabs, Popconfirm, } from 'antd';
 const { TabPane } = Tabs;
 import HeaderComponent from '../../components/header'
 import { useSelector } from 'react-redux';
 import './index.less'
-import api from '../../apis/grade'
 const Grade = () => {
   const [visible, setVisible] = useState(false);//弹窗新增和编辑
   const [loading, setLoading] = useState(false);
   const [gradeData, setGradeData] = useState([]);
-  const [semesterData, setsemesterData] = useState([])
+  const [semesterData, setSemesterData] = useState([])
   const [tabKey, setTabKey] = useState('tab1')
   const gradeColumns = [
-    {
-      title: '序号',
-      dataIndex: 'key',
-      key: 'key',
-    },
+    { title: '序号', align: 'center', fixed: 'left', render: (text, record, index) => `${index + 1}` },
     {
       title: '年级名字',
       dataIndex: 'name',
-      key: 'name',
+      align: 'center',
     },
     {
       title: '年级人数',
       dataIndex: 'studentNumber',
-      key: 'studentNumber'
+      align: 'center',
+      render:(text,record)=>{
+        let count = 0;
+        for(let i = 0;i<record.studentNumber.length;i ++){
+          count +=record.studentNumber[i].count
+        }
+        return count
+      }
     },
     {
       title: '操作',
       dataIndex: 'operation',
-      key: 'operation',
       render: (text, record) => (
         <div>
           <Button type="link" onClick={edit}>编辑</Button>
@@ -42,20 +43,15 @@ const Grade = () => {
     },
   ];
   const semesterColumns = [
-    {
-      title: '序号',
-      dataIndex: 'key',
-      key: 'key',
-    },
+    { title: '序号', align: 'center', fixed: 'left', render: (text, record, index) => `${index + 1}` },
     {
       title: '学期名字',
       dataIndex: 'name',
-      key: 'name',
+      align: 'center',
     },
     {
       title: '操作',
       dataIndex: 'operation',
-      key: 'operation',
       render: (text, record) => (
         <div>
           <Button type="link" onClick={edit}>编辑</Button>
@@ -75,25 +71,15 @@ const Grade = () => {
   const add = () => {
 
   }
-  useMemo(() => {
-    const fetchData = async () => {
-      const params = {
-      }
-      setLoading(true);
-      const res = await api.getGradeList(params);
-      setGradeData(res.data);
-      setLoading(false);
-    }
-    fetchData();
-  }, [])
-  useMemo(() => {
-    const fetchData = async () => {
-      setLoading(true);
-      const res = await api.getSemesterList();
-      setsemesterData(res.data);
-      setLoading(false);
-    }
-    fetchData();
+  useEffect(() => {
+    setLoading(true)
+    const res = React.$axios.get('/getGrade').then((gradeData) => {
+      setGradeData(gradeData.data)
+    })
+    const res1 = React.$axios.get('/getSemester').then((semesterData) => {
+      setSemesterData(semesterData.data);
+    })
+    setLoading(false)
   }, [])
   const callback=(key)=>{
     // console.log(key);

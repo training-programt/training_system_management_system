@@ -4,10 +4,11 @@ import LeaderCourse from './Course/leaderCourse';
 import LeaderMajor from './Major/leaderMajor';
 import DirectorMajor from './Major/directorMajor';
 import Home from './Home';
-import UserInfo from './UserInfo';
 import Grade from './Grade';
 import Notification from './Notification'
-import InfoView from "./InfoView";
+import UserInfo from "./InfoView/UserInfo";
+import Syllabus from "./InfoView/Syllabus";
+import TrainingScheme from "./InfoView/TrainingScheme";
 import TeachRoom from "./TeachRoom";
 import TrainingProject from './TrainingProject';
 import AddTrainingProject from './TrainingProject/add';
@@ -18,14 +19,15 @@ export {
   Home,
   LeaderTeacher,
   LeaderCourse,
-  UserInfo,
   Notification,
   LeaderMajor,
   DirectorMajor,
   Grade,
-  InfoView,
+  UserInfo,
   TeachRoom,
+  Syllabus,
   TrainingProject,
+  TrainingScheme,
   AddTrainingProject,
   EditTrainingProject,
 }
