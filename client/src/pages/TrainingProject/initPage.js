@@ -1,14 +1,33 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import { Form, Input, Select, InputNumber } from 'antd';
+import api from '@/apis/trainingProject'
+import { setSession, getSession } from '@/utils'
 
 const { Option } = Select;
 
 const InitPage = () => {
 
+  const [form] = Form.useForm();
+  const [majorOption, setMajorOption] = useState([])
+
   const layout = {
     labelCol: { span: 5 },
     wrapperCol: { span: 17 },
   };
+
+  useEffect(() => {
+    const formData = JSON.parse(getSession('training-project-data')) || {}
+    console.log(formData)
+    form.setFieldsValue(formData)
+    const fetch = async () => {
+      const res = await React.$axios.get(api.getMajor)
+      setMajorOption(res.data)
+    }
+    fetch()
+    return () => {
+      setSession('training-project-data', form.getFieldValue())
+    }
+  }, [])
 
   return (
     <div className="init-page">
@@ -16,6 +35,7 @@ const InitPage = () => {
         <div className='title'>方案初始数据</div>
         <Form
           {...layout}
+          form={form}
           name="basic"
         >
           <Form.Item
@@ -28,7 +48,7 @@ const InitPage = () => {
               },
             ]}
           >
-            <Input />
+            <Input allowClear placeholder='请输入培养方案标题' />
           </Form.Item>
 
           <Form.Item
@@ -41,7 +61,14 @@ const InitPage = () => {
               },
             ]}
           >
-            <Input />
+            <Select
+              allowClear
+              placeholder="选择专业"
+            >
+              {
+                majorOption.map(item => <Option key={item._id} value={item._id}>{item.name}</Option>)
+              }
+            </Select>
           </Form.Item>
           <Form.Item
             label="年级"
@@ -53,7 +80,7 @@ const InitPage = () => {
               },
             ]}
           >
-            <Input />
+            <Input allowClear placeholder='请输入年级' />
           </Form.Item>
           <Form.Item
             label="学位"
@@ -66,6 +93,7 @@ const InitPage = () => {
             ]}
           >
             <Select
+              allowClear
               showSearch
               placeholder="选择学位"
             >
@@ -85,6 +113,7 @@ const InitPage = () => {
             ]}
           >
             <Select
+              allowClear
               showSearch
               placeholder="选择学制"
             >
@@ -115,6 +144,7 @@ const InitPage = () => {
         <div className='title'>学制、学位、主干学科与课程</div>
         <Form
           {...layout}
+          form={form}
           name="basic1"
         >
           <Form.Item
@@ -127,7 +157,7 @@ const InitPage = () => {
               },
             ]}
           >
-            <Input />
+            <Input allowClear placeholder='请输入主干学科' />
           </Form.Item>
           <Form.Item
             label="专业核心课程"
@@ -139,7 +169,7 @@ const InitPage = () => {
               },
             ]}
           >
-            <Input.TextArea />
+            <Input.TextArea allowClear placeholder='专业核心课程' />
           </Form.Item>
           <Form.Item
             label="主要实践性教学环节"
@@ -151,7 +181,7 @@ const InitPage = () => {
               },
             ]}
           >
-            <Input.TextArea />
+            <Input.TextArea allowClear placeholder='主要实践性教学环节' />
           </Form.Item>
         </Form>
       </div>
