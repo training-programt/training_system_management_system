@@ -231,6 +231,7 @@ const Menu = () => {
     }
     const menu = await React.$axios.post('/menuData', params)
     // setMenuData([])
+    console.log(menu.data)
     setMenuData(menu.data)
   }
 

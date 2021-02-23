@@ -9,6 +9,7 @@ import infoView from './infoView';
 import teachRoom from './teachRoom';
 import trainingProject from './trainingProject';
 import graduatoinRequirement from './graduatoinRequirement';
+import courseLeader from './courseLeader'
 const routesConfig = [
   // 子路由
   ...major,
@@ -19,6 +20,7 @@ const routesConfig = [
   ...teachRoom,
   ...trainingProject,
   ...graduatoinRequirement,
+  ...courseLeader,
   ...setting,
   ...publish,
   ...exception,

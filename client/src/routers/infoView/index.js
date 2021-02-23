@@ -1,11 +1,11 @@
-import { UserInfo,Syllabus,TrainingScheme } from '@/pages'
+import { UserInfo,SyllabusShow,TrainingScheme } from '@/pages'
 
 export default [
   {
     path: '/infoView/syllabus',
     name: '教学大纲',
     icon: 'icon-icon-test7',
-    component: Syllabus,
+    component: SyllabusShow,
   },
   {
     path: '/infoView/trainingScheme',
