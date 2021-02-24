@@ -10,6 +10,7 @@ import UserInfo from "./InfoView/UserInfo";
 import SyllabusShow from "./InfoView/SyllabusShow";
 import TrainingScheme from "./InfoView/TrainingScheme";
 import TeachRoom from "./TeachRoom";
+import SectionDetails from "./TeachRoom/sectionDetails";
 import TrainingProject from './TrainingProject';
 import AddTrainingProject from './TrainingProject/add';
 import EditTrainingProject from './TrainingProject/edit';
@@ -27,6 +28,7 @@ export {
   Grade,
   UserInfo,
   TeachRoom,
+  SectionDetails,
   SyllabusShow,
   Syllabus,
   SyllabusAdd,

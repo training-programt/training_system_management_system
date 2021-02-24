@@ -1,8 +1,9 @@
 import React, { useState, useMemo } from 'react';
 import { Input, Select, Space, Button } from 'antd';
-import PaginationComponent from '../../components/pagination'
-import HeaderComponent from '../../components/header'
-import TableComponent from '../../components/table'
+import PaginationComponent from '@/components/pagination'
+import HeaderComponent from '@/components/header'
+import TableComponent from '@/components/table'
+import { PlusOutlined } from '@ant-design/icons';
 import './index.less'
 
 import api from '@/apis/teachRoom'
@@ -100,6 +101,7 @@ const TeachRoom = () => {
           </div>
           <div className="search-box">
             <Input.Search placeholder="请输入教研室名称" onSearch={value => setQuery(value)} allowClear enterButton />
+            <Button type="primary" icon={<PlusOutlined />}>添加教研室</Button>
           </div>
         </div>
         <div className="table-container">

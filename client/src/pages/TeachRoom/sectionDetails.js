@@ -1,9 +1,70 @@
-import React from 'react'
+import React, { useState, useMemo } from 'react'
+import { Input, Button, Tabs } from 'antd'
+import HeaderComponent from '@/components/header'
+import TableComponent from '@/components/table'
+import { PlusOutlined, DeleteOutlined } from '@ant-design/icons';
+const { TabPane } = Tabs;
+
+function callback(key) {
+  console.log(key);
+}
 
 const SectionDetais = (id) => {
+
+  const [tableData, setTableData] = useState([]);
+  const [loading, setLoading] = useState(false);
+
+  const tableSetting = {
+    page: 1,
+    rows: 10,
+  }
+
+  const columns = [
+    {
+      title: '名称',
+      dataIndex: 'name',
+      align: 'center'
+    },
+    {
+      title: '操作',
+      key: 'active',
+      align: 'center',
+      width: '20%',
+      render: (text, record) => (
+        <div style={{ textAlign: 'center' }}>
+            <Button type="link">删除</Button>
+        </div>
+      )
+    },
+  ];
+
   return (
-    <div>
-      我是详情
+    <div className='teach-details'>
+      <HeaderComponent title="教研室详情" />
+      <div className='body-wrap'>
+        <Tabs defaultActiveKey="1" onChange={callback}>
+          <TabPane tab="教师列表" key="1">
+            <div className="header-wrap">
+              <div className="search-box">
+                <Input.Search placeholder="请输入教师姓名" allowClear enterButton />
+              </div>
+              <div className="operation-wrap">
+                <Button type="primary" icon={<PlusOutlined />}>新增教师</Button>
+                <Button type="primary" icon={<DeleteOutlined />}>批量删除</Button>
+              </div>
+            </div>
+
+            <div className='table-wrap'>
+            <TableComponent data={tableData} column={columns} settings={tableSetting} loading={loading} />
+            </div>
+          </TabPane>
+          <TabPane tab="数据图表" key="2">
+            Content of Tab Pane 2
+          </TabPane>
+
+        </Tabs>
+
+      </div>
     </div>
   )
 }
