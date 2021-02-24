@@ -7,12 +7,14 @@ import Home from './Home';
 import Grade from './Grade';
 import Notification from './Notification'
 import UserInfo from "./InfoView/UserInfo";
-import Syllabus from "./InfoView/Syllabus";
+import SyllabusShow from "./InfoView/SyllabusShow";
 import TrainingScheme from "./InfoView/TrainingScheme";
 import TeachRoom from "./TeachRoom";
 import TrainingProject from './TrainingProject';
 import AddTrainingProject from './TrainingProject/add';
 import EditTrainingProject from './TrainingProject/edit';
+import Syllabus from "./CourseLeader/Syllabus";
+import SyllabusAdd from './CourseLeader/Syllabus/add';
 
 export {
   Login,
@@ -25,7 +27,9 @@ export {
   Grade,
   UserInfo,
   TeachRoom,
+  SyllabusShow,
   Syllabus,
+  SyllabusAdd,
   TrainingProject,
   TrainingScheme,
   AddTrainingProject,
