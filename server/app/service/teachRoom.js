@@ -2,20 +2,28 @@
 const Service = require('egg').Service;
 class TeachRoomService extends Service {
 
-    // 查询全部用户 老师
-    async getTeachRoom() {
+    // 查询学院下的教研室
+    async getTeachRoom(params) {
         const { ctx } = this;
+        const reg = new RegExp(params.query, 'i')
         const result = await ctx.model.TeachRoom
             .find({
+                // $and: [
+                //     { $or: [{ name: { $regex: reg } }] },
+                //     { $or: [{ type: parseInt(params.type) }] }
+                // ]
+                $or: [{ name: { $regex: reg } }, { type: params.type }]
             })
             .populate('director')
             .populate('college')
             .populate('major')
             .populate('teachers')
-            .sort('sort');
+            .limit(parseInt(params.pageSize))
+            .skip(parseInt(params.pageSize) * parseInt(params.page))
+            .sort('sort')
         return result;
     }
-    
+
     // 删除
     async delTeachRoom(params) {
         const { ctx } = this;
@@ -23,14 +31,14 @@ class TeachRoomService extends Service {
         return result
     }
     //修改
-    async updataTeachRoom(params){
+    async updataTeachRoom(params) {
         const { ctx } = this;
         const result = await ctx.model.TeachRoom.findByIdAndUpdate(params)
         return result
     }
     //增加
-    async addTeachRoom(params){
-        const {ctx} = this;
+    async addTeachRoom(params) {
+        const { ctx } = this;
         const result = await ctx.model.TeachRoom.insertMany(params);
         return result;
     }

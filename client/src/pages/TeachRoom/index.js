@@ -5,7 +5,7 @@ import HeaderComponent from '../../components/header'
 import TableComponent from '../../components/table'
 import './index.less'
 
-import api from '../../apis/teachRoom'
+import api from '@/apis/teachRoom'
 
 const { Option } = Select;
 
@@ -20,15 +20,21 @@ const TeachRoom = () => {
 
   const column = [
     { width: 50, render: (text, record, index) => `${index + 1 + (tableSetting.page - 1) * tableSetting.rows}` },
-    { title: 'id', dataIndex: 'id', key: 'id' },
+    { title: '_id', dataIndex: '_id', key: '_id' },
     { title: '名称', dataIndex: 'name', key: 'name' },
-    { title: '专业', dataIndex: 'major', key: 'major' },
+    {
+      title: '专业', dataIndex: 'major', key: 'major',
+      render: text => text.name
+    },
     {
       title: '类型', dataIndex: 'type', render: text => {
         return text == 1 ? '专业类' : text == 2 ? '学科类' : '管理类'
       }
     },
-    { title: '教师人数', dataIndex: 'teacherCount', key: 'teacherCount' },
+    {
+      title: '教师人数', dataIndex: 'teacherCount', key: 'teacherCount',
+      render: (text, record) => record.teachers.length
+    },
     { title: '专任教师', dataIndex: 'fullTeacher', key: 'fullTeacher' },
     {
       title: '操作', key: 'action',
@@ -68,7 +74,7 @@ const TeachRoom = () => {
         query: query
       }
       setLoading(true);
-      const res = await api.getDepartmentList(params);
+      const res = await React.$axios.get(`${api.getTeachRoom}?${React.$qs.stringify(params)}`);
       setTableData(res.data);
       setTotal(res.total);
       setLoading(false);
