@@ -35,5 +35,41 @@ class CourseLeaderService extends Service {
         const result = await ctx.model.Syllabus.insertMany(params);
         return result;
     }
+
+
+     // 查询全部课程教学目标
+     async getTeachGoal() {
+        const { ctx } = this;
+        const result = await ctx.model.TeachingGoal
+            .find({
+            })
+            .populate('attendance_proportion')
+            .sort('sort');
+        return result;
+    }
+    //添加教学目标
+    async addTeachGoal(params) {
+        const { ctx } = this;
+        const result = await ctx.model.TeachingGoal.create(params)
+        return result;
+    }
+    //删除教学目标
+    async delTeachGoal(params) {
+        const { ctx } = this;
+        const result = await ctx.model.TeachingGoal.remove(params)
+        return result
+    }
+     //更新
+     async updataTeachGoal(params) {
+        const { ctx } = this;
+        const result = await ctx.model.TeachingGoal.findByIdAndUpdate(params)
+        return result
+    }
+     //条件查询
+     async findTeachGoal(params) {
+        const { ctx } = this;
+        const result = await ctx.model.TeachingGoal.find(params)
+        return result;
+    }
 }
 module.exports = CourseLeaderService;

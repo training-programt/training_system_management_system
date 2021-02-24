@@ -17,15 +17,7 @@ class GradeService extends Service {
             .sort('sort');
         return result;
     }
-    // 查询全部学期
-    async getSemester() {
-        const { ctx } = this;
-        const result = await ctx.model.Semester
-            .find({
-            })
-            .sort('sort');
-        return result;
-    }
+   
     //条件查询
     async findGrade(params) {
         const { ctx } = this;
@@ -44,6 +36,23 @@ class GradeService extends Service {
         const result = await ctx.model.Grade.findByIdAndUpdate(params)
         return result
     }
-
+ // 查询全部学期
+ async getSemester() {
+    const { ctx } = this;
+    const result = await ctx.model.Semester
+        .find({
+        })
+        .sort('sort');
+    return result;
+}
+ // 查询全部学院
+ async getCollege() {
+    const { ctx } = this;
+    const result = await ctx.model.College
+        .find({
+        })
+        .sort('sort');
+    return result;
+}
 }
 module.exports = GradeService;

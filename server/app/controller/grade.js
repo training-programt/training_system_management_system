@@ -25,6 +25,17 @@ class GradeController extends Controller {
     }
 
   }
+  async getCollege() {
+    const { ctx } = this;
+    const data = await ctx.service.grade.getCollege()
+    ctx.body = {
+      total: data.length,
+      data: data,
+      code: 200,
+      isSucceed: true,
+    }
+
+  }
 }
  
 module.exports = GradeController;

@@ -6,7 +6,8 @@ module.exports = app => {
   const CourseSchema = new Schema({
     name: { type: String },
     code: { type: String },//课程代码
-    type: { type: String, default: 'null' },
+    type: { type: String },
+    englishName: { type: String },//英文名字
     //课程负责人与教师相关联
     header: {
       type: Schema.Types.ObjectId,
@@ -16,6 +17,13 @@ module.exports = app => {
       type: Schema.Types.ObjectId,
       ref: 'College'
     },
+    credits: { type: String },//学分
+    course_ap: { type: String },//先修课程
+    professional: [{
+      type: Schema.Types.ObjectId,
+      ref: 'Major'
+    }],//适用专业
+    introduce:{type:String},//课程简介
     semester: {
       type: Schema.Types.ObjectId,
       ref: 'Semester'
@@ -25,9 +33,9 @@ module.exports = app => {
     outside: { type: Number },
     computer: { type: Number },
     other: { type: Number },
-    system: { 
+    system: {
       type: Schema.Types.ObjectId,
-      ref:'CourseSystem' 
+      ref: 'CourseSystem'
     },//课程体系
     nature: { type: String },//课程性质
     attribute: { type: String },//选修必修限选
@@ -37,19 +45,19 @@ module.exports = app => {
     course_selection_group: { type: String },//分配选课组
     assessment_method: { type: String },//考核方式
     flag_fuse: { type: Boolean },//是否产教融合课程
-    point:{
-      type:Schema.Types.ObjectId,
-      ref:'Point'
-    },
-    weight:{type:Number},//课程权重 
-    syllabus:{//教学大纲
+    point: {
       type: Schema.Types.ObjectId,
-      ref:'Syllabus'
+      ref: 'Point'
     },
-    assessment:{//课程考核表
+    weight: { type: Number },//课程权重 
+    syllabus: {//教学大纲
       type: Schema.Types.ObjectId,
-      ref:'Assessment'
-    } 
+      ref: 'Syllabus'
+    },
+    assessment: {//课程考核表
+      type: Schema.Types.ObjectId,
+      ref: 'Assessment'
+    }
   })
   //新注释掉的
   // CourseSchema.virtual('syllabus', {//教学大纲

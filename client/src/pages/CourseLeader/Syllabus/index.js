@@ -53,7 +53,7 @@ const Syllabus = () => {
       key: 'operation',
       render: (text, record) => (
         <div>
-          <Link to={{ pathname: "trainingProject/edit" }}><Button size="small" type="link">编辑</Button></Link>
+          <Link to={{ pathname: "trainingProject/edit",state:{id:record._id} }}><Button size="small" type="link">编辑</Button></Link>
           <Popconfirm title="确定删除？" okText="确定" cancelText="取消">
             <Button type="link">删除</Button>
           </Popconfirm>
