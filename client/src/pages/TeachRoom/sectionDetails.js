@@ -13,7 +13,7 @@ function callback(key) {
 
 const SectionDetais = (props) => {
   console.log(props.location.state)
-  const [roomData, setRoomData] = useState();
+  const [roomData, setRoomData] = useState(props.location.state);
 
   const [tableData, setTableData] = useState([]);
   const [loading, setLoading] = useState(false);
@@ -25,7 +25,7 @@ const SectionDetais = (props) => {
 
   useMemo(async () => {
     const params = {
-      // teachRoomId: roomData._id,
+      teachRoomId: roomData._id,
     };
     const res = await React.$axios.get(
       `${api.getTeacherByRoom}?${React.$qs.stringify(params)}`

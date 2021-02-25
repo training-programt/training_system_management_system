@@ -31,9 +31,7 @@ const TeachRoom = () => {
       title: "专业",
       dataIndex: "major",
       key: "major",
-      render: (text, record) => {
-        console.log(text, record)
-      }
+      render: text => text.name || ''
     },
     {
       title: "类型",
