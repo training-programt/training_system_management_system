@@ -23,7 +23,7 @@
       font-size: 16px * @width;
 
       .filter-type {
-        flex: 4;
+        flex: 3;
         height: 60px * @height;
         line-height: 60px * @height;
 
@@ -39,6 +39,33 @@
 
       .search-box {
         flex: 1;
+        display: flex;
+      }
+    }
+  }
+}
+
+.teach-details {
+  height: 100%;
+
+  .body-wrap {
+    background-color: #fff;
+    height: calc(100% - @height1);
+    padding: 0 20px * @width 20px * @height;
+
+    .header-wrap {
+      height: 40px * @height;
+      width: 100%;
+      display: flex;
+      justify-content: space-between;
+
+      .search-box {
+        width: 320px * @width;
+      }
+      .operation-wrap {
+        width: 240px * @width;
+        display: flex;
+        justify-content: space-around;
       }
     }
   }

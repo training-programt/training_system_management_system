@@ -1,7 +1,8 @@
-import React, { useState } from 'react'
-
+import React, { useState, useEffect } from 'react'
 import { Form, Input, Button, List } from 'antd';
 import { PlusOutlined } from '@ant-design/icons';
+import { setSession, getSession } from '@/utils'
+
 const data = [
   {
     title: '人文素养',
@@ -25,8 +26,6 @@ const data = [
   },
 ];
 
-const data1 = []
-
 const layout = {
   labelCol: { span: 3 },
   wrapperCol: { span: 21 },
@@ -39,6 +38,7 @@ const TrainObject = () => {
   const [showMajorForm, setShowMajorForm] = useState(true)
   const [showForm, setShowForm] = useState(false);
   const [majorObject, setMajorObject] = useState('');
+  const [objectList, setObjectList] = useState([])
 
   const addMajorObject = () => {
     setMajorObject(form1.getFieldsValue().majorObject);
@@ -46,15 +46,32 @@ const TrainObject = () => {
   }
 
   const addObjectItem = () => {
-    data1.push(form2.getFieldsValue())
+    setObjectList([...objectList, form2.getFieldsValue()])
+    // objectList.push(form2.getFieldsValue())
     setShowForm(false)
     form2.resetFields()
   }
 
-  const delObjectItem = (index) => {
-    console.log(index)
-    data1.splice(index + 1, 1);
-  }
+  // const delObjectItem = (index) => {
+  //   console.log(index)
+  //   objectList.splice(index + 1, 1);
+  // }
+
+  useEffect(() => {
+    const temData = JSON.parse(getSession('training-project-data'))
+    setMajorObject(temData.majorObject || '')
+    setObjectList(temData.objectList || [])
+    return () => {
+      const data = {
+        ...temData,
+        majorObject,
+        objectList
+      }
+      setTimeout(() => {
+        setSession('training-project-data', data)
+      }, 100);
+    }
+  }, [])
 
   return (
     <div className="train-object">
@@ -87,7 +104,7 @@ const TrainObject = () => {
           </div>
           <List
             itemLayout="horizontal"
-            dataSource={data1}
+            dataSource={objectList}
             renderItem={(item, index) => (
               <List.Item
                 actions={[
@@ -121,7 +138,7 @@ const TrainObject = () => {
                   <Input.TextArea />
                 </Form.Item>
                 <Button onClick={addObjectItem} >添加</Button>
-                <Button onClick={() =>setShowForm(false)} >取消</Button>
+                <Button onClick={() => setShowForm(false)} >取消</Button>
               </Form>
             )
               : <Button type="dashed" onClick={() => setShowForm(true)} block icon={<PlusOutlined />}>添加具体专业培养目标</Button>

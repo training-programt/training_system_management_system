@@ -6,6 +6,7 @@ module.exports = app => {
   const TeachRoomSchema = new Schema({
     name: { type: String },
     count: { type: Number },
+    type: { type: String, defineValue: '1' },
     director: {
       type: Schema.Types.ObjectId,
       ref: 'Teacher'

@@ -1,4 +1,5 @@
 export default {
-  getDepartmentList: '',
-
+  getTeachRoom: '/getTeachRoom',
+  getTeacherByRoom: '/getTeacherByRoom',
+  
 }
