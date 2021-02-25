@@ -79,6 +79,18 @@ class CourseLeaderController extends Controller {
         };  
     }
   }
+  //得到对应关系
+  async getRelation() {
+    const { ctx } = this;
+    const data = await ctx.service.courseLeader.getRelation();
+    ctx.body = {
+      total: data.length,
+      data: data,
+      code: 200,
+      isSucceed: true,
+    }
+
+  }
 }
 
 module.exports = CourseLeaderController;

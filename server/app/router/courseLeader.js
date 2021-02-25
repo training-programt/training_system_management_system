@@ -6,5 +6,5 @@ module.exports = app => {
     router.post('/addTeachGoal', controller.courseLeader.addTeachGoal);
     router.post('/delTeachGoal', controller.courseLeader.delTeachGoal);
 
-
+    router.get('/getRelation', controller.courseLeader.getRelation);
 };

@@ -12,6 +12,10 @@ module.exports = app => {
       type: Schema.Types.ObjectId,
       ref: 'TeachingGoal'
     }],//教学目标
+    relation:[{
+      type: Schema.Types.ObjectId,
+      ref: 'Relation'
+    }],//课程教学目标与毕业要求的对应关系
     theory_teaching: [{
       type: Schema.Types.ObjectId,
       ref: 'TheoryTeach'

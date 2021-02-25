@@ -59,16 +59,28 @@ class CourseLeaderService extends Service {
         const result = await ctx.model.TeachingGoal.remove(params)
         return result
     }
-     //更新
+     //更新教学目标
      async updataTeachGoal(params) {
         const { ctx } = this;
         const result = await ctx.model.TeachingGoal.findByIdAndUpdate(params)
         return result
     }
-     //条件查询
+     //条件查询教学目标
      async findTeachGoal(params) {
         const { ctx } = this;
         const result = await ctx.model.TeachingGoal.find(params)
+        return result;
+    }
+    // 查询全部对应关系
+    async getRelation() {
+        const { ctx } = this;
+        const result = await ctx.model.Relation
+            .find({
+            })
+            .populate('major_requirement')
+            .populate('point')
+            .populate('teach_goal')
+            .sort('sort');
         return result;
     }
 }
