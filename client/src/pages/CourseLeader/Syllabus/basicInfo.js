@@ -14,7 +14,6 @@ const BasicInfo = () => {
     };
     useEffect(() => {
         const courses = React.$axios.get('/getCollege').then((res) => {
-            console.log(res)
             setCollegeData(res.data)
         })
         const major = React.$axios.get('/getMajor').then((res) => {

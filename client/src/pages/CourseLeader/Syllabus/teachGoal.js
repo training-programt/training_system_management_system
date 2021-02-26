@@ -15,7 +15,6 @@ const TeachGoal = () => {
     const [teachGoal, setTeachGoalDate] = useState([]);
     useEffect(() => {
         const TeachGoal = React.$axios.get('/getTeachGoal').then((goal) => {
-            console.log(goal)
             setTeachGoalDate(goal.data)
         })
     }, [])

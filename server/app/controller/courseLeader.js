@@ -91,6 +91,44 @@ class CourseLeaderController extends Controller {
     }
 
   }
+
+   //得到 专业要求
+   async getMajorRequirement() {
+    const { ctx } = this;
+    const data = await ctx.service.courseLeader.getMajorRequirement();
+    ctx.body = {
+      total: data.length,
+      data: data,
+      code: 200,
+      isSucceed: true,
+    }
+
+  }
+
+   //得到指标点
+   async getPoint() {
+    const { ctx } = this;
+    const data = await ctx.service.courseLeader.getPoint();
+    ctx.body = {
+      total: data.length,
+      data: data,
+      code: 200,
+      isSucceed: true,
+    }
+
+  }
+   //得到理论对应关系
+   async getTheory() {
+    const { ctx } = this;
+    const data = await ctx.service.courseLeader.getTheory();
+    ctx.body = {
+      total: data.length,
+      data: data,
+      code: 200,
+      isSucceed: true,
+    }
+
+  }
 }
 
 module.exports = CourseLeaderController;
