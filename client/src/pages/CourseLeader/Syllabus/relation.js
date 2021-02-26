@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Table, Input, Button, Modal, InputNumber, Select,Popconfirm, Form, Typography } from 'antd';
+import { Table, Input, Button, Modal, InputNumber, Select, Popconfirm, Form, Typography } from 'antd';
 
 
 const Relation = () => {
@@ -9,10 +9,18 @@ const Relation = () => {
   const [visible, setVisible] = useState(false);
   const [loading, setLoading] = useState(false);
   const [confirmLoading, setConfirmLoading] = useState(false);
+  const [requirement, setRequirementData] = useState([]);
+  const [point, setPointData] = useState([]);
+
   useEffect(() => {
     const Rel = React.$axios.get('/getRelation').then((rel) => {
-      console.log(rel)
       setRelationData(rel.data)
+    })
+    const MajorRequirement = React.$axios.get('/getMajorRequirement').then((ma) => {
+      setRequirementData(ma.data)
+    })
+    const Point = React.$axios.get('/getPoint').then((point) => {
+      setPointData(point.data)
     })
   }, [])
   const columns = [
@@ -20,21 +28,28 @@ const Relation = () => {
       title: '毕业要求',
       dataIndex: 'major_requirement',
       width: '25%',
+      algin: 'center',
       render: (text, record) => {
-        return record.major_requirement.name ? record.major_requirement.name : ''
+        // console.log(record)
+        // return record.name
+        // return record.major_requirement.name?record.major_requirement.name:''
       }
     },
     {
       title: '指标点',
       dataIndex: 'point',
       width: '15%',
+      algin: 'center',
       render: (text, record) => {
-        return record.point.content ? record.point.content : ''
+        // console.log(record)
+        return record.name
+        // return record.point.content?record.point.content:''
       }
     },
     {
       title: '课程教学目标',
       dataIndex: 'teach_goal',
+      algin: 'center',
       width: '40%',
       // render:(text,record)=>(
       //   <div>
@@ -47,10 +62,10 @@ const Relation = () => {
         {
           title: '目标1',
           dataIndex: 'target1',
-         render:(text,record)=>{
-          //  console.log(record)
-           return record.teach_goal[0].weight
-         }
+          render: (text, record) => {
+            //  console.log(record)
+            //  return record.teach_goal[0].weight
+          }
         },
         {
           title: '目标2',
@@ -92,7 +107,7 @@ const Relation = () => {
       key: 'operation',
       render: (text, record) => (
         <div>
-          <Button type="link" >编辑</Button>
+          <Button type="link">编辑</Button>
           <Popconfirm title="确定删除？" okText="确定" cancelText="取消">
             <Button type="link">删除</Button>
           </Popconfirm>
@@ -100,8 +115,8 @@ const Relation = () => {
       ),
     },
   ];
-   //新增
-   const showAdd = () => {
+  //新增
+  const showAdd = () => {
     setVisible(true);
     form.resetFields()
     setIsEdit(false)
@@ -121,7 +136,7 @@ const Relation = () => {
     form.setFieldsValue(data)
   };
   //删除
-  const del = async(record) => {
+  const del = async (record) => {
     // const params = {
     //   _id: record._id,
     // }
@@ -136,7 +151,7 @@ const Relation = () => {
     //   message.error(res.message);
     // }
   };
-  const handleOk = async(e) => {
+  const handleOk = async (e) => {
     e.preventDefault();
     const params = {
       ...form.getFieldValue(),
@@ -183,8 +198,7 @@ const Relation = () => {
       <div className="object-left">
         <div className="title">课程教学目标与毕业要求的对应关系</div>
         <div className="content-wrap">
-        {/* <Button type="primary" icon={<PlusOutlined />} onClick={showAdd}>新增</Button> */}
-        <Button type="primary" onClick={showAdd}>新增对应关系</Button>
+          <Button type="primary" onClick={showAdd}>新增对应关系</Button>
           <Table
             bordered
             dataSource={relation}
@@ -208,44 +222,34 @@ const Relation = () => {
             ]}
           >
             <Form form={form}>
-              <Form.Item 
-              name="major_requirement" 
-              label="毕业要求" 
-              rules={[{ required: true, message: '请选择毕业要求!' }]}
-
+              <Form.Item
+                name="major_requirement"
+                label="毕业要求"
+                rules={[{ required: true, message: '请选择毕业要求!' }]}
               >
                 <Select
-                    style={{ width: 320 }}
-                    placeholder="请选择毕业要求"
-                    mode="multiple"
-                    allowClear
-                  >
-                    {/* {courseData && courseData.map(item => {
-                      return <Select.Option value={item._id} key={item._id}>{item.name}</Select.Option>
-                    })} */}
-                  </Select>
+                  style={{ width: 320 }}
+                  placeholder="请选择毕业要求"
+                  allowClear
+                >
+                  {requirement && requirement.map(item => {
+                    return <Select.Option value={item.name} key={item._id}>{item.name}</Select.Option>
+                  })}
+                </Select>
               </Form.Item>
-              <Form.Item 
-              name="point" 
-              label="指标点" 
-              rules={[{ required: true, message: '请选择指标点!' }]}>
-
+              <Form.Item
+                name="point"
+                label="指标点"
+                rules={[{ required: true, message: '请选择指标点!' }]}>
                 <Select
-                    style={{ width: 320 }}
-                    placeholder="请选择指标点"
-                    mode="multiple"
-                    allowClear
-                  >
-                    {/* {courseData && courseData.map(item => {
-                      return <Select.Option value={item._id} key={item._id}>{item.name}</Select.Option>
-                    })} */}
-                  </Select>
-              </Form.Item>
-              <Form.Item name="introduce" label="专业介绍" rules={[{ required: true, message: '请输入专业介绍!' }]}>
-                <Input.TextArea />
-              </Form.Item>
-              <Form.Item name="count" label="专业人数" rules={[{ required: true, type: 'number', min: 0, max: 1000 }]}>
-                <InputNumber />
+                  style={{ width: 320 }}
+                  placeholder="请选择指标点"
+                  allowClear
+                >
+                  {point && point.map(item => {
+                    return <Select.Option value={item.content} key={item._id}>{item.content}</Select.Option>
+                  })}
+                </Select>
               </Form.Item>
             </Form>
           </Modal>

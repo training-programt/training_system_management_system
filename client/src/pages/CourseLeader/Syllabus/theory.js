@@ -1,254 +1,193 @@
-import React, { useContext, useState, useEffect, useRef } from 'react';
-import { Tabs, Table, Input, Button, Popconfirm, Form } from 'antd';
-const EditableContext = React.createContext(null);
-const { TabPane } = Tabs;
-
-import { createColumns, createRows } from '@/utils'
-
-const EditableRow = ({ index, ...props }) => {
-  const [form] = Form.useForm();
-  return (
-    <Form form={form} component={false}>
-      <EditableContext.Provider value={form}>
-        <tr {...props} />
-      </EditableContext.Provider>
-    </Form>
-  );
-};
+import React, { useState, useEffect } from 'react';
+import { Table, Input, InputNumber, Popconfirm, Select, Form, Divider, Button, Typography } from 'antd';
+import { PlusOutlined } from '@ant-design/icons';
+const { TextArea } = Input;
 
 const EditableCell = ({
-  title,
-  editable,
-  children,
+  editing,
   dataIndex,
+  title,
+  inputType,
   record,
-  handleSave,
+  index,
+  children,
   ...restProps
 }) => {
-  const [editing, setEditing] = useState(false);
-  const inputRef = useRef(null);
-  const form = useContext(EditableContext);
-  useEffect(() => {
-    if (editing) {
-      inputRef.current.focus();
-    }
-  }, [editing]);
-
-  const toggleEdit = () => {
-    setEditing(!editing);
-    form.setFieldsValue({
-      [dataIndex]: record[dataIndex],
-    });
-  };
-
-  const save = async () => {
-    try {
-      const values = await form.validateFields();
-      toggleEdit();
-      handleSave({ ...record, ...values });
-    } catch (errInfo) {
-      console.log('Save failed:', errInfo);
-    }
-  };
-
-  let childNode = children;
-
-  if (editable) {
-    childNode = editing ? (
-      <Form.Item
-        style={{
-          margin: 0,
-        }}
-        name={dataIndex}
-        rules={[
-          {
-            required: true,
-            message: `${title} is required.`,
-          },
-        ]}
-      >
-        <Input ref={inputRef} onPressEnter={save} onBlur={save} />
-      </Form.Item>
-    ) : (
-        <div
-          className="editable-cell-value-wrap"
+  const inputNode = inputType === 'number' ? <InputNumber /> : <Input />;
+  return (
+    <td {...restProps}>
+      {editing ? (
+        <Form.Item
+          name={dataIndex}
           style={{
-            paddingRight: 24,
+            margin: 0,
           }}
-          onClick={toggleEdit}
+          rules={[
+            {
+              required: true,
+              message: `请输入 ${title}!`,
+            },
+          ]}
         >
-          {children}
-        </div>
-      );
-  }
-
-  return <td {...restProps}>{childNode}</td>;
+          {inputNode}
+        </Form.Item>
+      ) : (
+          children
+        )}
+    </td>
+  );
 };
-
+const layout = {
+  labelCol: { span: 2 },
+  wrapperCol: { span: 10 },
+};
 const Theory = () => {
+  const [form] = Form.useForm();
+  const [editingKey, setEditingKey] = useState('');
+  const [theory, setTheoryData] = useState([]);
+  const [showForm, setShowForm] = useState(false);
 
-  const [tableData, setTableData] = useState([
-    {
-      '1': ' ',
-      '2': 'H',
-      '3': ' ',
-      '4': 'M',
-      '5': ' ',
-    },
-    {
-      '1': 'H',
-      '2': ' ',
-      '3': 'H',
-      '4': ' ',
-      '5': 'M',
-    },
-    {
-      '1': 'L',
-      '2': 'H',
-      '3': ' ',
-      '4': 'M',
-      '5': ' ',
-    },
-    {
-      '1': ' ',
-      '2': 'H',
-      '3': ' ',
-      '4': 'M',
-      '5': ' ',
-    },
-    {
-      '1': 'H',
-      '2': ' ',
-      '3': 'H',
-      '4': ' ',
-      '5': 'M',
-    },
-    {
-      '1': 'L',
-      '2': 'H',
-      '3': ' ',
-      '4': 'M',
-      '5': ' ',
-    },
-    {
-      '1': ' ',
-      '2': 'H',
-      '3': ' ',
-      '4': 'M',
-      '5': ' ',
-    },
-    {
-      '1': 'H',
-      '2': ' ',
-      '3': 'H',
-      '4': ' ',
-      '5': 'M',
-    },
-    {
-      '1': ' L',
-      '2': 'H',
-      '3': ' ',
-      '4': 'M',
-      '5': ' ',
-    },
-    {
-      '1': ' ',
-      '2': 'H',
-      '3': ' ',
-      '4': 'M',
-      '5': ' ',
-    },
-    {
-      '1': 'H',
-      '2': ' ',
-      '3': 'H',
-      '4': ' ',
-      '5': 'M',
-    },
-    {
-      '1': 'L',
-      '2': 'H',
-      '3': ' ',
-      '4': 'M',
-      '5': ' ',
-    },
-  ]);
+  const isEditing = (record) => record.key === editingKey;
+  useEffect(() => {
+    const theory = React.$axios.get('/getTheory').then(thory => {
+      console.log(thory)
+      setTheoryData(thory.data)
+    })
+  }, [])
 
-  const columnsTable = [
-    {
-      title: '培养目标1：人文素养',
-      dataIndex: '1',
-      editable: true,
-    },
-    {
-      title: '培养目标2：专业知识与能力',
-      dataIndex: '2',
-      editable: true,
-    },
-    {
-      title: '培养目标3：工程能力与应用',
-      dataIndex: '3',
-      editable: true,
-    },
-    {
-      title: '培养目标4：团队沟通与合作',
-      dataIndex: '4',
-      editable: true,
-    },
-    {
-      title: '培养目标5：终生学习与持续发展',
-      dataIndex: '5',
-      editable: true,
-    },
-  ]
-
-  const firstRow = [
-    {
-      first: '毕业要求1：工程知识',
-    },
-    {
-      first: '毕业要求2：问题分析',
-    },
-    {
-      first: '毕业要求3：设计/开发解决方案',
-    },
-    {
-      first: '毕业要求4：研究',
-    },
-    {
-      first: '毕业要求5：使用现代工具',
-    },
-    {
-      first: '毕业要求6：工程与社会',
-    },
-    {
-      first: '毕业要求7：环境和可持续发展',
-    },
-    {
-      first: '毕业要求8：职业规范',
-    },
-    {
-      first: '毕业要求9：个人和团队',
-    },
-    {
-      first: '毕业要求10：沟通',
-    },
-    {
-      first: '毕业要求11：项目管理',
-    },
-    {
-      first: '毕业要求12：终身学习',
-    },
-  ]
-
-  const components = {
-    body: {
-      row: EditableRow,
-      cell: EditableCell,
-    },
+  const edit = (record) => {
+    form.setFieldsValue({
+      name: '',
+      age: '',
+      address: '',
+      ...record,
+    });
+    setEditingKey(record.key);
   };
 
-  const columns = createColumns('毕业要求/培养目标', columnsTable).map((col) => {
+  const cancel = () => {
+    setEditingKey('');
+  };
+
+  const save = async (key) => {
+    try {
+      const row = await form.validateFields();
+      const newData = [...theory];
+      const index = newData.findIndex((item) => key === item.key);
+
+      if (index > -1) {
+        const item = newData[index];
+        newData.splice(index, 1, { ...item, ...row });
+        setData(newData);
+        setEditingKey('');
+      } else {
+        newData.push(row);
+        setData(newData);
+        setEditingKey('');
+      }
+    } catch (errInfo) {
+      console.log('Validate Failed:', errInfo);
+    }
+  };
+
+  const columns = [
+    {
+      title: '序号',
+      align: 'center',
+      fixed: 'center',
+      render: (text, record, index) => `${index + 1}`
+    },
+    {
+      title: '教学单元',
+      dataIndex: 'unit',
+      inputType: 'text',
+      width: '10%',
+      editable: true,
+    },
+    {
+      title: '教学内容',
+      dataIndex: 'content',
+      inputType: 'text',
+      width: '30%',
+      editable: true,
+      // render:(text,record)=>(
+      //   <TextArea placeholder="" autoSize />
+      // )
+    },
+    {
+      title: '教学要求',
+      dataIndex: 'requirements',
+      inputType: 'text',
+      width: '30%',
+      editable: true,
+    },
+    {
+      title: '课内学时',
+      dataIndex: 'within',
+      inputType: 'number',
+      width: '5%',
+      editable: true,
+    },
+    {
+      title: '教学方式',
+      dataIndex: 'way',
+      inputType: 'text',
+      width: '5%',
+      editable: true,
+    },
+    {
+      title: '课外学时',
+      dataIndex: 'outside',
+      inputType: 'number',
+      width: '5%',
+      editable: true,
+    },
+    {
+      title: '课外环节',
+      dataIndex: 'link',
+      inputType: 'text',
+      width: '5%',
+      editable: true,
+    },
+    {
+      title: '课程目标',
+      dataIndex: 'target',
+      inputType: 'text',
+      width: '5%',
+      editable: true,
+    },
+    {
+      title: '操作',
+      dataIndex: 'operation',
+      width: '5%',
+      render: (_, record) => {
+        const editable = isEditing(record);
+        return editable ? (
+          <span>
+            <a
+              onClick={() => save(record.key)}
+              style={{
+                marginRight: 8,
+              }}
+            >
+              保存
+            </a>
+            <Popconfirm title="确定取消？" onConfirm={cancel}>
+              <a>取消</a>
+            </Popconfirm>
+          </span>
+        ) : (
+            <Typography.Link disabled={editingKey !== ''} onClick={() => edit(record)}>
+              编辑
+            </Typography.Link>
+          );
+      },
+    },
+  ];
+  const addThory = () => {
+
+  }
+  const mergedColumns = columns.map((col) => {
     if (!col.editable) {
       return col;
     }
@@ -257,43 +196,104 @@ const Theory = () => {
       ...col,
       onCell: (record) => ({
         record,
-        editable: col.editable,
+        inputType: col.inputType,
         dataIndex: col.dataIndex,
         title: col.title,
+        editing: isEditing(record),
       }),
     };
   });
-
   return (
-    <div>
-      <Tabs>
-        <TabPane tab="专业培养目标与毕业要求关系矩阵" key="1">
-          <Table
-            components={components}
-            rowClassName={() => 'editable-row'}
-            bordered
-            dataSource={createRows(firstRow, tableData)}
-            columns={columns}
-            pagination={false}
-            rowKey='first'
-          />
-          <div className="table-description">
-            <span>表格说明：</span>
-            <span>H表示毕业要求对培养目标进行强支撑；M表示毕业要求对培养目标进行中支撑；L表示毕业要求对培养目标进行弱支撑。</span>
-          </div>
-        </TabPane>
-        <TabPane tab="专业毕业要求与国家毕业要求覆盖情况" key="2">
-          Content of tab 2
-        </TabPane>
-        <TabPane tab="专业毕业要求与毕业要求指标点关系矩阵" key="3">
-          Content of tab 3
-        </TabPane>
-        <TabPane tab="毕业要求指标点与课程关系矩阵" key="4">
-          Content of tab 4
-        </TabPane>
-      </Tabs>
+    <div className="train-object">
+      <div className="object-left">
+        <div className="title">课程理论教学内容及学时分配</div>
+        <div className="content-wrap">
+          <Form form={form} component={false}>
+            <Table
+              components={{
+                body: {
+                  cell: EditableCell,
+                },
+              }}
+              bordered
+              rowKey={record => record._id}
+              dataSource={theory}
+              columns={mergedColumns}
+              rowClassName="editable-row"
+              pagination={{
+                onChange: cancel,
+              }}
+            />
+          </Form>
+          <Divider>编辑线</Divider>
+          {
+            showForm ? (
+              <Form form={form} {...layout}>
+                <Form.Item
+                  label="教学单元"
+                  name='unit'
+                  rules={[{ required: true, message: '教学单元不能为空' }]}
+                >
+                  <Input />
+                </Form.Item>
+                <Form.Item
+                  label="教学内容"
+                  name='content'
+                  rules={[{ required: true, message: '教学内容不能为空' }]}
+                >
+                  <Input.TextArea />
+                </Form.Item>
+                <Form.Item
+                  label="教学要求"
+                  name='requirements'
+                  rules={[{ required: true, message: '教学要求不能为空' }]}
+                >
+                  <Input.TextArea />
+                </Form.Item>
+                <Form.Item
+                  label="课内学时"
+                  name='within'
+                  rules={[{ required: true, message: '课内学时不能为空' }]}
+                >
+                  <InputNumber />
+                </Form.Item>
+                <Form.Item
+                  label="教学方式"
+                  name='way'
+                  rules={[{ required: true, message: '教学方式不能为空' }]}
+                >
+                  <Input />
+                </Form.Item>
+                <Form.Item
+                  label="课外学时"
+                  name='outside'
+                  rules={[{ required: true, message: '课外学时不能为空' }]}
+                >
+                  <InputNumber />
+                </Form.Item>
+                <Form.Item
+                  label="课外环节"
+                  name='link'
+                  rules={[{ required: true, message: '课外环节不能为空' }]}
+                >
+                  <InputNumber />
+                </Form.Item>
+                <Form.Item
+                  label="课程目标"
+                  name='target'
+                  rules={[{ required: true, message: '课程目标不能为空' }]}
+                >
+                  <Input/>
+                </Form.Item>
+                <Button onClick={addThory} >添加</Button>
+                <Button onClick={() => setShowForm(false)} >取消</Button>
+              </Form>
+            )
+              : <Button type="dashed" onClick={() => setShowForm(true)} block icon={<PlusOutlined />}>添加具体专业培养目标</Button>
+          }
+        </div>
+      </div>
     </div>
-  )
-}
-
+  );
+};
 export default Theory

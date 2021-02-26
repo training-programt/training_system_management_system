@@ -83,5 +83,36 @@ class CourseLeaderService extends Service {
             .sort('sort');
         return result;
     }
+    // 查询全部专业要求
+    async getMajorRequirement() {
+        const { ctx } = this;
+        const result = await ctx.model.MajorRequirement
+            .find({
+            })
+            .populate('point')
+            .sort('sort');
+        return result;
+    }
+    // 查询全部指标点
+    async getPoint() {
+        const { ctx } = this;
+        const result = await ctx.model.Point
+            .find({
+            })
+            .populate('course')
+            .populate('graducationRequirement')
+            .populate('teachingGoal')
+            .sort('sort');
+        return result;
+    }
+     // 查询 全部理论
+     async getTheory() {
+        const { ctx } = this;
+        const result = await ctx.model.TheoryTeach
+            .find({
+            })
+            .sort('sort');
+        return result;
+    }
 }
 module.exports = CourseLeaderService;
