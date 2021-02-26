@@ -11,7 +11,7 @@ module.exports = app => {
       ref:'AttendanceProportion'
     }
     ],
-    weight:{type:Number}//课程目标权重
+    weight:{type:String}//课程目标权重
   })
   
   return mongoose.model('TeachingGoal', TeachingGoalSchema, 'teachingGoal');

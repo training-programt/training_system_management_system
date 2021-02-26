@@ -3,8 +3,11 @@ import { Button, Steps, message } from 'antd'
 import { Link } from 'react-router-dom'
 import { ArrowLeftOutlined, ArrowRightOutlined, RollbackOutlined, SaveOutlined } from '@ant-design/icons';
 
-// import BasicInfo from './basicInfo'
-// import  BasicInfo  from '../Syllabus/basicInfo'
+import BasicInfo from './basicInfo'
+import TeachGoal from './teachGoal'
+import Relation from './relation'
+import Theory from './theory'
+import Practice from './practice'
 const { Step } = Steps;
 const SyllabusAdd = () => {
     const [current, setCurrent] = useState(0);
@@ -12,23 +15,23 @@ const SyllabusAdd = () => {
     const steps = [
         {
             title: '基本信息',
-            // content: <BasicInfo />,
+            content: <BasicInfo />,
         },
         {
             title: '教学目标',
-            // content: <BasicInfo />,
+            content: <TeachGoal />,
         },
         {
             title: '教学目标与毕业要求对应关系',
-            // content: <BasicInfo />,
+            content: <Relation />,
         },
         {
             title: '理论教学及学时分配',
-            // content: <BasicInfo />,
+            content: <Theory />,
         },
         {
             title: '实践教学及学时分配',
-            // content: <BasicInfo />,
+            content: <Practice />,
         },
         {
             title: '审批',

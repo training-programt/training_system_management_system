@@ -6,6 +6,18 @@ module.exports = app => {
   const CollegeSchema = new Schema({
     name: { type: String },
     introduce: { type: String },
+    // majorList: [{//专业
+    //   type: Schema.Types.ObjectId,
+    //   ref: 'Major'
+    // }],
+    // teachRoomList: [{//教研室
+    //   type: Schema.Types.ObjectId,
+    //   ref: 'TeachRoom'
+    // }],
+    // courseList: [{//课程
+    //   type: Schema.Types.ObjectId,
+    //   ref: 'Course'
+    // }],
   })
 
   CollegeSchema.virtual('majorList', {
