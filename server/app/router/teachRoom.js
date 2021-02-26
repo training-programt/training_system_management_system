@@ -4,5 +4,6 @@ module.exports = app => {
     router.get('/getTeachRoom', controller.teachRoom.getTeachRoom);
     router.get('/getTeacherByRoom', controller.teachRoom.getTeacherByRoom);
     router.post('/addTeachRoom', controller.teachRoom.addTeachRoom);
-    
+    router.post('/updateTeachRoom', controller.teachRoom.updateTeachRoom);
+    router.post('/delTeachRoom', controller.teachRoom.delTeachRoom);
 };

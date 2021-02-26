@@ -9,7 +9,8 @@ import api from "@/apis/teachRoom";
 
 
 const SectionDetais = (props) => {
-  const [roomData, setRoomData] = useState(props.location.state);
+  console.log(props.match.params)
+  const [roomData, setRoomData] = useState(props.match.params);
   const [tableData, setTableData] = useState([]);
   const [loading, setLoading] = useState(false);
 
@@ -33,7 +34,7 @@ const SectionDetais = (props) => {
 
   useMemo(async () => {
     const params = {
-      teachRoomId: roomData._id,
+      teachRoomId: roomData.id,
     };
     const res = await React.$axios.get(
       `${api.getTeacherByRoom}?${React.$qs.stringify(params)}`
@@ -105,6 +106,11 @@ const SectionDetais = (props) => {
   };
 
   const columns = [
+    {
+      width: 50,
+      render: (text, record, index) =>
+        `${index + 1 + (tableSetting.page - 1) * tableSetting.rows}`,
+    },
     {
       title: "名称",
       dataIndex: "name",

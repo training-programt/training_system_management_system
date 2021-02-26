@@ -1,5 +1,14 @@
 import React, { useState, useMemo } from "react";
-import { Input, Select, Space, Button, Form, Modal, message } from "antd";
+import {
+  Input,
+  Select,
+  Space,
+  Button,
+  Form,
+  Modal,
+  message,
+  Popconfirm,
+} from "antd";
 import { Link } from "react-router-dom";
 import PaginationComponent from "@/components/pagination";
 import HeaderComponent from "@/components/header";
@@ -23,6 +32,18 @@ const TeachRoom = () => {
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [isEdit, setIsEdit] = useState(false);
 
+  const tableSetting = {
+    page: 1,
+    rows: 12,
+    isMultiple: true,
+  };
+
+  const pageparams = {
+    page: page,
+    pageSize: 12,
+    total: total,
+  };
+
   const column = [
     {
       width: 50,
@@ -34,7 +55,7 @@ const TeachRoom = () => {
       title: "专业",
       dataIndex: "major",
       key: "major",
-      
+      render: (text, record) => (text ? text.name : ""),
     },
     {
       title: "类型",
@@ -59,9 +80,7 @@ const TeachRoom = () => {
       render: (text, record) => {
         return (
           <Space size="middle">
-            <Link
-              to={{ pathname: "teachRoom/details", state: { _id: text._id } }}
-            >
+            <Link to={{ pathname: `teachRoom/details/${text._id}` }}>
               <Button size="small" type="link">
                 详情
               </Button>
@@ -73,26 +92,19 @@ const TeachRoom = () => {
             >
               编辑
             </Button>
-            <Button size="small" type="link">
-              删除
-            </Button>
+            <Popconfirm
+              title="确定删除？"
+              okText="确定"
+              cancelText="取消"
+              onConfirm={() => delTeachRoom(record)}
+            >
+              <Button type="link"> 删除</Button>
+            </Popconfirm>
           </Space>
         );
       },
     },
   ];
-
-  const tableSetting = {
-    page: 1,
-    rows: 12,
-    isMultiple: true,
-  };
-
-  const pageparams = {
-    page: page,
-    pageSize: 12,
-    total: total,
-  };
 
   const selectData = [
     { value: "1", name: "专业类" },
@@ -104,6 +116,34 @@ const TeachRoom = () => {
     labelCol: { span: 5 },
     wrapperCol: { span: 16 },
   };
+
+  useMemo(() => {
+    const fetchData = async () => {
+      const res = await React.$axios.get(api.getMajor);
+      setMajorData(res.data);
+    };
+    fetchData();
+  }, []);
+
+  useMemo(() => {
+    const fetchData = async () => {
+      const params = {
+        page: pageparams.page,
+        rows: tableSetting.rows,
+        type: type,
+        query: query,
+      };
+      setLoading(true);
+      const res = await React.$axios.get(
+        `${api.getTeachRoom}?${React.$qs.stringify(params)}`
+      );
+      setTableData(res.data);
+      setTotal(res.total);
+      setLoading(false);
+    };
+
+    fetchData();
+  }, [type, query, page, isModalVisible]);
 
   const showModal = () => {
     form.resetFields();
@@ -130,68 +170,56 @@ const TeachRoom = () => {
 
     const params = {
       ...form.getFieldValue(),
-    }
+    };
     if (!isEdit) {
-      const res = await React.$axios.post(
-        api.addTeachRoom,
-        params,
-      );
+      const res = await React.$axios.post(api.addTeachRoom, params);
       if (res && res.isSucceed) {
         message.success(res.message);
-        setTableData(res.data);
         setIsModalVisible(false);
       } else {
-        message.error('新增失败');
+        message.error("新增失败");
         setIsModalVisible(false);
       }
     } else {
-      const res = await React.$axios.post(
-        api.updateTeachRoom,
-        params,
-      );
+      const res = await React.$axios.post(api.updateTeachRoom, params);
       if (res && res.isSucceed) {
         message.success(res.message);
-        setTableData(res.data);
         setIsModalVisible(false);
       } else {
-        message.error('修改失败');
+        message.error("修改失败");
         setIsModalVisible(false);
       }
     }
-    
   };
 
   const handleCancel = () => {
     setIsModalVisible(false);
   };
 
-  useMemo(() =>{
-    const fetchData = async () =>{
-      const res = await React.$axios.get(api.getMajor);
-      setMajorData(res.data)
-    }
-    fetchData()
-  }, [])
-
-  useMemo(() => {
-    const fetchData = async () => {
-      const params = {
-        page: pageparams.page,
-        rows: tableSetting.rows,
-        type: type,
-        query: query,
-      };
-      setLoading(true);
-      const res = await React.$axios.get(
-        `${api.getTeachRoom}?${React.$qs.stringify(params)}`
-      );
-      setTableData(res.data);
-      setTotal(res.total);
-      setLoading(false);
+  const delTeachRoom = async (record) => {
+    const params = {
+      _id: record._id,
     };
-
-    fetchData();
-  }, [type, query, page, isModalVisible]);
+    const res = await React.$axios.post(api.delTeachRoom, params);
+    if (res && res.isSucceed) {
+      message.success(res.message);
+    } else {
+      message.error(res.message);
+    }
+    const params2 = {
+      page: pageparams.page,
+      rows: tableSetting.rows,
+      type: type,
+      query: query,
+    };
+    setLoading(true);
+    const res2 = await React.$axios.get(
+      `${api.getTeachRoom}?${React.$qs.stringify(params2)}`
+    );
+    setTableData(res2.data);
+    setTotal(res2.total);
+    setLoading(false);
+  };
 
   return (
     <div className="teach-section">
@@ -266,7 +294,7 @@ const TeachRoom = () => {
             <Input />
           </Form.Item>
           <Form.Item name="major" label="专业" rules={[{ required: true }]}>
-          <Select className="select-type">
+            <Select className="select-type">
               {majorData.map((item) => (
                 <Option key={item._id} value={item._id}>
                   {item.name}

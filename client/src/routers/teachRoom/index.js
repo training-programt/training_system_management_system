@@ -7,7 +7,7 @@ export default [
     component: TeachRoom
   },
   {
-    path: '/teachRoom/details',
+    path: '/teachRoom/details/:id',
     name: '教研室详情',
     icon: 'icon-teacher',
     component: SectionDetails,
