@@ -39,7 +39,7 @@ class TeachRoomService extends Service {
     //增加
     async addTeachRoom(params) {
         const { ctx } = this;
-        const result = await ctx.model.TeachRoom.insertMany(params);
+        const result = await ctx.model.TeachRoom.create(params);
         return result;
     }
 }

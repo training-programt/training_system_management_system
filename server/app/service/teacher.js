@@ -18,6 +18,7 @@ class TeacherService extends Service {
 
     async getTeacherByRoom(params) {
         const { ctx } = this
+        console.log(params)
         const result = await ctx.model.Teacher.find({
             teachRoom: params.teachRoomId
         })
