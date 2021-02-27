@@ -51,7 +51,7 @@
   .body-wrap {
     background-color: #fff;
     height: calc(100% - @height1);
-    padding: 0 20px * @width 20px * @height;
+    padding: 20px * @height 20px * @width ;
 
     .header-wrap {
       height: 40px * @height;
@@ -68,5 +68,29 @@
         justify-content: space-around;
       }
     }
+
+    .table-wrap {
+      width: 100%;
+      display: flex;
+
+      .left-table {
+        width: 80%;
+      }
+
+
+      .right-echart {
+        flex: 1;
+        margin-left: 20px * @width;
+        display: flex;
+        flex-direction: column;
+
+        &>div {
+          width: 100%;
+          flex: 1;
+        }
+      }
+    }
   }
+
+  
 }

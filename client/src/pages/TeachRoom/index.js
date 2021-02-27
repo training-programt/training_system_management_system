@@ -1,5 +1,14 @@
 import React, { useState, useMemo } from "react";
-import { Input, Select, Space, Button } from "antd";
+import {
+  Input,
+  Select,
+  Space,
+  Button,
+  Form,
+  Modal,
+  message,
+  Popconfirm,
+} from "antd";
 import { Link } from "react-router-dom";
 import PaginationComponent from "@/components/pagination";
 import HeaderComponent from "@/components/header";
@@ -12,12 +21,28 @@ import api from "@/apis/teachRoom";
 const { Option } = Select;
 
 const TeachRoom = () => {
+  const [form] = Form.useForm();
   const [page, setPage] = useState(1);
   const [type, setType] = useState("0");
   const [query, setQuery] = useState("");
   const [total, setTotal] = useState(0);
   const [loading, setLoading] = useState(false);
   const [tableData, setTableData] = useState([]);
+  const [majorData, setMajorData] = useState([]);
+  const [isModalVisible, setIsModalVisible] = useState(false);
+  const [isEdit, setIsEdit] = useState(false);
+
+  const tableSetting = {
+    page: 1,
+    rows: 12,
+    isMultiple: true,
+  };
+
+  const pageparams = {
+    page: page,
+    pageSize: 12,
+    total: total,
+  };
 
   const column = [
     {
@@ -25,15 +50,12 @@ const TeachRoom = () => {
       render: (text, record, index) =>
         `${index + 1 + (tableSetting.page - 1) * tableSetting.rows}`,
     },
-    { title: "_id", dataIndex: "_id", key: "_id" },
     { title: "名称", dataIndex: "name", key: "name" },
     {
       title: "专业",
       dataIndex: "major",
       key: "major",
-      render: (text, record) => {
-        console.log(text, record)
-      }
+      render: (text, record) => (text ? text.name : ""),
     },
     {
       title: "类型",
@@ -48,42 +70,60 @@ const TeachRoom = () => {
       key: "teacherCount",
       render: (text, record) => record.teachers.length,
     },
-    { title: "专任教师", dataIndex: "fullTeacher", key: "fullTeacher" },
+    {
+      title: "描述",
+      dataIndex: "introduce",
+    },
     {
       title: "操作",
       key: "action",
-      render: (text, record) => (
-        <Space size="middle">
-          <Link to={{ pathname: "teachRoom/details", state: { _id: text._id } }}>
-            <Button size="small" type="link">
-              详情
+      render: (text, record) => {
+        return (
+          <Space size="middle">
+            <Link to={{ pathname: `teachRoom/details/${text._id}` }}>
+              <Button size="small" type="link">
+                详情
+              </Button>
+            </Link>
+            <Button
+              size="small"
+              type="link"
+              onClick={() => showEditModal(record)}
+            >
+              编辑
             </Button>
-          </Link>
-          <Button size="small" type="link">
-            删除
-          </Button>
-        </Space>
-      ),
+            <Popconfirm
+              title="确定删除？"
+              okText="确定"
+              cancelText="取消"
+              onConfirm={() => delTeachRoom(record)}
+            >
+              <Button type="link"> 删除</Button>
+            </Popconfirm>
+          </Space>
+        );
+      },
     },
   ];
 
-  const tableSetting = {
-    page: 1,
-    rows: 12,
-    isMultiple: true,
-  };
-
-  const pageparams = {
-    page: page,
-    pageSize: 12,
-    total: total,
-  };
-
   const selectData = [
-    { id: 1, name: "专业类" },
-    { id: 2, name: "管理类" },
-    { id: 3, name: "学科类" },
+    { value: "1", name: "专业类" },
+    { value: "2", name: "管理类" },
+    { value: "3", name: "学科类" },
   ];
+
+  const layout = {
+    labelCol: { span: 5 },
+    wrapperCol: { span: 16 },
+  };
+
+  useMemo(() => {
+    const fetchData = async () => {
+      const res = await React.$axios.get(api.getMajor);
+      setMajorData(res.data);
+    };
+    fetchData();
+  }, []);
 
   useMemo(() => {
     const fetchData = async () => {
@@ -103,7 +143,83 @@ const TeachRoom = () => {
     };
 
     fetchData();
-  }, [type, query, page]);
+  }, [type, query, page, isModalVisible]);
+
+  const showModal = () => {
+    form.resetFields();
+    setIsModalVisible(true);
+    setIsEdit(false);
+  };
+
+  const showEditModal = (record) => {
+    setIsModalVisible(true);
+    form.resetFields();
+    setIsEdit(true);
+    let data = {
+      _id: record._id,
+      name: record.name,
+      major: record.major._id,
+      type: record.type,
+      introduce: record.introduce,
+    };
+    form.setFieldsValue(data);
+  };
+
+  const handleOk = async (e) => {
+    e.preventDefault();
+
+    const params = {
+      ...form.getFieldValue(),
+    };
+    if (!isEdit) {
+      const res = await React.$axios.post(api.addTeachRoom, params);
+      if (res && res.isSucceed) {
+        message.success(res.message);
+        setIsModalVisible(false);
+      } else {
+        message.error("新增失败");
+        setIsModalVisible(false);
+      }
+    } else {
+      const res = await React.$axios.post(api.updateTeachRoom, params);
+      if (res && res.isSucceed) {
+        message.success(res.message);
+        setIsModalVisible(false);
+      } else {
+        message.error("修改失败");
+        setIsModalVisible(false);
+      }
+    }
+  };
+
+  const handleCancel = () => {
+    setIsModalVisible(false);
+  };
+
+  const delTeachRoom = async (record) => {
+    const params = {
+      _id: record._id,
+    };
+    const res = await React.$axios.post(api.delTeachRoom, params);
+    if (res && res.isSucceed) {
+      message.success(res.message);
+    } else {
+      message.error(res.message);
+    }
+    const params2 = {
+      page: pageparams.page,
+      rows: tableSetting.rows,
+      type: type,
+      query: query,
+    };
+    setLoading(true);
+    const res2 = await React.$axios.get(
+      `${api.getTeachRoom}?${React.$qs.stringify(params2)}`
+    );
+    setTableData(res2.data);
+    setTotal(res2.total);
+    setLoading(false);
+  };
 
   return (
     <div className="teach-section">
@@ -119,7 +235,7 @@ const TeachRoom = () => {
             >
               <Option value="0">全部</Option>
               {selectData.map((item) => (
-                <Option key={item.id} value={item.id}>
+                <Option key={item.value} value={item.value}>
                   {item.name}
                 </Option>
               ))}
@@ -132,7 +248,7 @@ const TeachRoom = () => {
               allowClear
               enterButton
             />
-            <Button type="primary" icon={<PlusOutlined />}>
+            <Button type="primary" icon={<PlusOutlined />} onClick={showModal}>
               添加教研室
             </Button>
           </div>
@@ -150,6 +266,56 @@ const TeachRoom = () => {
           handlePage={(v) => setPage(v)}
         />
       </div>
+      <Modal
+        visible={isModalVisible}
+        width={700}
+        title={isEdit ? "编辑教研室" : "新增教研室"}
+        centered
+        maskClosable={false}
+        destroyOnClose
+        onOk={handleOk}
+        onCancel={handleCancel}
+        footer={[
+          <Button key="back" onClick={handleCancel}>
+            取消
+          </Button>,
+          <Button
+            key="submit"
+            type="primary"
+            loading={loading}
+            onClick={handleOk}
+          >
+            确定
+          </Button>,
+        ]}
+      >
+        <Form {...layout} form={form} name="control-hooks">
+          <Form.Item name="name" label="名称" rules={[{ required: true }]}>
+            <Input />
+          </Form.Item>
+          <Form.Item name="major" label="专业" rules={[{ required: true }]}>
+            <Select className="select-type">
+              {majorData.map((item) => (
+                <Option key={item._id} value={item._id}>
+                  {item.name}
+                </Option>
+              ))}
+            </Select>
+          </Form.Item>
+          <Form.Item name="type" label="类型" rules={[{ required: true }]}>
+            <Select className="select-type">
+              {selectData.map((item) => (
+                <Option key={item.value} value={item.value}>
+                  {item.name}
+                </Option>
+              ))}
+            </Select>
+          </Form.Item>
+          <Form.Item name="introduce" label="描述" rules={[{ required: true }]}>
+            <Input.TextArea />
+          </Form.Item>
+        </Form>
+      </Modal>
     </div>
   );
 };

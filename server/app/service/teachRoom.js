@@ -33,13 +33,13 @@ class TeachRoomService extends Service {
     //修改
     async updataTeachRoom(params) {
         const { ctx } = this;
-        const result = await ctx.model.TeachRoom.findByIdAndUpdate(params)
+        const result = await ctx.model.TeachRoom.findByIdAndUpdate(params._id, params)
         return result
     }
     //增加
     async addTeachRoom(params) {
         const { ctx } = this;
-        const result = await ctx.model.TeachRoom.insertMany(params);
+        const result = await ctx.model.TeachRoom.create(params);
         return result;
     }
 }

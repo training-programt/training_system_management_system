@@ -15,6 +15,14 @@ class TeacherService extends Service {
             .sort('sort');
         return result;
     }
+
+    async getTeacherByRoom(params) {
+        const { ctx } = this
+        const result = await ctx.model.Teacher.find({
+            teachRoom: params.teachRoomId
+        })
+        return result
+    }
     // 删除
     async delTeacher(params) {
         const { ctx } = this;
