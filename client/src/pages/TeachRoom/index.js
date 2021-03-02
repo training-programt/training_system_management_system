@@ -197,6 +197,10 @@ const TeachRoom = () => {
   };
 
   const delTeachRoom = async (record) => {
+    if(record.teachers.length == 0) {
+      message.error('教师人数不为零，不能删除')
+      return false;
+    }
     const params = {
       _id: record._id,
     };
@@ -316,6 +320,7 @@ const TeachRoom = () => {
           </Form.Item>
         </Form>
       </Modal>
+      
     </div>
   );
 };

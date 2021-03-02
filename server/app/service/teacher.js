@@ -16,6 +16,20 @@ class TeacherService extends Service {
         return result;
     }
 
+    // 查询全部教师，分页
+    async getAllTeacher(params) {
+        const data = {
+            pageSize: parseInt(params.rows),
+            page: parseInt(params.page) - 1,
+        }
+        const result = await ctx.model.Teacher
+            .find()
+            .limit(data.pageSize)
+            .skip(data.pageSize * data.page)
+            .sort()
+        return result;
+    }
+
     async getTeacherByRoom(params) {
         const { ctx } = this
         const result = await ctx.model.Teacher.find({

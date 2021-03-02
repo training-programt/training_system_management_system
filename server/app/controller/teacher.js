@@ -13,6 +13,20 @@ class TeacherController extends Controller {
       isSucceed: true,
     }
   }
+
+  async getAllTeacher() {
+    const { ctx } = this;
+    const params = ctx.request.query
+    const data = await ctx.service.teacher.getAllTeacher(params)
+    console.log(data)
+    ctx.body = {
+      total: data.length,
+      data: data,
+      code: 200,
+      isSucceed: true,
+    }
+  }
+
   async addTeacher() {
     const { ctx } = this;
     let params = await ctx.request.body;

@@ -1,5 +1,5 @@
 import React, { useState, useMemo, useEffect } from "react";
-import { Input, Button,  } from "antd";
+import { Input, Button, Modal, Table, Select } from "antd";
 import echarts from "echarts";
 import { withRouter } from "react-router-dom";
 import HeaderComponent from "@/components/header";
@@ -7,14 +7,21 @@ import TableComponent from "@/components/table";
 import { PlusOutlined, DeleteOutlined } from "@ant-design/icons";
 import api from "@/apis/teachRoom";
 
+const { Option } = Select;
 
 const SectionDetais = (props) => {
-  console.log(props.match.params)
   const [roomData, setRoomData] = useState(props.match.params);
   const [tableData, setTableData] = useState([]);
+  const [teacherData, setTeacherData] = useState([]);
   const [loading, setLoading] = useState(false);
+  const [isModalVisible, setIsModalVisible] = useState(false);
 
   const tableSetting = {
+    page: 1,
+    rows: 10,
+  };
+
+  const teachTableSetting = {
     page: 1,
     rows: 10,
   };
@@ -65,7 +72,7 @@ const SectionDetais = (props) => {
         text: "教师职称占比",
         bottom: 20,
         left: "center",
-      },  
+      },
       tooltip: {
         trigger: "item",
       },
@@ -142,6 +149,63 @@ const SectionDetais = (props) => {
     },
   ];
 
+  const teachColumn = [
+    {
+      width: 50,
+      render: (text, record, index) =>
+        `${index + 1 + (teachTableSetting.page - 1) * teachTableSetting.rows}`,
+    },
+    {
+      title: "姓名",
+      dataIndex: "name",
+      align: "center",
+    },
+    {
+      title: "职称",
+      dataIndex: "position",
+    },
+    {
+      title: "专职/兼职",
+      dataIndex: "job",
+    },
+    {
+      title: "备注",
+      dataIndex: "note",
+    },
+  ];
+
+  const showModal = () => {
+    setIsModalVisible(true);
+    getAllTeacher()
+  };
+
+  const getAllTeacher = async () => {
+    const res = await React.$axios.get(`${api.getAllTeacher}?${React.$qs.stringify(params)}`)
+    if(res && res.isSucceed) {
+      setTeacherData(res.data)
+    }
+  }
+
+  const handleOk = async (e) => {
+    e.preventDefault();
+
+    const params = {
+      ...form.getFieldValue(),
+    };
+    const res = await React.$axios.post(api.addTeachRoom, params);
+    if (res && res.isSucceed) {
+      message.success(res.message);
+      setIsModalVisible(false);
+    } else {
+      message.error("新增失败");
+      setIsModalVisible(false);
+    }
+  };
+
+  const handleCancel = () => {
+    setIsModalVisible(false);
+  };
+
   return (
     <div className="teach-details">
       <HeaderComponent title="教研室详情" />
@@ -151,7 +215,7 @@ const SectionDetais = (props) => {
             <Input.Search placeholder="请输入教师姓名" allowClear enterButton />
           </div>
           <div className="operation-wrap">
-            <Button type="primary" icon={<PlusOutlined />}>
+            <Button type="primary" icon={<PlusOutlined />} onClick={showModal}>
               新增教师
             </Button>
             <Button type="primary" icon={<DeleteOutlined />}>
@@ -175,6 +239,48 @@ const SectionDetais = (props) => {
           </div>
         </div>
       </div>
+      <Modal
+        visible={isModalVisible}
+        width={1000}
+        title="新增教师"
+        centered
+        maskClosable={false}
+        destroyOnClose
+        onOk={handleOk}
+        onCancel={handleCancel}
+        footer={[
+          <Button key="back" onClick={handleCancel}>
+            取消
+          </Button>,
+          <Button key="submit" type="primary" onClick={handleOk}>
+            确定
+          </Button>,
+        ]}
+      >
+        <div style={{ display: "flex", justifyContent: "space-between", marginBottom: '10px' }}>
+          <Input.Search placeholder="请输入教师姓名" allowClear enterButton />
+          <Select
+            defaultValue="lucy"
+            style={{ width: "80%", margin: " 0 20px " }}
+          >
+            <Option value="jack">Jack</Option>
+            <Option value="lucy">Lucy</Option>
+            <Option value="disabled" disabled>
+              Disabled
+            </Option>
+            <Option value="Yiminghe">yiminghe</Option>
+          </Select>
+          <Select defaultValue="lucy" style={{ width: "80%" }}>
+            <Option value="jack">Jack</Option>
+            <Option value="lucy">Lucy</Option>
+            <Option value="disabled" disabled>
+              Disabled
+            </Option>
+            <Option value="Yiminghe">yiminghe</Option>
+          </Select>
+        </div>
+        <Table dataSource={teacherData} columns={teachColumn} />
+      </Modal>
     </div>
   );
 };

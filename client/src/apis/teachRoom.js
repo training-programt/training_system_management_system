@@ -5,4 +5,5 @@ export default {
   delTeachRoom: '/delTeachRoom',
   getTeacherByRoom: '/getTeacherByRoom',
   getMajor:'/getMajor',
+  getAllTeacher: '/getAllTeacher',
 }
