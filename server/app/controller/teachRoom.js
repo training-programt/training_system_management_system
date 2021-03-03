@@ -17,13 +17,10 @@ class TeachRoomController extends Controller {
     };
   }
 
-  async getTeacherByRoom() {
+  async getRoomDetail() {
     const { ctx } = this;
-
     const params = ctx.request.query;
-
-    const data = await ctx.service.teacher.getTeacherByRoom(params);
-
+    const data = await ctx.service.teachRoom.getRoomDetail(params);
     ctx.body = {
       total: data.length,
       data: data,
@@ -34,9 +31,7 @@ class TeachRoomController extends Controller {
 
   async addTeachRoom() {
     const { ctx } = this;
-
     const params = ctx.request.body;
-
     const res = await ctx.service.teachRoom.addTeachRoom(params);
     if (res) {
       ctx.body = {
@@ -59,9 +54,7 @@ class TeachRoomController extends Controller {
   async updateTeachRoom() {
     const { ctx } = this;
     const params = ctx.request.body;
-
-    const res = await ctx.service.teachRoom.updataTeachRoom(params);
-
+    const res = await ctx.service.teachRoom.updateTeachRoom(params);
     if (res) {
       ctx.body = {
         total: 0,

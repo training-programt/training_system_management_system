@@ -18,12 +18,27 @@ class TeacherService extends Service {
 
     // 查询全部教师，分页
     async getAllTeacher(params) {
+        const { ctx } = this;
         const data = {
+            query: params.query || '',
+            position: params.position || '',
+            job: params.job || '',
             pageSize: parseInt(params.rows),
             page: parseInt(params.page) - 1,
         }
+        const regName = new RegExp(data.query, 'i')
+        const regPosition = new RegExp(data.position, 'i')
+        const regJob = new RegExp(data.job, 'i')
+        console.log(data)
+        
         const result = await ctx.model.Teacher
-            .find()
+            .find({
+                $or: [
+                    { name: { $regex: regName } }, 
+                    { position: { $regex: regPosition } }, 
+                    { job: data.job }
+                ]
+            })
             .limit(data.pageSize)
             .skip(data.pageSize * data.page)
             .sort()
@@ -44,19 +59,19 @@ class TeacherService extends Service {
         return result
     }
     //修改
-    async updataTeacher(params){
+    async updataTeacher(params) {
         const { ctx } = this;
         const result = await ctx.model.Teacher.findByIdAndUpdate(params)
         return result
     }
     //增加
-    async addTeacher(params){
-        const {ctx} = this;
+    async addTeacher(params) {
+        const { ctx } = this;
         const result = await ctx.model.Teacher.insertMany(params);
         return result;
     }
-     //条件查询
-     async findTeacher(params) {
+    //条件查询
+    async findTeacher(params) {
         const { ctx } = this;
         const result = await ctx.model.Teacher.find(params)
         return result;

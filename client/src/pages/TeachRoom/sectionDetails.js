@@ -1,10 +1,10 @@
 import React, { useState, useMemo, useEffect } from "react";
-import { Input, Button, Modal, Table, Select } from "antd";
+import { Input, Button, Modal, Table, Select, message } from "antd";
 import echarts from "echarts";
 import { withRouter } from "react-router-dom";
 import HeaderComponent from "@/components/header";
 import TableComponent from "@/components/table";
-import { PlusOutlined, DeleteOutlined } from "@ant-design/icons";
+import { PlusOutlined, DownloadOutlined, RollbackOutlined } from "@ant-design/icons";
 import api from "@/apis/teachRoom";
 
 const { Option } = Select;
@@ -15,6 +15,12 @@ const SectionDetais = (props) => {
   const [teacherData, setTeacherData] = useState([]);
   const [loading, setLoading] = useState(false);
   const [isModalVisible, setIsModalVisible] = useState(false);
+  const [selectedList, setSelectedList] = useState([])
+  const [teachQuery, setTeachQuery] = useState({
+    query: '',
+    position: '',
+    job: ''
+  })
 
   const tableSetting = {
     page: 1,
@@ -23,8 +29,22 @@ const SectionDetais = (props) => {
 
   const teachTableSetting = {
     page: 1,
-    rows: 10,
+    rows: 5,
   };
+
+  const getTeacher = async() => {
+    const params = {
+      _id: roomData.id,
+    };
+    setLoading(true)
+    const res = await React.$axios.get(
+      `${api.getRoomDetail}?${React.$qs.stringify(params)}`
+    );
+    setLoading(false)
+    if (res && res.isSucceed) {
+      setTableData(res.data.teachers || []);
+    }
+  }
 
   useEffect(() => {
     const topEchart = echarts.init(document.getElementById("top-echart"));
@@ -39,18 +59,21 @@ const SectionDetais = (props) => {
     initEchart(bottomEchart, optionData);
   }, []);
 
-  useMemo(async () => {
-    const params = {
-      teachRoomId: roomData.id,
-    };
-    const res = await React.$axios.get(
-      `${api.getTeacherByRoom}?${React.$qs.stringify(params)}`
-    );
+  useMemo(() => {
+    getTeacher()
+  }, [isModalVisible]);
 
-    if (res && res.isSucceed) {
-      setTableData(res.data);
+  useMemo(async () => {
+    if (!isModalVisible) return false;
+    const params = {
+      ...teachQuery,
+      ...teachTableSetting,
     }
-  }, []);
+    const res = await React.$axios.get(`${api.getAllTeacher}?${React.$qs.stringify(params)}`)
+    if (res && res.isSucceed) {
+      setTeacherData(res.data)
+    }
+  }, [teachQuery]);
 
   const initEchart = (dom, optionData) => {
     let color = [
@@ -143,7 +166,7 @@ const SectionDetais = (props) => {
       render: (text, record) => (
         <div style={{ textAlign: "center" }}>
           <Button type="link">编辑</Button>
-          <Button type="link">删除</Button>
+          <Button type="link" onClick={() => delTeacher(record._id)}>删除</Button>
         </div>
       ),
     },
@@ -158,7 +181,6 @@ const SectionDetais = (props) => {
     {
       title: "姓名",
       dataIndex: "name",
-      align: "center",
     },
     {
       title: "职称",
@@ -180,31 +202,58 @@ const SectionDetais = (props) => {
   };
 
   const getAllTeacher = async () => {
-    const res = await React.$axios.get(`${api.getAllTeacher}?${React.$qs.stringify(params)}`)
-    if(res && res.isSucceed) {
+    const res = await React.$axios.get(`${api.getAllTeacher}?${React.$qs.stringify(teachTableSetting)}`)
+    if (res && res.isSucceed) {
       setTeacherData(res.data)
     }
   }
 
-  const handleOk = async (e) => {
-    e.preventDefault();
-
+  const handleOk = async () => {
+    let teachers = Array.from(new Set([...selectedList, ...tableData.map(item => item._id)]))
     const params = {
-      ...form.getFieldValue(),
-    };
-    const res = await React.$axios.post(api.addTeachRoom, params);
-    if (res && res.isSucceed) {
-      message.success(res.message);
-      setIsModalVisible(false);
-    } else {
-      message.error("新增失败");
-      setIsModalVisible(false);
+      _id: roomData.id,
+      teachers
     }
+    const res = await React.$axios.post(api.updateTeachRoom, params)
+    if(res && res.isSucceed) {
+      message.success('添加成功')
+    }
+
+    setIsModalVisible(false);
   };
 
   const handleCancel = () => {
     setIsModalVisible(false);
   };
+
+  const delTeacher = async (record) => {
+    let ids = tableData.map(item => item._id)
+    ids.splice(ids.findIndex(item => item === record), 1)
+    const params = {
+      _id: roomData.id,
+      teachers: ids
+    }
+    const res = await React.$axios.post(api.updateTeachRoom, params)
+    if(res && res.isSucceed) {
+      message.success('删除成功')
+      getTeacher()
+    }
+  }
+
+  const rowSelection = {
+    onChange: (selectedRowKeys, selectedRows) => {
+      console.log(selectedRowKeys);
+      setSelectedList(selectedRowKeys)
+    },
+    getCheckboxProps: (record) => ({
+      disabled: record.name === 'Disabled User',
+      name: record.name,
+    }),
+  };
+
+  const goBack = () => {
+    props.history.go(-1)
+  }
 
   return (
     <div className="teach-details">
@@ -215,11 +264,14 @@ const SectionDetais = (props) => {
             <Input.Search placeholder="请输入教师姓名" allowClear enterButton />
           </div>
           <div className="operation-wrap">
+            <Button icon={<RollbackOutlined />} onClick={() => goBack()}>
+              返回
+            </Button>
             <Button type="primary" icon={<PlusOutlined />} onClick={showModal}>
               新增教师
             </Button>
-            <Button type="primary" icon={<DeleteOutlined />}>
-              批量删除
+            <Button type="primary" icon={<DownloadOutlined />}>
+              导出教师
             </Button>
           </div>
         </div>
@@ -258,28 +310,45 @@ const SectionDetais = (props) => {
         ]}
       >
         <div style={{ display: "flex", justifyContent: "space-between", marginBottom: '10px' }}>
-          <Input.Search placeholder="请输入教师姓名" allowClear enterButton />
+          <Input.Search placeholder="请输入教师姓名" allowClear enterButton onSearch={(value) => setTeachQuery({ ...teachQuery, query: value })} />
           <Select
-            defaultValue="lucy"
+            placeholder='全部'
+            allowClear
+            onChange={(value) => setTeachQuery({ ...teachQuery, position: value })}
             style={{ width: "80%", margin: " 0 20px " }}
           >
-            <Option value="jack">Jack</Option>
-            <Option value="lucy">Lucy</Option>
-            <Option value="disabled" disabled>
-              Disabled
-            </Option>
-            <Option value="Yiminghe">yiminghe</Option>
+            <Option value="教授">教授</Option>
+            <Option value="副教授">副教授</Option>
+            <Option value="讲师">讲师</Option>
+            <Option value="助教">助教</Option>
+            <Option value="其他正高级">其他正高级</Option>
+            <Option value="其他副高级">其他副高级</Option>
+            <Option value="其他中级">其他中级</Option>
+            <Option value="其他初级">其他初级</Option>
+            <Option value="未评级">未评级</Option>
+
           </Select>
-          <Select defaultValue="lucy" style={{ width: "80%" }}>
-            <Option value="jack">Jack</Option>
-            <Option value="lucy">Lucy</Option>
-            <Option value="disabled" disabled>
-              Disabled
-            </Option>
-            <Option value="Yiminghe">yiminghe</Option>
+          <Select
+            placeholder='全部'
+            allowClear
+            onChange={(value) => setTeachQuery({ ...teachQuery, job: value })}
+            style={{ width: "80%" }}
+          >
+            <Option value="专职">专职</Option>
+            <Option value="兼职">兼职</Option>
           </Select>
         </div>
-        <Table dataSource={teacherData} columns={teachColumn} />
+        <Table
+          dataSource={teacherData}
+          columns={teachColumn}
+          rowKey='_id'
+          bordered
+          pagination={false}
+          rowSelection={{
+            type: 'checkbox',
+            ...rowSelection,
+          }}
+        />
       </Modal>
     </div>
   );

@@ -13,7 +13,7 @@ import { Link } from "react-router-dom";
 import PaginationComponent from "@/components/pagination";
 import HeaderComponent from "@/components/header";
 import TableComponent from "@/components/table";
-import { PlusOutlined } from "@ant-design/icons";
+import { PlusOutlined, DownloadOutlined } from "@ant-design/icons";
 import "./index.less";
 
 import api from "@/apis/teachRoom";
@@ -197,7 +197,7 @@ const TeachRoom = () => {
   };
 
   const delTeachRoom = async (record) => {
-    if(record.teachers.length == 0) {
+    if (record.teachers.length == 0) {
       message.error('教师人数不为零，不能删除')
       return false;
     }
@@ -246,15 +246,21 @@ const TeachRoom = () => {
             </Select>
           </div>
           <div className="search-box">
+            
             <Input.Search
               placeholder="请输入教研室名称"
               onSearch={(value) => setQuery(value)}
               allowClear
               enterButton
             />
+            <Space size='small'>
             <Button type="primary" icon={<PlusOutlined />} onClick={showModal}>
               添加教研室
             </Button>
+            <Button type="primary" icon={<DownloadOutlined />} >
+              导出数据
+            </Button>
+            </Space>
           </div>
         </div>
         <div className="table-container">
@@ -320,7 +326,7 @@ const TeachRoom = () => {
           </Form.Item>
         </Form>
       </Modal>
-      
+
     </div>
   );
 };

@@ -23,6 +23,12 @@ class TeachRoomService extends Service {
             .sort('sort')
         return result;
     }
+    // 查询教研室详情
+    async getRoomDetail(params) {
+        const { ctx } = this;
+        const result = await ctx.model.TeachRoom.findOne({_id: params._id}).populate('teachers')
+        return result
+    }
 
     // 删除
     async delTeachRoom(params) {
@@ -31,7 +37,7 @@ class TeachRoomService extends Service {
         return result
     }
     //修改
-    async updataTeachRoom(params) {
+    async updateTeachRoom(params) {
         const { ctx } = this;
         const result = await ctx.model.TeachRoom.findByIdAndUpdate(params._id, params)
         return result
