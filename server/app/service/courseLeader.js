@@ -114,5 +114,14 @@ class CourseLeaderService extends Service {
             .sort('sort');
         return result;
     }
+     // 查询 全部实践
+     async getPractice() {
+        const { ctx } = this;
+        const result = await ctx.model.PracticeTeach
+            .find({
+            })
+            .sort('sort');
+        return result;
+    }
 }
 module.exports = CourseLeaderService;

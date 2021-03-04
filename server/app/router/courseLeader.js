@@ -13,6 +13,8 @@ module.exports = app => {
     router.get('/getPoint', controller.courseLeader.getPoint);
     //理论表
     router.get('/getTheory', controller.courseLeader.getTheory);
+    //实践表
+    router.get('/getPractice', controller.courseLeader.getPractice);
 
 
 };
