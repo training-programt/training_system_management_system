@@ -209,6 +209,18 @@ class TeacherController extends Controller {
     }
    
   }
+
+  async getTeacherDetail() {
+    const { ctx } = this;
+    const params = ctx.request.body;
+    const res = await ctx.service.teacher.getTeacherDetail(params)
+    ctx.body = {
+      total: 0,
+      data: res,
+      code: 200,
+      isSucceed: true,
+    }
+  }
 }
 
 module.exports = TeacherController;

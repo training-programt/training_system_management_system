@@ -14,8 +14,8 @@ class LoginController extends Controller {
       password: userInfo.password
     }
 
-    const res = await ctx.model.Teacher.findOne({ name: data.name })
-    // console.log(res)
+    const res = await ctx.model.Teacher
+      .findOne({ name: data.name }, {_id: 1, name: 1, role: 1, password: 1})
     if (!res) {
       ctx.body = {
         message: '用户不存在',

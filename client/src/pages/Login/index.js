@@ -4,6 +4,7 @@ import { useDispatch, useSelector } from 'react-redux'
 import './index.less'
 import { setSession, authenticateSuccess } from '../../utils';
 import { useHistory } from 'react-router-dom';
+import api from '@/apis/publish'
 
 const Login = () => {
   const [form] = Form.useForm();
@@ -14,7 +15,7 @@ const Login = () => {
     e.preventDefault();
     dispatch({ type: 'START_LOGIN' });
     const res = await React.$axios.post(
-      '/login',
+      api.login,
       form.getFieldsValue(),
     )
     if (res && res.isSucceed) {

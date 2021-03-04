@@ -4,11 +4,15 @@
 .userInfo-container {
   height: 100%;
   width: 100%;
+  background-color: #fff;
+  padding: 0 20px * @width;
 
   .container-info {
     display: flex;
     height: 100%;
     width: 100%;
+    justify-content: center;
+    align-items: center;
   }
 
   .left-container {
@@ -43,17 +47,22 @@
       align-items: center;
     }
 
-    .baseinfo-box {
+    .base-info-box {
       width: 100%;
       margin-top: 40px * @height;
+      text-align: center;
     }
 
   }
 
-  .container-info {
-    display: flex;
-    justify-content: center;
-    align-items: center;
+  .container-password {
+    width: 60%;
+    margin: 50px * @width auto;
+
+    .submit-btn {
+      width: 100%;
+      text-align: center;
+    }
   }
 
 }

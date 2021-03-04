@@ -1,7 +1,11 @@
 'use strict';
 const Service = require('egg').Service;
 class TeacherService extends Service {
-
+    async getTeacherDetail(params) {
+        const { ctx } = this;
+        const res = ctx.model.Teacher.findOne({ _id: params._id }).populate('teachRoom').populate('major')
+        return res
+    }
     // 查询全部用户 老师
     async getTeacher() {
         const { ctx } = this;
@@ -15,7 +19,6 @@ class TeacherService extends Service {
             .sort('sort');
         return result;
     }
-
     // 查询全部教师，分页
     async getAllTeacher(params) {
         const { ctx } = this;
@@ -30,12 +33,12 @@ class TeacherService extends Service {
         const regPosition = new RegExp(data.position, 'i')
         const regJob = new RegExp(data.job, 'i')
         console.log(data)
-        
+
         const result = await ctx.model.Teacher
             .find({
                 $or: [
-                    { name: { $regex: regName } }, 
-                    { position: { $regex: regPosition } }, 
+                    { name: { $regex: regName } },
+                    { position: { $regex: regPosition } },
                     { job: data.job }
                 ]
             })

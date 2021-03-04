@@ -8,7 +8,6 @@ module.exports = app => {
     router.post('/delTeacher', controller.teacher.delTeacher);
     router.post('/updataTeacher', controller.teacher.updataTeacher);
     router.post('/manyDelete', controller.teacher.manyDelete);
-
-
+    router.post('/getUserInfo', controller.teacher.getTeacherDetail);
 
 };
