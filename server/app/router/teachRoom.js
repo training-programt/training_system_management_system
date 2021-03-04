@@ -6,4 +6,5 @@ module.exports = app => {
     router.post('/addTeachRoom', controller.teachRoom.addTeachRoom);
     router.post('/updateTeachRoom', controller.teachRoom.updateTeachRoom);
     router.post('/delTeachRoom', controller.teachRoom.delTeachRoom);
+    router.post('/exportOneRoom', controller.teachRoom.exportOneRoom);
 };

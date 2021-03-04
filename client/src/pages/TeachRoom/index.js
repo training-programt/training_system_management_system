@@ -29,6 +29,7 @@ const TeachRoom = () => {
   const [loading, setLoading] = useState(false);
   const [tableData, setTableData] = useState([]);
   const [majorData, setMajorData] = useState([]);
+  const [teacherData, setTeacherData] = useState([])
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [isEdit, setIsEdit] = useState(false);
 
@@ -69,6 +70,12 @@ const TeachRoom = () => {
       dataIndex: "teacherCount",
       key: "teacherCount",
       render: (text, record) => record.teachers.length,
+    },
+    {
+      title: "教研室主任",
+      dataIndex: "director",
+      key: "director",
+      render: (text, record) =>  record.director ? record.director.name : ''
     },
     {
       title: "描述",
@@ -121,6 +128,7 @@ const TeachRoom = () => {
     const fetchData = async () => {
       const res = await React.$axios.get(api.getMajor);
       setMajorData(res.data);
+      teacherList();
     };
     fetchData();
   }, []);
@@ -145,6 +153,13 @@ const TeachRoom = () => {
     fetchData();
   }, [type, query, page, isModalVisible]);
 
+  const teacherList = async () => {
+    const res = await React.$axios.get(api.getTeacher)
+    if(res && res.isSucceed) {
+      setTeacherData(res.data)
+    }
+  }
+
   const showModal = () => {
     form.resetFields();
     setIsModalVisible(true);
@@ -160,6 +175,7 @@ const TeachRoom = () => {
       name: record.name,
       major: record.major._id,
       type: record.type,
+      director: record.director.name,
       introduce: record.introduce,
     };
     form.setFieldsValue(data);
@@ -197,7 +213,7 @@ const TeachRoom = () => {
   };
 
   const delTeachRoom = async (record) => {
-    if (record.teachers.length == 0) {
+    if (record.teachers.length != 0) {
       message.error('教师人数不为零，不能删除')
       return false;
     }
@@ -316,6 +332,15 @@ const TeachRoom = () => {
             <Select className="select-type">
               {selectData.map((item) => (
                 <Option key={item.value} value={item.value}>
+                  {item.name}
+                </Option>
+              ))}
+            </Select>
+          </Form.Item>
+          <Form.Item name="director" label="主任" rules={[{ required: true }]}>
+            <Select className="select-type">
+              {teacherData.map((item) => (
+                <Option key={item._id} value={item._id}>
                   {item.name}
                 </Option>
               ))}

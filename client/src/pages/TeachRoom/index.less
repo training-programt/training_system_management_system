@@ -52,7 +52,24 @@
   .body-wrap {
     background-color: #fff;
     height: calc(100% - @height1);
-    padding: 20px * @height 20px * @width ;
+    padding: 14px * @height 20px * @width ;
+
+    .room-detail {
+      width: 100%;
+      &>div {
+        line-height: 26px * @height;
+      }
+
+      .detail-top {
+        display: flex;
+        width: 100%;
+
+        div {
+          margin-right: 30px * @width;
+          font-size: 14px * @width;
+        }
+      }
+    }
 
     .header-wrap {
       height: 40px * @height;
@@ -63,8 +80,9 @@
       .search-box {
         width: 320px * @width;
       }
+
       .operation-wrap {
-        width: 360px * @width;
+        width: 480px * @width;
         display: flex;
         justify-content: space-around;
       }

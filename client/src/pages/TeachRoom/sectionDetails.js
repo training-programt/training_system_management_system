@@ -1,4 +1,4 @@
-import React, { useState, useMemo, useEffect } from "react";
+import React, { useState, useMemo, useEffect, createContext } from "react";
 import { Input, Button, Modal, Table, Select, message } from "antd";
 import echarts from "echarts";
 import { withRouter } from "react-router-dom";
@@ -9,13 +9,14 @@ import api from "@/apis/teachRoom";
 
 const { Option } = Select;
 
-const SectionDetais = (props) => {
-  const [roomData, setRoomData] = useState(props.match.params);
-  const [tableData, setTableData] = useState([]);
+const SectionDetails = (props) => {
+  const [roomDetail, setRoomDetail] = useState({})
   const [teacherData, setTeacherData] = useState([]);
   const [loading, setLoading] = useState(false);
   const [isModalVisible, setIsModalVisible] = useState(false);
+  const [appointModal, setAppointModal] = useState(false)
   const [selectedList, setSelectedList] = useState([])
+  const [director, setDirector] = useState('')
   const [teachQuery, setTeachQuery] = useState({
     query: '',
     position: '',
@@ -32,9 +33,9 @@ const SectionDetais = (props) => {
     rows: 5,
   };
 
-  const getTeacher = async() => {
+  const getRomDetail = async () => {
     const params = {
-      _id: roomData.id,
+      _id: props.match.params.id,
     };
     setLoading(true)
     const res = await React.$axios.get(
@@ -42,9 +43,13 @@ const SectionDetais = (props) => {
     );
     setLoading(false)
     if (res && res.isSucceed) {
-      setTableData(res.data.teachers || []);
+      setRoomDetail(res.data)
     }
   }
+
+  useMemo(() => {
+    getRomDetail()
+  }, []);
 
   useEffect(() => {
     const topEchart = echarts.init(document.getElementById("top-echart"));
@@ -59,10 +64,6 @@ const SectionDetais = (props) => {
     initEchart(bottomEchart, optionData);
   }, []);
 
-  useMemo(() => {
-    getTeacher()
-  }, [isModalVisible]);
-
   useMemo(async () => {
     if (!isModalVisible) return false;
     const params = {
@@ -74,6 +75,8 @@ const SectionDetais = (props) => {
       setTeacherData(res.data)
     }
   }, [teachQuery]);
+
+
 
   const initEchart = (dom, optionData) => {
     let color = [
@@ -209,14 +212,15 @@ const SectionDetais = (props) => {
   }
 
   const handleOk = async () => {
-    let teachers = Array.from(new Set([...selectedList, ...tableData.map(item => item._id)]))
+    let teachers = Array.from(new Set([...selectedList, ...roomDetail.teachers.map(item => item._id)]))
     const params = {
-      _id: roomData.id,
+      _id: props.match.params.id,
       teachers
     }
     const res = await React.$axios.post(api.updateTeachRoom, params)
-    if(res && res.isSucceed) {
+    if (res && res.isSucceed) {
       message.success('添加成功')
+      getRomDetail()
     }
 
     setIsModalVisible(false);
@@ -224,25 +228,29 @@ const SectionDetais = (props) => {
 
   const handleCancel = () => {
     setIsModalVisible(false);
+    getRomDetail()
   };
 
   const delTeacher = async (record) => {
-    let ids = tableData.map(item => item._id)
+    if(record == roomDetail.director._id) {
+      message.error('不能删除教研室主任')
+      return false;
+    }
+    let ids = roomDetail.teachers.map(item => item._id)
     ids.splice(ids.findIndex(item => item === record), 1)
     const params = {
-      _id: roomData.id,
+      _id: props.match.params.id,
       teachers: ids
     }
     const res = await React.$axios.post(api.updateTeachRoom, params)
-    if(res && res.isSucceed) {
+    if (res && res.isSucceed) {
       message.success('删除成功')
-      getTeacher()
+      getRomDetail()
     }
   }
 
   const rowSelection = {
     onChange: (selectedRowKeys, selectedRows) => {
-      console.log(selectedRowKeys);
       setSelectedList(selectedRowKeys)
     },
     getCheckboxProps: (record) => ({
@@ -255,22 +263,69 @@ const SectionDetais = (props) => {
     props.history.go(-1)
   }
 
+  const exportTeacher = async () => {
+    const params = {
+      _id: props.match.params.id,
+    };
+    const res = await React.$axios.post(api.exportByRoom, params)
+    console.log(res)
+  }
+
+  const showAppointModal = () => {
+    setAppointModal(true)
+  }
+
+  const hideAppointModal = () => {
+    setDirector('')
+    setAppointModal(false)
+    getRomDetail()
+  }
+
+  const onAppointChange = (val) => {
+    setDirector(val)
+  }
+
+  const appointDirector = async () => {
+    const params = {
+      ...roomDetail,
+      director: director,
+    }
+    const res = await React.$axios.post(api.updateTeachRoom, params);
+    if(res && res.isSucceed) {
+      message.success('教研室主任修改成功')
+      getRomDetail()
+    }
+    setAppointModal(false)
+  }
+
   return (
     <div className="teach-details">
       <HeaderComponent title="教研室详情" />
       <div className="body-wrap">
+        <div className="room-detail">
+          <div className="detail-top">
+            <div><strong>所属学院：</strong>{roomDetail.college ? roomDetail.college.name : ''}</div>
+            <div><strong>教研室主任：</strong>{roomDetail.director ? roomDetail.director.name : ''}</div>
+            <div><strong>类型：</strong>{roomDetail.type}</div>
+            <div><strong>专业：</strong>{roomDetail.major ?   roomDetail.major.name : ''}</div>
+          </div>
+          <div className="detail-bottom"><strong>描述：</strong>{roomDetail.introduce}</div>
+        </div>
         <div className="header-wrap">
           <div className="search-box">
             <Input.Search placeholder="请输入教师姓名" allowClear enterButton />
           </div>
           <div className="operation-wrap">
-            <Button icon={<RollbackOutlined />} onClick={() => goBack()}>
+            <Button icon={<RollbackOutlined />} onClick={goBack}>
               返回
+            </Button>
+            <Button type="primary" icon={<PlusOutlined />} onClick={showAppointModal}>
+              指定教研室主任
             </Button>
             <Button type="primary" icon={<PlusOutlined />} onClick={showModal}>
               新增教师
             </Button>
-            <Button type="primary" icon={<DownloadOutlined />}>
+            <Button type="primary" icon={<DownloadOutlined />} onClick={exportTeacher}>
               导出教师
             </Button>
           </div>
@@ -279,7 +334,7 @@ const SectionDetais = (props) => {
         <div className="table-wrap">
           <div className="left-table">
             <TableComponent
-              data={tableData}
+              data={roomDetail.teachers}
               column={columns}
               settings={tableSetting}
               loading={loading}
@@ -350,8 +405,39 @@ const SectionDetais = (props) => {
           }}
         />
       </Modal>
+      <Modal
+        visible={appointModal}
+        title="指定教研室主任"
+        centered={true}
+        maskClosable={false}
+        destroyOnClose
+        onOk={appointDirector}
+        onCancel={hideAppointModal}
+        footer={[
+          <Button key="back" onClick={hideAppointModal}>
+            取消
+          </Button>,
+          <Button key="submit" type="primary" onClick={appointDirector}>
+            确定
+        </Button>
+        ]}
+      >
+        <div style={{display: 'flex', flexDirection: 'column', alignItems: 'center'}}>
+          <div style={{marginBottom: '16px'}}><strong>当前教研室主任：</strong>{roomDetail.director ? roomDetail.director.name : ''}</div>
+          <Select
+            showSearch
+            style={{ width: 250 }}
+            placeholder="选择教师"
+            onChange={onAppointChange}
+          >
+            {
+              roomDetail.teachers && roomDetail.teachers.map((item, index) => <Option value={item._id} key={index}>{item.name}</Option>)
+            }
+          </Select>
+        </div>
+      </Modal>
     </div>
   );
 };
 
-export default withRouter(SectionDetais);
+export default withRouter(SectionDetails);

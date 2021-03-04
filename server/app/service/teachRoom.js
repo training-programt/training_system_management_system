@@ -26,7 +26,12 @@ class TeachRoomService extends Service {
     // 查询教研室详情
     async getRoomDetail(params) {
         const { ctx } = this;
-        const result = await ctx.model.TeachRoom.findOne({_id: params._id}).populate('teachers')
+        const result = await ctx.model.TeachRoom
+            .findOne({ _id: params._id })
+            .populate('teachers')
+            .populate('director')
+            .populate('college')
+            .populate('major')
         return result
     }
 
@@ -45,7 +50,11 @@ class TeachRoomService extends Service {
     //增加
     async addTeachRoom(params) {
         const { ctx } = this;
-        const result = await ctx.model.TeachRoom.create(params);
+        const data = {
+            ...params,
+            teachers: [params.director],
+        }
+        const result = await ctx.model.TeachRoom.create(data);
         return result;
     }
 }

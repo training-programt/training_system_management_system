@@ -6,4 +6,6 @@ export default {
   getRoomDetail: '/getRoomDetail',
   getMajor:'/getMajor',
   getAllTeacher: '/getAllTeacher',
+  exportByRoom: '/exportOneRoom',
+  getTeacher: '/getTeacher',
 }

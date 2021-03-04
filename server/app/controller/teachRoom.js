@@ -116,10 +116,17 @@ class TeachRoomController extends Controller {
       temp[3] = item.job;
       temp[4] = item.position;
       temp[5] = item.lastInfo;
-      data.push(temp)
+      excelData.push(temp)
     });
+    console.log(excelData)
     sheet.data = excelData
-    xlsx.generate(res)
+    xlsx.generate('test.xlsx')
+    ctx.body = {
+      total: 0,
+      data: fs.createReadStream('test.xlsx'),
+      code: 200,
+      isSucceed: true,
+    }
   }
 }
 

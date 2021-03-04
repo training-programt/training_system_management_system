@@ -8,7 +8,7 @@ export default [
     component: SyllabusShow,
   },
   {
-    path: '/infoView/trainingScheme',
+    path: '/infoView/trainingProject',
     name: '培养方案',
     icon: 'icon-icon-test8',
     component: TrainingScheme,
