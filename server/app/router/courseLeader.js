@@ -2,6 +2,7 @@ module.exports = app => {
     // 课程大纲
     const { router, controller } = app;
     router.get('/getSyllabus', controller.courseLeader.getSyllabus);
+    router.post('/findSyllabus', controller.courseLeader.findSyllabus);
     router.get('/getTeachGoal', controller.courseLeader.getTeachGoal);
     router.post('/addTeachGoal', controller.courseLeader.addTeachGoal);
     router.post('/delTeachGoal', controller.courseLeader.delTeachGoal);

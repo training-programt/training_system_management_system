@@ -2,7 +2,7 @@ import React, { useState, useMemo } from 'react'
 import { Table, Form, message, Select, InputNumber, TreeSelect, Input, Button, Modal, Popconfirm } from 'antd';
 import PaginationComponent from '@/components/pagination'
 import HeaderComponent from '@/components/header'
-import TableComponent from '@/components/table'
+// import TableComponent from '@/components/table'
 import { PlusOutlined, DeleteOutlined } from '@ant-design/icons';
 
 const Menu = () => {
@@ -11,29 +11,14 @@ const Menu = () => {
   const [loading, setLoading] = useState(false);
   const [tableData, setTableData] = useState([]);
   const [total, setTotal] = useState(0);
-  const [page, setPage] = useState(1);
+  const [pageSize, setPageSize] = useState(8)
   const [menuId, setMenuId] = useState('');
   const [level, setLevel] = useState(1);
   const [isEdit, setIsEdit] = useState(false);
   const [roleData, setRoleData] = useState([]);
   const [menuData, setMenuData] = useState([]);
-
-  const tableSetting = {
-    page: 1,
-    rows: 10,
-    rowSelection: {
-      type: 'checkbox',
-      onChange: (selectedRowKeys) => {
-        setDeleteList(selectedRowKeys)
-      },
-    }
-  }
-
-  const pageparams = {
-    page: page,
-    pageSize: 4,
-    total: total,
-  }
+  const [showSizeChanger, setShowSizeChanger] = useState(true);
+  const [showQuickJumper, setShowQuickJumper] = useState(true)
 
   const columns = [
     {
@@ -103,7 +88,7 @@ const Menu = () => {
   useMemo(() => {
     const fetchData = async () => {
       const params = {
-        page: page,
+        // page: page,
         pageSize: 10,
       }
       setLoading(true);
@@ -116,7 +101,7 @@ const Menu = () => {
       setLoading(false);
     }
     fetchData();
-  }, [page, isModalVisible])
+  }, [isModalVisible])
 
   useMemo(() => {
     const fetchData = async () => {
@@ -255,11 +240,24 @@ const Menu = () => {
     wrapperCol: { span: 15 },
   };
 
-  const onShowSizeChange = (current, size) => {
-    console.log(current, size)
-    setPageSize(size)
+//分页设置
+const paginationProps = {
+  showSizeChanger,//设置每页显示数据条数
+  showQuickJumper,
+  pageSize,
+  total,  //数据的总的条数
+  onChange: (current) => changePage(current), //点击当前页码
+  onShowSizeChange: (current, pageSize) => {//设置每页显示数据条数，current表示当前页码，pageSize表示每页展示数据条数
+      onShowSizeChange(current, pageSize)
   }
-
+}
+const changePage = (current) => {
+  //current参数表示是点击当前的页码，
+  // this.getData(current) //向后端发送请求
+}
+const onShowSizeChange = (current, pageSize) => {
+  setPageSize(pageSize)
+}
   return (
     <div className="page-container">
       <HeaderComponent title="菜单管理" />
@@ -274,9 +272,13 @@ const Menu = () => {
           </div>
         </div>
         <div className="table-wrap">
-          <TableComponent data={tableData} column={columns} settings={tableSetting} loading={loading} />
+          <Table 
+          dataSource={tableData} 
+          rowKey={record => record._id}
+          columns={columns} 
+          loading={loading} 
+          pagination={paginationProps}/>
         </div>
-        <PaginationComponent onShowSizeChange={onShowSizeChange} pageparams={pageparams} handlePage={v => setPage(v)} />
       </div>
       <Modal
         visible={isModalVisible}
