@@ -129,6 +129,18 @@ class CourseLeaderController extends Controller {
     }
 
   }
+   //得到实践对应关系
+   async getPractice() {
+    const { ctx } = this;
+    const data = await ctx.service.courseLeader.getPractice();
+    ctx.body = {
+      total: data.length,
+      data: data,
+      code: 200,
+      isSucceed: true,
+    }
+
+  }
 }
 
 module.exports = CourseLeaderController;

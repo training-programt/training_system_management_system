@@ -11,18 +11,6 @@ const Relation = () => {
   const [confirmLoading, setConfirmLoading] = useState(false);
   const [requirement, setRequirementData] = useState([]);
   const [point, setPointData] = useState([]);
-
-  useEffect(() => {
-    const Rel = React.$axios.get('/getRelation').then((rel) => {
-      setRelationData(rel.data)
-    })
-    const MajorRequirement = React.$axios.get('/getMajorRequirement').then((ma) => {
-      setRequirementData(ma.data)
-    })
-    const Point = React.$axios.get('/getPoint').then((point) => {
-      setPointData(point.data)
-    })
-  }, [])
   const columns = [
     {
       title: '毕业要求',
@@ -30,9 +18,7 @@ const Relation = () => {
       width: '25%',
       algin: 'center',
       render: (text, record) => {
-        // console.log(record)
-        // return record.name
-        // return record.major_requirement.name?record.major_requirement.name:''
+        return record.major_requirement.name?record.major_requirement.name:''
       }
     },
     {
@@ -41,9 +27,7 @@ const Relation = () => {
       width: '15%',
       algin: 'center',
       render: (text, record) => {
-        // console.log(record)
-        return record.name
-        // return record.point.content?record.point.content:''
+        return record.point.content?record.point.content:''
       }
     },
     {
@@ -60,45 +44,39 @@ const Relation = () => {
       // )
       children: [
         {
-          title: '目标1',
-          dataIndex: 'target1',
-          render: (text, record) => {
-            //  console.log(record)
-            //  return record.teach_goal[0].weight
-          }
         },
-        {
-          title: '目标2',
-          dataIndex: 'target2',
-          // render:(text,record)=>{
-          //   console.log(record)
-          //   return record.teach_goal[1].weight
-          // }
-        },
-        {
-          title: '目标3',
-          dataIndex: 'target3',
-          // render:(text,record)=>{
-          //   console.log(record)
-          //   return record.teach_goal[2].weight
-          // }
-        },
-        {
-          title: '目标4',
-          dataIndex: 'target4',
-          // render:(text,record)=>{
-          //   console.log(record)
-          //   return record.teach_goal[3].weight
-          // }
-        },
-        {
-          title: '目标5',
-          dataIndex: 'target5',
-          // render:(text,record)=>{
-          //   console.log(record)
-          //   return record.teach_goal[4].weight
-          // }
-        },
+        // {
+        //   title: '目标2',
+        //   dataIndex: 'target2',
+        //   // render:(text,record)=>{
+        //   //   console.log(record)
+        //   //   return record.teach_goal[1].weight
+        //   // }
+        // },
+        // {
+        //   title: '目标3',
+        //   dataIndex: 'target3',
+        //   // render:(text,record)=>{
+        //   //   console.log(record)
+        //   //   return record.teach_goal[2].weight
+        //   // }
+        // },
+        // {
+        //   title: '目标4',
+        //   dataIndex: 'target4',
+        //   // render:(text,record)=>{
+        //   //   console.log(record)
+        //   //   return record.teach_goal[3].weight
+        //   // }
+        // },
+        // {
+        //   title: '目标5',
+        //   dataIndex: 'target5',
+        //   // render:(text,record)=>{
+        //   //   console.log(record)
+        //   //   return record.teach_goal[4].weight
+        //   // }
+        // },
       ],
     },
     {
@@ -115,6 +93,34 @@ const Relation = () => {
       ),
     },
   ];
+  useEffect(() => {
+    const Rel = React.$axios.get('/getRelation').then((rel) => {
+      console.log(rel.data)
+      setRelationData(rel.data)
+      console.log(columns[2].children)
+      // console.log(rel.data[0].teach_goal.length)
+      for(let i = 0;i<rel.data[0].teach_goal.length;i++){
+        console.log(rel.data[0].teach_goal[i])
+        columns[2].children.push(
+          {
+          title:rel.data[0].teach_goal[i].target_course_name,
+          dataIndex:'target'+i,
+          render:rel.data[0].teach_goal[i].weight
+        }
+        )
+        // columns[2].children[i].title = 
+        // columns[2].children[i].render = rel.data[0].teach_goal[i].weight
+
+      }
+    })
+    const MajorRequirement = React.$axios.get('/getMajorRequirement').then((ma) => {
+      setRequirementData(ma.data)
+    })
+    const Point = React.$axios.get('/getPoint').then((point) => {
+      setPointData(point.data)
+    })
+  }, [])
+
   //新增
   const showAdd = () => {
     setVisible(true);

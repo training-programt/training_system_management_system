@@ -8,6 +8,7 @@ import TeachGoal from './teachGoal'
 import Relation from './relation'
 import Theory from './theory'
 import Practice from './practice'
+import ExamAndApp from './examAndApp'
 const { Step } = Steps;
 const SyllabusAdd = () => {
     const [current, setCurrent] = useState(0);
@@ -35,7 +36,7 @@ const SyllabusAdd = () => {
         },
         {
             title: '审批',
-            // content: <BasicInfo />,
+            content: <ExamAndApp />,
         },
     ];
 
