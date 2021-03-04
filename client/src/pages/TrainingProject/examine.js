@@ -3,7 +3,7 @@ import FileViewer from 'react-file-viewer';
 import './index.less'
 
 const type = 'docx'
-const file = 'http://qmly29cs3.hd-bkt.clouddn.com/test.docx'
+const file = 'http://qpe0365ci.hd-bkt.clouddn.com/2019级软件工程人才培养方案说明.docx'
 
 
 const Examine = () => {

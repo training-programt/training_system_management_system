@@ -13,6 +13,19 @@ class TeacherController extends Controller {
       isSucceed: true,
     }
   }
+
+  async getAllTeacher() {
+    const { ctx } = this;
+    const params = ctx.request.query
+    const data = await ctx.service.teacher.getAllTeacher(params)
+    ctx.body = {
+      total: data.length,
+      data: data,
+      code: 200,
+      isSucceed: true,
+    }
+  }
+
   async addTeacher() {
     const { ctx } = this;
     let params = await ctx.request.body;
@@ -92,6 +105,7 @@ class TeacherController extends Controller {
     }
 
   }
+
   async updataTeacher() {
     const { ctx } = this;
     const params = ctx.request.body;
@@ -125,6 +139,7 @@ class TeacherController extends Controller {
         isSucceed: true,
       }
   }
+
   async queryTeacher() {
     const { ctx } = this;
     const params = ctx.request.body;
@@ -148,6 +163,7 @@ class TeacherController extends Controller {
       message: '查询成功',
     };
   }
+  
   async manyDelete(){
     const {ctx} = this;
     const params = ctx.request.body;

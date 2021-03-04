@@ -3,6 +3,7 @@ export default {
   addTeachRoom: '/addTeachRoom',
   updateTeachRoom: '/updateTeachRoom',
   delTeachRoom: '/delTeachRoom',
-  getTeacherByRoom: '/getTeacherByRoom',
+  getRoomDetail: '/getRoomDetail',
   getMajor:'/getMajor',
+  getAllTeacher: '/getAllTeacher',
 }
