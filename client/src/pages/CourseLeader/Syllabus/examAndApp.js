@@ -2,8 +2,7 @@ import React from 'react'
 import FileViewer from 'react-file-viewer';
 
 const type = 'docx'
-const file = 'http://qmly29cs3.hd-bkt.clouddn.com/test.docx'
-
+const file = 'http://qpe0365ci.hd-bkt.clouddn.com/工程认证教学大纲示例.docx'
 
 const ExamAndApp = () => {
   return (
