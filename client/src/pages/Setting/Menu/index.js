@@ -53,14 +53,15 @@ const Menu = () => {
         )
       }
     },
-    // {
-    //   title: '角色',
-    //   dataIndex: 'role',
-    //   align: 'center',
-    //   render:(text,record)=>{
-    //     return record.role.role
-    //   }
-    // },
+    {
+      title: '角色',
+      dataIndex: 'role',
+      align: 'center',
+      render:(text,record)=>{
+        console.log(record)
+        return record.role.roleName
+      }
+    },
     {
       title: '操作',
       key: 'active',
