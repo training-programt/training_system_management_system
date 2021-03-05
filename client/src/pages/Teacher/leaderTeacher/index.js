@@ -205,7 +205,7 @@ const LeaderTeacher = () => {
       password:record.password,
       sex:record.sex,
       birthday:record.birthday,
-      course:record.course[0]._id,
+      // course:record.course[0]._id ? record.course[0]._id:'',
       job:record.job,
       position:record.position,
       lastInfo:record.lastInfo,
@@ -213,8 +213,8 @@ const LeaderTeacher = () => {
       researchDirection:record.researchDirection,
       professional:record.professional,
       degree:record.degree,
-      teachRoom:record.teachRoom._id,
-      major:record.major._id
+      // teachRoom:record.teachRoom._id ? record.teachRoom._id:'',
+      // major:record.major._id ? record.major._id:''
     }
     form.setFieldsValue(data)
   }
