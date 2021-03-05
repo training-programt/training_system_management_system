@@ -1,9 +1,10 @@
 import React, { useState, useMemo } from 'react';
 import { Tabs, Form, Input, Image, Button, Upload, Select, message } from 'antd'
+import { useHistory } from 'react-router-dom'
 import postJSON from '@/public/json/post.json'
 import educationJSON from '@/public/json/education.json'
 import api from '@/apis/publish'
-import { getSession } from '@/utils'
+import { getSession, delSession } from '@/utils'
 
 import './index.less'
 
@@ -29,15 +30,18 @@ function beforeUpload(file) {
 }
 
 const UserInfo = () => {
+  const history = useHistory();
+
   const [form] = Form.useForm();
+  const [formPwd] = Form.useForm();
   const [random, setRandom] = useState();
   const [loading, setLoading] = useState(false);
   const [imageUrl, setImageUrl] = useState(false);
+  const [userInfo, setUserInfo] = useState(JSON.parse(getSession('userInfo')))
 
   useMemo(async () => {
-    console.log(JSON.parse(getSession('userInfo')))
     const params = {
-      _id: JSON.parse(getSession('userInfo'))._id
+      _id: userInfo._id
     }
     const res = await React.$axios.post(api.getUserInfo, params)
     if (res && res.isSucceed) {
@@ -45,7 +49,6 @@ const UserInfo = () => {
       form.setFieldsValue(res.data)
     }
   }, [])
-
 
   const formItemLayout = {
     labelCol: {
@@ -118,10 +121,18 @@ const UserInfo = () => {
   }
 
   const modifyPwd = async () => {
-    const params = form.getFieldValue()
+    const params = {
+      ...formPwd.getFieldValue(),
+      _id: userInfo._id,
+    }
     const res = await React.$axios.post(api.modifyPwd, params)
     if(res && res.isSucceed) {
       console.log(res)
+      message.success('密码修改成功')
+      delSession('userInfo')
+      history.replace('/login')
+    } else {
+      message.error(res.message)
     }
   }
 
@@ -250,9 +261,9 @@ const UserInfo = () => {
           </div>
         </TabPane>
         <TabPane tab="修改密码" key="2" className="container-password">
-          <Form  {...formItemLayout}>
+          <Form  {...formItemLayout} form={formPwd}>
             <Form.Item
-              name="password"
+              name="oldPassword"
               label="旧密码"
               rules={[{
                 required: true,
@@ -262,7 +273,7 @@ const UserInfo = () => {
               <Input.Password />
             </Form.Item>
             <Form.Item
-              name="newPassword"
+              name="password"
               label="新密码"
               rules={[{
                 required: true,
@@ -294,7 +305,7 @@ const UserInfo = () => {
             >
               <Input.Password />
             </Form.Item>
-            <div className='submit-btn'><Button type='primary'>保存</Button></div>
+            <div className='submit-btn'><Button type='primary' onClick={modifyPwd}>保存</Button></div>
           </Form>
         </TabPane>
       </Tabs>
