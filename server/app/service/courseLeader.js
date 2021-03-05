@@ -35,6 +35,12 @@ class CourseLeaderService extends Service {
         const result = await ctx.model.Syllabus.insertMany(params);
         return result;
     }
+    //查找课程大纲
+    async findSyllabus(params){
+        const {ctx} = this;
+        const result = await ctx.model.Syllabus.find(params);
+        return result;
+    }
 
 
      // 查询全部课程教学目标

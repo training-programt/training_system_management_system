@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import HeaderComponent from '@/components/header'
 import { Table, Input, Button, Popconfirm } from 'antd';
 import { PlusOutlined, DeleteOutlined, EditOutlined } from '@ant-design/icons';
+import { getSession} from '../../../utils';
 
 const Syllabus = () => {
   const [loading, setLoading] = useState(false);
@@ -53,7 +54,7 @@ const Syllabus = () => {
       key: 'operation',
       render: (text, record) => (
         <div>
-          <Link to={{ pathname: "trainingProject/edit",state:{id:record._id} }}><Button size="small" type="link">编辑</Button></Link>
+          <Link to={{ pathname: "/syllabus/add",state:{id:record._id} }}><Button size="small" type="link">编辑</Button></Link>
           <Popconfirm title="确定删除？" okText="确定" cancelText="取消">
             <Button type="link">删除</Button>
           </Popconfirm>
@@ -63,7 +64,11 @@ const Syllabus = () => {
   ];
   useEffect(() => {
     setLoading(true)
-    const res = React.$axios.get('/getSyllabus').then((syllabusData) => {
+    const teacher = JSON.parse(getSession('userInfo'));
+    const params={
+      _id:teacher._id
+    }
+    const res = React.$axios.post('/findSyllabus',params).then((syllabusData) => {
       setSyllabusData(syllabusData.data)
     })
     setLoading(false)
@@ -75,9 +80,6 @@ const Syllabus = () => {
         <div className="header-wrap">
           <div className="search-box">
             <Input.Search placeholder="请输入课程名称" allowClear enterButton />
-          </div>
-          <div className="operation-wrap">
-            <Link to="/syllabus/add"><Button type="primary" icon={<PlusOutlined />}>新增大纲</Button></Link>
           </div>
         </div>
         <div className="table-wrap">
