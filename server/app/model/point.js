@@ -11,9 +11,9 @@ module.exports = app => {
         ref: 'Course'
       }
     ],
-    graducationRequirement: {//关联毕业要求
+    graduationRequirement: {//关联毕业要求
       type: Schema.Types.ObjectId,
-      ref: 'GraducationRequirement'
+      ref: 'GraduationRequirement'
     },
     teachingGoal:[{//对应课程目标
       type: Schema.Types.ObjectId,

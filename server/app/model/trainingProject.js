@@ -20,9 +20,9 @@ module.exports = app => {
       type: Schema.Types.ObjectId,
       ref: 'Teacher'
     },//编写者，关联老师
-    graducationRequirement: [{//关联毕业要求表
+    graduationRequirement: [{//关联毕业要求表
       type: Schema.Types.ObjectId,
-      ref: 'GraducationRequirement'
+      ref: 'GraduationRequirement'
     }],
     trainingObjective: {//关联培养目标表
       type: Schema.Types.ObjectId,

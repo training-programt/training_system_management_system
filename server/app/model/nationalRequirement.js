@@ -6,6 +6,12 @@ module.exports = app => {
   const NationalRequirementSchema = new Schema({
     national_name: { type: String },
     nation_description: {type:String},
+    point: [
+      {
+        name: String,
+        description: String,
+      }
+    ]
   })
 
   return mongoose.model('NationalRequirement', NationalRequirementSchema, 'nationalRequirement');
