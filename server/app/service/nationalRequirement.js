@@ -33,5 +33,18 @@ class NationalRequirementService extends Service {
     )
     return res;
   }
+
+  async addPoint(params) {
+    const { ctx} = this;
+    const res = await ctx.model.NationalRequirement.update(
+      { _id: params._id },
+      {
+        $push: {
+          point: params.pointData
+        }
+      }
+    )
+    return res
+  }
 }
 module.exports = NationalRequirementService;

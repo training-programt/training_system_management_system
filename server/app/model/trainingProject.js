@@ -5,10 +5,11 @@ module.exports = app => {
   const Schema = mongoose.Schema;
   const TrainingProjectSchema = new Schema({
     name: { type: String },
-    year: {//年级表关联
-      type: Schema.Types.ObjectId,
-      ref: 'Grade'
-    },
+    year: String,
+    // year: {//年级表关联
+    //   type: Schema.Types.ObjectId,
+    //   ref: 'Grade'
+    // },
     major: {//专业表关联
       type: Schema.Types.ObjectId,
       ref: 'Major'

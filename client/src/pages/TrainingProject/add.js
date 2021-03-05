@@ -1,8 +1,9 @@
-import React, { useState } from 'react'
+import React, { useState, useRef } from 'react'
 import { Button, Steps, message } from 'antd'
 import { Link } from 'react-router-dom'
 import { ArrowLeftOutlined, ArrowRightOutlined, RollbackOutlined, SaveOutlined } from '@ant-design/icons';
 import './index.less'
+import api from '@/apis/trainingProject'
 
 import InitPage from './initPage'
 import TrainObject from './trainObject'
@@ -15,15 +16,16 @@ const { Step } = Steps;
 
 const AddTrainingProject = () => {
   const [current, setCurrent] = useState(0);
+  const childRef = useRef()
 
   const steps = [
     {
       title: '基础信息',
-      content: <InitPage />,
+      content: <InitPage ref={childRef} />,
     },
     {
       title: '培养目标',
-      content: <TrainObject />,
+      content: <TrainObject ref={childRef} />,
     },
     {
       title: '毕业要求',
@@ -44,12 +46,25 @@ const AddTrainingProject = () => {
   ];
 
   const next = () => {
+    if (current == 0) {
+      const data = childRef.current.saveProject()
+      initProject(data)
+    } else {
+      console.log(childRef.current.saveProject())
+    }
     setCurrent(current + 1);
   };
 
   const prev = () => {
     setCurrent(current - 1);
   };
+
+  const initProject = async (data) => {
+    console.log(data)
+    const res = await React.$axios.post(api.createProject, data)
+
+    console.log(res)
+  }
 
   return (
     <div className="training-project">

@@ -15,5 +15,6 @@ module.exports = app => {
   require('./router/grade')(app)
   require('./router/nationalRequirement')(app)
   require('./router/courseLeader')(app)
+  require('./router/trainingProject')(app)
 
 };

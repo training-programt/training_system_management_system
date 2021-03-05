@@ -4,10 +4,24 @@ import { Button, Input } from 'antd'
 import HeaderComponent from '@/components/header'
 import TableComponent from '@/components/table'
 import { PlusOutlined, DeleteOutlined, EditOutlined } from '@ant-design/icons';
+import api from '@/apis/trainingProject'
 
 const TrainingProject = () => {
   const [loading, setLoading] = useState(false);
-  // const [tableData, setTableData] = useState([]);
+  const [tableData, setTableData] = useState([]);
+
+  const getProjectList = async () => {
+    setLoading(true)
+    const res = await React.$axios.get(api.getProjectList)
+    setLoading(false)
+    if(res && res.isSucceed) {
+      setTableData(res.data)
+    }
+  }
+
+  useMemo(() => {
+    getProjectList()
+  }, [])
 
   const tableSetting = {
     page: 1,
@@ -20,17 +34,17 @@ const TrainingProject = () => {
     }
   }
 
-  const tableData = [
-    {
-      _id: '1',
-      name: '2019-2020学年软件工程',
-      writer: '张三',
-      degree: '工学',
-      total_credits: 180,
-      createTime: '2020/12/12',
-      status: 1,
-    }
-  ]
+  // const tableData = [
+  //   {
+  //     _id: '1',
+  //     name: '2019-2020学年软件工程',
+  //     writer: '张三',
+  //     degree: '工学',
+  //     total_credits: 180,
+  //     createTime: '2020/12/12',
+  //     status: 1,
+  //   }
+  // ]
 
   const columns = [
     {

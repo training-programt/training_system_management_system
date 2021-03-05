@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useImperativeHandle, forwardRef  } from 'react'
 import { Form, Input, Button, List } from 'antd';
 import { PlusOutlined } from '@ant-design/icons';
 import { setSession, getSession } from '@/utils'
@@ -31,7 +31,7 @@ const layout = {
   wrapperCol: { span: 21 },
 };
 
-const TrainObject = () => {
+const TrainObject = (props, ref) => {
 
   const [form1] = Form.useForm();
   const [form2] = Form.useForm();
@@ -52,26 +52,37 @@ const TrainObject = () => {
     form2.resetFields()
   }
 
+  useImperativeHandle(ref, () => {
+    return {
+      saveProject() {
+        return {
+          data,
+          majorObject,
+        }
+      }
+    }
+  })
+
   // const delObjectItem = (index) => {
   //   console.log(index)
   //   objectList.splice(index + 1, 1);
   // }
 
-  useEffect(() => {
-    const temData = JSON.parse(getSession('training-project-data'))
-    setMajorObject(temData.majorObject || '')
-    setObjectList(temData.objectList || [])
-    return () => {
-      const data = {
-        ...temData,
-        majorObject,
-        objectList
-      }
-      setTimeout(() => {
-        setSession('training-project-data', data)
-      }, 100);
-    }
-  }, [])
+  // useEffect(() => {
+  //   const temData = JSON.parse(getSession('training-project-data'))
+  //   setMajorObject(temData.majorObject || '')
+  //   setObjectList(temData.objectList || [])
+  //   return () => {
+  //     const data = {
+  //       ...temData,
+  //       majorObject,
+  //       objectList
+  //     }
+  //     setTimeout(() => {
+  //       setSession('training-project-data', data)
+  //     }, 100);
+  //   }
+  // }, [])
 
   return (
     <div className="train-object">
@@ -172,4 +183,4 @@ const TrainObject = () => {
   )
 }
 
-export default TrainObject
+export default forwardRef(TrainObject)

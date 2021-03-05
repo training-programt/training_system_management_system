@@ -1,11 +1,11 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useState, useImperativeHandle, forwardRef } from 'react'
 import { Form, Input, Select, InputNumber } from 'antd';
 import api from '@/apis/trainingProject'
 import { setSession, getSession } from '@/utils'
 
 const { Option } = Select;
 
-const InitPage = () => {
+const InitPage = (props, ref) => {
 
   const [form] = Form.useForm();
   const [majorOption, setMajorOption] = useState([])
@@ -16,18 +16,28 @@ const InitPage = () => {
   };
 
   useEffect(() => {
-    const formData = JSON.parse(getSession('training-project-data')) || {}
-    console.log(formData)
-    form.setFieldsValue(formData)
+    // const formData = JSON.parse(getSession('training-project-data')) || {}
+    // form.setFieldsValue(formData)
     const fetch = async () => {
       const res = await React.$axios.get(api.getMajor)
       setMajorOption(res.data)
     }
     fetch()
     return () => {
-      setSession('training-project-data', form.getFieldValue())
+      // setSession('training-project-data', form.getFieldValue())
     }
   }, [])
+
+
+
+  useImperativeHandle(ref, () => {
+    return {
+      saveProject() {
+        return form.getFieldValue()
+      }
+    }
+  })
+
 
   return (
     <div className="init-page">
@@ -117,13 +127,13 @@ const InitPage = () => {
               showSearch
               placeholder="选择学制"
             >
-              <Option value="一年">一年</Option>
-              <Option value="二年">二年</Option>
-              <Option value="三年">三年</Option>
-              <Option value="四年">四年</Option>
-              <Option value="五年">五年</Option>
-              <Option value="六年">六年</Option>
-              <Option value="七年">七年</Option>
+              <Option value="1">一年</Option>
+              <Option value="2">二年</Option>
+              <Option value="3">三年</Option>
+              <Option value="4">四年</Option>
+              <Option value="5">五年</Option>
+              <Option value="6">六年</Option>
+              <Option value="7">七年</Option>
             </Select>
           </Form.Item>
           <Form.Item
@@ -189,4 +199,4 @@ const InitPage = () => {
   )
 }
 
-export default InitPage
+export default forwardRef(InitPage)
