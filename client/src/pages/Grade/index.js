@@ -1,5 +1,5 @@
 import React, { useState, useMemo, useEffect } from 'react';
-import { Table, Button, Modal, Form, message, Input, InputNumber, Tabs, Popconfirm, } from 'antd';
+import { Table, Button, Modal, Form, message, Select, Input, InputNumber, Tabs, Popconfirm, } from 'antd';
 const { TabPane } = Tabs;
 import HeaderComponent from '../../components/header'
 import { SearchOutlined, PlusOutlined } from '@ant-design/icons';
@@ -9,13 +9,14 @@ const Grade = () => {
   const [visible, setVisible] = useState(false);//弹窗新增和编辑
   const [loading, setLoading] = useState(false);
   const [form] = Form.useForm();
+  const [form1] = Form.useForm();
   const [gradeData, setGradeData] = useState([]);
   const [isEdit, setIsEdit] = useState(false);
   const [confirmLoading, setConfirmLoading] = useState(false);
   const [semesterData, setSemesterData] = useState([]);
   const [tab, setTabData] = useState(1);
   const [titles, setTitlesData] = useState('新增年级');
-
+  const [majorData, setMajorData] = useState([]);
   const gradeColumns = [
     { title: '序号', align: 'center', fixed: 'left', render: (text, record, index) => `${index + 1}` },
     {
@@ -52,7 +53,7 @@ const Grade = () => {
     { title: '序号', align: 'center', fixed: 'left', render: (text, record, index) => `${index + 1}` },
     {
       title: '学期名字',
-      dataIndex: 'name',
+      dataIndex: 'semesterName',
       align: 'center',
     },
     {
@@ -76,6 +77,9 @@ const Grade = () => {
     const res1 = React.$axios.get('/getSemester').then((semesterData) => {
       setSemesterData(semesterData.data);
     })
+    const major = React.$axios.get('/getMajor').then((res) => {
+      setMajorData(res.data)
+    })
     setLoading(false)
   }, [])
 
@@ -88,7 +92,7 @@ const Grade = () => {
   }
   const addSemester = () => {
     setVisible(true);
-    form.resetFields()
+    form1.resetFields()
     setTitlesData('新增学期')
     setIsEdit(false)
   }
@@ -102,8 +106,8 @@ const Grade = () => {
   const editSemester = (record) => {
     setTitlesData('编辑学期')
     setVisible(true);
+    form1.resetFields()
     setVisible(true);
-
   };
   const delGrade = () => {
   };
@@ -117,36 +121,63 @@ const Grade = () => {
     const params = {
       ...form.getFieldValue(),
     }
+    const params1 = {
+      ...form1.getFieldValue(),
+    }
     if (!isEdit) {
-      const add = await React.$axios.post(
-        '/addMajor',
-        params,
-      );
-      console.log(add)
-      if (add.isSucceed) {
-        message.success(add.message)
-        const newMajor = await React.$axios.get(
-          '/getMajor'
-        )
-        setMajorData(newMajor.data);
+      if (tab === 1) {
+        console.log(tab)
+        const addGrade = await React.$axios.post(
+          '/addGrade',
+          params,
+        );
+        if (addGrade.isSucceed) {
+          message.success(addGrade.message)
+          const newGrade = await React.$axios.get(
+            '/getGrade'
+          )
+          setGradeData(newGrade.data);
+        } else {
+          message.error(addGrade.message)
+        }
       } else {
-        message.error(add.message)
+        const addSemester = await React.$axios.post(
+          '/addSemester',
+          params1,
+        );
+        if (addSemester.isSucceed) {
+          message.success(addSemester.message)
+          const newSemester = await React.$axios.get(
+            '/getSemester'
+          )
+          setSemesterData(newSemester.data);
+        } else {
+          message.error(addSemester.message)
+        }
       }
-    } else if (isEdit) {
-      const res = await React.$axios.post(
-        '/updateMajor',
-        params,
-      );
-      if (res && res.isSucceed) {
-        message.success(res.message);
-        const res = await React.$axios.get(
-          '/getMajor'
-        )
-        setMajorData(res.data);
-      } else {
-        message.error(res.message);
+      setVisible(false);
+    } else {
+      if (tab === 1) {
+        console.log(1)
+      } else if (tab === 2) {
+        console.log(2)
       }
     }
+    //  if (isEdit) {
+    //   const res = await React.$axios.post(
+    //     '/updateMajor',
+    //     params,
+    //   );
+    //   if (res && res.isSucceed) {
+    //     message.success(res.message);
+    //     const res = await React.$axios.get(
+    //       '/getMajor'
+    //     )
+    //     setMajorData(res.data);
+    //   } else {
+    //     message.error(res.message);
+    //   }
+    // }
     setVisible(false);
 
   };
@@ -166,6 +197,7 @@ const Grade = () => {
               columns={gradeColumns}
               loading={loading}
               bordered
+              rowKey={record => record._id}
             >
             </Table>
           </TabPane>
@@ -176,6 +208,7 @@ const Grade = () => {
               columns={semesterColumns}
               loading={loading}
               bordered
+              rowKey={record => record._id}
             >
             </Table>
           </TabPane>
@@ -187,6 +220,8 @@ const Grade = () => {
           onCancel={handleCancel}
           destroyOnClose
           title={titles}
+          maskClosable={true}
+          getContainer={false}
           footer={[
             <Button key="back" onClick={handleCancel}>
               取消
@@ -196,14 +231,33 @@ const Grade = () => {
               </Button>
           ]}
         >
-          <Form form={form}>
-            <Form.Item name="name" label="年级名字" rules={[{ required: true, message: '请输入年级名!' }]}>
-              <Input />
-            </Form.Item>
-            <Form.Item name="name" label="学期名字" rules={[{ required: true, message: '请输入学期名字!' }]}>
-              <Input />
-            </Form.Item>
-          </Form>
+
+          {
+            tab === 1 ?
+              <Form form={form}>
+                <Form.Item name="name" label="年级名字" rules={[{ required: true, message: '请输入年级名!' }]}>
+                  <Input placeholder="年级名字" />
+                </Form.Item>
+                <Form.Item
+                  name="studentNumber"
+                  label="包含专业"
+                  rules={[{ required: true, message: '请选择包含专业!' }]}
+                >
+                  <Select placeholder="包含专业" allowClear mode="tags">
+                    {
+                      majorData && majorData.map(item => (<Select.Option key={item._id} value={item._id}>{item.name}</Select.Option>))
+                    }
+                  </Select>
+                </Form.Item>
+              </Form>
+              :
+              <Form form={form1}>
+                <Form.Item name="semesterName" label="学期名字" rules={[{ required: true, message: '请输入学期名字!' }]}>
+                  <Input />
+                </Form.Item>
+              </Form>
+          }
+
         </Modal>
       </div>
     </div>

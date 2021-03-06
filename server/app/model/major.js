@@ -15,6 +15,10 @@ module.exports = app => {
       type: Schema.Types.ObjectId,
       ref: 'College'
     },
+    grade: {
+      type: Schema.Types.ObjectId,
+      ref: 'Grade'
+    },
     //学期表相关联
     semester:{
       type:Schema.Types.ObjectId,
