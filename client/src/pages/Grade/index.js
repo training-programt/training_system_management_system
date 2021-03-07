@@ -42,9 +42,9 @@ const Grade = () => {
       render: (text, record) => (
         <div>
           <Button type="link" onClick={() => editGrade(record)}>编辑</Button>
-          <Popconfirm title="确定删除？" okText="确定" cancelText="取消">
+          {/* <Popconfirm title="确定删除？" okText="确定" cancelText="取消"> */}
             <Button type="link" onClick={() => delGrade(record)}>删除</Button>
-          </Popconfirm>
+          {/* </Popconfirm> */}
         </div>
       ),
     },
@@ -62,9 +62,9 @@ const Grade = () => {
       render: (text, record) => (
         <div>
           <Button type="link" onClick={() => editSemester(record)}>编辑</Button>
-          <Popconfirm title="确定删除？" okText="确定" cancelText="取消">
+          {/* <Popconfirm title="确定删除？" okText="确定" cancelText="取消"> */}
             <Button type="link" onClick={() => delSemester(record)}>删除</Button>
-          </Popconfirm>
+          {/* </Popconfirm> */}
         </div>
       ),
     },
@@ -102,16 +102,53 @@ const Grade = () => {
     setTitlesData('编辑年级')
     form.resetFields()
     setIsEdit(true)
+    let data = {
+      _id: record._id,
+      name: record.name,
+      // studentNumber: record.studentNumber._id,
+    }
+    form.setFieldsValue(data)
   };
   const editSemester = (record) => {
     setTitlesData('编辑学期')
     setVisible(true);
     form1.resetFields()
     setVisible(true);
+    let data = {
+      _id: record._id,
+      semesterName: record.semesterName,
+    }
+    form1.setFieldsValue(data)
   };
-  const delGrade = () => {
+  const delGrade = async(record) => {
+    const params = {
+      _id: record._id,
+    }
+    const res = await React.$axios.post('/delGrade', params)
+    if (res && res.isSucceed) {
+      message.success(res.message);
+      const newGrade = await React.$axios.get(
+        '/getGrade'
+      )
+      setGradeData(newGrade.data);
+    } else {
+      message.error(res.message);
+    }
   };
-  const delSemester = () => {
+  const delSemester = async(record) => {
+    const params = {
+      _id: record._id,
+    }
+    const res = await React.$axios.post('/delSemester', params)
+    if (res.isSucceed) {
+      message.success(res.message);
+      const newSemester = await React.$axios.get(
+        '/getSemester'
+      )
+      setSemesterData(newSemester.data);
+    } else {
+      message.error(res.message);
+    }
   };
   const callback = (key) => {
     setTabData(key);
@@ -142,7 +179,7 @@ const Grade = () => {
         }
       } else {
         const addSemester = await React.$axios.post(
-          '/addSemester',
+          '/updateSemester',
           params1,
         );
         if (addSemester.isSucceed) {
@@ -158,28 +195,36 @@ const Grade = () => {
       setVisible(false);
     } else {
       if (tab === 1) {
-        console.log(1)
+        const res = await React.$axios.post(
+          '/updateGrade',
+          params,
+        );
+        if (res.isSucceed) {
+          message.success('修改成功');
+          const res = await React.$axios.get(
+            '/getGrade'
+          )
+          setGradeData(res.data);
+        } else {
+          message.error('修改失败');
+        }
       } else if (tab === 2) {
-        console.log(2)
+        const res = await React.$axios.post(
+          '/updateSemester',
+          params,
+        );
+        if (res.isSucceed) {
+          message.success('修改成功');
+          const res = await React.$axios.get(
+            '/getSemester'
+          )
+          setSemesterData(res.data);
+        } else {
+          message.error('修改失败');
+        }
       }
     }
-    //  if (isEdit) {
-    //   const res = await React.$axios.post(
-    //     '/updateMajor',
-    //     params,
-    //   );
-    //   if (res && res.isSucceed) {
-    //     message.success(res.message);
-    //     const res = await React.$axios.get(
-    //       '/getMajor'
-    //     )
-    //     setMajorData(res.data);
-    //   } else {
-    //     message.error(res.message);
-    //   }
-    // }
     setVisible(false);
-
   };
 
   const handleCancel = () => {
