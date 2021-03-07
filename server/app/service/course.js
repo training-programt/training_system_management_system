@@ -15,6 +15,7 @@ class CourseService extends Service {
             .populate('semester')
             .populate('unit')
             .populate('assessment')
+            .populate('professional')
             .populate('major')
             .sort('sort');
         return result;

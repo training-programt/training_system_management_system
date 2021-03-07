@@ -59,18 +59,5 @@ module.exports = app => {
       ref: 'Assessment'
     }
   })
-  //新注释掉的
-  // CourseSchema.virtual('syllabus', {//教学大纲
-  //   localField: '_id',
-  //   foreignField: 'course_info',
-  //   justOne: false,
-  //   ref: 'Syllabus'
-  // })
-  // CourseSchema.virtual('assessment', {//课程考核表
-  //   localField: '_id',
-  //   foreignField: 'course',
-  //   justOne: false,
-  //   ref: 'Assessment'
-  // })
   return mongoose.model('Course', CourseSchema, 'course');
 }
