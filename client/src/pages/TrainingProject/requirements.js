@@ -1,7 +1,10 @@
-import React, { useState } from 'react'
+import React, { useState, useImperativeHandle, forwardRef } from 'react'
 
-import { Form, Input, Button, List } from 'antd';
+import { Form, Input, Button, List, Collapse, Space } from 'antd';
 import { PlusOutlined } from '@ant-design/icons';
+
+const { Panel } = Collapse;
+
 const data = [
   {
     title: '工程知识',
@@ -53,36 +56,102 @@ const data = [
   },
 ];
 
-const data1 = []
-
 const layout = {
   labelCol: { span: 3 },
   wrapperCol: { span: 21 },
 };
 
-const Requirements = () => {
+const Requirements = (props, ref)  => {
 
   const [form1] = Form.useForm();
   const [form2] = Form.useForm();
   const [showMajorForm, setShowMajorForm] = useState(true)
   const [showForm, setShowForm] = useState(false);
   const [majorRequirement, setMajorRequirement] = useState('');
+  const [requirementList, setRequirementList] = useState([])
+  const [isPointVisible, setIsPointVisible] = useState(false);
+
 
   const addMajorRequirement = () => {
-    setMajorRequirement(form1.getFieldsValue().majorRequirement);
+    setMajorRequirement(form1.getFieldsValue().description);
     setShowMajorForm(false)
   }
 
   const addRequirementItem = () => {
-    data1.push(form2.getFieldsValue())
+    setRequirementList([...requirementList, form2.getFieldsValue()])
     setShowForm(false)
     form2.resetFields()
   }
 
   const delRequirementItem = (index) => {
     console.log(index)
-    data1.splice(index + 1, 1);
+    requirementList.splice(index + 1, 1);
   }
+
+
+  useImperativeHandle(ref, () => {
+    return {
+      saveProject() {
+        return {
+          description: majorRequirement,
+          majorRequirement: requirementList,
+        }
+      }
+    }
+  })
+
+  const showPointModal = (item) => {
+    setAcRequirement(item)
+    formPoint.resetFields()
+    setIsPointVisible(true);
+  }
+
+  const delRequirement = async (record) => {
+    if (!record.point.length) {
+      message.error('指标点不为空，无法删除！')
+      return false;
+    }
+    const params = {
+      _id: record._id,
+    }
+    const res = await React.$axios.post(
+      api.delNationalRequirement,
+      params,
+    );
+    if (res && res.isSucceed) {
+      message.success(res.message)
+      setLoading(true);
+      const data = await React.$axios.get(
+        api.getNationalRequirement,
+      )
+      setTableData(data.data);
+      setLoading(false);
+    }
+  }
+
+  const showEditModal = (record) => {
+    form.resetFields()
+    setIsModalVisible(true)
+    setIsEdit(true)
+    form.setFieldsValue(record)
+  }
+
+  const listHeader = (item, index) => {
+    return (
+      <>
+        <div style={{ color: 'rgba(0,0,0,0.85)' }}>毕业要求{index + 1}：{item.national_name}</div>
+        <div style={{ color: 'rgba(0,0,0,0.45)', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+          <div style={{ width: '90%' }}>{item.nation_description}</div>
+          <Space>
+            <Button type='link' size='small' onClick={() => showPointModal(item._id)}>新增指标点</Button>
+            <Button type='link' size='small' onClick={() => showEditModal(item)}>编辑</Button>
+            <Button type='link' size='small' onClick={() => delRequirement(item)}>删除</Button>
+          </Space>
+        </div>
+      </>
+    )
+  }
+
 
   return (
     <div className="train-object">
@@ -102,7 +171,7 @@ const Requirements = () => {
                 : (
                   <Form form={form1}>
                     <Form.Item
-                      name='majorRequirement'
+                      name='description'
                       rules={[{ required: true, message: '专业毕业要求描述不能为空' }]}
                     >
                       <Input.TextArea allowClear autoSize={{ minRows: 3, maxRows: 5 }} />
@@ -113,9 +182,34 @@ const Requirements = () => {
             }
 
           </div>
-          <List
+
+          <Collapse accordion ghost>
+            {
+              requirementList.map((item, index) => {
+                return (
+                  <Panel header={listHeader(item, index)} key={index}>
+                    <List
+                      itemLayout="horizontal"
+                      dataSource={item.point}
+                      renderItem={(itemList, index) => (
+                        <List.Item
+                          actions={[<a key="list-loadmore-edit" style={{fontSize: '12px'}}>编辑</a>, <a key="list-loadmore-more" style={{fontSize: '12px'}}>删除</a>]}
+                        >
+                          <List.Item.Meta
+                            title={'指标点' + (index + 1) + '：' + itemList.name}
+                            description={itemList.description}
+                          />
+                        </List.Item>
+                      )}
+                    />
+                  </Panel>
+                )
+              })
+            }
+          </Collapse>
+          {/* <List
             itemLayout="horizontal"
-            dataSource={data1}
+            dataSource={requirementList}
             renderItem={(item, index) => (
               <List.Item
                 actions={[
@@ -129,14 +223,14 @@ const Requirements = () => {
                 />
               </List.Item>
             )}
-          />
+          /> */}
 
           {
             showForm ? (
               <Form form={form2} {...layout}>
                 <Form.Item
                   label="标题"
-                  name='title'
+                  name='name'
                   rules={[{ required: true, message: '标题不能为空' }]}
                 >
                   <Input />
@@ -183,4 +277,4 @@ const Requirements = () => {
   )
 }
 
-export default Requirements
+export default forwardRef(Requirements)

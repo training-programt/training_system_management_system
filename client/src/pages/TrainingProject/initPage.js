@@ -1,7 +1,6 @@
 import React, { useEffect, useState, useImperativeHandle, forwardRef } from 'react'
 import { Form, Input, Select, InputNumber } from 'antd';
 import api from '@/apis/trainingProject'
-import { setSession, getSession } from '@/utils'
 
 const { Option } = Select;
 
@@ -33,7 +32,9 @@ const InitPage = (props, ref) => {
   useImperativeHandle(ref, () => {
     return {
       saveProject() {
-        return form.getFieldValue()
+        return {
+          ...form.getFieldValue(),
+        }
       }
     }
   })

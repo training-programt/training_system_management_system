@@ -21,10 +21,10 @@ module.exports = app => {
       type: Schema.Types.ObjectId,
       ref: 'Teacher'
     },//编写者，关联老师
-    graduationRequirement: [{//关联毕业要求表
+    graduationRequirement: {//关联毕业要求表
       type: Schema.Types.ObjectId,
       ref: 'GraduationRequirement'
-    }],
+    },
     trainingObjective: {//关联培养目标表
       type: Schema.Types.ObjectId,
       ref: 'TrainingObjective'
@@ -37,5 +37,5 @@ module.exports = app => {
     second_classroom:{type:String}//第二课堂文字
   })
 
-  return mongoose.model('TrainingProject', TrainingProjectSchema, 'TrainingProject');
+  return mongoose.model('TrainingProject', TrainingProjectSchema, 'trainingProject');
 } 

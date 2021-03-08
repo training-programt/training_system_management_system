@@ -4,6 +4,8 @@ import { Link } from 'react-router-dom'
 import { ArrowLeftOutlined, ArrowRightOutlined, RollbackOutlined, SaveOutlined } from '@ant-design/icons';
 import './index.less'
 import api from '@/apis/trainingProject'
+import { setSession, getSession } from '@/utils'
+
 
 import InitPage from './initPage'
 import TrainObject from './trainObject'
@@ -16,6 +18,9 @@ const { Step } = Steps;
 
 const AddTrainingProject = () => {
   const [current, setCurrent] = useState(0);
+  const [acProject, setAcProject] = useState('')
+  const [writer, setWriter] = useState(JSON.parse(getSession('userInfo'))._id)
+
   const childRef = useRef()
 
   const steps = [
@@ -29,7 +34,7 @@ const AddTrainingProject = () => {
     },
     {
       title: '毕业要求',
-      content: <Requirements />,
+      content: <Requirements ref={childRef} />,
     },
     {
       title: '矩阵关系',
@@ -46,12 +51,22 @@ const AddTrainingProject = () => {
   ];
 
   const next = () => {
-    if (current == 0) {
-      const data = childRef.current.saveProject()
-      initProject(data)
-    } else {
-      console.log(childRef.current.saveProject())
+    const data = childRef.current.saveProject()
+    switch (current) {
+      case 0: {
+        initProject(data)
+        break;
+      }
+      case 1: {
+        saveObject(data)
+        break;
+      }
+      case 2: {
+        saveRequirement(data)
+        break;
+      }
     }
+    
     setCurrent(current + 1);
   };
 
@@ -60,10 +75,32 @@ const AddTrainingProject = () => {
   };
 
   const initProject = async (data) => {
-    console.log(data)
-    const res = await React.$axios.post(api.createProject, data)
+    const newTime = new Date().getTime()
+    const params = {
+      ...data,
+      writer,
+      newTime,
+    }
+    const res = await React.$axios.post(api.createProject, params)
+    setAcProject(res.data._id)
+  }
 
-    console.log(res)
+  const saveObject = async (data) => {
+    const params = {
+      ...data,
+      _id: acProject,
+    }
+    const res = await React.$axios.post(api.updateObject, params)
+  }
+
+  const saveRequirement = async (data) => {
+    console.log(data)
+    const params = {
+      ...data,
+      _id: acProject,
+    }
+    const res = await React.$axios.post(api.updateRequirement, params)
+
   }
 
   return (

@@ -50,14 +50,15 @@ const TrainObject = (props, ref) => {
     // objectList.push(form2.getFieldsValue())
     setShowForm(false)
     form2.resetFields()
+    console.log(objectList)
   }
 
   useImperativeHandle(ref, () => {
     return {
       saveProject() {
         return {
-          data,
-          majorObject,
+          professional_training_objectives: majorObject,
+          specific_training_objectives: objectList,
         }
       }
     }
@@ -136,7 +137,7 @@ const TrainObject = (props, ref) => {
               <Form form={form2} {...layout}>
                 <Form.Item
                   label="标题"
-                  name='title'
+                  name='objective_name'
                   rules={[{ required: true, message: '标题不能为空' }]}
                 >
                   <Input />
