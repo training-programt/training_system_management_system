@@ -26,16 +26,39 @@ class CourseService extends Service {
         const result = await ctx.model.Course.remove(params)
         return result
     }
+      //条件查询
+      async findCourse(params) {
+        const { ctx } = this;
+        const result = await ctx.model.Course.find(params)
+        return result;
+    }
     //修改
     async updataCourse(params){
         const { ctx } = this;
         const result = await ctx.model.Course.findByIdAndUpdate(params)
         return result
     }
+      //新建
+      async addCourse(params) {
+        const { ctx } = this;
+        const result = await ctx.model.Course.create(params)
+        return result;
+    }
     //增加
     async addCourse(params){
         const {ctx} = this;
         const result = await ctx.model.Course.insertMany(params);
+        return result;
+    }
+     // 查询全部课程体系
+     async getCourseSystem() {
+        const { ctx } = this;
+        const result = await ctx.model.CourseSystem
+            .find({
+            })
+            .populate('creditStructure')
+            .populate('syllcoursesabus')
+            .sort('sort');
         return result;
     }
 }

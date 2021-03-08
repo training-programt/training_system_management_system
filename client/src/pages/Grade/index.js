@@ -62,9 +62,7 @@ const Grade = () => {
       render: (text, record) => (
         <div>
           <Button type="link" onClick={() => editSemester(record)}>编辑</Button>
-          {/* <Popconfirm title="确定删除？" okText="确定" cancelText="取消"> */}
             <Button type="link" onClick={() => delSemester(record)}>删除</Button>
-          {/* </Popconfirm> */}
         </div>
       ),
     },
@@ -154,6 +152,7 @@ const Grade = () => {
     setTabData(key);
   }
   const handleOk = async (e) => {
+    //有问题？？？好像
     e.preventDefault();
     const params = {
       ...form.getFieldValue(),
