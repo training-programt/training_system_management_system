@@ -133,6 +133,8 @@ class MenuController extends Controller {
           }
         }
       )
+    // console.log(meunDelete)
+
       const addMenu = await ctx.model.Menu.update(
         { _id: params.parent },
         {
@@ -142,6 +144,7 @@ class MenuController extends Controller {
         }
       )
     }
+
     if (params.role !== findMenu[0].role) {
       const roleDelete = await ctx.model.Role.update(
         { _id: findMenu[0].role },
@@ -166,7 +169,7 @@ class MenuController extends Controller {
         $set: {
           sort: params.sort,
           name: params.name,
-          key: params.key,
+          path: params.path,
           icon: params.icon,
           level: params.level,
           role: params.role,
@@ -174,7 +177,7 @@ class MenuController extends Controller {
         }
       }
     );
-    console.log(res)
+    // console.log(res)
     if (res.ok == 1) {
       ctx.body = {
         total: 0,

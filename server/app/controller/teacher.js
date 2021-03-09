@@ -29,6 +29,7 @@ class TeacherController extends Controller {
   async addTeacher() {
     const { ctx } = this;
     let params = await ctx.request.body;
+    console.log(params)
     const teachers = await ctx.service.teacher.addTeacher(params)
     const teachRoom = await ctx.model.TeachRoom.update(
       { _id: params.teachRoom },

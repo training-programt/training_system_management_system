@@ -21,10 +21,10 @@ class CourseLeaderController extends Controller {
     const data = await ctx.model.Teacher.find({_id:params._id});
     const syllabus = await ctx.model.Syllabus.find({ course_info: data[0].course})
     .populate('course_info')
-    // .populate('teaching_goal')
-    // .populate('theory_teaching')
-    // .populate('practice_teaching')
-    // .populate('assessment')
+    .populate('teaching_goal')
+    .populate('theory_teaching')
+    .populate('practice_teaching')
+    .populate('assessment')
     .populate('reviewer')
     .sort('sort');
     ctx.body = {

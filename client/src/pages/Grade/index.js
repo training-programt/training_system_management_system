@@ -1,15 +1,22 @@
-import React, { useState, useMemo,useEffect } from 'react';
-import { Table, Button, Tabs, Popconfirm, } from 'antd';
+import React, { useState, useMemo, useEffect } from 'react';
+import { Table, Button, Modal, Form, message, Select, Input, InputNumber, Tabs, Popconfirm, } from 'antd';
 const { TabPane } = Tabs;
 import HeaderComponent from '../../components/header'
+import { SearchOutlined, PlusOutlined } from '@ant-design/icons';
 import { useSelector } from 'react-redux';
 import './index.less'
 const Grade = () => {
   const [visible, setVisible] = useState(false);//弹窗新增和编辑
   const [loading, setLoading] = useState(false);
+  const [form] = Form.useForm();
+  const [form1] = Form.useForm();
   const [gradeData, setGradeData] = useState([]);
-  const [semesterData, setSemesterData] = useState([])
-  const [tabKey, setTabKey] = useState('tab1')
+  const [isEdit, setIsEdit] = useState(false);
+  const [confirmLoading, setConfirmLoading] = useState(false);
+  const [semesterData, setSemesterData] = useState([]);
+  const [tab, setTabData] = useState(1);
+  const [titles, setTitlesData] = useState('新增年级');
+  const [majorData, setMajorData] = useState([]);
   const gradeColumns = [
     { title: '序号', align: 'center', fixed: 'left', render: (text, record, index) => `${index + 1}` },
     {
@@ -21,10 +28,10 @@ const Grade = () => {
       title: '年级人数',
       dataIndex: 'studentNumber',
       align: 'center',
-      render:(text,record)=>{
+      render: (text, record) => {
         let count = 0;
-        for(let i = 0;i<record.studentNumber.length;i ++){
-          count +=record.studentNumber[i].count
+        for (let i = 0; i < record.studentNumber.length; i++) {
+          count += record.studentNumber[i].count
         }
         return count
       }
@@ -34,10 +41,10 @@ const Grade = () => {
       dataIndex: 'operation',
       render: (text, record) => (
         <div>
-          <Button type="link" onClick={edit}>编辑</Button>
-          <Popconfirm title="确定删除？" okText="确定" cancelText="取消">
-            <Button type="link" onClick={del}>删除</Button>
-          </Popconfirm>
+          <Button type="link" onClick={() => editGrade(record)}>编辑</Button>
+          {/* <Popconfirm title="确定删除？" okText="确定" cancelText="取消"> */}
+            <Button type="link" onClick={() => delGrade(record)}>删除</Button>
+          {/* </Popconfirm> */}
         </div>
       ),
     },
@@ -46,7 +53,7 @@ const Grade = () => {
     { title: '序号', align: 'center', fixed: 'left', render: (text, record, index) => `${index + 1}` },
     {
       title: '学期名字',
-      dataIndex: 'name',
+      dataIndex: 'semesterName',
       align: 'center',
     },
     {
@@ -54,23 +61,12 @@ const Grade = () => {
       dataIndex: 'operation',
       render: (text, record) => (
         <div>
-          <Button type="link" onClick={edit}>编辑</Button>
-          <Popconfirm title="确定删除？" okText="确定" cancelText="取消">
-            <Button type="link" onClick={del}>删除</Button>
-          </Popconfirm>
+          <Button type="link" onClick={() => editSemester(record)}>编辑</Button>
+            <Button type="link" onClick={() => delSemester(record)}>删除</Button>
         </div>
       ),
     },
   ];
-  const del = () => {
-  };
-  //编辑
-  const edit = () => {
-    setVisible(true);
-  };
-  const add = () => {
-
-  }
   useEffect(() => {
     setLoading(true)
     const res = React.$axios.get('/getGrade').then((gradeData) => {
@@ -79,35 +75,234 @@ const Grade = () => {
     const res1 = React.$axios.get('/getSemester').then((semesterData) => {
       setSemesterData(semesterData.data);
     })
+    const major = React.$axios.get('/getMajor').then((res) => {
+      setMajorData(res.data)
+    })
     setLoading(false)
   }, [])
-  const callback=(key)=>{
-    // console.log(key);
+
+
+  const addGrade = () => {
+    setVisible(true);
+    form.resetFields()
+    setTitlesData('新增年级')
+    setIsEdit(false)
   }
+  const addSemester = () => {
+    setVisible(true);
+    form1.resetFields()
+    setTitlesData('新增学期')
+    setIsEdit(false)
+  }
+  //编辑
+  const editGrade = (record) => {
+    setVisible(true);
+    setTitlesData('编辑年级')
+    form.resetFields()
+    setIsEdit(true)
+    let data = {
+      _id: record._id,
+      name: record.name,
+      // studentNumber: record.studentNumber._id,
+    }
+    form.setFieldsValue(data)
+  };
+  const editSemester = (record) => {
+    setTitlesData('编辑学期')
+    setVisible(true);
+    form1.resetFields()
+    setVisible(true);
+    let data = {
+      _id: record._id,
+      semesterName: record.semesterName,
+    }
+    form1.setFieldsValue(data)
+  };
+  const delGrade = async(record) => {
+    const params = {
+      _id: record._id,
+    }
+    const res = await React.$axios.post('/delGrade', params)
+    if (res && res.isSucceed) {
+      message.success(res.message);
+      const newGrade = await React.$axios.get(
+        '/getGrade'
+      )
+      setGradeData(newGrade.data);
+    } else {
+      message.error(res.message);
+    }
+  };
+  const delSemester = async(record) => {
+    const params = {
+      _id: record._id,
+    }
+    const res = await React.$axios.post('/delSemester', params)
+    if (res.isSucceed) {
+      message.success(res.message);
+      const newSemester = await React.$axios.get(
+        '/getSemester'
+      )
+      setSemesterData(newSemester.data);
+    } else {
+      message.error(res.message);
+    }
+  };
+  const callback = (key) => {
+    setTabData(key);
+  }
+  const handleOk = async (e) => {
+    //有问题？？？好像
+    e.preventDefault();
+    const params = {
+      ...form.getFieldValue(),
+    }
+    const params1 = {
+      ...form1.getFieldValue(),
+    }
+    if (!isEdit) {
+      if (tab === 1) {
+        console.log(tab)
+        const addGrade = await React.$axios.post(
+          '/addGrade',
+          params,
+        );
+        if (addGrade.isSucceed) {
+          message.success(addGrade.message)
+          const newGrade = await React.$axios.get(
+            '/getGrade'
+          )
+          setGradeData(newGrade.data);
+        } else {
+          message.error(addGrade.message)
+        }
+      } else {
+        const addSemester = await React.$axios.post(
+          '/updateSemester',
+          params1,
+        );
+        if (addSemester.isSucceed) {
+          message.success(addSemester.message)
+          const newSemester = await React.$axios.get(
+            '/getSemester'
+          )
+          setSemesterData(newSemester.data);
+        } else {
+          message.error(addSemester.message)
+        }
+      }
+      setVisible(false);
+    } else {
+      if (tab === 1) {
+        const res = await React.$axios.post(
+          '/updateGrade',
+          params,
+        );
+        if (res.isSucceed) {
+          message.success('修改成功');
+          const res = await React.$axios.get(
+            '/getGrade'
+          )
+          setGradeData(res.data);
+        } else {
+          message.error('修改失败');
+        }
+      } else if (tab === 2) {
+        const res = await React.$axios.post(
+          '/updateSemester',
+          params,
+        );
+        if (res.isSucceed) {
+          message.success('修改成功');
+          const res = await React.$axios.get(
+            '/getSemester'
+          )
+          setSemesterData(res.data);
+        } else {
+          message.error('修改失败');
+        }
+      }
+    }
+    setVisible(false);
+  };
+
+  const handleCancel = () => {
+    setVisible(false);
+  };
   return (
     <div className="gradeInsLeader">
       <HeaderComponent title="年级管理" />
       <div className="body-wrap">
         <Tabs defaultActiveKey="1" onChange={callback}>
           <TabPane tab="年级管理" key="1">
+            <Button type="primary" icon={<PlusOutlined />} onClick={addGrade}>新增年级</Button>
             <Table
               dataSource={gradeData}
               columns={gradeColumns}
               loading={loading}
               bordered
+              rowKey={record => record._id}
             >
             </Table>
           </TabPane>
           <TabPane tab="学期管理" key="2">
+            <Button type="primary" icon={<PlusOutlined />} onClick={addSemester}>新增学期</Button>
             <Table
               dataSource={semesterData}
               columns={semesterColumns}
               loading={loading}
               bordered
+              rowKey={record => record._id}
             >
             </Table>
           </TabPane>
         </Tabs>
+        <Modal
+          visible={visible}
+          onOk={handleOk}
+          confirmLoading={confirmLoading}
+          onCancel={handleCancel}
+          destroyOnClose
+          title={titles}
+          maskClosable={true}
+          getContainer={false}
+          footer={[
+            <Button key="back" onClick={handleCancel}>
+              取消
+              </Button>,
+            <Button key="submit" type="primary" loading={loading} onClick={handleOk}>
+              确认
+              </Button>
+          ]}
+        >
+
+          {
+            tab === 1 ?
+              <Form form={form}>
+                <Form.Item name="name" label="年级名字" rules={[{ required: true, message: '请输入年级名!' }]}>
+                  <Input placeholder="年级名字" />
+                </Form.Item>
+                <Form.Item
+                  name="studentNumber"
+                  label="包含专业"
+                  rules={[{ required: true, message: '请选择包含专业!' }]}
+                >
+                  <Select placeholder="包含专业" allowClear mode="tags">
+                    {
+                      majorData && majorData.map(item => (<Select.Option key={item._id} value={item._id}>{item.name}</Select.Option>))
+                    }
+                  </Select>
+                </Form.Item>
+              </Form>
+              :
+              <Form form={form1}>
+                <Form.Item name="semesterName" label="学期名字" rules={[{ required: true, message: '请输入学期名字!' }]}>
+                  <Input />
+                </Form.Item>
+              </Form>
+          }
+
+        </Modal>
       </div>
     </div>
   )

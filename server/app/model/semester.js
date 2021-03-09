@@ -4,7 +4,7 @@ module.exports = app => {
   const mongoose = app.mongoose;
   const Schema = mongoose.Schema;
   const SemesterSchema = new mongoose.Schema({
-    name: { type: String },
+    semesterName: { type: String },
   })
 
   return mongoose.model('Semester', SemesterSchema, 'semester');

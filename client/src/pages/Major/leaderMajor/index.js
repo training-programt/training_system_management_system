@@ -127,8 +127,8 @@ useEffect(()=>{
         '/updateMajor',
         params,
       );
-      if (res && res.isSucceed) {
-        message.success(res.message);
+      if (res.isSucceed) {
+        message.success('新增成功');
         const res = await React.$axios.get(
           '/getMajor'
         )
@@ -168,7 +168,6 @@ useEffect(()=>{
           >
           </Table>
           <Modal
-            title="新增专业"
             visible={visible}
             onOk={handleOk}
             confirmLoading={confirmLoading}

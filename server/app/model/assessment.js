@@ -13,7 +13,7 @@ module.exports = app => {
         type:Schema.Types.ObjectId,
         ref:'TeachingGoal'
     }],//课程目标(包括了考核方式和占比AttendanceProportion)
-    test:{type:Boolean},//考核方式，考试、考查
+    test:{type:String},//考核方式，考试、考查
     check:{type:Boolean},
     assessment_process:{type:Number},//成绩构成比例 过程考核占比
     In_class_practice:{type:Number},//课内实践占比

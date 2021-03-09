@@ -14,10 +14,10 @@ module.exports = app => {
     //   type: Schema.Types.ObjectId,
     //   ref: 'TeachRoom'
     // }],
-    // courseList: [{//课程
-    //   type: Schema.Types.ObjectId,
-    //   ref: 'Course'
-    // }],
+    courseList: [{//课程
+      type: Schema.Types.ObjectId,
+      ref: 'Course'
+    }],
   })
 
   CollegeSchema.virtual('majorList', {
@@ -34,12 +34,12 @@ module.exports = app => {
     ref: 'TeachRoom'
   })
 //学院和课程相关联
-  CollegeSchema.virtual('courseList', {
-    localField: '_id',
-    foreignField: 'unit',
-    justOne: false,
-    ref: 'Course'
-  })
+  // CollegeSchema.virtual('courseList', {
+  //   localField: '_id',
+  //   foreignField: 'unit',
+  //   justOne: false,
+  //   ref: 'Course'
+  // })
 
   return mongoose.model('College', CollegeSchema, 'college');
 }
