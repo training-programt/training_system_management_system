@@ -36,7 +36,7 @@ class NationalRequirementService extends Service {
 
   async addPoint(params) {
     const { ctx} = this;
-    const res = await ctx.model.NationalRequirement.update(
+    const res = await ctx.model.NationalRequirement.findByIdAndUpdate(
       { _id: params._id },
       {
         $push: {

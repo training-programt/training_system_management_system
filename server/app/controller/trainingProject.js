@@ -1,12 +1,12 @@
 'use strict';
 const Controller = require('egg').Controller;
- 
+
 class TrainingProjectController extends Controller {
 
   async getProjectList() {
     const { ctx } = this;
     const res = await ctx.service.trainingProject.getProjectList()
-    if(res) {
+    if (res) {
       ctx.body = {
         total: 0,
         data: res,
@@ -15,13 +15,12 @@ class TrainingProjectController extends Controller {
       }
     }
   }
-  
+
   async createProject() {
     const { ctx } = this;
     const params = ctx.request.body;
-    console.log(params)
     const res = await ctx.service.trainingProject.createProject(params)
-    if(res) {
+    if (res) {
       ctx.body = {
         total: 0,
         data: res,
@@ -34,9 +33,8 @@ class TrainingProjectController extends Controller {
   async updateProject() {
     const { ctx } = this;
     const params = ctx.request.body;
-    console.log(params)
     const res = await ctx.service.trainingProject.updateProject(params)
-    if(res) {
+    if (res) {
       ctx.body = {
         total: 0,
         data: res,
@@ -49,9 +47,8 @@ class TrainingProjectController extends Controller {
   async updateObject() {
     const { ctx } = this;
     const params = ctx.request.body;
-    console.log(params)
     let res;
-    if(params.objectId) {
+    if (params.objectId) {
       res = await ctx.service.trainingObjective.updateObject(params)
     } else {
       res = await ctx.service.trainingObjective.createObject(params)
@@ -61,8 +58,7 @@ class TrainingProjectController extends Controller {
       }
       await ctx.service.trainingProject.updateProject(data)
     }
-    console.log(res)
-    if(res) {
+    if (res) {
       ctx.body = {
         total: 0,
         data: res,
@@ -75,9 +71,17 @@ class TrainingProjectController extends Controller {
   async updateRequirement() {
     const { ctx } = this;
     const params = ctx.request.body;
-    console.log(params)
+    for (let i = 0; i < params.majorRequirement.length; i++) {
+      let point = params.majorRequirement[i].point;
+      if (point) {
+        let tempData = await ctx.service.point.addPoint(point)
+        params.majorRequirement[i].point = tempData.map(item => item._id)
+      } else {
+        params.majorRequirement[i].point = []
+      }
+    }
     let res;
-    if(params.requirementId) {
+    if (params.requirementId) {
       res = await ctx.service.graduationRequirement.updateRequirement(params)
     } else {
       res = await ctx.service.graduationRequirement.createRequirement(params)
@@ -87,8 +91,7 @@ class TrainingProjectController extends Controller {
       }
       await ctx.service.trainingProject.updateProject(data)
     }
-    console.log(res)
-    if(res) {
+    if (res) {
       ctx.body = {
         total: 0,
         data: res,
@@ -119,7 +122,7 @@ class TrainingProjectController extends Controller {
       };
     }
   }
-  
+
 }
- 
+
 module.exports = TrainingProjectController;

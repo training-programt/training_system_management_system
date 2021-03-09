@@ -6,5 +6,5 @@ module.exports = app => {
   router.post('/updateNationalRequirement', controller.nationalRequirement.updateRequirement);
   router.post('/delNationalRequirement', controller.nationalRequirement.delRequirement);
   router.post('/downloadRequirement', controller.nationalRequirement.downloadRequirement);
-  router.post('/addPoint', controller.nationalRequirement.addPoint);
+  // router.post('/addPoint', controller.nationalRequirement.addPoint);
 };

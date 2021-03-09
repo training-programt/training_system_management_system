@@ -51,17 +51,20 @@ const AddTrainingProject = () => {
   ];
 
   const next = () => {
-    const data = childRef.current.saveProject()
+    
     switch (current) {
       case 0: {
+        const data = childRef.current.saveProject()
         initProject(data)
         break;
       }
       case 1: {
+        const data = childRef.current.saveProject()
         saveObject(data)
         break;
       }
       case 2: {
+        const data = childRef.current.saveProject()
         saveRequirement(data)
         break;
       }
@@ -75,6 +78,7 @@ const AddTrainingProject = () => {
   };
 
   const initProject = async (data) => {
+    if(acProject.length) return false;
     const newTime = new Date().getTime()
     const params = {
       ...data,
@@ -123,7 +127,7 @@ const AddTrainingProject = () => {
         )}
 
         <Button icon={<SaveOutlined />}>暂存</Button>
-        <Button icon={<RollbackOutlined />}><Link to="/trainingProject" style={{ color: '#000', marginLeft: '8px' }}>返回</Link></Button>
+       <Link to="/trainingProject" style={{ color: '#000', marginLeft: '8px' }}><Button icon={<RollbackOutlined />}>返回</Button></Link>
       </div>
 
     </div>

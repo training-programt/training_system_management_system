@@ -1,8 +1,8 @@
 import React, { useState, useImperativeHandle, forwardRef } from 'react'
 
-import { Form, Input, Button, List, Collapse, Space } from 'antd';
+import { Form, Input, Button, List, Collapse, Space, Modal } from 'antd';
 import { PlusOutlined } from '@ant-design/icons';
-
+import api from '@/apis/trainingProject'
 const { Panel } = Collapse;
 
 const data = [
@@ -56,21 +56,23 @@ const data = [
   },
 ];
 
-const layout = {
-  labelCol: { span: 3 },
-  wrapperCol: { span: 21 },
-};
-
-const Requirements = (props, ref)  => {
+const Requirements = (props, ref) => {
 
   const [form1] = Form.useForm();
   const [form2] = Form.useForm();
+  const [formPoint] = Form.useForm();
   const [showMajorForm, setShowMajorForm] = useState(true)
   const [showForm, setShowForm] = useState(false);
   const [majorRequirement, setMajorRequirement] = useState('');
   const [requirementList, setRequirementList] = useState([])
   const [isPointVisible, setIsPointVisible] = useState(false);
+  const [acRequirement, setAcRequirement] = useState(0)
 
+
+  const formItemLayout = {
+    labelCol: { span: 4 },
+    wrapperCol: { span: 20 },
+  };
 
   const addMajorRequirement = () => {
     setMajorRequirement(form1.getFieldsValue().description);
@@ -78,15 +80,23 @@ const Requirements = (props, ref)  => {
   }
 
   const addRequirementItem = () => {
-    setRequirementList([...requirementList, form2.getFieldsValue()])
+    // console.log(requirementList)
+    let params = {
+      ...form2.getFieldsValue(),
+      point: [],
+    }
+    console.log(params)
+    let tempList = [...requirementList];
+    tempList.push(params)
+    setRequirementList(tempList)
     setShowForm(false)
     form2.resetFields()
   }
 
-  const delRequirementItem = (index) => {
-    console.log(index)
-    requirementList.splice(index + 1, 1);
-  }
+  // const delRequirementItem = (index) => {
+  //   console.log(index)
+  //   requirementList.splice(index + 1, 1);
+  // }
 
 
   useImperativeHandle(ref, () => {
@@ -100,8 +110,9 @@ const Requirements = (props, ref)  => {
     }
   })
 
-  const showPointModal = (item) => {
-    setAcRequirement(item)
+  const showPointModal = (index) => {
+    // console.log(item)
+    setAcRequirement(index)
     formPoint.resetFields()
     setIsPointVisible(true);
   }
@@ -136,14 +147,43 @@ const Requirements = (props, ref)  => {
     form.setFieldsValue(record)
   }
 
+  const handlePointOk = async () => {
+    // const res = await React.$axios.post(api.addPoint, formPoint.getFieldValue());
+    // if (res && res.isSucceed) {
+    //   console.log(res)
+      let tempList = [...requirementList];
+      // tempList[acRequirement].point.push(res.data._id)
+      tempList[acRequirement].point.push(formPoint.getFieldValue())
+      setRequirementList(tempList)
+    // }
+    console.log(requirementList)
+    // getRequirement()
+    setIsPointVisible(false);
+  }
+
+  const handlePointCancel = () => {
+    formPoint.resetFields(),
+      setIsPointVisible(false);
+  }
+
+  const useRequirementItem = (item) => {
+    setRequirementList([...requirementList, item])
+  }
+
+  const delRequirementItem = (index) => {
+    let tempData = [...requirementList]
+    tempData.splice(index,1); 
+    setRequirementList(tempData)
+  }
+
   const listHeader = (item, index) => {
     return (
       <>
-        <div style={{ color: 'rgba(0,0,0,0.85)' }}>毕业要求{index + 1}：{item.national_name}</div>
+        <div style={{ color: 'rgba(0,0,0,0.85)' }}>毕业要求{index + 1}：{item.name}</div>
         <div style={{ color: 'rgba(0,0,0,0.45)', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-          <div style={{ width: '90%' }}>{item.nation_description}</div>
+          <div style={{ width: '90%' }}>{item.description}</div>
           <Space>
-            <Button type='link' size='small' onClick={() => showPointModal(item._id)}>新增指标点</Button>
+            <Button type='link' size='small' onClick={() => showPointModal(index)}>新增指标点</Button>
             <Button type='link' size='small' onClick={() => showEditModal(item)}>编辑</Button>
             <Button type='link' size='small' onClick={() => delRequirement(item)}>删除</Button>
           </Space>
@@ -151,7 +191,6 @@ const Requirements = (props, ref)  => {
       </>
     )
   }
-
 
   return (
     <div className="train-object">
@@ -193,11 +232,13 @@ const Requirements = (props, ref)  => {
                       dataSource={item.point}
                       renderItem={(itemList, index) => (
                         <List.Item
-                          actions={[<a key="list-loadmore-edit" style={{fontSize: '12px'}}>编辑</a>, <a key="list-loadmore-more" style={{fontSize: '12px'}}>删除</a>]}
+                          actions={[
+                            <a key="list-loadmore-edit" style={{ fontSize: '12px' }}>编辑</a>, 
+                            <a key="list-loadmore-more" style={{ fontSize: '12px' }} onClick={() => delRequirementItem(index)}>删除</a>
+                          ]}
                         >
                           <List.Item.Meta
-                            title={'指标点' + (index + 1) + '：' + itemList.name}
-                            description={itemList.description}
+                            title={'指标点' + (index + 1) + '：' + itemList.content}
                           />
                         </List.Item>
                       )}
@@ -227,7 +268,7 @@ const Requirements = (props, ref)  => {
 
           {
             showForm ? (
-              <Form form={form2} {...layout}>
+              <Form form={form2} {...formItemLayout}>
                 <Form.Item
                   label="标题"
                   name='name'
@@ -243,7 +284,7 @@ const Requirements = (props, ref)  => {
                   <Input.TextArea />
                 </Form.Item>
                 <Button onClick={addRequirementItem} >添加</Button>
-                <Button onClick={() =>setShowForm(false)} >取消</Button>
+                <Button onClick={() => setShowForm(false)} >取消</Button>
               </Form>
             )
               : <Button type="dashed" onClick={() => setShowForm(true)} block icon={<PlusOutlined />}>添加专业毕业要求</Button>
@@ -262,7 +303,7 @@ const Requirements = (props, ref)  => {
             dataSource={data}
             renderItem={(item, index) => (
               <List.Item
-                actions={[<Button type="link" >应用</Button>]}
+                actions={[<Button type="link" onClick={() => useRequirementItem(item)}>应用</Button>]}
               >
                 <List.Item.Meta
                   title={'毕业要求' + (index + 1) + '：' + item.title}
@@ -273,6 +314,35 @@ const Requirements = (props, ref)  => {
           />
         </div>
       </div>
+      <Modal
+        visible={isPointVisible}
+        width={680}
+        title={'新增指标点'}
+        centered
+        maskClosable={true}
+        destroyOnClose
+        onOk={handlePointOk}
+        onCancel={handlePointCancel}
+        footer={[
+          <Button key="back" onClick={handlePointCancel}>取消</Button>,
+          <Button key="submit" type="primary" onClick={handlePointOk}>确认</Button>
+        ]}
+      >
+        <Form {...formItemLayout} form={formPoint}>
+          <Form.Item
+            label='指标点内容'
+            name="content"
+            rules={[
+              { required: true, message: '指标点内容不能为空' },
+            ]}
+          >
+            <Input.TextArea
+              autoSize={{ minRows: 5, maxRows: 5 }}
+              placeholder="请输入指标点内容描述"
+            />
+          </Form.Item>
+        </Form>
+      </Modal>
     </div>
   )
 }

@@ -5,5 +5,5 @@ export default {
   delProject: '/delProject',
   updateObject: '/updateObject',
   updateRequirement: '/updateRequirement',
-  
+  addPoint: '/addPoint'
 }
