@@ -89,7 +89,7 @@ const Course = () => {
       key: 'operation',
       render: (text, record) => (
         <div>
-          <Button type="link" onClick={edit}>编辑</Button>
+          <Button type="link" onClick={()=>{edit(record)}}>编辑</Button>
           <Button type="link" onClick={() => { del(record) }}>删除</Button>
           <Button type="link" onClick={() => { showDrawer(record) }}>详情查看</Button>
         </div>
@@ -117,6 +117,7 @@ const Course = () => {
   const rowSelection = {
     type: 'checkout',
     onChange: (selectedRowKeys, selectedRows) => {
+      // console.log(selectedRowKeys)
       setSelectedRowKeys([...selectedRows])
     },
   };
@@ -135,10 +136,10 @@ const Course = () => {
       _id: record._id,
       name: record.name,
       code: record.code,
-      header: record.header.name,
-      unit: record.unit.name,
+      // header: record.header?record.header.name:"",
+      // unit: record.unit?record.unit.name:"",
       type: record.type,
-      semester: record.semester.semesterName,
+      // semester: record.semester?record.semester.semesterName:"",
       weekly_hours: record.weekly_hours,
       within: record.within,
       credits: record.credits,
@@ -151,6 +152,7 @@ const Course = () => {
       degree: record.degree,
       direction: record.direction,
       introduce: record.introduce,
+      // system:record.system?record.system.name:"",
       course_selection_group: record.course_selection_group,
       assessment_method: record.assessment_method,
       flag_fuse: record.flag_fuse
@@ -164,8 +166,8 @@ const Course = () => {
       _id: record._id,
       name: record.name,
       code: record.code,
-      header: record.header.name,
-      unit: record.unit.name,
+      header: record.header?record.header.name:"",
+      unit: record.unit?record.unit.name:"",
       type: record.type,
       semester: record.semester ? record.semester.semesterName : "",
       weekly_hours: record.weekly_hours,
@@ -179,13 +181,27 @@ const Course = () => {
       degree: record.degree,
       direction: record.direction,
       introduce: record.introduce,
+      system:record.system?record.system.name:"",
       course_selection_group: record.course_selection_group,
       assessment_method: record.assessment_method,
       flag_fuse: record.flag_fuse
     })
     setDrawerVisible(true)
   };
-
+  const manyDelete = async()=>{
+    const res = await React.$axios.post('/delMany',selectedRowKeys);
+    console.log(res)
+    if (res.isSucceed) {
+      message.success('批量删除成功');
+      const res = await React.$axios.get(
+        '/getCourse',
+      )
+      setCourseData(res.data);
+      setTotal(res.total)
+    } else {
+      message.error('批量删除失败');
+    }
+  }
   const onClose = () => {
     setDrawerVisible(false)
   };
@@ -226,19 +242,19 @@ const Course = () => {
         message.error("新增失败")
       }
     } else if (isEdit) {
-      // const res = await React.$axios.post(
-      //   '/updateMajor',
-      //   params,
-      // );
-      // if (res.isSucceed) {
-      //   message.success('新增成功');
-      //   const res = await React.$axios.get(
-      //     '/getMajor'
-      //   )
-      //   setMajorData(res.data);
-      // } else {
-      //   message.error(res.message);
-      // }
+      const res = await React.$axios.post(
+        '/updateCourse',
+        params,
+      );
+      if (res.isSucceed) {
+        message.success('修改成功');
+        const res = await React.$axios.get(
+          '/getCourse'
+        )
+        setCourseData(res.data);
+      } else {
+        message.error(res.message);
+      }
     }
     setVisible(false);
 
@@ -286,7 +302,7 @@ const Course = () => {
           </div>
           <Button type="primary" icon={<SearchOutlined />} >查询</Button>
           <Button type="primary" icon={<PlusOutlined />} onClick={showAdd}>新增</Button>
-          <Button icon={<DeleteOutlined />}>批量删除</Button>
+          <Button icon={<DeleteOutlined />} onClick={manyDelete}>批量删除</Button>
           <Button icon={<UploadOutlined />}>批量导入</Button>
           <Button icon={<DownloadOutlined />}>批量导出</Button>
         </div>
