@@ -67,7 +67,7 @@ const Requirements = (props, ref) => {
   const [requirementList, setRequirementList] = useState([])
   const [isPointVisible, setIsPointVisible] = useState(false);
   const [acRequirement, setAcRequirement] = useState(0)
-
+  const [editRequirement, setEditRequirement] = useState(false);
 
   const formItemLayout = {
     labelCol: { span: 4 },
@@ -80,14 +80,20 @@ const Requirements = (props, ref) => {
   }
 
   const addRequirementItem = () => {
-    let params = {
-      ...form2.getFieldsValue(),
-      point: [],
+    if (!editRequirement) {
+      let params = {
+        ...form2.getFieldsValue(),
+        point: [],
+      }
+      let tempData = [...requirementList];
+      tempData.push(params)
+      setRequirementList(tempData)
+    } else {
+      const tempData = [...requirementList]
+      tempData[acRequirement] = form2.getFieldValue();
+      setRequirementList(tempData)
+      setEditRequirement(false)
     }
-    console.log(params)
-    let tempList = [...requirementList];
-    tempList.push(params)
-    setRequirementList(tempList)
     setShowForm(false)
     form2.resetFields()
   }
@@ -116,29 +122,6 @@ const Requirements = (props, ref) => {
     setIsPointVisible(true);
   }
 
-  const delRequirement = async (record) => {
-    if (!record.point.length) {
-      message.error('指标点不为空，无法删除！')
-      return false;
-    }
-    const params = {
-      _id: record._id,
-    }
-    const res = await React.$axios.post(
-      api.delNationalRequirement,
-      params,
-    );
-    if (res && res.isSucceed) {
-      message.success(res.message)
-      setLoading(true);
-      const data = await React.$axios.get(
-        api.getNationalRequirement,
-      )
-      setTableData(data.data);
-      setLoading(false);
-    }
-  }
-
   const showEditModal = (record) => {
     form2.resetFields()
     setIsModalVisible(true)
@@ -147,10 +130,10 @@ const Requirements = (props, ref) => {
   }
 
   const handlePointOk = async () => {
-      let tempList = [...requirementList];
+    let tempList = [...requirementList];
 
-      tempList[acRequirement].point.push(formPoint.getFieldValue())
-      setRequirementList(tempList)
+    tempList[acRequirement].point.push(formPoint.getFieldValue())
+    setRequirementList(tempList)
     // }
     console.log(requirementList)
     // getRequirement()
@@ -165,7 +148,7 @@ const Requirements = (props, ref) => {
   const useRequirementItem = (item) => {
     console.log(item)
     const obj = {
-      ...item, 
+      ...item,
       point: [],
     }
     setRequirementList([...requirementList, obj])
@@ -173,8 +156,16 @@ const Requirements = (props, ref) => {
 
   const delRequirementItem = (index) => {
     let tempData = [...requirementList]
-    tempData.splice(index,1); 
+    tempData.splice(index, 1);
     setRequirementList(tempData)
+  }
+
+  const editRequirementItem = index => {
+    console.log(index)
+    setEditRequirement(true)
+    setShowForm(true)
+    setAcRequirement(index)
+    form2.setFieldsValue(requirementList[index]);
   }
 
   const listHeader = (item, index) => {
@@ -185,8 +176,8 @@ const Requirements = (props, ref) => {
           <div style={{ width: '90%' }}>{item.description}</div>
           <Space>
             <Button type='link' size='small' onClick={() => showPointModal(index)}>新增指标点</Button>
-            <Button type='link' size='small' onClick={() => showEditModal(item)}>编辑</Button>
-            <Button type='link' size='small' onClick={() => delRequirement(item)}>删除</Button>
+            <Button type='link' size='small' onClick={() => editRequirementItem(index)}>编辑</Button>
+            <Button type='link' size='small' onClick={() => delRequirementItem(index)}>删除</Button>
           </Space>
         </div>
       </>
@@ -234,7 +225,7 @@ const Requirements = (props, ref) => {
                       renderItem={(itemList, index) => (
                         <List.Item
                           actions={[
-                            <a key="list-loadmore-edit" style={{ fontSize: '12px' }}>编辑</a>, 
+                            <a key="list-loadmore-edit" style={{ fontSize: '12px' }}>编辑</a>,
                             <a key="list-loadmore-more" style={{ fontSize: '12px' }} onClick={() => delRequirementItem(index)}>删除</a>
                           ]}
                         >
@@ -284,7 +275,7 @@ const Requirements = (props, ref) => {
                 >
                   <Input.TextArea />
                 </Form.Item>
-                <Button onClick={addRequirementItem} >添加</Button>
+                <Button onClick={addRequirementItem} >{editRequirement ? '确定' : '添加'}</Button>
                 <Button onClick={() => setShowForm(false)} >取消</Button>
               </Form>
             )

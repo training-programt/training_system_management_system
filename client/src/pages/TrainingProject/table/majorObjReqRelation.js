@@ -108,7 +108,7 @@ const TableOne = (props) => {
     , [])
 
   const formatData = (row, col) => {
-    let rowData = row.map((item, index) => {
+    let rowData = row.majorRequirement.map((item, index) => {
       return {
         first: '毕业要求' + (index + 1) + '：' + item.name
       }

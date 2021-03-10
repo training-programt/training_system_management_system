@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useImperativeHandle, forwardRef  } from 'react'
+import React, { useState, useEffect, useImperativeHandle, forwardRef } from 'react'
 import { Form, Input, Button, List } from 'antd';
 import { PlusOutlined } from '@ant-design/icons';
 import { setSession, getSession } from '@/utils'
@@ -39,6 +39,8 @@ const TrainObject = (props, ref) => {
   const [showForm, setShowForm] = useState(false);
   const [majorObject, setMajorObject] = useState('');
   const [objectList, setObjectList] = useState([])
+  const [editObject, setEditObject] = useState(false);
+  const [acObject, setAcObject] = useState(0)
 
   const addMajorObject = () => {
     setMajorObject(form1.getFieldsValue().majorObject);
@@ -46,10 +48,17 @@ const TrainObject = (props, ref) => {
   }
 
   const addObjectItem = () => {
-    setObjectList([...objectList, form2.getFieldsValue()])
+    if (!editObject) {
+      setObjectList([...objectList, form2.getFieldsValue()])
+    } else {
+      const tempData = [...objectList]
+      tempData[acObject] = form2.getFieldValue();
+      setObjectList(tempData)
+      setEditObject(false)
+    }
     setShowForm(false)
+
     form2.resetFields()
-    console.log(objectList)
   }
 
   const useObjectItem = (item) => {
@@ -58,8 +67,15 @@ const TrainObject = (props, ref) => {
 
   const delObjectItem = (index) => {
     let tempData = [...objectList]
-    tempData.splice(index,1); 
+    tempData.splice(index, 1);
     setObjectList(tempData)
+  }
+
+  const editObjectItem = index => {
+    setEditObject(true)
+    setShowForm(true)
+    setAcObject(index)
+    form2.setFieldsValue(objectList[index]);
   }
 
   useImperativeHandle(ref, () => {
@@ -72,27 +88,6 @@ const TrainObject = (props, ref) => {
       }
     }
   })
-
-  // const delObjectItem = (index) => {
-  //   console.log(index)
-  //   objectList.splice(index + 1, 1);
-  // }
-
-  // useEffect(() => {
-  //   const temData = JSON.parse(getSession('training-project-data'))
-  //   setMajorObject(temData.majorObject || '')
-  //   setObjectList(temData.objectList || [])
-  //   return () => {
-  //     const data = {
-  //       ...temData,
-  //       majorObject,
-  //       objectList
-  //     }
-  //     setTimeout(() => {
-  //       setSession('training-project-data', data)
-  //     }, 100);
-  //   }
-  // }, [])
 
   return (
     <div className="train-object">
@@ -129,7 +124,7 @@ const TrainObject = (props, ref) => {
             renderItem={(item, index) => (
               <List.Item
                 actions={[
-                  <Button type="link" size='small'>编辑</Button>,
+                  <Button type="link" size='small' onClick={() => editObjectItem(index)}>编辑</Button>,
                   <Button type="link" size='small' onClick={() => delObjectItem(index)}>删除</Button>
                 ]}
               >
@@ -158,7 +153,7 @@ const TrainObject = (props, ref) => {
                 >
                   <Input.TextArea />
                 </Form.Item>
-                <Button onClick={addObjectItem} >添加</Button>
+                <Button onClick={addObjectItem} >{editObject ? '确定' : '添加'}</Button>
                 <Button onClick={() => setShowForm(false)} >取消</Button>
               </Form>
             )

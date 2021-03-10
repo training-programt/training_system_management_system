@@ -71,9 +71,10 @@ class TrainingProjectController extends Controller {
   async updateRequirement() {
     const { ctx } = this;
     const params = ctx.request.body;
+    console.log(params)
     for (let i = 0; i < params.majorRequirement.length; i++) {
       let point = params.majorRequirement[i].point;
-      if (point) {
+      if (point.length) {
         let tempData = await ctx.service.point.addPoint(point)
         params.majorRequirement[i].point = tempData.map(item => item._id)
       } else {
@@ -129,7 +130,7 @@ class TrainingProjectController extends Controller {
     const data = await ctx.service.trainingProject.findObjAndReqByProject(params)
     console.log(data)
     const res = {
-      row: data.graduationRequirement.majorRequirement,
+      row: data.graduationRequirement,
       col: data.trainingObjective,
     }
 
