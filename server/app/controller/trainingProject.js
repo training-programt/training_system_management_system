@@ -142,6 +142,24 @@ class TrainingProjectController extends Controller {
       isSucceed: true,
     }
   }
+
+  async getTable2RowCol() {
+    const { ctx } = this;
+    const params = ctx.request.query;
+    const data = await ctx.service.trainingProject.findObjAndReqByProject(params)
+    const nationReq = await ctx.service.nationalRequirement.getAllRequirement();
+    console.log(nationReq)
+    const res = {
+      row: data.graduationRequirement.majorRequirement,
+      col: nationReq,
+    }
+    ctx.body = {
+      total: 0,
+      data: res,
+      code: 200,
+      isSucceed: true,
+    }
+  }
 }
 
 module.exports = TrainingProjectController;

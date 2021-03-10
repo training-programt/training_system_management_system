@@ -8,4 +8,6 @@ module.exports = app => {
   router.post('/updateObject', controller.trainingProject.updateObject);
   router.post('/updateRequirement', controller.trainingProject.updateRequirement);
   router.get('/getRowColData', controller.trainingProject.getRowColData);
+  router.get('/getTable2RowCol', controller.trainingProject.getTable2RowCol);
+
 };

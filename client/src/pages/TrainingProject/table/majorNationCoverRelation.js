@@ -5,12 +5,11 @@ import { createColumns, createRows } from '@/utils'
 
 const TableOne = (props) => {
   const EditableContext = React.createContext(null);
-
   const [projectId, setProjectId] = useState(props.project)
   const [firstRow, setFirstRow] = useState([])
   const [columnsTable, setColumnsTable] = useState([])
   const [tableData, setTableData] = useState([]);
-  const [explain, setExplain] = useState('H表示毕业要求对培养目标进行强支撑；M表示毕业要求对培养目标进行中支撑；L表示毕业要求对培养目标进行弱支撑。')
+  const [explain, setExplain] = useState('“√”表示本专业毕业要求对工程认证标准毕业要求进行覆盖。')
 
   const EditableRow = ({ index, ...props }) => {
     const [form] = Form.useForm();
@@ -92,12 +91,13 @@ const TableOne = (props) => {
 
     return <td {...restProps}>{childNode}</td>;
   };
+
   // 获取行列数据
   const getRowColData = async () => {
     const params = {
       _id: projectId,
     }
-    const res = await React.$axios.get(api.getTable1RowCol, params)
+    const res = await React.$axios.get(api.getTable2RowCol, params)
     if (res && res.isSucceed) {
       formatData(res.data.row, res.data.col)
     }
@@ -110,12 +110,12 @@ const TableOne = (props) => {
   const formatData = (row, col) => {
     let rowData = row.map((item, index) => {
       return {
-        first: '毕业要求' + (index + 1) + '：' + item.name
+        first: '毕业要求' + (index + 1),
       }
     })
-    let colData = col.specific_training_objectives.map((item, index) => {
+    let colData = col.map((item, index) => {
       return {
-        title: '培养目标' + (index + 1) + '：' + item.objective_name,
+        title: '毕业要求' + (index + 1),
         dataIndex: index,
         editable: true,
       }
@@ -145,7 +145,7 @@ const TableOne = (props) => {
     setTableData(newData)
   };
 
-  const columns = createColumns('毕业要求/培养目标', columnsTable).map((col) => {
+  const columns = createColumns('本专业毕业要求/工程认证标准要求', columnsTable).map((col) => {
     if (!col.editable) {
       return col;
     }
@@ -168,7 +168,7 @@ const TableOne = (props) => {
       relation: tableData,
       explain: explain,
     }
-    const res = await React.$axios.post(api.saveTableOne, params)
+    const res = await React.$axios.post(api.saveTableTwo, params)
     console.log(res)
   }
 

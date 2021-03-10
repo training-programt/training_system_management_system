@@ -6,6 +6,8 @@ export default {
   updateObject: '/updateObject',
   updateRequirement: '/updateRequirement',
   addPoint: '/addPoint',
-  getRowColData: '/getRowColData',
   saveTableOne: '/jys/tableOne',
+  saveTableTwo: '/jys/tableTwo',
+  getTable1RowCol: '/getRowColData',
+  getTable2RowCol: '/getTable2RowCol'
 }

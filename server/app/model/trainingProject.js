@@ -33,6 +33,10 @@ module.exports = app => {
       type: Schema.Types.ObjectId,
       ref: 'MajorObjReqRelation'
     },
+    majorNationCoverRelation: {//专业毕业要求与认证标准毕业要求覆盖情况
+      type: Schema.Types.ObjectId,
+      ref: 'MajorNationCoverRelation'
+    },
 
     core_disciplines:{type:String},//主干学科
     core_curriculum:{type:String},//专业核心课程、一段画？？多选框勾选出来合并成一段话

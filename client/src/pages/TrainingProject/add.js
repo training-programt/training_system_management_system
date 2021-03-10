@@ -38,7 +38,7 @@ const AddTrainingProject = () => {
     },
     {
       title: '矩阵关系',
-      content: <MatrixRelation project={acProject._id}/>,
+      content: <MatrixRelation project={acProject._id} />,
     },
     {
       title: '课程修读计划',
@@ -51,11 +51,12 @@ const AddTrainingProject = () => {
   ];
 
   const next = () => {
-    
+
     switch (current) {
       case 0: {
         const data = childRef.current.saveProject()
         initProject(data)
+
         break;
       }
       case 1: {
@@ -68,9 +69,10 @@ const AddTrainingProject = () => {
         saveRequirement(data)
         break;
       }
+      default: {
+        setCurrent(current + 1);
+      }
     }
-    
-    setCurrent(current + 1);
   };
 
   const prev = () => {
@@ -78,7 +80,7 @@ const AddTrainingProject = () => {
   };
 
   const initProject = async (data) => {
-    if(!acProject) return false;
+    if (!acProject) return false;
     const newTime = new Date().getTime()
     const params = {
       ...data,
@@ -87,24 +89,27 @@ const AddTrainingProject = () => {
     }
     const res = await React.$axios.post(api.createProject, params)
     setAcProject(res.data)
+    setCurrent(current + 1);
   }
 
   const saveObject = async (data) => {
+    if (!acProject) return false;
     const params = {
       ...data,
       _id: acProject._id,
     }
     const res = await React.$axios.post(api.updateObject, params)
+    setCurrent(current + 1);
   }
 
   const saveRequirement = async (data) => {
-    console.log(data)
+    if (!acProject) return false;
     const params = {
       ...data,
       _id: acProject._id,
     }
     const res = await React.$axios.post(api.updateRequirement, params)
-
+    setCurrent(current + 1);
   }
 
   return (
@@ -127,7 +132,7 @@ const AddTrainingProject = () => {
         )}
 
         <Button icon={<SaveOutlined />}>暂存</Button>
-       <Link to="/trainingProject" style={{ color: '#000', marginLeft: '8px' }}><Button icon={<RollbackOutlined />}>返回</Button></Link>
+        <Link to="/trainingProject" style={{ color: '#000', marginLeft: '8px' }}><Button icon={<RollbackOutlined />}>返回</Button></Link>
       </div>
 
     </div>

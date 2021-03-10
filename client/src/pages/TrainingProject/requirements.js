@@ -140,14 +140,15 @@ const Requirements = (props, ref) => {
   }
 
   const showEditModal = (record) => {
-    form.resetFields()
+    form2.resetFields()
     setIsModalVisible(true)
     setIsEdit(true)
-    form.setFieldsValue(record)
+    form2.setFieldsValue(record)
   }
 
   const handlePointOk = async () => {
       let tempList = [...requirementList];
+
       tempList[acRequirement].point.push(formPoint.getFieldValue())
       setRequirementList(tempList)
     // }
@@ -163,7 +164,11 @@ const Requirements = (props, ref) => {
 
   const useRequirementItem = (item) => {
     console.log(item)
-    setRequirementList([...requirementList, item])
+    const obj = {
+      ...item, 
+      point: [],
+    }
+    setRequirementList([...requirementList, obj])
   }
 
   const delRequirementItem = (index) => {
