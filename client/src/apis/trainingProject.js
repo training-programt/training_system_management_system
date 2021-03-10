@@ -5,5 +5,7 @@ export default {
   delProject: '/delProject',
   updateObject: '/updateObject',
   updateRequirement: '/updateRequirement',
-  addPoint: '/addPoint'
+  addPoint: '/addPoint',
+  getRowColData: '/getRowColData',
+  saveTableOne: '/jys/tableOne',
 }

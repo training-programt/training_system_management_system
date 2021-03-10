@@ -10,6 +10,12 @@ class NationalRequirementService extends Service {
     return result;
   }
 
+  async getAllRequirement() {
+    const { ctx } = this;
+    const res = await ctx.model.NationalRequirement.find()
+    return res
+  }
+
   async addRequirement(params) {
     const { ctx } = this;
     const res = await ctx.model.NationalRequirement.create(params);

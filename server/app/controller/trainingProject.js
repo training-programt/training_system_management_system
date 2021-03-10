@@ -123,6 +123,25 @@ class TrainingProjectController extends Controller {
     }
   }
 
+  async getRowColData() {
+    const { ctx } = this;
+    const params = ctx.request.query;
+    const data = await ctx.service.trainingProject.findObjAndReqByProject(params)
+    console.log(data)
+    const res = {
+      row: data.graduationRequirement.majorRequirement,
+      col: data.trainingObjective,
+    }
+
+    console.log(res)
+
+    ctx.body = {
+      total: 0,
+      data: res,
+      code: 200,
+      isSucceed: true,
+    }
+  }
 }
 
 module.exports = TrainingProjectController;

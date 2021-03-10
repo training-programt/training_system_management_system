@@ -18,7 +18,7 @@ const { Step } = Steps;
 
 const AddTrainingProject = () => {
   const [current, setCurrent] = useState(0);
-  const [acProject, setAcProject] = useState('')
+  const [acProject, setAcProject] = useState({})
   const [writer, setWriter] = useState(JSON.parse(getSession('userInfo'))._id)
 
   const childRef = useRef()
@@ -38,7 +38,7 @@ const AddTrainingProject = () => {
     },
     {
       title: '矩阵关系',
-      content: <MatrixRelation />,
+      content: <MatrixRelation project={acProject._id}/>,
     },
     {
       title: '课程修读计划',
@@ -78,7 +78,7 @@ const AddTrainingProject = () => {
   };
 
   const initProject = async (data) => {
-    if(acProject.length) return false;
+    if(!acProject) return false;
     const newTime = new Date().getTime()
     const params = {
       ...data,
@@ -86,13 +86,13 @@ const AddTrainingProject = () => {
       newTime,
     }
     const res = await React.$axios.post(api.createProject, params)
-    setAcProject(res.data._id)
+    setAcProject(res.data)
   }
 
   const saveObject = async (data) => {
     const params = {
       ...data,
-      _id: acProject,
+      _id: acProject._id,
     }
     const res = await React.$axios.post(api.updateObject, params)
   }
@@ -101,7 +101,7 @@ const AddTrainingProject = () => {
     console.log(data)
     const params = {
       ...data,
-      _id: acProject,
+      _id: acProject._id,
     }
     const res = await React.$axios.post(api.updateRequirement, params)
 

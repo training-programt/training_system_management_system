@@ -29,6 +29,11 @@ module.exports = app => {
       type: Schema.Types.ObjectId,
       ref: 'TrainingObjective'
     },
+    majorObjReqRelation: {//专业培养目标与毕业要求关系矩阵
+      type: Schema.Types.ObjectId,
+      ref: 'MajorObjReqRelation'
+    },
+
     core_disciplines:{type:String},//主干学科
     core_curriculum:{type:String},//专业核心课程、一段画？？多选框勾选出来合并成一段话
     practical_teaching_link:{type:String},//主要实践性教学环节

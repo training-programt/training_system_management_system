@@ -7,4 +7,5 @@ module.exports = app => {
   router.post('/updateProject', controller.trainingProject.updateProject);
   router.post('/updateObject', controller.trainingProject.updateObject);
   router.post('/updateRequirement', controller.trainingProject.updateRequirement);
+  router.get('/getRowColData', controller.trainingProject.getRowColData);
 };
