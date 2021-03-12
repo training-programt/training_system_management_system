@@ -117,7 +117,6 @@ const Course = () => {
   const rowSelection = {
     type: 'checkout',
     onChange: (selectedRowKeys, selectedRows) => {
-      // console.log(selectedRowKeys)
       setSelectedRowKeys([...selectedRows])
     },
   };

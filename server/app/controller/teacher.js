@@ -111,6 +111,44 @@ class TeacherController extends Controller {
     const { ctx } = this;
     const params = ctx.request.body;
     console.log(params)
+    const find  = await ctx.model.Teacher.find({_id:params._id})
+    console.log(find)
+    if(params.major!==find[0].major){
+      const majorChange = await ctx.model.Major.update(
+        { _id: find[0].major },
+        {
+          $pull: {
+            teachers: params._id
+          }
+        },
+      )
+      const newChange = await ctx.model.Major.update(
+        { _id: params.major },
+        {
+          $push: {
+            teachers: params._id
+          }
+        },
+      )
+    }
+    if(params.teachRoom!==find[0].teachRoom){
+      const teachRoomChange = await ctx.model.TeachRoom.update(
+        { _id: find[0].teachRoom },
+        {
+          $pull: {
+            teachers: params._id
+          }
+        },
+      )
+      const newChange = await ctx.model.TeachRoom.update(
+        { _id: params.teachRoom },
+        {
+          $push: {
+            teachers: params._id
+          }
+        },
+      )
+    }
     const data = await ctx.model.Teacher.findByIdAndUpdate(
       { _id: params._id },
       {

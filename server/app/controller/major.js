@@ -24,7 +24,13 @@ class MajorController extends Controller {
     }
     async getMajor() {
         const { ctx } = this;
-        const res = await ctx.model.Major.find({});
+        const res = await ctx.model.Major.find({})
+        .populate("semester")
+        .populate("teachers")
+        .populate("grade")
+        .populate("college")
+        .sort()
+
         ctx.body = {
             total: res.length,
             data: res,

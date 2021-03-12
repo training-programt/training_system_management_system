@@ -55,11 +55,17 @@ const LeaderTeacher = () => {
       dataIndex: 'course',
       align: 'center',
       render: (text, record) => {
-        let sum = ''
-        for (let i = 0; i < record.course.length; i++) {
-          sum = sum + record.course[i].name + '、'
+        // console.log(record)
+        if(record.course){
+          let sum = ''
+          for (let i = 0; i < record.course.length; i++) {
+            sum = sum + record.course[i].name + '、'
+          }
+          return sum
+        }else{
+          return ''
         }
-        return sum
+        
       }
     },
     { title: '专职/兼职', dataIndex: 'job', algin: 'center' },

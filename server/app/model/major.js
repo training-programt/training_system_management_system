@@ -24,7 +24,7 @@ module.exports = app => {
       type:Schema.Types.ObjectId,
       ref:'Semester'
     },
-  teachers:[{type:Schema.Types.ObjectId,ref:'teacher'}],
+  teachers:[{type:Schema.Types.ObjectId,ref:'Teacher'}],
   })
   MajorSchema.virtual('teachRoom', {
     localField: '_id',//内键,schema对应的模型Major的_id
