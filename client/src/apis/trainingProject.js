@@ -9,5 +9,9 @@ export default {
   saveTableOne: '/jys/tableOne',
   saveTableTwo: '/jys/tableTwo',
   getTable1RowCol: '/getRowColData',
-  getTable2RowCol: '/getTable2RowCol'
+  getTable2RowCol: '/getTable2RowCol',
+  getAllPoint: '/getAllPoint',
+  getCourse: '/getAllCourse',
+  addCurrRelationship: '/addCurrRelationship',
+  delCurrRelationship: '/delCurrRelationship',
 }

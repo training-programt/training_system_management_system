@@ -272,6 +272,17 @@ class CourseController extends Controller {
     }
 
   }
+
+  async getAllCourse() {
+    const { ctx } = this;
+    const res = await ctx.service.course.getAllCourse()
+    ctx.body = {
+      total: res.length,
+      data: res,
+      code: 200,
+      isSucceed: true,
+    }
+  }
 }
 
 module.exports = CourseController;

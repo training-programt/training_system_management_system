@@ -61,5 +61,11 @@ class CourseService extends Service {
             .sort('sort');
         return result;
     }
+
+    async getAllCourse() {
+        const { ctx } = this;
+        const result = await ctx.model.Course.find({}, {_id: true, name: true}).sort();
+        return result;
+    }
 }
 module.exports = CourseService;
