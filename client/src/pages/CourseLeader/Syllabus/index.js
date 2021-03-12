@@ -3,50 +3,36 @@ import { Link } from 'react-router-dom';
 import HeaderComponent from '@/components/header'
 import { Table, Input, Button, Popconfirm } from 'antd';
 import { PlusOutlined, DeleteOutlined, EditOutlined } from '@ant-design/icons';
-import { getSession} from '../../../utils';
+import { getSession } from '../../../utils';
 
 const Syllabus = () => {
   const [loading, setLoading] = useState(false);
   const [syllabusData, setSyllabusData] = useState([]);
-
+ 
   const professColumns = [
     { title: '序号', align: 'center', render: (text, record, index) => `${index + 1}` },
     {
       title: '课程名字',
       dataIndex: 'name',
       key: 'name',
-      render: (text, record) => {
-        return record.course_info.name ? record.course_info.name : ''
-      }
     },
     {
       title: '课程编码',
       dataIndex: 'code',
       key: 'code',
-      render: (text, record) => {
-        return record.course_info.code ? record.course_info.code : ''
-      }
     },
-    // {
-    //   title: '状态',
-    //   dataIndex: 'status',
-    //   key: 'status',
-    //   render: (text, record) => {
-    //     return text ? '已完成' : '未完成'
-    //   }
-    // },
     {
-      title: '修改时间',
-      dataIndex: 'modify_data',
-      key: 'modify_data',
+      title: '学分',
+      dataIndex: 'credits',
+      key: 'credits',
     },
     {
       title: '审核人',
       dataIndex: 'reviewer',
       key: 'reviewer',
-      render: (text, record) => {
-        return record.reviewer.name ? record.reviewer.name : ''
-      }
+      // render: (text, record) => {
+      //   return record.reviewer.name ? record.reviewer.name : ''
+      // }
     },
     {
       title: '操作',
@@ -54,10 +40,11 @@ const Syllabus = () => {
       key: 'operation',
       render: (text, record) => (
         <div>
-          <Link to={{ pathname: "/syllabus/add",state:{id:record._id} }}><Button size="small" type="link">编辑</Button></Link>
+          <Link to={{ pathname: "/syllabus/add", state: { data: record } }}><Button size="small" type="link" >编辑课程大纲</Button></Link>
           <Popconfirm title="确定删除？" okText="确定" cancelText="取消">
-            <Button type="link">删除</Button>
+            <Button type="link">删除课程大纲</Button>
           </Popconfirm>
+          <Button type="link">查看课程大纲</Button>
         </div>
       ),
     },
@@ -65,12 +52,18 @@ const Syllabus = () => {
   useEffect(() => {
     setLoading(true)
     const teacher = JSON.parse(getSession('userInfo'));
-    const params={
-      _id:teacher._id
+    const params = {
+      _id: teacher._id
     }
-    const res = React.$axios.post('/findSyllabus',params).then((syllabusData) => {
-      setSyllabusData(syllabusData.data)
+    const res = React.$axios.post('/findSyllabus', params).then((syllabusData) => {
+      console.log(syllabusData)
+      setSyllabusData(syllabusData.data[0].course)
     })
+    // const course = React.$axios.get('/getCourse').then((courseData) => {
+    //   console.log(courseData)
+    //   setSyllabusData(courseData.data)
+    //   setTotal(courseData.total)
+    // })
     setLoading(false)
   }, [])
   return (

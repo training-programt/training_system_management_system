@@ -155,7 +155,6 @@ class TeacherController extends Controller {
         $set: {
           name: params.name,
           password: params.password,
-          role: params.role,
           sex: params.sex,
           birthday: params.birthday,
           course: params.course,

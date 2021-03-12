@@ -68,9 +68,6 @@ const SyllabusShow = () => {
           <div className="search-box">
             <Input.Search placeholder="请输入课程名称" allowClear enterButton />
           </div>
-          <div className="operation-wrap">
-            <Link to="/syllabus/add"><Button type="primary" icon={<PlusOutlined />}>新增大纲</Button></Link>
-          </div>
         </div>
         <div className="table-wrap">
           <Table
