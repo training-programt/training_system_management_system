@@ -10,6 +10,12 @@ class NationalRequirementService extends Service {
     return result;
   }
 
+  async getAllRequirement() {
+    const { ctx } = this;
+    const res = await ctx.model.NationalRequirement.find()
+    return res
+  }
+
   async addRequirement(params) {
     const { ctx } = this;
     const res = await ctx.model.NationalRequirement.create(params);
@@ -32,6 +38,19 @@ class NationalRequirementService extends Service {
       }
     )
     return res;
+  }
+
+  async addPoint(params) {
+    const { ctx} = this;
+    const res = await ctx.model.NationalRequirement.findByIdAndUpdate(
+      { _id: params._id },
+      {
+        $push: {
+          point: params.pointData
+        }
+      }
+    )
+    return res
   }
 }
 module.exports = NationalRequirementService;

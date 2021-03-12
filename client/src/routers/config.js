@@ -8,6 +8,7 @@ import setting from './setting';
 import infoView from './infoView';
 import teachRoom from './teachRoom';
 import trainingProject from './trainingProject';
+import trainingObject from './trainingObject';
 import graduatoinRequirement from './graduatoinRequirement';
 import courseLeader from './courseLeader'
 const routesConfig = [
@@ -19,6 +20,7 @@ const routesConfig = [
   ...infoView,
   ...teachRoom,
   ...trainingProject,
+  ...trainingObject,
   ...graduatoinRequirement,
   ...courseLeader,
   ...setting,

@@ -4,4 +4,5 @@ export default {
   delNationalRequirement: '/delNationalRequirement',
   updateNationalRequirement: '/updateNationalRequirement',
   downloadRequirement: '/downloadRequirement',
+  addPoint: '/addPoint',
 }

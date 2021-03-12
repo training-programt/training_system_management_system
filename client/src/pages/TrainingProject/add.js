@@ -1,8 +1,11 @@
-import React, { useState } from 'react'
+import React, { useState, useRef } from 'react'
 import { Button, Steps, message } from 'antd'
 import { Link } from 'react-router-dom'
 import { ArrowLeftOutlined, ArrowRightOutlined, RollbackOutlined, SaveOutlined } from '@ant-design/icons';
 import './index.less'
+import api from '@/apis/trainingProject'
+import { setSession, getSession } from '@/utils'
+
 
 import InitPage from './initPage'
 import TrainObject from './trainObject'
@@ -15,23 +18,27 @@ const { Step } = Steps;
 
 const AddTrainingProject = () => {
   const [current, setCurrent] = useState(0);
+  const [acProject, setAcProject] = useState({})
+  const [writer, setWriter] = useState(JSON.parse(getSession('userInfo'))._id)
+
+  const childRef = useRef()
 
   const steps = [
     {
       title: '基础信息',
-      content: <InitPage />,
+      content: <InitPage ref={childRef} />,
     },
     {
       title: '培养目标',
-      content: <TrainObject />,
+      content: <TrainObject ref={childRef} />,
     },
     {
       title: '毕业要求',
-      content: <Requirements />,
+      content: <Requirements ref={childRef} />,
     },
     {
       title: '矩阵关系',
-      content: <MatrixRelation />,
+      content: <MatrixRelation project={acProject._id} />,
     },
     {
       title: '课程修读计划',
@@ -44,12 +51,66 @@ const AddTrainingProject = () => {
   ];
 
   const next = () => {
-    setCurrent(current + 1);
+
+    switch (current) {
+      case 0: {
+        const data = childRef.current.saveProject()
+        initProject(data)
+
+        break;
+      }
+      case 1: {
+        const data = childRef.current.saveProject()
+        saveObject(data)
+        break;
+      }
+      case 2: {
+        const data = childRef.current.saveProject()
+        saveRequirement(data)
+        break;
+      }
+      default: {
+        setCurrent(current + 1);
+      }
+    }
   };
 
   const prev = () => {
     setCurrent(current - 1);
   };
+
+  const initProject = async (data) => {
+    if (!acProject) return false;
+    const newTime = new Date().getTime()
+    const params = {
+      ...data,
+      writer,
+      newTime,
+    }
+    const res = await React.$axios.post(api.createProject, params)
+    setAcProject(res.data)
+    setCurrent(current + 1);
+  }
+
+  const saveObject = async (data) => {
+    if (!acProject) return false;
+    const params = {
+      ...data,
+      _id: acProject._id,
+    }
+    const res = await React.$axios.post(api.updateObject, params)
+    setCurrent(current + 1);
+  }
+
+  const saveRequirement = async (data) => {
+    if (!acProject) return false;
+    const params = {
+      ...data,
+      _id: acProject._id,
+    }
+    const res = await React.$axios.post(api.updateRequirement, params)
+    setCurrent(current + 1);
+  }
 
   return (
     <div className="training-project">
@@ -71,7 +132,7 @@ const AddTrainingProject = () => {
         )}
 
         <Button icon={<SaveOutlined />}>暂存</Button>
-        <Button icon={<RollbackOutlined />}><Link to="/trainingProject" style={{ color: '#000', marginLeft: '8px' }}>返回</Link></Button>
+        <Link to="/trainingProject" style={{ color: '#000', marginLeft: '8px' }}><Button icon={<RollbackOutlined />}>返回</Button></Link>
       </div>
 
     </div>

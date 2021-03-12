@@ -1,13 +1,27 @@
 import React, { useState, useMemo } from 'react'
 import { Link } from 'react-router-dom';
-import { Button, Input } from 'antd'
+import { Button, Input, Space, message } from 'antd'
 import HeaderComponent from '@/components/header'
 import TableComponent from '@/components/table'
 import { PlusOutlined, DeleteOutlined, EditOutlined } from '@ant-design/icons';
+import api from '@/apis/trainingProject'
 
 const TrainingProject = () => {
   const [loading, setLoading] = useState(false);
-  // const [tableData, setTableData] = useState([]);
+  const [tableData, setTableData] = useState([]);
+
+  const getProjectList = async () => {
+    setLoading(true)
+    const res = await React.$axios.get(api.getProjectList)
+    setLoading(false)
+    if (res && res.isSucceed) {
+      setTableData(res.data)
+    }
+  }
+
+  useMemo(() => {
+    getProjectList()
+  }, [])
 
   const tableSetting = {
     page: 1,
@@ -20,18 +34,6 @@ const TrainingProject = () => {
     }
   }
 
-  const tableData = [
-    {
-      _id: '1',
-      name: '2019-2020学年软件工程',
-      writer: '张三',
-      degree: '工学',
-      total_credits: 180,
-      createTime: '2020/12/12',
-      status: 1,
-    }
-  ]
-
   const columns = [
     {
       title: '名称',
@@ -40,6 +42,12 @@ const TrainingProject = () => {
     {
       title: '编写者',
       dataIndex: 'writer',
+      render: (text, record) => text.name || ''
+    },
+    {
+      title: '专业',
+      dataIndex: 'major',
+      render: (text, record) => text.name || ''
     },
     {
       title: '学位',
@@ -66,11 +74,27 @@ const TrainingProject = () => {
       width: '100',
       render: (text, record) => (
         <div style={{ textAlign: 'center' }}>
-          <Link to={{pathname: "trainingProject/edit", state: {id: text._id}}}><Button size="small" type="link">编辑</Button></Link>
+          <Space size="small">
+            <Link to={{ pathname: "trainingProject/edit", state: { id: text._id } }}><Button size="small" type="link">编辑</Button></Link>
+            <Button size="small" type="link" onClick={() => delProject(record)}>删除</Button>
+          </Space>
         </div>
       )
     },
   ]
+
+  const delProject = async (record) => {
+    const params = {
+      _id: record._id,
+    };
+    const res = await React.$axios.post(api.delProject, params);
+    if (res && res.isSucceed) {
+      message.success(res.message);
+    } else {
+      message.error(res.message);
+    }
+    getProjectList()
+  }
 
   return (
     <div className="page-container">

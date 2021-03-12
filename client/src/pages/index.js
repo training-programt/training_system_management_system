@@ -12,6 +12,7 @@ import TrainingScheme from "./InfoView/TrainingScheme";
 import TeachRoom from "./TeachRoom";
 import SectionDetails from "./TeachRoom/sectionDetails";
 import TrainingProject from './TrainingProject';
+import TrainingObject from './TrainingObject';
 import AddTrainingProject from './TrainingProject/add';
 import EditTrainingProject from './TrainingProject/edit';
 import Syllabus from "./CourseLeader/Syllabus";
@@ -33,6 +34,7 @@ export {
   Syllabus,
   SyllabusAdd,
   TrainingProject,
+  TrainingObject,
   TrainingScheme,
   AddTrainingProject,
   EditTrainingProject,

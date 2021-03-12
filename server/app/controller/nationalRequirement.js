@@ -174,6 +174,27 @@ class NationalRequirementController extends Controller {
 
     docx.generate(ctx.res)
   }
+
+  async addPoint() {
+    const { ctx } = this;
+    const params = ctx.request.body;
+    const res = await ctx.service.nationalRequirement.addPoint(params)
+    if(res) {
+      ctx.body = {
+        total: 0,
+        data: res,
+        code: 200,
+        isSucceed: true,
+      }
+    } else {
+      ctx.body = {
+        total: 0,
+        message: '新增失败',
+        code: 200,
+        isSucceed: true,
+      }
+    }
+  }
 }
 
 module.exports = NationalRequirementController;

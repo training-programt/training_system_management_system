@@ -5,10 +5,11 @@ module.exports = app => {
   const Schema = mongoose.Schema;
   const TrainingProjectSchema = new Schema({
     name: { type: String },
-    year: {//年级表关联
-      type: Schema.Types.ObjectId,
-      ref: 'Grade'
-    },
+    year: String,
+    // year: {//年级表关联
+    //   type: Schema.Types.ObjectId,
+    //   ref: 'Grade'
+    // },
     major: {//专业表关联
       type: Schema.Types.ObjectId,
       ref: 'Major'
@@ -20,14 +21,23 @@ module.exports = app => {
       type: Schema.Types.ObjectId,
       ref: 'Teacher'
     },//编写者，关联老师
-    graduationRequirement: [{//关联毕业要求表
+    graduationRequirement: {//关联毕业要求表
       type: Schema.Types.ObjectId,
       ref: 'GraduationRequirement'
-    }],
+    },
     trainingObjective: {//关联培养目标表
       type: Schema.Types.ObjectId,
       ref: 'TrainingObjective'
     },
+    majorObjReqRelation: {//专业培养目标与毕业要求关系矩阵
+      type: Schema.Types.ObjectId,
+      ref: 'MajorObjReqRelation'
+    },
+    majorNationCoverRelation: {//专业毕业要求与认证标准毕业要求覆盖情况
+      type: Schema.Types.ObjectId,
+      ref: 'MajorNationCoverRelation'
+    },
+
     core_disciplines:{type:String},//主干学科
     core_curriculum:{type:String},//专业核心课程、一段画？？多选框勾选出来合并成一段话
     practical_teaching_link:{type:String},//主要实践性教学环节
@@ -36,5 +46,5 @@ module.exports = app => {
     second_classroom:{type:String}//第二课堂文字
   })
 
-  return mongoose.model('TrainingProject', TrainingProjectSchema, 'TrainingProject');
+  return mongoose.model('TrainingProject', TrainingProjectSchema, 'trainingProject');
 } 
