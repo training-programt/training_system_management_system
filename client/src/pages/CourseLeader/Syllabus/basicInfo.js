@@ -69,7 +69,7 @@ const BasicInfo = () => {
         <div className="page">
             <Form
                 {...layout}
-                name="basic"
+                name="init"
                 form={form}
             >
                 <div className="left">
