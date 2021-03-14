@@ -17,6 +17,9 @@ import AddTrainingProject from './TrainingProject/add';
 import EditTrainingProject from './TrainingProject/edit';
 import Syllabus from "./CourseLeader/Syllabus";
 import SyllabusAdd from './CourseLeader/Syllabus/add';
+import TeachingRecord from './TeachingRecord';
+import CourseAssessment from './CourseAssessment';
+import AddCourseAssessment from './CourseAssessment/add';
 
 export {
   Login,
@@ -38,4 +41,7 @@ export {
   TrainingScheme,
   AddTrainingProject,
   EditTrainingProject,
+  TeachingRecord,
+  CourseAssessment,
+  AddCourseAssessment,
 }
