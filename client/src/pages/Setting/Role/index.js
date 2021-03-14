@@ -114,7 +114,7 @@ const Role = () => {
         '/updateRole',
         params,
       );
-      if (res && res.isSucceed) {
+      if (res.isSucceed) {
         message.success('修改成功');
         const res = await React.$axios.get(
           '/getRole',

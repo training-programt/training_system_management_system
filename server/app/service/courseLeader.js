@@ -9,10 +9,10 @@ class CourseLeaderService extends Service {
             .find({
             })
             .populate('course_info')
-            // .populate('teaching_goal')
-            // .populate('theory_teaching')
-            // .populate('practice_teaching')
-            // .populate('assessment')
+            .populate('teaching_goal')
+            .populate('theory_teaching')
+            .populate('practice_teaching')
+            .populate('assessment')
             .populate('reviewer')
             .sort('sort');
         return result;

@@ -195,7 +195,7 @@ const User = () => {
             ...form.getFieldValue(),
         }
         const res = await React.$axios.post(
-            '/updataTeacher',
+            '/updataTeacher1',
             params,
         );
         if (res && res.isSucceed) {

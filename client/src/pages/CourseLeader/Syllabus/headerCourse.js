@@ -5,9 +5,10 @@ import { Table, Input, Button, Popconfirm } from 'antd';
 import { PlusOutlined, DeleteOutlined, EditOutlined } from '@ant-design/icons';
 import { getSession,setSession } from '../../../utils';
 
-const Syllabus = () => {
+const HeaderCourse = () => {
   const [loading, setLoading] = useState(false);
-  const [syllabusData, setSyllabusData] = useState([]);
+  const [courseData, setCourseData] = useState([]);
+  const [total, setTotal] = useState(0);
  
   const professColumns = [
     { title: '序号', align: 'center', render: (text, record, index) => `${index + 1}` },
@@ -27,6 +28,15 @@ const Syllabus = () => {
       key: 'credits',
     },
     {
+        title: '课程负责人',
+        dataIndex: 'header',
+        align: 'center',
+        render: (text, record) => {
+            console.log(record)
+          return record.header ? record.header.name : ''
+        }
+      },
+    {
       title: '审核人',
       dataIndex: 'reviewer',
       key: 'reviewer',
@@ -40,11 +50,7 @@ const Syllabus = () => {
       key: 'operation',
       render: (text, record) => (
         <div>
-          <Link to={{ pathname: "/syllabus/add", state: { data: record } }}><Button size="small" type="link" onClick={()=>{add(record)}}>编辑课程大纲</Button></Link>
-          <Popconfirm title="确定删除？" okText="确定" cancelText="取消">
-            <Button type="link">删除课程大纲</Button>
-          </Popconfirm>
-          <Button type="link">查看课程大纲</Button>
+          <Button type="link">绑定课程大纲</Button>
         </div>
       ),
     },
@@ -55,15 +61,11 @@ const Syllabus = () => {
     const params = {
       _id: teacher._id
     }
-    const res = React.$axios.post('/findSyllabus', params).then((syllabusData) => {
-      // console.log(syllabusData)
-      setSyllabusData(syllabusData.data[0].course)
-    })
-    // const course = React.$axios.get('/getCourse').then((courseData) => {
-    //   console.log(courseData)
-    //   setSyllabusData(courseData.data)
-    //   setTotal(courseData.total)
-    // })
+    console.log(teacher)
+    const res = React.$axios.post('/findSyllabus', params).then((data) => {
+        console.log(data)
+        setCourseData(data.data[0].course)
+      })
     setLoading(false)
   }, [])
   const add=(record)=>{
@@ -71,16 +73,16 @@ const Syllabus = () => {
   }
   return (
     <div className="page-container">
-      <HeaderComponent title="教学大纲管理" />
+      <HeaderComponent title="课程关系绑定" />
       <div className="body-wrap">
         <div className="header-wrap">
           <div className="search-box">
-           <Button type="primary">新增教学大纲</Button>
+            <Input.Search placeholder="请输入课程名称" allowClear enterButton />
           </div>
         </div>
         <div className="table-wrap">
           <Table
-            dataSource={syllabusData}
+            dataSource={courseData}
             columns={professColumns}
             loading={loading}
             bordered
@@ -96,4 +98,4 @@ const Syllabus = () => {
   )
 }
 
-export default Syllabus
+export default HeaderCourse

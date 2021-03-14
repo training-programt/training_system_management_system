@@ -19,7 +19,9 @@ class CourseLeaderController extends Controller {
     const { ctx } = this;
     let params = await ctx.request.body;
     const data = await ctx.model.Teacher.find({_id:params._id})
-    .populate('course').sort();
+    .populate('course')
+    .populate('header')
+    .sort();
     console.log(data)
     // const syllabus = await ctx.model.Syllabus.find({ course_info: data[0].course})
     // .populate('course_info')
