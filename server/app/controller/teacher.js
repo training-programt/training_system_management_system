@@ -13,7 +13,21 @@ class TeacherController extends Controller {
       isSucceed: true,
     }
   }
-
+  async findTeacher() {
+    const { ctx } = this;
+    const params = ctx.request.body
+    console.log(params)
+    const data = await ctx.model.Teacher.find({ _id: params._id })
+    .populate('course')
+    .sort()
+    console.log(data)
+    ctx.body = {
+      total: data.length,
+      data: data,
+      code: 200,
+      isSucceed: true,
+    }
+  }
   async getAllTeacher() {
     const { ctx } = this;
     const params = ctx.request.query
@@ -111,9 +125,9 @@ class TeacherController extends Controller {
     const { ctx } = this;
     const params = ctx.request.body;
     console.log(params)
-    const find  = await ctx.model.Teacher.find({_id:params._id})
+    const find = await ctx.model.Teacher.find({ _id: params._id })
     console.log(find)
-    if(params.major!==find[0].major){
+    if (params.major !== find[0].major) {
       const majorChange = await ctx.model.Major.update(
         { _id: find[0].major },
         {
@@ -131,7 +145,7 @@ class TeacherController extends Controller {
         },
       )
     }
-    if(params.teachRoom!==find[0].teachRoom){
+    if (params.teachRoom !== find[0].teachRoom) {
       const teachRoomChange = await ctx.model.TeachRoom.update(
         { _id: find[0].teachRoom },
         {
@@ -154,6 +168,7 @@ class TeacherController extends Controller {
       {
         $set: {
           name: params.name,
+          // role:params.role,
           password: params.password,
           sex: params.sex,
           birthday: params.birthday,
@@ -170,14 +185,33 @@ class TeacherController extends Controller {
         }
       })
     console.log(data)
-      ctx.body = {
-        total: data.length,
-        data: data,
-        code: 200,
-        isSucceed: true,
-      }
+    ctx.body = {
+      total: data.length,
+      data: data,
+      code: 200,
+      isSucceed: true,
+    }
   }
-
+  async updataTeacher1() {
+    const { ctx } = this;
+    const params = ctx.request.body;
+    console.log(params)
+    const data = await ctx.model.Teacher.findByIdAndUpdate(
+      { _id: params._id },
+      {
+        $set: {
+          name: params.name,
+          role: params.role,
+          password: params.password,
+        }
+      })
+    ctx.body = {
+      total: data.length,
+      data: data,
+      code: 200,
+      isSucceed: true,
+    }
+  }
   async queryTeacher() {
     const { ctx } = this;
     const params = ctx.request.body;
@@ -201,51 +235,51 @@ class TeacherController extends Controller {
       message: '查询成功',
     };
   }
-  
-  async manyDelete(){
-    const {ctx} = this;
+
+  async manyDelete() {
+    const { ctx } = this;
     const params = ctx.request.body;
-    const deleteMany = await ctx.service.teacher.delTeacher({_id:{$in:params}})
-   for(let i = 0;i<params.length;i++){
-    const teachRoom = await ctx.model.TeachRoom.update(
-      { _id: params[i].teachRoom._id },
-      {
-        // $pull: {
-        //   teachers:  {$each: params}
-        // }
-        $pull:{
-          teachers:params[i]._id
-        }
-      },
-      { multi: true }
-    )
-    const major = await ctx.model.Major.update(
-      { _id: params[i].major._id },
-      {
-        $pull: {
-          teachers:  params[i]._id
-        }
-      },
-      { multi: true }
-    )
-   }
-    
-    if(deleteMany.ok==1){
+    const deleteMany = await ctx.service.teacher.delTeacher({ _id: { $in: params } })
+    for (let i = 0; i < params.length; i++) {
+      const teachRoom = await ctx.model.TeachRoom.update(
+        { _id: params[i].teachRoom._id },
+        {
+          // $pull: {
+          //   teachers:  {$each: params}
+          // }
+          $pull: {
+            teachers: params[i]._id
+          }
+        },
+        { multi: true }
+      )
+      const major = await ctx.model.Major.update(
+        { _id: params[i].major._id },
+        {
+          $pull: {
+            teachers: params[i]._id
+          }
+        },
+        { multi: true }
+      )
+    }
+
+    if (deleteMany.ok == 1) {
       ctx.body = {
         total: deleteMany.length,
         data: deleteMany,
         code: 200,
         isSucceed: true,
-        message: '删除成功'+deleteMany.deletedCount+'条数据',
+        message: '删除成功' + deleteMany.deletedCount + '条数据',
       };
-    }else{
+    } else {
       ctx.body = {
-        code:500,
+        code: 500,
         isSucceed: true,
         message: '批量删除失败',
       };
     }
-   
+
   }
 
   async getTeacherDetail() {

@@ -66,8 +66,7 @@ const SyllabusAdd = () => {
                     <Button type="primary" onClick={() => message.success('Processing complete!')}>提交审批</Button>
                 )}
 
-                <Button icon={<SaveOutlined />} onClick={()=>{save}}>暂存</Button>
-                <Button icon={<RollbackOutlined />} style={{ color: '#000', marginLeft: '8px' }} onClick={() => prev()}>返回</Button>
+                <Button icon={<RollbackOutlined />} style={{ color: '#000', marginLeft: '8px' }}>返回</Button>
             </div>
 
         </div>

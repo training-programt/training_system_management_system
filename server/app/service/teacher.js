@@ -77,6 +77,12 @@ class TeacherService extends Service {
     async findTeacher(params) {
         const { ctx } = this;
         const result = await ctx.model.Teacher.find(params)
+        // .populate('role')
+        // .populate('teachRoom')
+        // .populate('course')
+        // .populate('major')
+        // .populate('header')
+        // .sort('sort');
         return result;
     }
 }
