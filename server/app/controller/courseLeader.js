@@ -18,18 +18,20 @@ class CourseLeaderController extends Controller {
   async findSyllabus() {
     const { ctx } = this;
     let params = await ctx.request.body;
-    const data = await ctx.model.Teacher.find({_id:params._id});
-    const syllabus = await ctx.model.Syllabus.find({ course_info: data[0].course})
-    .populate('course_info')
-    .populate('teaching_goal')
-    .populate('theory_teaching')
-    .populate('practice_teaching')
-    .populate('assessment')
-    .populate('reviewer')
-    .sort('sort');
+    const data = await ctx.model.Teacher.find({_id:params._id})
+    .populate('course').sort();
+    console.log(data)
+    // const syllabus = await ctx.model.Syllabus.find({ course_info: data[0].course})
+    // .populate('course_info')
+    // .populate('teaching_goal')
+    // .populate('theory_teaching')
+    // .populate('practice_teaching')
+    // .populate('assessment')
+    // .populate('reviewer')
+    // .sort('sort');
     ctx.body = {
-      total: syllabus.length,
-      data: syllabus,
+      total: data.length,
+      data: data,
       code: 200,
       isSucceed: true,
     }

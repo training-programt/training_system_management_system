@@ -1,5 +1,5 @@
 import React, { useState, useMemo,useEffect } from 'react';
-import { Table, Input, Button, Modal, Form, message,  InputNumber, Popconfirm, Descriptions } from 'antd';
+import { Table, Input, Button, Modal,Card, Form, message,  InputNumber, Popconfirm, Descriptions } from 'antd';
 import { SearchOutlined, PlusOutlined } from '@ant-design/icons';
 import HeaderComponent from '../../../components/header'
 import { useSelector } from 'react-redux';
@@ -11,11 +11,18 @@ const LeaderMajor = () => {
   const [majorData, setMajorData] = useState([]);
   const [loading, setLoading] = useState(false);
   const [visible, setVisible] = useState(false);
+  const [teacherView, setTeacherView] = useState([]);
   const [isEdit, setIsEdit] = useState(false);
   const [confirmLoading, setConfirmLoading] = useState(false);
 
 useEffect(()=>{
   const res =  React.$axios.get('/getMajor').then((majorData)=>{
+    // console.log(majorData)
+    // setTeacherView(majorData.data.teachers)
+    // let teachers = [];
+    // for(let i = 0;i<majorData.data.length;i++){
+
+    // }
     setMajorData(majorData.data)
   })
   setLoading(false)
@@ -52,6 +59,8 @@ useEffect(()=>{
           <Popconfirm title="确定删除？" okText="确定" cancelText="取消">
             <Button type="link" onClick={()=>{del(record)}}>删除</Button>
           </Popconfirm>
+          <Button type="link" onClick={()=>{viewTeacher(record)}}>查看教师名单</Button>
+
         </div>
       ),
     },
@@ -92,6 +101,19 @@ useEffect(()=>{
       message.error(res.message);
     }
   };
+  const viewTeacher = async(record)=>{
+    Modal.info({
+      title: '教师名单',
+      content: (
+        <div>
+          {record.teachers&&record.teachers.map((item,index)=>{
+           return <span key={index}>{item.name}</span>
+          })}
+        </div>
+      ),
+      onOk() {},
+    });
+  }
   //查询
   const queryData = async() =>{
     setLoading(true);
@@ -138,7 +160,6 @@ useEffect(()=>{
       }
     }
     setVisible(false);
-
   };
 
   const handleCancel = () => {

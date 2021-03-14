@@ -1,11 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import { Form, Input, Select } from 'antd';
+import {useLocation } from "react-router-dom";
 
 const { Option } = Select;
 
 const BasicInfo = () => {
     const [form] = Form.useForm();
-    // var data = this.props.location.state;
+    const data = useLocation().state.data;
     const [college, setCollegeData] = useState([]);
     const [majorData, setMajorData] = useState([]);
     const layout = {
@@ -19,6 +20,33 @@ const BasicInfo = () => {
         const major = React.$axios.get('/getMajor').then((res) => {
             setMajorData(res.data)
         })
+        form.resetFields()
+        let basic = {
+        //   _id: data._id,
+          name: data.name,
+          code: data.code,
+          // header: data.header?data.header.name:"",
+          // unit: data.unit?data.unit.name:"",
+          type: data.type,
+          // semester: data.semester?data.semester.semesterName:"",
+          weekly_hours: data.weekly_hours,
+          within: data.within,
+          credits: data.credits,
+          outside: data.outside,
+          computer: data.computer,
+          other: data.other,
+          nature: data.nature,
+          attribute: data.attribute,
+          category: data.category,
+          degree: data.degree,
+          direction: data.direction,
+          introduce: data.introduce,
+          // system:data.system?data.system.name:"",
+          course_selection_group: data.course_selection_group,
+          assessment_method: data.assessment_method,
+          flag_fuse: data.flag_fuse
+        }
+        form.setFieldsValue(basic)
     }, [])
     return (
         <div className="init-page">

@@ -1,6 +1,6 @@
-import React, { useState } from 'react'
+import React, { useState,useEffect} from 'react'
 import { Button, Steps, message } from 'antd'
-import { Link } from 'react-router-dom'
+import { Link,useLocation, BrowserRouter as Router,Route,Switch} from 'react-router-dom'
 import { ArrowLeftOutlined, ArrowRightOutlined, RollbackOutlined, SaveOutlined } from '@ant-design/icons';
 
 import BasicInfo from './basicInfo'
@@ -12,7 +12,6 @@ import ExamAndApp from './examAndApp'
 const { Step } = Steps;
 const SyllabusAdd = () => {
     const [current, setCurrent] = useState(0);
-
     const steps = [
         {
             title: '基本信息',
@@ -67,8 +66,8 @@ const SyllabusAdd = () => {
                     <Button type="primary" onClick={() => message.success('Processing complete!')}>提交审批</Button>
                 )}
 
-                <Button icon={<SaveOutlined />}>暂存</Button>
-                <Button icon={<RollbackOutlined />}><Link to="/trainingProject" style={{ color: '#000', marginLeft: '8px' }}>返回</Link></Button>
+                <Button icon={<SaveOutlined />} onClick={()=>{save}}>暂存</Button>
+                <Button icon={<RollbackOutlined />} style={{ color: '#000', marginLeft: '8px' }} onClick={() => prev()}>返回</Button>
             </div>
 
         </div>
