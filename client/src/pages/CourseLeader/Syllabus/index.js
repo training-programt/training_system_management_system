@@ -13,26 +13,32 @@ const Syllabus = () => {
     { title: '序号', align: 'center', render: (text, record, index) => `${index + 1}` },
     {
       title: '课程名字',
-      dataIndex: 'name',
-      key: 'name',
+      dataIndex: 'course_info',
+      key: 'course_info',
+      render:(text,record)=>{
+        return record.course_info.name?record.course_info.name:""
+      }
     },
     {
       title: '课程编码',
       dataIndex: 'code',
       key: 'code',
+      render:(text,record)=>{
+        return record.course_info.code?record.course_info.code:""
+      }
     },
     {
-      title: '学分',
-      dataIndex: 'credits',
-      key: 'credits',
+      title: '修改时间',
+      dataIndex: 'modify_data',
+      key: 'modify_data',
     },
     {
       title: '审核人',
       dataIndex: 'reviewer',
       key: 'reviewer',
-      // render: (text, record) => {
-      //   return record.reviewer.name ? record.reviewer.name : ''
-      // }
+      render: (text, record) => {
+        return record.reviewer.name ? record.reviewer.name : ''
+      }
     },
     {
       title: '操作',
@@ -51,22 +57,22 @@ const Syllabus = () => {
   ];
   useEffect(() => {
     setLoading(true)
-    const teacher = JSON.parse(getSession('userInfo'));
-    const params = {
-      _id: teacher._id
-    }
-    const res = React.$axios.post('/findSyllabus', params).then((syllabusData) => {
-      // console.log(syllabusData)
-      setSyllabusData(syllabusData.data[0].course)
-    })
-    // const course = React.$axios.get('/getCourse').then((courseData) => {
-    //   console.log(courseData)
-    //   setSyllabusData(courseData.data)
-    //   setTotal(courseData.total)
+    // const teacher = JSON.parse(getSession('userInfo'));
+    // const params = {
+    //   _id: teacher._id
+    // }
+    // const res = React.$axios.post('/getSyllabus', params).then((syllabusData) => {
+    //   // console.log(syllabusData)
+    //   setSyllabusData(syllabusData.data[0].course)
     // })
+    const syll = React.$axios.get('/getSyllabus').then((sllData) => {
+      setSyllabusData(sllData.data)
+    })
+
     setLoading(false)
   }, [])
   const add=(record)=>{
+    console.log(record)
     setSession("newData",JSON.stringify(record));
   }
   return (
@@ -75,7 +81,7 @@ const Syllabus = () => {
       <div className="body-wrap">
         <div className="header-wrap">
           <div className="search-box">
-           <Button type="primary">新增教学大纲</Button>
+           <Link to={{ pathname: "/syllabus/add"}}><Button size="big" type="primary">新增课程大纲</Button></Link>
           </div>
         </div>
         <div className="table-wrap">

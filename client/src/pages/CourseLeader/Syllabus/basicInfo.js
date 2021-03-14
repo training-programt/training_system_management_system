@@ -13,6 +13,7 @@ const BasicInfo = () => {
     const [college, setCollegeData] = useState([]);
     const [majorData, setMajorData] = useState([]);
     const [header, setHeaderData] = useState([]);
+  const [courseData, setCourseData] = useState([]);
     const data = JSON.parse(getSession("newData"));
     const layout = {
         labelCol: { span: 5 },
@@ -28,10 +29,13 @@ const BasicInfo = () => {
         const res1 = React.$axios.get('/getTeacher').then((teacherData) => {
             setHeaderData(teacherData.data)
           })
+          const res = React.$axios.get('/getCourse').then((courseData) => {
+            setCourseData(courseData.data)
+          })
         form.resetFields()
         let basic = {
             //   _id: data._id,
-            name: data.name,
+            // name: data.course_info.name,
             code: data.code,
             // header: data.header?data.header.name:"",
             // unit: data.unit?data.unit.name:"",
@@ -58,9 +62,7 @@ const BasicInfo = () => {
         form.setFieldsValue(basic)
     }, [])
     const save = () => {
-        console.log(11)
         const params = {
-            
             ...form.getFieldValue(),
         }
         console.log(params)
@@ -84,9 +86,12 @@ const BasicInfo = () => {
                             },
                         ]}
                     >
-                        <Input />
+                          <Select placeholder="课程名字" allowClear>
+                            {
+                                courseData && courseData.map(item => (<Option key={item._id} value={item._id}>{item.name}</Option>))
+                            }
+                        </Select>
                     </Form.Item>
-
                     <Form.Item
                         label="英文名字"
                         name="englishName"
