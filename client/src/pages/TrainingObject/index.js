@@ -1,192 +1,160 @@
-import React, { useState, useMemo } from 'react'
-import { Input, Button, Modal, Form, List, message } from 'antd';
-import HeaderComponent from '@/components/header'
-import { PlusOutlined, DownloadOutlined } from '@ant-design/icons';
-import api from "@/apis/nationalRequirement";
+
+import React, { useState, useMemo } from "react";
+import { Input, Select, Space, Button, Form, Modal, message, Popconfirm } from "antd";
+import { Link } from "react-router-dom";
+import PaginationComponent from "@/components/pagination";
+import HeaderComponent from "@/components/header";
+import TableComponent from "@/components/table";
+import { PlusOutlined, DownloadOutlined } from "@ant-design/icons";
+
+import api from "@/apis/majorObjective";
+
+const { Option } = Select;
 
 const TrainingObject = () => {
-  const [form] = Form.useForm();
+  const [page, setPage] = useState(1);
+  const [type, setType] = useState("0");
+  const [query, setQuery] = useState("");
+  const [total, setTotal] = useState(0);
   const [loading, setLoading] = useState(false);
   const [tableData, setTableData] = useState([]);
-  const [query, setQuery] = useState('');
-  const [isModalVisible, setIsModalVisible] = useState(false);
-  const [isEdit, setIsEdit] = useState(false);
 
-  const formItemLayout = {
-    labelCol: { span: 4 },
-    wrapperCol: { span: 20 },
+  const tableSetting = {
+    page: 1,
+    rows: 12,
+    isMultiple: true,
   };
 
-  useMemo(() => {
-    const fetchData = async () => {
-      setLoading(true);
-      const params = {
-        national_name: query
-      }
-      console.log(params)
-      const res = await React.$axios.get(
-        `${api.getNationalRequirement}?${React.$qs.stringify(params)}`
-      )
-      setTableData(res.data);
-      setLoading(false);
-    }
-    fetchData();
-
-  }, [query, isModalVisible])
-
-  const handleCancel = () => {
-    setIsModalVisible(false);
+  const pageparams = {
+    page: page,
+    pageSize: 12,
+    total: total,
   };
-  const handleOk = async (e) => {
-    e.preventDefault();
-    const params = {
-      ...form.getFieldValue(),
+
+  const column = [
+    {
+      width: 50,
+      render: (text, record, index) =>
+        `${index + 1 + (tableSetting.page - 1) * tableSetting.rows}`,
+    },
+    {
+      title: "专业",
+      dataIndex: "major",
+      key: "major",
+      render: (text, record) => (text ? text.name : ""),
+    },
+    {
+      title: "学校培养目标",
+      dataIndex: "school_objective",
+    },
+    {
+      title: "培养方案数",
+      dataIndex: "objectCount",
+      key: "objectCount",
+      render: (text, record) => record.objectives.length,
+    },
+    {
+      title: "操作",
+      key: "action",
+      render: (text, record) => {
+        return (
+          <Space size="middle">
+            <Link to={{ pathname: `trainingObject/edit/${text._id}` }}>
+              <Button size="small" type="link">
+                详情
+              </Button>
+            </Link>
+            <Popconfirm
+              title="确定删除？"
+              okText="确定"
+              cancelText="取消"
+              onConfirm={() => delMajorObjective(record)}
+            >
+              <Button type="link"> 删除</Button>
+            </Popconfirm>
+          </Space>
+        );
+      },
+    },
+  ];
+
+  const selectData = [
+    { value: "1", name: "专业类" },
+    { value: "2", name: "管理类" },
+    { value: "3", name: "学科类" },
+  ];
+
+  const getObjectives = async () => {
+    const params = {};
+    const res = await React.$axios.get(api.getMajorObjective, params);
+    if (res && res.isSucceed) {
+      console.log(res)
+      setTableData(res.data)
     }
-    if (!isEdit) {
-      const res = await React.$axios.post(
-        api.addNationalRequirement,
-        params,
-      );
-      res && res.isSucceed && message.success(res.message)
-    }
-    else {
-      const res = await React.$axios.post(
-        api.updateNationalRequirement,
-        params,
-      );
-      res && res.isSucceed && message.success(res.message)
-    }
-    setIsModalVisible(false);
   }
-  const showEditModal = (record) => {
-    form.resetFields()
-    setIsModalVisible(true)
-    setIsEdit(true)
-    form.setFieldsValue(record)
-  }
 
-  const showModal = () => {
-    form.resetFields()
-    setIsModalVisible(true);
-    setIsEdit(false)
-  };
+  useMemo(() =>
+    getObjectives()
+    , [])
 
-  const delRequirement = async (record) => {
+  const delMajorObjective = async (record) => {
     const params = {
       _id: record._id,
-    }
-    const res = await React.$axios.post(
-      api.delNationalRequirement,
-      params,
-    );
+    };
+    const res = await React.$axios.post(api.delMajorObjective, params);
     if (res && res.isSucceed) {
-      message.success(res.message)
-      setLoading(true);
-      const data = await React.$axios.get(
-        api.getNationalRequirement,
-      )
-      setTableData(data.data);
-      setLoading(false);
+      message.success(res.message);
+    } else {
+      message.error(res.message);
     }
-  }
-
-  const listStyle = {
-    padding: '20px',
-    overflow: 'auto'
-  }
+    getObjectives()
+  };
 
   return (
-    <div className="page-container">
+    <div className="teach-section">
       <HeaderComponent title="培养目标管理" />
       <div className="body-wrap">
-        <div className="header-wrap">
-          <div className="search-box">
-            <Input.Search placeholder="请输入毕业要求名称" onSearch={value => setQuery(value)} allowClear enterButton />
+        <div className="filter-container">
+          <div className="filter-type">
+            <span>学院分类：</span>
+            <Select
+              className="select-type"
+              defaultValue={type}
+              onChange={(value) => setType(value)}
+            >
+              <Option value="0">全部</Option>
+              {selectData.map((item) => (
+                <Option key={item.value} value={item.value}>
+                  {item.name}
+                </Option>
+              ))}
+            </Select>
           </div>
-          <div className="operation-wrap">
-            <Button type="primary" icon={<PlusOutlined />} onClick={showModal}>新增要求</Button>
-            <Button type="primary" icon={<DownloadOutlined />}>导出目标</Button>
+          <div className="search-box">
+
+            <Input.Search
+              placeholder="请输入专业名称"
+              onSearch={(value) => setQuery(value)}
+              allowClear
+              enterButton
+            />
+            <Link to="trainingObject/add"><Button type="primary" icon={<PlusOutlined />}>添加专业目标</Button></Link>
           </div>
         </div>
-        <div className='table-wrap' style={listStyle}>
-          <List
+        <div className="table-container">
+          <TableComponent
+            data={tableData}
+            column={column}
+            settings={tableSetting}
             loading={loading}
-            itemLayout="horizontal"
-            dataSource={tableData}
-            renderItem={(item, index) => (
-              <List.Item
-                actions={[
-                  <a key="list-loadmore-edit" onClick={() => showEditModal(item)}>编辑</a>,
-                  <a key="list-loadmore-more" onClick={() => delRequirement(item)}>删除</a>
-                ]}
-              >
-                <List.Item.Meta
-                  title={'培养目标' + (index + 1) + '：' + item.national_name}
-                  description={item.nation_description}
-                />
-              </List.Item>
-            )}
           />
-          </div>
+        </div>
+        <PaginationComponent
+          pageparams={pageparams}
+          handlePage={(v) => setPage(v)}
+        />
       </div>
-      <Modal
-        visible={isModalVisible}
-        width={680}
-        title={isEdit ? '编辑要求' : '新建要求'}
-        centered
-        maskClosable={true}
-        destroyOnClose
-        onOk={handleOk}
-        onCancel={handleCancel}
-        footer={[
-          <Button key="back" onClick={handleCancel}>取消</Button>,
-          <Button key="submit" type="primary" loading={loading} onClick={handleOk}>确认</Button>
-        ]}
-      >
-        <Form {...formItemLayout} form={form}>
-          {
-            isEdit ? (
-              <Form.Item
-                name="_id"
-                label="ID"
-              >
-                <Input
-                  maxLength={32}
-                  disabled
-                />
-              </Form.Item>
-            ) : ''
-          }
-          <Form.Item
-            label='要求名称'
-            name="national_name"
-            rules={[
-              { required: true, message: '名称不能为空' },
-              { pattern: '^[^ ]+$', message: '名称不能有空格' }
-            ]}
-          >
-            <Input
-              maxLength={32}
-              style={{ width: 300 }}
-              placeholder="请输入要求名称"
-            />
-          </Form.Item>
-          <Form.Item
-            label='要求描述'
-            name="nation_description"
-            rules={[
-              { required: true, message: '描述不能为空' },
-            ]}
-          >
-            <Input.TextArea
-              autoSize={{ minRows: 5, maxRows: 5 }}
-              placeholder="请输入要求描述"
-            />
-          </Form.Item>
-        </Form>
-      </Modal>
-      </div>
-  )
-}
-
-export default TrainingObject
+    </div>
+  );
+};
+export default TrainingObject;

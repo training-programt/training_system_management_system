@@ -1,6 +1,6 @@
 import React, { useMemo, useState, useEffect } from 'react';
 import { Layout } from 'antd';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import SideMenu from '../SideMenu';
 import MainContent from '../MainContent';
 import './index.less';
@@ -12,6 +12,7 @@ const BasicLayout = () => {
   const dispatch = useDispatch();
   const [menus, setMenus] = useState([]);
   const [collapsed, setCollapsed] = useState(false)
+  const typeColor = useSelector(state => state.user.typeColor);
 
   useMemo(() => {
     const fetchData = async () => {
@@ -28,9 +29,16 @@ const BasicLayout = () => {
     fetchData();
   }, [])
 
+  const style = {
+    siderStyle: {
+      height: '100vh',
+      backgroundColor: typeColor ? '#fff' : '',
+    }
+  }
+
   return (
     <Layout>
-      <Sider collapsible trigger={null} collapsed={collapsed} style={{ height: '100vh' }}><SideMenu menus={menus} />
+      <Sider collapsible trigger={null} collapsed={collapsed} style={style.siderStyle}><SideMenu menus={menus} />
       </Sider>
       <Layout>
         <MainHeader />

@@ -13,12 +13,17 @@ import TeachRoom from "./TeachRoom";
 import SectionDetails from "./TeachRoom/sectionDetails";
 import TrainingProject from './TrainingProject';
 import TrainingObject from './TrainingObject';
+import EditTrainingObject from './TrainingObject/detail';
 import AddTrainingProject from './TrainingProject/add';
 import EditTrainingProject from './TrainingProject/edit';
 import Syllabus from "./CourseLeader/Syllabus";
 import SyllabusAdd from './CourseLeader/Syllabus/add';
 import HeaderCourse from "./CourseLeader/Syllabus/headerCourse";
 import ProjectShow from "./CourseLeader/Syllabus/projectShow"
+import TeachingRecord from './TeachingRecord';
+import CourseAssessment from './CourseAssessment';
+import AddCourseAssessment from './CourseAssessment/add';
+
 export {
   Login,
   Home,
@@ -38,7 +43,11 @@ export {
   ProjectShow,
   TrainingProject,
   TrainingObject,
+  EditTrainingObject,
   TrainingScheme,
   AddTrainingProject,
   EditTrainingProject,
+  TeachingRecord,
+  CourseAssessment,
+  AddCourseAssessment,
 }

@@ -10,6 +10,7 @@ import { setSession, getSession } from '@/utils'
 import InitPage from './initPage'
 import TrainObject from './trainObject'
 import Requirements from './requirements'
+import CurriculumSystem from './curriculumSystem'
 import MatrixRelation from './matrixRelation'
 import StudyProgramme from './studyProgramme'
 import Examine from './examine'
@@ -20,6 +21,7 @@ const AddTrainingProject = () => {
   const [current, setCurrent] = useState(0);
   const [acProject, setAcProject] = useState({})
   const [writer, setWriter] = useState(JSON.parse(getSession('userInfo'))._id)
+  const [requirementId, setRequirementId] = useState('')
 
   const childRef = useRef()
 
@@ -37,6 +39,10 @@ const AddTrainingProject = () => {
       content: <Requirements ref={childRef} />,
     },
     {
+      title: '课程体系',
+      content: <CurriculumSystem requirementId={requirementId} />
+    },
+    {
       title: '矩阵关系',
       content: <MatrixRelation project={acProject._id} />,
     },
@@ -51,12 +57,10 @@ const AddTrainingProject = () => {
   ];
 
   const next = () => {
-
     switch (current) {
       case 0: {
         const data = childRef.current.saveProject()
         initProject(data)
-
         break;
       }
       case 1: {
@@ -88,8 +92,10 @@ const AddTrainingProject = () => {
       newTime,
     }
     const res = await React.$axios.post(api.createProject, params)
-    setAcProject(res.data)
-    setCurrent(current + 1);
+    if(res && res.isSucceed) {
+      setAcProject(res.data)
+      setCurrent(current + 1);
+    }
   }
 
   const saveObject = async (data) => {
@@ -99,7 +105,9 @@ const AddTrainingProject = () => {
       _id: acProject._id,
     }
     const res = await React.$axios.post(api.updateObject, params)
-    setCurrent(current + 1);
+    if(res && res.isSucceed) {
+      setCurrent(current + 1);
+    }
   }
 
   const saveRequirement = async (data) => {
@@ -109,7 +117,10 @@ const AddTrainingProject = () => {
       _id: acProject._id,
     }
     const res = await React.$axios.post(api.updateRequirement, params)
-    setCurrent(current + 1);
+    if(res && res.isSucceed) {
+      setRequirementId(res.data._id)
+      setCurrent(current + 1);
+    }
   }
 
   return (
