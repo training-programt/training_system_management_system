@@ -47,7 +47,7 @@ const TrainingProject = () => {
     {
       title: '专业',
       dataIndex: 'major',
-      render: (text, record) => text.name || ''
+      // render: (text, record) => text.name || ''
     },
     {
       title: '学位',
