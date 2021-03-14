@@ -19,4 +19,5 @@ module.exports = app => {
   require('./router/point')(app)
   require('./router/table')(app)
   require('./router/teachingRecord')(app)
+  require('./router/majorObjective')(app)
 };

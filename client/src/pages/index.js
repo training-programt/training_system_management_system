@@ -13,6 +13,7 @@ import TeachRoom from "./TeachRoom";
 import SectionDetails from "./TeachRoom/sectionDetails";
 import TrainingProject from './TrainingProject';
 import TrainingObject from './TrainingObject';
+import EditTrainingObject from './TrainingObject/detail';
 import AddTrainingProject from './TrainingProject/add';
 import EditTrainingProject from './TrainingProject/edit';
 import Syllabus from "./CourseLeader/Syllabus";
@@ -38,6 +39,7 @@ export {
   SyllabusAdd,
   TrainingProject,
   TrainingObject,
+  EditTrainingObject,
   TrainingScheme,
   AddTrainingProject,
   EditTrainingProject,
