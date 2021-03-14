@@ -1,14 +1,5 @@
 import React, { useState, useMemo } from "react";
-import {
-  Input,
-  Select,
-  Space,
-  Button,
-  Form,
-  Modal,
-  message,
-  Popconfirm,
-} from "antd";
+import { Input, Select, Space, Button, Form, Modal, message, Popconfirm } from "antd";
 import { Link } from "react-router-dom";
 import PaginationComponent from "@/components/pagination";
 import HeaderComponent from "@/components/header";
@@ -75,7 +66,7 @@ const TeachRoom = () => {
       title: "教研室主任",
       dataIndex: "director",
       key: "director",
-      render: (text, record) =>  record.director ? record.director.name : ''
+      render: (text, record) => record.director ? record.director.name : ''
     },
     {
       title: "描述",
@@ -155,7 +146,7 @@ const TeachRoom = () => {
 
   const teacherList = async () => {
     const res = await React.$axios.get(api.getTeacher)
-    if(res && res.isSucceed) {
+    if (res && res.isSucceed) {
       setTeacherData(res.data)
     }
   }
@@ -262,7 +253,7 @@ const TeachRoom = () => {
             </Select>
           </div>
           <div className="search-box">
-            
+
             <Input.Search
               placeholder="请输入教研室名称"
               onSearch={(value) => setQuery(value)}
@@ -270,11 +261,11 @@ const TeachRoom = () => {
               enterButton
             />
             <Space size='small'>
-            <Button type="primary" icon={<PlusOutlined />} onClick={showModal}>
-              添加教研室
+              <Button type="primary" icon={<PlusOutlined />} onClick={showModal}>
+                添加教研室
             </Button>
-            <Button type="primary" icon={<DownloadOutlined />} >
-              导出数据
+              <Button type="primary" icon={<DownloadOutlined />} >
+                导出数据
             </Button>
             </Space>
           </div>

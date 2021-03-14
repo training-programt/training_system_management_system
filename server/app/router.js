@@ -18,5 +18,5 @@ module.exports = app => {
   require('./router/trainingProject')(app)
   require('./router/point')(app)
   require('./router/table')(app)
-
+  require('./router/teachingRecord')(app)
 };
