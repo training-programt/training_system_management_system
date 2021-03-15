@@ -37,7 +37,7 @@ const Syllabus = () => {
       dataIndex: 'reviewer',
       key: 'reviewer',
       render: (text, record) => {
-        return record.reviewer.name ? record.reviewer.name : ''
+        return record.reviewer ? record.reviewer.name : ''
       }
     },
     {

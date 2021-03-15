@@ -14,6 +14,21 @@ class CourseLeaderController extends Controller {
     }
 
   }
+   //添加课程大纲
+   async addSyllabus() {
+    const { ctx } = this;
+    const params  = ctx.request.body;
+    console.log(params)
+    const data = await ctx.service.courseLeader.createSyllabus(params)
+    console.log(data)
+    ctx.body = {
+      total: data.length,
+      data: data,
+      code: 200,
+      isSucceed: true,
+    }
+
+  }
   //查找对应的课程大纲
   async findSyllabus() {
     const { ctx } = this;

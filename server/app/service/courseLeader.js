@@ -35,6 +35,12 @@ class CourseLeaderService extends Service {
         const result = await ctx.model.Syllabus.insertMany(params);
         return result;
     }
+     //增加课程大纲
+     async createSyllabus(params){
+        const {ctx} = this;
+        const result = await ctx.model.Syllabus.create(params);
+        return result;
+    }
     //查找课程大纲
     async findSyllabus(params){
         const {ctx} = this;
