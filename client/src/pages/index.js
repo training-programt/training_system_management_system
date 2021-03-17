@@ -18,6 +18,7 @@ import AddTrainingProject from './TrainingProject/add';
 import EditTrainingProject from './TrainingProject/edit';
 import Syllabus from "./CourseLeader/Syllabus";
 import SyllabusAdd from './CourseLeader/Syllabus/add';
+import SyllabusShows from './CourseLeader/Syllabus/show';
 import HeaderCourse from "./CourseLeader/HeaderCourse/headerCourse";
 import ProjectShow from "./CourseLeader/ProjectShow/projectShow"
 import TeachingRecord from './TeachingRecord';
@@ -36,6 +37,7 @@ export {
   UserInfo,
   TeachRoom,
   SectionDetails,
+  SyllabusShows,
   SyllabusShow,
   Syllabus,
   SyllabusAdd,

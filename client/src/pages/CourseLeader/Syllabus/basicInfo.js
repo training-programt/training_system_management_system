@@ -3,19 +3,21 @@ import { Form, Input, Select, Button,message } from 'antd';
 import { useLocation } from "react-router-dom";
 import { SpaceContext } from 'antd/lib/space';
 import { ArrowLeftOutlined, ArrowRightOutlined, RollbackOutlined, SaveOutlined } from '@ant-design/icons';
-import { getSession } from '../../../utils';
+import { getSession,setSession } from '../../../utils';
 
 const { Option } = Select;
 
 const BasicInfo = () => {
     const [form] = Form.useForm();
-    // let data = useLocation.state.data;
+    let info = useLocation()?.state?.data;
     const [college, setCollegeData] = useState([]);
     const [majorData, setMajorData] = useState([]);
     const [header, setHeaderData] = useState([]);
     const [butType,setButType] = useState(false);
   const [courseData, setCourseData] = useState([]);
     const data = JSON.parse(getSession("newData"));
+    // const [basic,setBasicData] = useState({});
+
     const layout = {
         labelCol: { span: 5 },
         wrapperCol: { span: 17 },
@@ -33,27 +35,22 @@ const BasicInfo = () => {
           const res = React.$axios.get('/getCourse').then((courseData) => {
             setCourseData(courseData.data)
           })
-        // form.resetFields()
-        let basic = {
-           ...form.getFieldsValue()
-        }
-        form.setFieldsValue(basic)
     }, [])
     const save = async() => {
         const params = {
             ...form.getFieldValue(),
         }
-        console.log(params)
-        const res =await React.$axios.post('/updateCourse1',params).then((course)=>{
-            console.log(course)
-            if(course.isSucceed){
-                message.info('暂存成功')
-            }else{
-                message.error('暂存失败')
-            }
-        })
-        setButType(true)
+        localStorage.setItem("basic",JSON.stringify(params));
+        message.info('暂存成功')
     }
+    useEffect(() => {
+        console.log(info)
+        if(info){
+            form.setFieldsValue(info.course_info)
+        }else{
+            form.setFieldsValue(JSON.parse(localStorage.getItem('basic'))||{})
+        }
+    }, [])
     return (
         <div className="page">
             <Form

@@ -16,7 +16,7 @@ const SyllabusAdd = () => {
     const steps = [
         {
             title: '基本信息',
-            content: <BasicInfo />,
+            content: <BasicInfo/>,
         },
         {
             title: '教学目标',
@@ -42,6 +42,7 @@ const SyllabusAdd = () => {
 
     const next = () => {
         setCurrent(current + 1);
+        console.log(current);
     };
 
     const prev = () => {

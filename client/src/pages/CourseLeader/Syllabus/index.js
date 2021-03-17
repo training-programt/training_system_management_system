@@ -1,44 +1,37 @@
 import React, { useState, useMemo, useEffect } from 'react'
-import { Link } from 'react-router-dom';
 import HeaderComponent from '@/components/header'
 import { Table, Input, Button, Popconfirm } from 'antd';
 import { PlusOutlined, DeleteOutlined, EditOutlined } from '@ant-design/icons';
 import { getSession,setSession } from '../../../utils';
+import { Link,useLocation,useHistory, BrowserRouter as Router,Route,Switch} from 'react-router-dom'
+
 
 const Syllabus = () => {
   const [loading, setLoading] = useState(false);
   const [syllabusData, setSyllabusData] = useState([]);
- 
+  const [courseData, setCourseData] = useState([]);
+  let history = useHistory();
   const professColumns = [
     { title: '序号', align: 'center', render: (text, record, index) => `${index + 1}` },
     {
       title: '课程名字',
-      dataIndex: 'course_info',
-      key: 'course_info',
-      render:(text,record)=>{
-        return record.course_info.name?record.course_info.name:""
-      }
+      dataIndex: 'name',
+      key: 'name',
     },
     {
       title: '课程编码',
       dataIndex: 'code',
       key: 'code',
-      render:(text,record)=>{
-        return record.course_info.code?record.course_info.code:""
-      }
     },
     {
-      title: '修改时间',
-      dataIndex: 'modify_data',
-      key: 'modify_data',
+      title: '学分',
+      dataIndex: 'credits',
+      key: 'credits',
     },
     {
-      title: '审核人',
-      dataIndex: 'reviewer',
-      key: 'reviewer',
-      render: (text, record) => {
-        return record.reviewer ? record.reviewer.name : ''
-      }
+      title: '选修/必修/限选',
+      dataIndex: 'attribute',
+      key: 'attribute',
     },
     {
       title: '操作',
@@ -46,34 +39,37 @@ const Syllabus = () => {
       key: 'operation',
       render: (text, record) => (
         <div>
-          <Link to={{ pathname: "/syllabus/add", state: { data: record } }}><Button size="small" type="link" onClick={()=>{add(record)}}>编辑课程大纲</Button></Link>
+          <Link to={{ pathname: "/syllabus/edit", state: { data: record } }}><Button size="small" type="link" onClick={()=>{add(record)}}>编辑课程大纲</Button></Link>
           <Popconfirm title="确定删除？" okText="确定" cancelText="取消">
             <Button type="link">删除课程大纲</Button>
           </Popconfirm>
-          <Button type="link">查看课程大纲</Button>
+          <Button type="link" onClick={()=>{showSyllabus(record)}}>查看课程大纲</Button>
         </div>
       ),
     },
   ];
   useEffect(() => {
     setLoading(true)
-    // const teacher = JSON.parse(getSession('userInfo'));
-    // const params = {
-    //   _id: teacher._id
-    // }
+    const teacher = JSON.parse(getSession('userInfo'));
+    const params = {
+      _id: teacher._id
+    }
     // const res = React.$axios.post('/getSyllabus', params).then((syllabusData) => {
     //   // console.log(syllabusData)
     //   setSyllabusData(syllabusData.data[0].course)
     // })
-    const syll = React.$axios.get('/getSyllabus').then((sllData) => {
-      setSyllabusData(sllData.data)
+    const res = React.$axios.post('/findTeacher', params).then((data) => {
+      setCourseData(data.data.course)
     })
-
     setLoading(false)
   }, [])
   const add=(record)=>{
     console.log(record)
     setSession("newData",JSON.stringify(record));
+  }
+  const showSyllabus = (record)=>{
+    console.log(record)
+    history.push('/syllabus/show')
   }
   return (
     <div className="page-container">
@@ -86,7 +82,7 @@ const Syllabus = () => {
         </div>
         <div className="table-wrap">
           <Table
-            dataSource={syllabusData}
+            dataSource={courseData}
             columns={professColumns}
             loading={loading}
             bordered

@@ -33,14 +33,6 @@ const HeaderCourse = () => {
       key: 'attribute',
     },
     {
-      title: '审核人',
-      dataIndex: 'reviewer',
-      key: 'reviewer',
-      // render: (text, record) => {
-      //   return record.reviewer.name ? record.reviewer.name : ''
-      // }
-    },
-    {
       title: '操作',
       dataIndex: 'operation',
       key: 'operation',
