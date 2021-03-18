@@ -13,7 +13,7 @@ module.exports = app => {
     sex:{type:String},
     birthday:{type:String},
     //课程，教师课程一对多
-    course:[{type:Schema.Types.ObjectId,ref:'Course'}],
+    // course:[{type:Schema.Types.ObjectId,ref:'Course'}],
     job:{type:String},//专职，兼职
     position: {//副教授、助教.....
       type: String,
@@ -27,10 +27,6 @@ module.exports = app => {
       type: Schema.Types.ObjectId,
       ref: 'TeachRoom'
     },
-    major: {
-      type: Schema.Types.ObjectId,
-      ref: 'Major'
-    }
   })
 
   return mongoose.model('Teacher', TeacherSchema, 'teacher');

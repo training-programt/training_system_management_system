@@ -15,12 +15,10 @@ class TeacherController extends Controller {
   }
   async findTeacher() {
     const { ctx } = this;
-    const params = ctx.request.body
-    console.log(params)
-    const data = await ctx.model.Teacher.find({ _id: params._id })
+    const params =await ctx.request.body
+    const data = await ctx.model.Teacher.findOne({ _id: params._id })
     .populate('course')
     .sort()
-    console.log(data)
     ctx.body = {
       total: data.length,
       data: data,
@@ -168,7 +166,6 @@ class TeacherController extends Controller {
       {
         $set: {
           name: params.name,
-          // role:params.role,
           password: params.password,
           sex: params.sex,
           birthday: params.birthday,

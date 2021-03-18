@@ -28,21 +28,9 @@ const HeaderCourse = () => {
       key: 'credits',
     },
     {
-        title: '课程负责人',
-        dataIndex: 'header',
-        align: 'center',
-        render: (text, record) => {
-            console.log(record)
-          return record.header ? record.header.name : ''
-        }
-      },
-    {
-      title: '审核人',
-      dataIndex: 'reviewer',
-      key: 'reviewer',
-      // render: (text, record) => {
-      //   return record.reviewer.name ? record.reviewer.name : ''
-      // }
+      title: '选修/必修/限选',
+      dataIndex: 'attribute',
+      key: 'attribute',
     },
     {
       title: '操作',
@@ -61,10 +49,8 @@ const HeaderCourse = () => {
     const params = {
       _id: teacher._id
     }
-    console.log(teacher)
-    const res = React.$axios.post('/findSyllabus', params).then((data) => {
-        console.log(data)
-        setCourseData(data.data[0].course)
+    const res = React.$axios.post('/findTeacher', params).then((data) => {
+        setCourseData(data.data.course)
       })
     setLoading(false)
   }, [])

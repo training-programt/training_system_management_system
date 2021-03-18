@@ -58,7 +58,6 @@ const Menu = () => {
       dataIndex: 'role',
       align: 'center',
       render:(text,record)=>{
-        console.log(record)
         return record.role.roleName
       }
     },

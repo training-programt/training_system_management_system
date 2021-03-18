@@ -65,23 +65,7 @@ const Relation = () => {
   ];
   useEffect(() => {
     const Rel = React.$axios.get('/getRelation').then((rel) => {
-      // console.log(rel.data)
       setRelationData(rel.data)
-      // console.log(columns[2].children)
-      // console.log(rel.data[0].teach_goal.length)
-      // for(let i = 0;i<rel.data[0].teach_goal.length;i++){
-      //   console.log(rel.data[0].teach_goal[i])
-      //   columns[2].children.push(
-      //     {
-      //     title:rel.data[0].teach_goal[i].target_course_name,
-      //     dataIndex:'target'+i,
-      //     render:rel.data[0].teach_goal[i].weight
-      //   }
-      //   )
-      // columns[2].children[i].title = 
-      // columns[2].children[i].render = rel.data[0].teach_goal[i].weight
-
-      // }
     })
     const MajorRequirement = React.$axios.get('/getMajorRequirement').then((ma) => {
       setRequirementData(ma.data)
@@ -89,6 +73,8 @@ const Relation = () => {
     const Point = React.$axios.get('/getPoint').then((point) => {
       setPointData(point.data)
     })
+    let teachGoal = JSON.parse(localStorage.getItem('teachGoal'))
+    console.log(teachGoal)
   }, [])
 
   //新增
@@ -163,7 +149,6 @@ const Relation = () => {
     //   }
     // }
     setVisible(false);
-
   };
 
   const handleCancel = () => {
@@ -227,6 +212,16 @@ const Relation = () => {
                   })}
                 </Select>
               </Form.Item>
+              {/* {teachGoal&&teachGoal.map(item=>{
+                  return  
+                  <Form.Item
+                  name="teach_goal"
+                  label="课程教学目标"
+                  >
+                  <Input/>
+                </Form.Item>
+                })} */}
+             
             </Form>
           </Modal>
         </div>

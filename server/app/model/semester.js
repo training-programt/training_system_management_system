@@ -1,5 +1,5 @@
 'use strict'
-//学期表 2017-2018上学期
+//学期表 2017-2018-1
 module.exports = app => {
   const mongoose = app.mongoose;
   const Schema = mongoose.Schema;

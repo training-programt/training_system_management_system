@@ -187,11 +187,71 @@ class CourseController extends Controller {
           category: params.category,
           degree: params.degree,
           direction: params.direction,
-          introduce: params.introduce,
           system:params.system,
           course_selection_group: params.course_selection_group,
           assessment_method: params.assessment_method,
           flag_fuse: params.flag_fuse
+        }
+      }
+    )
+    if (res.n == 1) {
+      ctx.body = {
+        total: res.length,
+        message: '修改成功',
+        data: res,
+        code: 200,
+        isSucceed: true,
+      };
+    } else {
+      ctx.body = {
+        message: '修改失败',
+        code: 200,
+        isSucceed: false,
+      };
+    }
+  }
+  async updateCourse1() {
+    const { ctx } = this;
+    const params = ctx.request.body;
+    console.log(params)
+    const createSyllabus = await ctx.service.courseLeader.createSyllabus({course_info:params.name})
+    console.log(createSyllabus)
+    const find  = await ctx.service.course.findCourse({_id:params.name})
+    console.log(find)
+    if(params.unit!==find[0].unit){
+      const collegeChange = await ctx.model.College.update(
+        { _id: find[0].unit },
+        {
+          $pull: {
+            courseList: params.name
+          }
+        },
+      )
+      const newChange = await ctx.model.College.update(
+        { _id: params.unit },
+        {
+          $push: {
+            courseList: params.name
+          }
+        },
+      )
+    }
+    const res = await ctx.model.Course.update(
+      { _id: params.name },
+      {
+        $set: {
+          _id: params.name,
+          name: find[0].name,
+          code: params.code,
+          unit: params.unit,
+          type: params.type,
+          within: params.within,
+          outside: params.outside,
+          introduce:params.introduce,
+          englishName:params.englishName,
+          professional:params.professional,
+          credits:params.credits,
+          system:createSyllabus._id,
         }
       }
     )

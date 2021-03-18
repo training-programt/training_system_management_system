@@ -1,4 +1,4 @@
-import {Syllabus,SyllabusAdd,HeaderCourse,ProjectShow} from "@/pages";
+import {Syllabus,SyllabusAdd,HeaderCourse,ProjectShow,SyllabusShows} from "@/pages";
 //课程负责人
 export default [
   {
@@ -11,6 +11,16 @@ export default [
     path: '/syllabus/add',
     name: '新增教学大纲',
     component: SyllabusAdd,
+  },
+  {
+    path: '/syllabus/edit',
+    name: '编辑教学大纲',
+    component: SyllabusAdd,
+  },
+  {
+    path: '/syllabus/show',
+    name: '查看教学大纲',
+    component: SyllabusShows,
   },
   {
     path: '/trainingShow',

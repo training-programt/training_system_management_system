@@ -1,19 +1,23 @@
 import React, { useState, useEffect } from 'react';
-import { Form, Input, Select, Button } from 'antd';
+import { Form, Input, Select, Button,message } from 'antd';
 import { useLocation } from "react-router-dom";
 import { SpaceContext } from 'antd/lib/space';
 import { ArrowLeftOutlined, ArrowRightOutlined, RollbackOutlined, SaveOutlined } from '@ant-design/icons';
-import { getSession } from '../../../utils';
+import { getSession,setSession } from '../../../utils';
 
 const { Option } = Select;
 
 const BasicInfo = () => {
     const [form] = Form.useForm();
-    // connst data = useLocation.state.data()
+    let info = useLocation()?.state?.data;
     const [college, setCollegeData] = useState([]);
     const [majorData, setMajorData] = useState([]);
     const [header, setHeaderData] = useState([]);
+    const [butType,setButType] = useState(false);
+  const [courseData, setCourseData] = useState([]);
     const data = JSON.parse(getSession("newData"));
+    // const [basic,setBasicData] = useState({});
+
     const layout = {
         labelCol: { span: 5 },
         wrapperCol: { span: 17 },
@@ -28,43 +32,25 @@ const BasicInfo = () => {
         const res1 = React.$axios.get('/getTeacher').then((teacherData) => {
             setHeaderData(teacherData.data)
           })
-        form.resetFields()
-        let basic = {
-            //   _id: data._id,
-            name: data.name,
-            code: data.code,
-            // header: data.header?data.header.name:"",
-            // unit: data.unit?data.unit.name:"",
-            type: data.type,
-            // semester: data.semester?data.semester.semesterName:"",
-            course_ap: data.course_ap,
-            weekly_hours: data.weekly_hours,
-            within: data.within,
-            credits: data.credits,
-            outside: data.outside,
-            computer: data.computer,
-            other: data.other,
-            nature: data.nature,
-            attribute: data.attribute,
-            category: data.category,
-            degree: data.degree,
-            direction: data.direction,
-            introduce: data.introduce,
-            // system:data.system?data.system.name:"",
-            course_selection_group: data.course_selection_group,
-            assessment_method: data.assessment_method,
-            flag_fuse: data.flag_fuse
-        }
-        form.setFieldsValue(basic)
+          const res = React.$axios.get('/getCourse').then((courseData) => {
+            setCourseData(courseData.data)
+          })
     }, [])
-    const save = () => {
-        console.log(11)
+    const save = async() => {
         const params = {
-            
             ...form.getFieldValue(),
         }
-        console.log(params)
+        localStorage.setItem("basic",JSON.stringify(params));
+        message.info('暂存成功')
     }
+    useEffect(() => {
+        console.log(info)
+        if(info){
+            form.setFieldsValue(info.course_info)
+        }else{
+            form.setFieldsValue(JSON.parse(localStorage.getItem('basic'))||{})
+        }
+    }, [])
     return (
         <div className="page">
             <Form
@@ -84,9 +70,12 @@ const BasicInfo = () => {
                             },
                         ]}
                     >
-                        <Input />
+                          <Select placeholder="选择课程名字" allowClear>
+                            {
+                                courseData && courseData.map(item => (<Option key={item._id} value={item._id}>{item.name}</Option>))
+                            }
+                        </Select>
                     </Form.Item>
-
                     <Form.Item
                         label="英文名字"
                         name="englishName"
@@ -115,28 +104,6 @@ const BasicInfo = () => {
                             }
                         </Select>
                     </Form.Item>
-                    {/* <Form.Item
-                        label="课程负责人"
-                        name="header"
-                        rules={[
-                            {
-                                required: true,
-                                message: '课程负责人不能为空!',
-                            },
-                        ]}
-                    >
-                       <Select
-                        placeholder="请选择课程负责人"
-                        showSearch
-                        optionFilterProp="children"
-                      >
-                        {
-                          header && header.map((item, index) => {
-                            return <Select.Option key={index} value={item._id}>{item.name}</Select.Option>
-                          })
-                        }
-                      </Select>
-                    </Form.Item> */}
                     <Form.Item
                         label="课程代码"
                         name="code"
@@ -242,7 +209,7 @@ const BasicInfo = () => {
                     </Form.Item>
                 </div>
             </Form>
-            <Button icon={<SaveOutlined />} onClick={save} type="primary">暂存信息</Button>
+            <Button icon={<SaveOutlined />} onClick={save} type="primary" disabled={butType}>暂存信息</Button>
         </div>
 
     )

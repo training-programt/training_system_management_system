@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react'
-
+import { useLocation } from "react-router-dom";
 import { Form, Input, Button, List, Divider, message } from 'antd';
 import { PlusOutlined } from '@ant-design/icons';
 const data1 = []
@@ -11,45 +11,37 @@ const layout = {
 const TeachGoal = () => {
 
     const [form] = Form.useForm();
+    let info = useLocation()?.state?.data;
     const [showForm, setShowForm] = useState(false);
     const [teachGoal, setTeachGoalDate] = useState([]);
     useEffect(() => {
-        const TeachGoal = React.$axios.get('/getTeachGoal').then((goal) => {
-            setTeachGoalDate(goal.data)
-        })
+        // const TeachGoal = React.$axios.get('/getTeachGoal').then((goal) => {
+        //     setTeachGoalDate(goal.data)
+        // })
     }, [])
     const addTeachGoal = async () => {
         const params = {
             ...form.getFieldValue(),
         }
-        const res = await React.$axios.post(
-            '/addTeachGoal',
-            params,
-        );
-        if (res) {
-            message.info(res.message)
+        setTeachGoalDate([...teachGoal,params]);
+            message.info("添加成功")
             setShowForm(false)
             form.resetFields();
-            const newGoal = await React.$axios.get(
-                '/getTeachGoal'
-            )
-            setTeachGoalDate(newGoal.data);
+            localStorage.setItem("teachGoal",JSON.stringify([...teachGoal,params]))
+    }
+    const delTeachGoal=async(index)=>{
+        let newTeachGoal = [...teachGoal]
+        newTeachGoal.splice(index,1)
+        setTeachGoalDate(newTeachGoal)
+        localStorage.setItem("teachGoal",JSON.stringify(newTeachGoal))
+    }
+    useEffect(() => {
+        if(info){
+            setTeachGoalDate(info.teaching_goal)
+        }else{
+            setTeachGoalDate(JSON.parse(localStorage.getItem('teachGoal'))||[])
         }
-    }
-    const delTeachGoal=async(item)=>{
-        console.log(item)
-        const params = {
-            _id: item._id,
-          }
-          const del = await React.$axios.post('/delTeachGoal', params)
-          if (del) {
-            message.info(del.message);
-            const res = await React.$axios.get(
-              '/getTeachGoal',
-            )
-            setTeachGoalDate(res.data);
-          }
-    }
+    }, [])
     return (
         <div className="train-object">
             <div className="object-left">
@@ -61,7 +53,7 @@ const TeachGoal = () => {
                         renderItem={(item, index) => (
                             <List.Item
                                 actions={[
-                                    <Button type="link" size='small' onClick={()=>delTeachGoal(item)}>删除</Button>
+                                    <Button type="link" size='small' onClick={()=>delTeachGoal(index)}>删除</Button>
                                 ]}
                             >
                                 <List.Item.Meta
