@@ -5,21 +5,10 @@ module.exports = app => {
   const Schema = mongoose.Schema;
   const TeachRoomSchema = new Schema({
     name: { type: String },
-    count: { type: Number },
-    type: { type: String, defineValue: '1' },
     director: {
       type: Schema.Types.ObjectId,
       ref: 'Teacher'
     },
-    college: {
-      type: Schema.Types.ObjectId,
-      ref: 'College'
-    },
-    major: {
-      type: Schema.Types.ObjectId,
-      ref: 'Major'
-    },
-    introduce: { type: String },
     //教研室教师一对多
     teachers: [{
       type: Schema.Types.ObjectId,
