@@ -5,11 +5,6 @@ module.exports = app => {
   const Schema = mongoose.Schema;
   const GraduationRequirementSchema = new Schema({
     description: { type: String },
-    analysis: { type: String },
-    nationalRequirement: [{//国家毕业要求
-      type: Schema.Types.ObjectId,
-      ref: 'NationalRequirement'
-    }],
     majorRequirement: [{
       name: { type: String },
       description: { type: String },
@@ -18,13 +13,6 @@ module.exports = app => {
         ref: 'Point'
       }],
     }]
-  })
-
-  GraduationRequirementSchema.virtual('pointList', {
-    localField: '_id',
-    foreignField: 'graduationRequirement',
-    justOne: false,
-    ref: 'Point'
   })
 
   return mongoose.model('GraduationRequirement', GraduationRequirementSchema, 'graduationRequirement');
