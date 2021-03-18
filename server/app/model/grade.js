@@ -3,7 +3,7 @@
 module.exports = app => {
   const mongoose = app.mongoose;
   const Schema = mongoose.Schema;
-  const GradeSchema = new mongoose.Schema({
+  const GradeSchema = new Schema({
     name: { type: String },
     // studentNumber: [{ 
     //   type: Schema.Types.ObjectId,

@@ -12,7 +12,7 @@ module.exports = app => {
     //教研室教师一对多
     teachers: [{
       type: Schema.Types.ObjectId,
-      ref: "Teacher"
+      ref: 'Teacher'
     }]
   })
 

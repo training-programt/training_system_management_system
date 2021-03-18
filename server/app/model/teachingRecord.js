@@ -3,7 +3,7 @@
 module.exports = app => {
   const mongoose = app.mongoose;
   const Schema = mongoose.Schema;
-  const TeachingRecordSchema = new mongoose.Schema({
+  const TeachingRecordSchema = new Schema({
     teacher: {
       type:Schema.Types.ObjectId,
       ref:'Teacher'
@@ -14,7 +14,7 @@ module.exports = app => {
     },
     course: {
       type:Schema.Types.ObjectId,
-      ref:'Course'
+      ref:'BasicCourse'
     },
     assessment: {
       type:Schema.Types.ObjectId,

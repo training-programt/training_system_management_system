@@ -14,25 +14,25 @@ module.exports = app => {
     //   type: Schema.Types.ObjectId,
     //   ref: 'TeachRoom'
     // }],
-    courseList: [{//课程
-      type: Schema.Types.ObjectId,
-      ref: 'Course'
-    }],
+    // courseList: [{//课程
+    //   type: Schema.Types.ObjectId,
+    //   ref: 'Course'
+    // }],
   })
 
-  CollegeSchema.virtual('majorList', {
-    localField: '_id',
-    foreignField: 'college_id',
-    justOne: false,
-    ref: 'Major'
-  })
+  // CollegeSchema.virtual('majorList', {
+  //   localField: '_id',
+  //   foreignField: 'college_id',
+  //   justOne: false,
+  //   ref: 'Major'
+  // })
 
-  CollegeSchema.virtual('teachRoomList', {
-    localField: '_id',
-    foreignField: 'college_id',
-    justOne: false,
-    ref: 'TeachRoom'
-  })
+  // CollegeSchema.virtual('teachRoomList', {
+  //   localField: '_id',
+  //   foreignField: 'college_id',
+  //   justOne: false,
+  //   ref: 'TeachRoom'
+  // })
 //学院和课程相关联
   // CollegeSchema.virtual('courseList', {
   //   localField: '_id',

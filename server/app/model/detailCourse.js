@@ -5,8 +5,8 @@ module.exports = app => {
   const Schema = mongoose.Schema;
   const DetailCourseSchema = new Schema({
       course:{
-        tyep:Schema.Types.ObjectId,
-        ref:"BasicCourse"
+        type:Schema.Types.ObjectId,
+        ref:'BasicCourse'
       },
       englishName: { type: String },//英文名字
       unit: {//所属学院

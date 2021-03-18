@@ -19,7 +19,7 @@ module.exports = app => {
         // ]
         course: {
             type: Schema.Types.ObjectId,
-            ref: 'Course'
+            ref: 'BasicCourse'
         },
         leader: {
             type: Schema.Types.ObjectId,

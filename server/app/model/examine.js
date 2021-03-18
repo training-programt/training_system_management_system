@@ -5,7 +5,7 @@ module.exports = app => {
   const ExamineSchema = new Schema({
     course: {
       type: Schema.Types.ObjectId,
-      ref: 'Course',
+      ref: 'BasicCourse',
     },
     achievement: {
       type: Schema.Types.ObjectId,
