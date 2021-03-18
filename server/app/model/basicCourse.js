@@ -7,23 +7,14 @@ module.exports = app => {
     name: { type: String },
     code: { type: String },//课程代码
     // type: { type: String },
-    // englishName: { type: String },//英文名字
     //课程负责人与教师相关联
     // header: {
     //   type: Schema.Types.ObjectId,
     //   ref: 'Teacher'
     // },
-    // unit: {//所属学院
-    //   type: Schema.Types.ObjectId,
-    //   ref: 'College'
-    // },
     credits: { type: String },//学分
     // course_ap: { type: String },//先修课程
-    // professional: [{
-    //   type: Schema.Types.ObjectId,
-    //   ref: 'Major'
-    // }],//适用专业
-    // introduce:{type:String},//课程简介
+    
     // semester: {
     //   type: Schema.Types.ObjectId,
     //   ref: 'Semester'

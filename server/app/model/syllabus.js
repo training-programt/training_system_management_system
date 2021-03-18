@@ -6,7 +6,7 @@ module.exports = app => {
   const SyllabusSchema = new Schema({
     course_info: {
       type: Schema.Types.ObjectId,
-      ref: 'Course'
+      ref: 'DetailCourse'
     },
     teaching_goal: [{
       type: Schema.Types.ObjectId,
@@ -27,8 +27,15 @@ module.exports = app => {
     assessment: {
       type: Schema.Types.ObjectId,
       ref: 'AttendanceProportion'
-    },//考核方式
-    reference: { type: String },//建意教材及教学参考书
+    },//考核环节
+    assessmentGoal:{
+      type:Schema.Types.ObjectId,
+      ref:"AssessmentGoal"
+    },//考核环节与课程目标的对应关系
+    reference: { 
+      type: Schema.Types.ObjectId,
+      ref: 'Book'
+    },//建意教材及教学参考书
     instructions: { type: String },//大纲执行说明
     writer: { type: String },//执笔人
     reviewer: {
