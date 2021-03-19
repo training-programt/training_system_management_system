@@ -118,13 +118,18 @@ export function mergeCells(text, data, key, index) {
   return rowSpan
 }
 
-export function downloadFile(blob, tagFileName, fileType) {
-  var downloadElement = document.createElement('a');
-  var href = window.URL.createObjectURL(blob);
-  downloadElement.href = href;
-  downloadElement.download = tagFileName + '.' + fileType; 
-  document.body.appendChild(downloadElement);
-  downloadElement.click();
-  document.body.removeChild(downloadElement);
-  window.URL.revokeObjectURL(href);
+export function downloadFile(data, filename) {
+  if (!data) { return; }  
+  if (window.navigator && window.navigator.msSaveOrOpenBlob) {
+    let jpgData = new Blob([data]);
+    window.navigator.msSaveOrOpenBlob(jpgData, filename);
+  } else {
+    let url = window.URL.createObjectURL(new Blob([data]));
+    let link = document.createElement("a");
+    link.style.display = "none";
+    link.href = url;
+    link.setAttribute("download", filename);
+    document.body.appendChild(link);
+    link.click();
+  }
 }

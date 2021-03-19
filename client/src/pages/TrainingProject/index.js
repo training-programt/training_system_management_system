@@ -6,6 +6,10 @@ import TableComponent from '@/components/table'
 import { PlusOutlined, DeleteOutlined, EditOutlined } from '@ant-design/icons';
 import api from '@/apis/trainingProject'
 
+import axios from 'axios';
+
+import { downloadFile } from '@/utils'
+
 const TrainingProject = () => {
   const [loading, setLoading] = useState(false);
   const [tableData, setTableData] = useState([]);
@@ -97,6 +101,19 @@ const TrainingProject = () => {
     getProjectList()
   }
 
+
+  const download = async () => {
+    axios({
+      url: '/download',
+      method: 'get',
+      responseType: 'blob'
+    }).then(res => {
+      downloadFile(res, 'example.xlsx')
+    })
+    // const rul = 'http://qpe0365ci.hd-bkt.clouddn.com/2019%E7%BA%A7%E8%BD%AF%E4%BB%B6%E5%B7%A5%E7%A8%8B%E4%BA%BA%E6%89%8D%E5%9F%B9%E5%85%BB%E6%96%B9%E6%A1%88.docx'
+    // downloadFile(rul, 'test.docx')
+  }
+
   return (
     <div className="page-container">
       <HeaderComponent title="培养方案管理" />
@@ -107,7 +124,7 @@ const TrainingProject = () => {
           </div>
           <div className="operation-wrap">
             <Link to="trainingProject/add"><Button type="primary" icon={<PlusOutlined />}>新增方案</Button></Link>
-            <Button type="primary" icon={<DeleteOutlined />}>批量删除</Button>
+            <Button type="primary" icon={<DeleteOutlined />} onClick={download}>批量删除</Button>
           </div>
         </div>
         <div className="table-wrap">
