@@ -3,16 +3,18 @@ const Service = require('egg').Service;
 class CourseSystemService extends Service {
   async getCourseSystem(params) {
     const { ctx } = this;
-    const reg = new RegExp(params.query, 'i')
     const result = await ctx.model.CourseSystem
       .find({
-        $and: [{ name: { $regex: reg } }]
+        // $or: [
+          // { courseType: params.courseType },
+          // { grade: params.grade }
+        // ]
       })
-      .populate('teacher')
-      .populate('basicCourse')
-      .populate('grade')
-      .populate('major')
-      .populate('courseType')
+      .populate('leader', '_id name')
+      .populate('course', '_id name')
+      .populate('grade', '_id name')
+      .populate('major', '_id name')
+      .populate('courseType', '_id name')
       .limit(parseInt(params.pageSize))
       .skip(parseInt(params.pageSize) * (parseInt(params.page) - 1))
       .sort();

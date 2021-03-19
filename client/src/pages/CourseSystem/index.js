@@ -15,9 +15,9 @@ const CourseSystem = () => {
   const [total, setTotal] = useState(0);
   const [page, setPage] = useState(1);
   const [isEdit, setIsEdit] = useState(false);
-  const [pageSize, setPageSize] = useState(12)
   const [selectedRowKeys, setSelectedRowKeys] = useState([])
-  const [query, setQuery] = useState('')
+  const [grade, setGrade] = useState('')
+  const [courseType, setCourseType] = useState('')
   const [courseList, setCourseList] = useState([])
   const [gradeList, setGradeList] = useState([])
   const [courseTypeList, setCourseTypeList] = useState([])
@@ -25,7 +25,7 @@ const CourseSystem = () => {
 
   const tableSetting = {
     page: page,
-    rows: pageSize,
+    rows: 12,
     isMultiple: true,
     rowSelection: {
       type: 'checkbox',
@@ -37,7 +37,7 @@ const CourseSystem = () => {
 
   const pageparams = {
     page: page,
-    pageSize: pageSize,
+    pageSize: tableSetting.rows,
     total: total,
   }
 
@@ -48,9 +48,10 @@ const CourseSystem = () => {
 
   const getCourseSystem = async () => {
     const params = {
-      query: '',
-      pageSize: 12,
-      page: 1,
+      grade: '',
+      courseType: '',
+      pageSize: tableSetting.rows,
+      page: page,
     }
     setLoading(true)
     const res = await React.$axios.get(
@@ -93,7 +94,7 @@ const CourseSystem = () => {
 
   useMemo(() => {
     getCourseSystem()
-  }, [page, query])
+  }, [page, grade])
 
   useMemo(() => {
     getCourseList()
@@ -111,12 +112,12 @@ const CourseSystem = () => {
     {
       title: '课程名称',
       dataIndex: 'basicCourse',
-      render: text => text.name
+      render: (text, record) => record.course.name
     },
     {
       title: '年级',
       dataIndex: 'grade',
-      render: text => text.name
+      render: (text, record) => record.grade.name
     },
     {
       title: '开课学期',
@@ -126,17 +127,17 @@ const CourseSystem = () => {
     {
       title: '专业',
       dataIndex: 'major',
-      render: text => text.name
+      render: (text, record) => record.major.name
     },
     {
       title: '课程类型',
       dataIndex: 'courseType',
-      render: text => text.name
+      render: (text, record) => record.courseType.name
     },
     {
       title: '课程负责人',
       dataIndex: 'leader',
-      render: text => text.name
+      render: (text, record) => record.leader.name
     },
     {
       title: '操作',
@@ -165,7 +166,15 @@ const CourseSystem = () => {
     setIsModalVisible(true);
     form.resetFields()
     setIsEdit(true)
-    form.setFieldsValue(record)
+    let temp = {
+      ...record,
+      course: record.course._id,
+      leader: record.leader._id,
+      grade: record.grade._id,
+      courseType: record.courseType._id,
+    }
+    console.log(temp)
+    form.setFieldsValue(temp)
   }
 
   const handleOk = async (e) => {
@@ -243,8 +252,28 @@ const CourseSystem = () => {
       <HeaderComponent title="课程体系管理" />
       <div className="body-wrap">
         <div className="header-wrap">
-          <div className="search-box">
-            <Input.Search placeholder="请输入课程体系名称" allowClear enterButton onSearch={value => setQuery(value)} />
+          <div className="select-box">
+            {/* <Input.Search placeholder="请输入课程体系名称" allowClear enterButton onSearch={value => setQuery(value)} /> */}
+            <Select
+              placeholder="请选择课程类型"
+              showSearch
+              allowClear
+              onChange={value => setCourseType(value)}
+            >
+              {
+                courseTypeList.map(item => <Select.Option key={item._id} value={item._id}>{item.name}</Select.Option>)
+              }
+            </Select>
+            <Select
+              placeholder="请选择年级"
+              showSearch
+              allowClear
+              onChange={value => setGrade(value)}
+            >
+              {
+                gradeList.map(item => <Select.Option key={item._id} value={item._id}>{item.name}</Select.Option>)
+              }
+            </Select>
           </div>
           <div className="operation-wrap">
             <Button type="primary" icon={<PlusOutlined />} onClick={showModal}>新增课程体系</Button>
@@ -346,8 +375,8 @@ const CourseSystem = () => {
             label="是否工程认证"
           >
             <Radio.Group >
-              <Radio value='1'>是</Radio>
-              <Radio value='0'>否</Radio>
+              <Radio value={1}>是</Radio>
+              <Radio value={0}>否</Radio>
             </Radio.Group>
           </Form.Item>
           <Form.Item
@@ -355,8 +384,8 @@ const CourseSystem = () => {
             label="是否学位课"
           >
             <Radio.Group >
-              <Radio value='1'>是</Radio>
-              <Radio value='0'>否</Radio>
+              <Radio value={1}>是</Radio>
+              <Radio value={0}>否</Radio>
             </Radio.Group>
           </Form.Item>
         </Form>

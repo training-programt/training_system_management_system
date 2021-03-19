@@ -5,6 +5,7 @@ class CourseSystemController extends Controller {
   async getCourseSystem() {
     const { ctx } = this;
     const params = ctx.request.query;
+    console.log(params)
     const data = await ctx.service.courseSystem.getCourseSystem(params);
     const count = await ctx.service.courseSystem.getCount();
     ctx.body = {
