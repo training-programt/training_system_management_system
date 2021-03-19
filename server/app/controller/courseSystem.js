@@ -1,12 +1,12 @@
 'use strict';
 const Controller = require('egg').Controller;
 
-class CourseTypeController extends Controller {
-  async getCourseType() {
+class CourseSystemController extends Controller {
+  async getCourseSystem() {
     const { ctx } = this;
     const params = ctx.request.query;
-    const data = await ctx.service.courseType.getCourseType(params);
-    const count = await ctx.service.courseType.getCount();
+    const data = await ctx.service.courseSystem.getCourseSystem(params);
+    const count = await ctx.service.courseSystem.getCount();
     ctx.body = {
       total: count,
       data: data,
@@ -15,11 +15,11 @@ class CourseTypeController extends Controller {
     };
   }
 
-  async addCourseType() {
+  async addCourseSystem() {
     const { ctx } = this;
     const params = ctx.request.body;
-    const res = await ctx.service.courseType.addCourseType(params)
-    const count = await ctx.service.courseType.getCount();
+    const res = await ctx.service.courseSystem.addCourseSystem(params)
+    const count = await ctx.service.courseSystem.getCount();
     ctx.body = {
       total: count,
       data: res,
@@ -28,11 +28,11 @@ class CourseTypeController extends Controller {
     };
   }
 
-  async delCourseType() {
+  async delCourseSystem() {
     const { ctx } = this;
     const params = ctx.request.body;
-    const res = await ctx.service.courseType.delCourseType(params)
-    const count = await ctx.service.courseType.getCount();
+    const res = await ctx.service.courseSystem.delCourseSystem(params)
+    const count = await ctx.service.courseSystem.getCount();
     ctx.body = {
       total: count,
       data: res,
@@ -41,11 +41,11 @@ class CourseTypeController extends Controller {
     };
   }
 
-  async updateCourseType() {
+  async updateCourseSystem() {
     const { ctx } = this;
     const params = ctx.request.body;
-    const res = await ctx.service.courseType.updateCourseType(params)
-    const count = await ctx.service.courseType.getCount();
+    const res = await ctx.service.courseSystem.updateCourseSystem(params)
+    const count = await ctx.service.courseSystem.getCount();
     ctx.body = {
       total: count,
       data: res,
@@ -54,12 +54,12 @@ class CourseTypeController extends Controller {
     };
   }
 
-  async delMoreCourseType() {
+  async delMoreCourseSystem() {
     const { ctx } = this;
     const params = ctx.request.body;
     const data = params.ids.split(',');
-    const res = await ctx.service.courseType.delMoreCourseType(data)
-    const count = await ctx.service.courseType.getCount();
+    const res = await ctx.service.courseSystem.delMoreCourseSystem(data)
+    const count = await ctx.service.courseSystem.getCount();
     ctx.body = {
       total: count,
       data: res,
@@ -68,9 +68,9 @@ class CourseTypeController extends Controller {
     };
   }
 
-  async getAllCourseType() {
+  async getAllCourseSystem() {
     const { ctx } = this;
-    const res = await ctx.service.courseType.getAllCourseType();
+    const res = await ctx.service.courseSystem.getAllCourseSystem();
     ctx.body = {
       total: res.length,
       data: res,
@@ -80,4 +80,4 @@ class CourseTypeController extends Controller {
   }
 }
 
-module.exports = CourseTypeController;
+module.exports = CourseSystemController;

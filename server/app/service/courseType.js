@@ -40,6 +40,12 @@ class CourseTypeService extends Service {
     return result
   }
 
+  async getAllCourseType() {
+    const { ctx } = this;
+    const result = await ctx.model.CourseType.find().sort()
+    return result;
+  }
+
   async getCount() {
     const { ctx } = this;
     const count = await ctx.model.CourseType.find().count();

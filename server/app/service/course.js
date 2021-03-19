@@ -64,7 +64,7 @@ class CourseService extends Service {
 
     async getAllCourse() {
         const { ctx } = this;
-        const result = await ctx.model.Course.find({}, {_id: true, name: true}).sort();
+        const result = await ctx.model.BasicCourse.find({}, {_id: true, name: true}).sort();
         return result;
     }
 }
