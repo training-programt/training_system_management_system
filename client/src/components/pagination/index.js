@@ -16,12 +16,10 @@ const PaginationComponent = (props) => {
     // />
     <Pagination
       total={props.pageparams.total}
-      showSizeChanger
       showQuickJumper
       pageSize={props.pageparams.pageSize}
       defaultCurrent={props.pageparams.page}
       onChange={(page) => props.handlePage(page)}
-      onShowSizeChange={(current, size) => props.onShowSizeChange(current, size)}
       showTotal={total => `共 ${total} 条`}
       hideOnSinglePage
       className="pagenation-container"

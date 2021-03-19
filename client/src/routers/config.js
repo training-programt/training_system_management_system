@@ -12,6 +12,7 @@ import trainingObject from './trainingObject';
 import graduatoinRequirement from './graduatoinRequirement';
 import courseLeader from './courseLeader'
 import teachingManagement from './teachingManagement'
+import courseType from './courseType';
 
 const routesConfig = [
   // 子路由
@@ -21,6 +22,7 @@ const routesConfig = [
   ...grade,
   ...infoView,
   ...teachRoom,
+  ...courseType,
   ...trainingProject,
   ...trainingObject,
   ...graduatoinRequirement,
