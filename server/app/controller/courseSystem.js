@@ -21,12 +21,22 @@ class CourseSystemController extends Controller {
     const params = ctx.request.body;
     const res = await ctx.service.courseSystem.addCourseSystem(params)
     const count = await ctx.service.courseSystem.getCount();
-    ctx.body = {
+    if(res) {
+      ctx.body = {
       total: count,
       data: res,
       code: 200,
       isSucceed: true,
     };
+    } else {
+      ctx.body = {
+        total: 0,
+        message: '新增失败',
+        code: 200,
+        isSucceed: true,
+      }
+    }
+    
   }
 
   async delCourseSystem() {

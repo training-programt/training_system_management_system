@@ -6,8 +6,8 @@ class CourseSystemService extends Service {
     const result = await ctx.model.CourseSystem
       .find({
         // $or: [
-          // { courseType: params.courseType },
-          // { grade: params.grade }
+        // { courseType: params.courseType },
+        // { grade: params.grade }
         // ]
       })
       .populate('leader', '_id name')
@@ -24,7 +24,21 @@ class CourseSystemService extends Service {
   async addCourseSystem(params) {
     const { ctx } = this;
     const result = await ctx.model.CourseSystem.create(params);
-    return result
+    if (result) {
+      const data = {
+        leader: params.leader,
+        role: ['6004f464120f362f90f32e71']
+      }
+      await this.updateTeacherRole(data)
+      return result
+    }
+    return false
+  }
+
+  async updateTeacherRole(params) {
+    const { ctx } = this;
+    const res = await ctx.model.Teacher.findByIdAndUpdate(params.leader, params);
+    return res;
   }
 
   async updateCourseSystem(params) {
