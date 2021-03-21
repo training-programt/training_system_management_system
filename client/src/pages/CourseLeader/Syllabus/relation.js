@@ -1,10 +1,11 @@
 import React, { useState, useEffect } from 'react';
+import { useLocation } from "react-router-dom";
 import { Table, Input, Button, Space,Modal, InputNumber, message, Select, Row, Col, Popconfirm, Form, Typography } from 'antd';
 import "./index.less"
 
 const Relation = () => {
   const [relation, setRelationData] = useState([]);
-  const [isEdit, setIsEdit] = useState(false);
+  let info = useLocation()?.state?.data;
   const [visible, setVisible] = useState(false);
   const [loading, setLoading] = useState(false);
   const [confirmLoading, setConfirmLoading] = useState(false);
@@ -13,7 +14,7 @@ const Relation = () => {
   const goal = JSON.parse(localStorage.getItem('teachGoal'));
   const [req,setReqData] = useState([]);
   const [pointSecond,setPointSecond]= useState({})
-  const [weight, setWeightData] = useState({})
+  const [weight, setWeightData] = useState([])
   const columns = [
     {
       title: '毕业要求',
@@ -35,7 +36,7 @@ const Relation = () => {
     },
     {
       title: '课程教学目标',
-      dataIndex: 'weight',
+      dataIndex: 'teach_goal',
       algin: 'center',
       width: '40%',
       className: 'teach',
@@ -56,20 +57,19 @@ const Relation = () => {
       title: '操作',
       dataIndex: 'operation',
       key: 'operation',
-      render: (text, record) => (
+      render: (text, record,index) => (
         <div>
-          <Button type="link">编辑</Button>
           <Popconfirm title="确定删除？" okText="确定" cancelText="取消">
-            <Button type="link">删除</Button>
+            <Button type="link" onClick={()=>{del(index)}}>删除</Button>
           </Popconfirm>
         </div>
       ),
     },
   ];
   useEffect(() => {
-    const Rel = React.$axios.get('/getRelation').then((rel) => {
-      setRelationData(rel.data)
-    })
+    // const Rel = React.$axios.get('/getRelation').then((rel) => {
+    //   setRelationData(rel.data)
+    // })
     const MajorRequirement = React.$axios.get('/getMajorRequirement').then((ma) => {
       setRequirementData(ma.data)
     })
@@ -81,47 +81,34 @@ const Relation = () => {
   //新增
   const showAdd = () => {
     setVisible(true);
-    setIsEdit(false)
   };
-  //编辑
-  const edit = (record) => {
-    setVisible(true);
-    setIsEdit(true)
-    let data = {
-      // _id: record._id,
-      // name: record.name,
-      // code: record.code,
-      // introduce: record.introduce,
-      // count: record.count,
-    }
-    form.setFieldsValue(data)
-  };
-  //删除
-  const del = async (record) => {
-  };
+ 
   const handleOk = async (e) => {
     e.preventDefault();
     const params = {
       major_requirement:req,
       point:pointSecond,
-      weight,
+      teach_goal:weight,
     }
-    if (!isEdit) {
       console.log(params)
+      console.log([...relation,params])
       setRelationData([...relation,params]);
       message.info("添加成功")
       localStorage.setItem("relation", JSON.stringify([...relation,params]))
       setVisible(false)
-    } else if (isEdit) {
-    }
-    setVisible(false);
   };
-
+ //删除
+ const del = async (index) => {
+  let newRelation = [...relation]
+      newRelation.splice(index,1)
+      setRelationData(newRelation)
+      localStorage.setItem("relation",JSON.stringify(newRelation))
+};
   const handleCancel = () => {
     setVisible(false);
   };
   const inputChange = (currentIndex, value) => {
-    const arr = [...weight]
+    let arr = [...weight]
     arr[currentIndex] = Number(value)
     setWeightData(arr)
   }
@@ -133,14 +120,26 @@ const Relation = () => {
     })
   }
   const requirementChange=(value)=>{
-    // console.log(value)
-    // console.log(requirement)
     requirement.map((item)=>{
       if(item._id==value){
         setReqData(item)
       }
     })
   }
+  useEffect(() => {
+    if(info){
+        setRelationData(info.relation)
+    }else{
+        setRelationData(JSON.parse(localStorage.getItem('relation'))||[])
+        let re = JSON.parse(localStorage.getItem('relation'))
+        let newArr = []
+        for(let i = 0;i<re.length;i++){
+         newArr.push(re[i].teach_goal)
+        }
+        console.log(newArr)
+        setWeightData([...weight,newArr])
+    }
+}, [])
   return (
     <div className="train-object">
       <div className="object-left">
@@ -159,7 +158,7 @@ const Relation = () => {
             confirmLoading={confirmLoading}
             onCancel={handleCancel}
             destroyOnClose
-            title={isEdit ? '编辑对应关系' : '新增对应关系'}
+            title='新增对应关系'
             footer={[
               <Button key="back" onClick={handleCancel}>
                 取消
