@@ -12,7 +12,6 @@ import trainingObject from './trainingObject';
 import graduatoinRequirement from './graduatoinRequirement';
 import courseLeader from './courseLeader'
 import teachingManagement from './teachingManagement'
-
 const routesConfig = [
   // 子路由
   ...major,

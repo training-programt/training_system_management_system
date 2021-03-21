@@ -10,6 +10,7 @@ module.exports = app => {
     router.post('/delTeachGoal', controller.courseLeader.delTeachGoal);
     //对应关系
     router.get('/getRelation', controller.courseLeader.getRelation);
+    router.post('/addRelation', controller.courseLeader.addRelation);
     //专业毕业要求
     router.get('/getMajorRequirement', controller.courseLeader.getMajorRequirement);
     //指标点

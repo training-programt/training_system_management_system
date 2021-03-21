@@ -12,10 +12,11 @@ module.exports = app => {
         type: Schema.Types.ObjectId,
         ref: 'Point'
     },
-    teach_goal:[{
+    teach_goal:{
         type: Schema.Types.ObjectId,
         ref: 'TeachingGoal'
-    }]
+    },
+    weight:{type:String},
   })
 
   return mongoose.model('Relation', RelationSchema, 'relation');

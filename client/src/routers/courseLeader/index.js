@@ -1,6 +1,18 @@
-import {Syllabus,SyllabusAdd,HeaderCourse,ProjectShow,SyllabusShows} from "@/pages";
+import {Syllabus,SyllabusAdd,HeaderCourse,ProjectShow,SyllabusShows,testMethod,Book} from "@/pages";
 //课程负责人
 export default [
+  {
+    path:'/testMethods',
+    name:'考核环节设置',
+    icon:'icon-icon-test8',
+    component:testMethod
+  },
+  {
+    path:'/referenceBooks',
+    name:'建议教材及参考大纲设置',
+    icon:'icon-icon-test8',
+    component:Book
+  },
   {
     path: '/syllabus',
     name: '教学大纲',

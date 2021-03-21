@@ -6,7 +6,8 @@ module.exports = app => {
   const AttendanceProportionSchema = new Schema({
     name:{type:String},
     content:{type:String},
-    
+    account:{type:String},//占比10%
+    // status:{type:Boolean},
   })
   
   return mongoose.model('AttendanceProportion', AttendanceProportionSchema, 'attendanceProportion');

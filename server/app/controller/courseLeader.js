@@ -131,7 +131,31 @@ class CourseLeaderController extends Controller {
     }
 
   }
-
+  async addRelation() {
+    const { ctx } = this;
+    const params = ctx.request.body;
+    console.log(params)
+    // const find = await ctx.service.courseLeader.findRelation(
+    //   { target_course_name: params.target_course_name }
+    // )
+    // console.log(find)
+      // const res = await ctx.service.courseLeader.addTeachGoal(params)
+      if (res) {
+        ctx.body = {
+          total: res.length,
+          data: res,
+          code: 200,
+          isSucceed: true,
+          message: '新增成功',
+        };
+      } else {
+        ctx.body = {
+          message: '新增失败',
+          code: 200,
+          isSucceed: false,
+        };
+      }
+  }
    //得到 专业要求
    async getMajorRequirement() {
     const { ctx } = this;
