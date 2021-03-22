@@ -26,7 +26,7 @@ class CourseSystemService extends Service {
     const result = await ctx.model.CourseSystem.create(params);
     if (result) {
       const data = {
-        leader: params.leader,
+        teacher: params.leader,
         role: ['6004f464120f362f90f32e71']
       }
       await this.updateTeacherRole(data)
@@ -37,7 +37,7 @@ class CourseSystemService extends Service {
 
   async updateTeacherRole(params) {
     const { ctx } = this;
-    const res = await ctx.model.Teacher.findByIdAndUpdate(params.leader, params);
+    const res = await ctx.model.Teacher.findByIdAndUpdate(params.teacher, params);
     return res;
   }
 

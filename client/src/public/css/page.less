@@ -28,7 +28,6 @@
 
       .select-box {
         display: flex;
-        width: 500px * @width;
         justify-content: space-between;
 
         &>div:nth-child(1),
@@ -40,6 +39,10 @@
         &>div:nth-child(even) {
           margin: 0 12px * @width;
         }
+      }
+
+      .ant-select {
+        min-width: 240px * @width !important
       }
 
       .operation-wrap {

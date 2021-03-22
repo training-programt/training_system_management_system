@@ -11,6 +11,7 @@ module.exports = app => {
   require('./router/teacher')(app)
   require('./router/courseType')(app)
   require('./router/courseSystem')(app)
+  require('./router/teachingInfo')(app)
 
   // require('./router/test')(app)
   require('./router/course')(app)
