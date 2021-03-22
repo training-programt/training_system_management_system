@@ -72,5 +72,23 @@ class TeachingInfoService extends Service {
     const count = await ctx.model.TeachingInfo.find().count();
     return count;
   }
+
+  async getTeachingInfoByTeacher(params) {
+    const { ctx } = this;
+    let semester = params.semester ? {
+      semester: params.semester
+    } : {};
+    const res = await ctx.model.TeachingInfo
+      .find(
+        { $and: [semester, { teacher: params.teacher }] }
+      )
+      .populate("major", '_id name')
+      .populate('semester', '_id semesterName')
+      .populate('basicCourse', '_id name')
+      .limit(parseInt(params.pageSize))
+      .skip(parseInt(params.pageSize) * (parseInt(params.page) - 1))
+      .sort();
+    return res
+  }
 }
 module.exports = TeachingInfoService;

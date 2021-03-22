@@ -15,6 +15,7 @@ import teachingManagement from './teachingManagement'
 import courseType from './courseType';
 import courseSystem from './courseSystem';
 import teachingInfo from './teachingInfo';
+import teachingList from './teachingList';
 
 const routesConfig = [
   // 子路由
@@ -32,6 +33,7 @@ const routesConfig = [
   ...courseLeader,
   ...teachingManagement,
   ...teachingInfo,
+  ...teachingList,
   ...setting,
   ...publish,
   ...exception,

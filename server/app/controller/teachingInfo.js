@@ -87,6 +87,18 @@ class TeachingInfoController extends Controller {
       isSucceed: true,
     }
   }
+
+  async getTeachingInfoByTeacher() {
+    const { ctx } = this;
+    const params = ctx.request.query;
+    const res = await ctx.service.teachingInfo.getTeachingInfoByTeacher(params);
+    ctx.body = {
+      total: res.length,
+      data: res,
+      code: 200,
+      isSucceed: true,
+    }
+  }
 }
 
 module.exports = TeachingInfoController;
