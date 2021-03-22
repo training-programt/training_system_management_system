@@ -9,6 +9,7 @@ import Relation from './relation'
 import Theory from './theory'
 import Practice from './practice'
 import ExamAndApp from './examAndApp'
+import Assessment from './assessment'
 const { Step } = Steps;
 const SyllabusAdd = () => {
     const [current, setCurrent] = useState(0);
@@ -33,6 +34,10 @@ const SyllabusAdd = () => {
         {
             title: '实践教学及学时分配',
             content: <Practice />,
+        },
+        {
+            title: '考核环节设置',
+            content: <Assessment />,
         },
         {
             title: '审批',

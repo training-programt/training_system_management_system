@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useLocation } from "react-router-dom";
-import { Table, Input, Button, Space,Modal, InputNumber, message, Select, Row, Col, Popconfirm, Form, Typography } from 'antd';
+import { Table, Input, Button, Space, Modal, InputNumber, message, Select, Row, Col, Popconfirm, Form, Typography } from 'antd';
 import "./index.less"
 
 const Relation = () => {
@@ -12,8 +12,8 @@ const Relation = () => {
   const [requirement, setRequirementData] = useState([]);
   const [point, setPointData] = useState([]);
   const goal = JSON.parse(localStorage.getItem('teachGoal'));
-  const [req,setReqData] = useState([]);
-  const [pointSecond,setPointSecond]= useState({})
+  const [req, setReqData] = useState([]);
+  const [pointSecond, setPointSecond] = useState({})
   const [weight, setWeightData] = useState([])
   const columns = [
     {
@@ -41,26 +41,30 @@ const Relation = () => {
       width: '40%',
       className: 'teach',
       render: (text, record) => (
-        goal.map((data, index) => {
-          const count = goal.length;
-          const wid = 100 / count + '%';
-          return (
-            <div key={index} style={{ width: wid, height: '11vh' }}>
-              <div className="target">目标{index + 1}</div>
-              <div>{weight[index]}</div>
-            </div>
-          )
-        })
+        <>
+          {
+            record.teach_goal.map((goal, index) => {
+              const count = record.teach_goal.length;
+              const wid = 100 / count + '%';
+              return (
+                <div key={index} style={{ width: wid, height: '11vh' }}>
+                  <div className="target">目标{index + 1}</div>
+                  <div>{goal}</div>
+                </div>
+              )
+            })
+          }
+        </>
       )
     },
     {
       title: '操作',
       dataIndex: 'operation',
       key: 'operation',
-      render: (text, record,index) => (
+      render: (text, record, index) => (
         <div>
           <Popconfirm title="确定删除？" okText="确定" cancelText="取消">
-            <Button type="link" onClick={()=>{del(index)}}>删除</Button>
+            <Button type="link" onClick={() => { del(index) }}>删除</Button>
           </Popconfirm>
         </div>
       ),
@@ -82,28 +86,28 @@ const Relation = () => {
   const showAdd = () => {
     setVisible(true);
   };
- 
+
   const handleOk = async (e) => {
     e.preventDefault();
     const params = {
-      major_requirement:req,
-      point:pointSecond,
-      teach_goal:weight,
+      major_requirement: req,
+      point: pointSecond,
+      teach_goal: weight,
     }
-      console.log(params)
-      console.log([...relation,params])
-      setRelationData([...relation,params]);
-      message.info("添加成功")
-      localStorage.setItem("relation", JSON.stringify([...relation,params]))
-      setVisible(false)
+    console.log(params)
+    console.log([...relation, params])
+    setRelationData([...relation, params]);
+    message.success("添加成功")
+    localStorage.setItem("relation", JSON.stringify([...relation, params]))
+    setVisible(false)
   };
- //删除
- const del = async (index) => {
-  let newRelation = [...relation]
-      newRelation.splice(index,1)
-      setRelationData(newRelation)
-      localStorage.setItem("relation",JSON.stringify(newRelation))
-};
+  //删除
+  const del = async (index) => {
+    let newRelation = [...relation]
+    newRelation.splice(index, 1)
+    setRelationData(newRelation)
+    localStorage.setItem("relation", JSON.stringify(newRelation))
+  };
   const handleCancel = () => {
     setVisible(false);
   };
@@ -112,34 +116,34 @@ const Relation = () => {
     arr[currentIndex] = Number(value)
     setWeightData(arr)
   }
-  const pointChange=(value)=>{
-    point.map((item)=>{
-      if(item._id==value){
+  const pointChange = (value) => {
+    point.map((item) => {
+      if (item._id == value) {
         setPointSecond(item)
       }
     })
   }
-  const requirementChange=(value)=>{
-    requirement.map((item)=>{
-      if(item._id==value){
+  const requirementChange = (value) => {
+    requirement.map((item) => {
+      if (item._id == value) {
         setReqData(item)
       }
     })
   }
   useEffect(() => {
-    if(info){
-        setRelationData(info.relation)
-    }else{
-        setRelationData(JSON.parse(localStorage.getItem('relation'))||[])
-        let re = JSON.parse(localStorage.getItem('relation'))
-        let newArr = []
-        for(let i = 0;i<re.length;i++){
-         newArr.push(re[i].teach_goal)
-        }
-        console.log(newArr)
-        setWeightData([...weight,newArr])
+    if (info) {
+      setRelationData(info.relation)
+    } else {
+      setRelationData(JSON.parse(localStorage.getItem('relation')) || [])
+      // let re = JSON.parse(localStorage.getItem('relation'))
+      // let newArr = []
+      // for(let i = 0;i<re.length;i++){
+      //  newArr.push(re[i].teach_goal)
+      // }
+      // console.log(newArr)
+      // setWeightData([...weight,newArr])
     }
-}, [])
+  }, [])
   return (
     <div className="train-object">
       <div className="object-left">
@@ -168,52 +172,49 @@ const Relation = () => {
               </Button>
             ]}
           >
-            <Space direction="vertical" size="large">
-            <Row>
-              <Col span={24}>
-                <span>毕业要求</span>
-                <Select
-                  style={{ width: 320 }}
-                  placeholder="请选择毕业要求"
-                  allowClear
-                  onChange={(value) => {requirementChange(value)}}
-                >
-                  {requirement && requirement.map(item => {
-                    return <Select.Option value={item._id} key={item._id}>{item.name}</Select.Option>
-                  })}
-                </Select>
-              </Col>
-
-            </Row>
-            <Row>
-              <Col span={24}>
-                <span>指标点</span>
-                <Select
-                  style={{ width: 320 }}
-                  placeholder="请选择指标点"
-                  allowClear
-                  onChange={(value) => {pointChange(value)}}
-                >
-                  {point && point.map(item => {
-                    return <Select.Option value={item._id} key={item._id}>{item.content}</Select.Option>
-                  })}
-                </Select>
-              </Col>
-            </Row>
-            <Row>
-              {goal && goal.map((item, index) =>
-                <Col span={24} key={index}>
-                  <label>权重{index + 1}</label><Input onChange={e => { inputChange(index, e.target.value) }} />
+            <Space direction="vertical" size="large" style={{display: 'flex', justifyContent: 'center'}}>
+              <Row>
+                <Col span={4}>
+                  <span>毕业要求</span>
                 </Col>
-                // <Form.Item
-                //   key={index}
-                //   name={`weight_${index}`}
-                //   label={`目标${index+1}`}
-                // >
-                //   <Input />
-                // </Form.Item>
+                <Col span={20}>
+                  <Select
+                    style={{ width: '100%' }}
+                    placeholder="请选择毕业要求"
+                    allowClear
+                    onChange={(value) => { requirementChange(value) }}
+                  >
+                    {requirement && requirement.map(item => {
+                      return <Select.Option value={item._id} key={item._id}>{item.name}</Select.Option>
+                    })}
+                  </Select>
+                </Col>
+              </Row>
+              <Row>
+                <Col span={4}>
+                  <span>指标点</span>
+                </Col>
+                <Col span={20}>
+                  <Select
+                    style={{ width: '100%' }}
+                    placeholder="请选择指标点"
+                    allowClear
+                    onChange={(value) => { pointChange(value) }}
+                  >
+                    {point && point.map(item => {
+                      return <Select.Option value={item._id} key={item._id}>{item.content}</Select.Option>
+                    })}
+                  </Select>
+                </Col>
+              </Row>
+              {goal && goal.map((item, index) =>
+                <Row key={index}>
+                  <Col span={4}><label>权重{index + 1}</label></Col>
+                  <Col span={20}>
+                    <Input onChange={e => { inputChange(index, e.target.value) }} />
+                  </Col>
+                </Row>
               )}
-            </Row>
             </Space>
           </Modal>
         </div>

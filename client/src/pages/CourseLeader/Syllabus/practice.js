@@ -1,55 +1,20 @@
 import React, { useState, useEffect } from 'react';
 import { useLocation } from "react-router-dom";
-import { Table, Input, InputNumber, Popconfirm, Select, Form,message, Divider, Button, Typography } from 'antd';
+import { Table, Input, InputNumber, Popconfirm, Select, Form, message, Divider, Button, Typography } from 'antd';
 import { PlusOutlined } from '@ant-design/icons';
 const { TextArea } = Input;
-
-const EditableCell = ({
-  editing,
-  dataIndex,
-  title,
-  inputType,
-  record,
-  index,
-  children,
-  ...restProps
-}) => {
-  const inputNode = inputType === 'number' ? <InputNumber /> : <Input />;
-  return (
-    <td {...restProps}>
-      {editing ? (
-        <Form.Item
-          name={dataIndex}
-          style={{
-            margin: 0,
-          }}
-          rules={[
-            {
-              required: true,
-              message: `请输入 ${title}!`,
-            },
-          ]}
-        >
-          {inputNode}
-        </Form.Item>
-      ) : (
-          children
-        )}
-    </td>
-  );
-};
 const layout = {
-  labelCol: { span: 2 },
-  wrapperCol: { span: 10 },
+  labelCol: { span: 4 },
+  wrapperCol: { span: 16 },
 };
 const Practice = () => {
   const [form] = Form.useForm();
-  const [editingKey, setEditingKey] = useState('');
   const [practice, setPracticeData] = useState([]);
+  const [isEdit, setEditData] = useState(false);
   const [showForm, setShowForm] = useState(false);
+  const [updateindex, setUpdateIndex] = useState(0)
   let info = useLocation()?.state?.data;
 
-  const isEditing = (record) => record.key === editingKey;
   useEffect(() => {
     // const theory = React.$axios.get('/getPractice').then(practice => {
     //   console.log(practice)
@@ -57,39 +22,15 @@ const Practice = () => {
     // })
   }, [])
 
-  const edit = (record) => {
+  const edit = (record, index) => {
+    console.log(index)
+    setUpdateIndex(index)
+    form.resetFields()
+    setEditData(true)
+    setShowForm(true)
     form.setFieldsValue({
-      name: '',
-      age: '',
-      address: '',
       ...record,
     });
-    setEditingKey(record.key);
-  };
-
-  const cancel = () => {
-    setEditingKey('');
-  };
-
-  const save = async (key) => {
-    try {
-      const row = await form.validateFields();
-      const newData = [...theory];
-      const index = newData.findIndex((item) => key === item.key);
-
-      if (index > -1) {
-        const item = newData[index];
-        newData.splice(index, 1, { ...item, ...row });
-        setData(newData);
-        setEditingKey('');
-      } else {
-        newData.push(row);
-        setData(newData);
-        setEditingKey('');
-      }
-    } catch (errInfo) {
-      console.log('Validate Failed:', errInfo);
-    }
   };
 
   const columns = [
@@ -152,75 +93,61 @@ const Practice = () => {
       title: '操作',
       dataIndex: 'operation',
       width: '5%',
-      render: (_, record) => {
-        const editable = isEditing(record);
-        return editable ? (
-          <span>
-            <a
-              onClick={() => save(record.key)}
-              style={{
-                marginRight: 8,
-              }}
-            >
-              保存
-            </a>
-            <Popconfirm title="确定取消？" onConfirm={cancel}>
-              <a>取消</a>
-            </Popconfirm>
-          </span>
-        ) : (
+      render: (_, record, index) => {
+        return (
           <div>
-            <Typography.Link disabled={editingKey !== ''} onClick={() => edit(record)}>
+            <Typography.Link onClick={() => edit(record,index)}>
               编辑
             </Typography.Link>
-             <Typography.Link onClick={()=>{del(index)}}>
-             删除
+            <Typography.Link onClick={() => { del(index) }}>
+              删除
            </Typography.Link>
-           </div>
-          );
+          </div>
+        );
       },
     },
   ];
   const addPractice = () => {
     const params = {
       ...form.getFieldValue(),
-  }
-  console.log(params)
-  setPracticeData([...practice,params]);
-  message.info("添加成功")
-  setShowForm(false)
-  form.resetFields();
-  localStorage.setItem("practice",JSON.stringify([...practice,params]))
-  }
-  const del = (index)=>{
-    let newPractice = [...practice]
-    newPractice.splice(index,1)
-    setPracticeData(newPractice)
-    localStorage.setItem("practice",JSON.stringify(newPractice))
-  }
-  useEffect(() => {
-    if(info){
-      setPracticeData(info.theory)
-    }else{
-      setPracticeData(JSON.parse(localStorage.getItem('practice'))||[])
     }
-}, [])
-  const mergedColumns = columns.map((col) => {
-    if (!col.editable) {
-      return col;
+    if (!isEdit) {
+      setPracticeData([...practice, params]);
+      message.success("添加成功")
+      form.resetFields();
+      localStorage.setItem("practice", JSON.stringify([...practice, params]))
+      setShowForm(false)
+    } else {
+      console.log(updateindex)
+      console.log(params)
+      console.log(isEdit)
+      let updatePractice = [...practice];
+      updatePractice[updateindex] = params
+      setPracticeData(updatePractice)
+      message.success("修改成功")
+      localStorage.setItem("practice", JSON.stringify(updatePractice))
+      setShowForm(false)
     }
 
-    return {
-      ...col,
-      onCell: (record) => ({
-        record,
-        inputType: col.inputType,
-        dataIndex: col.dataIndex,
-        title: col.title,
-        editing: isEditing(record),
-      }),
-    };
-  });
+  }
+  const del = (index) => {
+    let newPractice = [...practice]
+    newPractice.splice(index, 1)
+    setPracticeData(newPractice)
+    localStorage.setItem("practice", JSON.stringify(newPractice))
+  }
+  const add = () => {
+    setShowForm(true);
+    form.resetFields();
+    setEditData(false)
+  }
+  useEffect(() => {
+    if (info) {
+      setPracticeData(info.practice)
+    } else {
+      setPracticeData(JSON.parse(localStorage.getItem('practice')) || [])
+    }
+  }, [])
   return (
     <div className="train-object">
       <div className="object-left">
@@ -228,19 +155,11 @@ const Practice = () => {
         <div className="content-wrap">
           <Form form={form} component={false}>
             <Table
-              components={{
-                body: {
-                  cell: EditableCell,
-                },
-              }}
               bordered
               rowKey={record => record._id}
               dataSource={practice}
-              columns={mergedColumns}
+              columns={columns}
               rowClassName="editable-row"
-              pagination={{
-                onChange: cancel,
-              }}
             />
           </Form>
           <Divider>编辑线</Divider>
@@ -248,66 +167,59 @@ const Practice = () => {
             showForm ? (
               <Form form={form} {...layout}>
                 <Form.Item
-                  label="教学单元"
-                  name='unit'
-                  rules={[{ required: true, message: '教学单元不能为空' }]}
+                  label="项目名称"
+                  name='name'
+                  rules={[{ required: true, message: '项目名称不能为空' }]}
                 >
                   <Input />
                 </Form.Item>
                 <Form.Item
-                  label="教学内容"
+                  label="实验目的"
+                  name='objective'
+                  rules={[{ required: true, message: '实验目的不能为空' }]}
+                >
+                  <Input.TextArea />
+                </Form.Item>
+                <Form.Item
+                  label="实验内容"
                   name='content'
-                  rules={[{ required: true, message: '教学内容不能为空' }]}
+                  rules={[{ required: true, message: '实验内容不能为空' }]}
                 >
                   <Input.TextArea />
                 </Form.Item>
                 <Form.Item
-                  label="教学要求"
-                  name='requirements'
-                  rules={[{ required: true, message: '教学要求不能为空' }]}
+                  label="选做/必做"
+                  name='practice_way'
+                  rules={[{ required: true, message: '類型不能为空' }]}
                 >
-                  <Input.TextArea />
+                  <Input />
                 </Form.Item>
                 <Form.Item
-                  label="课内学时"
-                  name='within'
-                  rules={[{ required: true, message: '课内学时不能为空' }]}
+                  label="项目类型"
+                  name='type'
+                  rules={[{ required: true, message: '项目类型不能为空' }]}
                 >
-                  <InputNumber />
+                  <Input />
                 </Form.Item>
                 <Form.Item
                   label="教学方式"
-                  name='way'
+                  name='teaching_way'
                   rules={[{ required: true, message: '教学方式不能为空' }]}
                 >
                   <Input />
                 </Form.Item>
                 <Form.Item
-                  label="课外学时"
-                  name='outside'
-                  rules={[{ required: true, message: '课外学时不能为空' }]}
+                  label="学时分配"
+                  name='time'
+                  rules={[{ required: true, message: '学时分配不能为空' }]}
                 >
                   <InputNumber />
                 </Form.Item>
-                <Form.Item
-                  label="课外环节"
-                  name='link'
-                  rules={[{ required: true, message: '课外环节不能为空' }]}
-                >
-                  <InputNumber />
-                </Form.Item>
-                <Form.Item
-                  label="课程目标"
-                  name='target'
-                  rules={[{ required: true, message: '课程目标不能为空' }]}
-                >
-                  <Input/>
-                </Form.Item>
-                <Button onClick={addPractice} >添加</Button>
+                <Button onClick={addPractice} >确定</Button>
                 <Button onClick={() => setShowForm(false)} >取消</Button>
               </Form>
             )
-              : <Button type="dashed" onClick={() => setShowForm(true)} block icon={<PlusOutlined />}>添加具体专业培养目标</Button>
+              : <Button type="dashed" onClick={add} block icon={<PlusOutlined />}>添加具体专业培养目标</Button>
           }
         </div>
       </div>

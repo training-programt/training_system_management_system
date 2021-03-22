@@ -7,7 +7,7 @@ const layout = {
     wrapperCol: { span: 21 },
 };
 
-const TeachGoal = () => {
+const Assessment = () => {
 
     const [form] = Form.useForm();
     let info = useLocation()?.state?.data;
@@ -93,4 +93,4 @@ const TeachGoal = () => {
     )
 }
 
-export default TeachGoal
+export default Assessment

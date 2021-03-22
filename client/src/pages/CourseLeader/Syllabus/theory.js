@@ -1,95 +1,27 @@
 import React, { useState, useEffect } from 'react';
 import { useLocation } from "react-router-dom";
-import { Table, Input, InputNumber, Popconfirm, Select,message, Form, Divider, Button, Typography } from 'antd';
+import { Table, Input, InputNumber, Popconfirm, Select, message, Form, Divider, Button, Typography } from 'antd';
 import { PlusOutlined } from '@ant-design/icons';
 const { TextArea } = Input;
-
-const EditableCell = ({
-  editing,
-  dataIndex,
-  title,
-  inputType,
-  record,
-  index,
-  children,
-  ...restProps
-}) => {
-  const inputNode = inputType === 'number' ? <InputNumber /> : <Input />;
-  return (
-    <td {...restProps}>
-      {editing ? (
-        <Form.Item
-          name={dataIndex}
-          style={{
-            margin: 0,
-          }}
-          rules={[
-            {
-              required: true,
-              message: `请输入 ${title}!`,
-            },
-          ]}
-        >
-          {inputNode}
-        </Form.Item>
-      ) : (
-          children
-        )}
-    </td>
-  );
-};
 const layout = {
-  labelCol: { span: 2 },
-  wrapperCol: { span: 10 },
+  labelCol: { span: 4 },
+  wrapperCol: { span: 16 },
 };
 const Theory = () => {
   const [form] = Form.useForm();
-  const [editingKey, setEditingKey] = useState('');
+  const [isEdit, setEditData] = useState(false);
   const [theory, setTheoryData] = useState([]);
   const [showForm, setShowForm] = useState(false);
+  const [updateindex, setUpdateIndex] = useState(0)
   let info = useLocation()?.state?.data;
 
-  const isEditing = (record) => record.key === editingKey;
   useEffect(() => {
     // const theory = React.$axios.get('/getTheory').then(thory => {
     //   setTheoryData(thory.data)
     // })
   }, [])
 
-  const edit = (record) => {
-    form.setFieldsValue({
-      name: '',
-      age: '',
-      address: '',
-      ...record,
-    });
-    setEditingKey(record.key);
-  };
 
-  const cancel = () => {
-    setEditingKey('');
-  };
-
-  const save = async (key) => {
-    try {
-      const row = await form.validateFields();
-      const newData = [...theory];
-      const index = newData.findIndex((item) => key === item.key);
-
-      if (index > -1) {
-        const item = newData[index];
-        newData.splice(index, 1, { ...item, ...row });
-        setData(newData);
-        setEditingKey('');
-      } else {
-        newData.push(row);
-        setData(newData);
-        setEditingKey('');
-      }
-    } catch (errInfo) {
-      console.log('Validate Failed:', errInfo);
-    }
-  };
 
   const columns = [
     {
@@ -158,76 +90,69 @@ const Theory = () => {
       title: '操作',
       dataIndex: 'operation',
       width: '5%',
-      render: (_, record,index) => {
-        const editable = isEditing(record);
-        return editable ? (
-          <span>
-            <a
-              onClick={() => save(record.key)}
-              style={{
-                marginRight: 8,
-              }}
-            >
-              保存
-            </a>
-            <Popconfirm title="确定取消？" onConfirm={cancel}>
-              <a>取消</a>
-            </Popconfirm>
-          </span>
-        ) : (
+      render: (_, record, index) => {
+        return (
           <div>
-            <Typography.Link disabled={editingKey !== ''} onClick={() => edit(record)}>
+            <Typography.Link onClick={() => edit(record, index)}>
               编辑
             </Typography.Link>
-            <Typography.Link onClick={()=>{del(index)}}>
+            <Typography.Link onClick={() => { del(index) }}>
               删除
             </Typography.Link>
-            </div>
-          );
-          
+          </div>
+        );
       },
     },
   ];
-  const addThory = () => {
+  const edit = (record, index) => {
+    // console.log(index)
+    setUpdateIndex(index)
+    form.resetFields()
+    setEditData(true)
+    setShowForm(true)
+    form.setFieldsValue({
+      ...record,
+    });
+  };
+  const del = (index) => {
+    let newTheory = [...theory]
+    newTheory.splice(index, 1)
+    setTheoryData(newTheory)
+    localStorage.setItem("theory", JSON.stringify(newTheory))
+  }
+  const handleOk = () => {
     const params = {
       ...form.getFieldValue(),
-  }
-  console.log(params)
-  setTheoryData([...theory,params]);
-  message.info("添加成功")
-  setShowForm(false)
-  form.resetFields();
-  localStorage.setItem("theory",JSON.stringify([...theory,params]))
-  }
-  const del = (index)=>{
-    let newTheory = [...theory]
-    newTheory.splice(index,1)
-    setTeachGoalDate(newTheory)
-    localStorage.setItem("theory",JSON.stringify(newTheory))
-  }
-  useEffect(() => {
-    if(info){
-      setTheoryData(info.theory)
-    }else{
-      setTheoryData(JSON.parse(localStorage.getItem('theory'))||[])
     }
-}, [])
-  const mergedColumns = columns.map((col) => {
-    if (!col.editable) {
-      return col;
+    if (!isEdit) {
+      console.log(params)
+      setTheoryData([...theory, params]);
+      message.success("添加成功")
+      localStorage.setItem("theory", JSON.stringify([...theory, params]))
+      setShowForm(false)
+    } else {
+      let updateTheory = [...theory];
+      updateTheory[updateindex] = params
+      setTheoryData(updateTheory)
+      message.success("修改成功")
+      localStorage.setItem("theory",JSON.stringify(updateTheory))
+      setShowForm(false)
     }
 
-    return {
-      ...col,
-      onCell: (record) => ({
-        record,
-        inputType: col.inputType,
-        dataIndex: col.dataIndex,
-        title: col.title,
-        editing: isEditing(record),
-      }),
-    };
-  });
+  }
+ 
+  const add = () => {
+    setShowForm(true);
+    form.resetFields();
+    setEditData(false)
+  }
+  useEffect(() => {
+    if (info) {
+      setTheoryData(info.theory)
+    } else {
+      setTheoryData(JSON.parse(localStorage.getItem('theory')) || [])
+    }
+  }, [])
   return (
     <div className="train-object">
       <div className="object-left">
@@ -235,19 +160,11 @@ const Theory = () => {
         <div className="content-wrap">
           <Form form={form} component={false}>
             <Table
-              components={{
-                body: {
-                  cell: EditableCell,
-                },
-              }}
               bordered
               rowKey={record => record._id}
               dataSource={theory}
-              columns={mergedColumns}
+              columns={columns}
               rowClassName="editable-row"
-              pagination={{
-                onChange: cancel,
-              }}
             />
           </Form>
           <Divider>编辑线</Divider>
@@ -308,13 +225,13 @@ const Theory = () => {
                   name='target'
                   rules={[{ required: true, message: '课程目标不能为空' }]}
                 >
-                  <Input/>
+                  <Input />
                 </Form.Item>
-                <Button onClick={addThory} >添加</Button>
+                <Button onClick={handleOk} >确定</Button>
                 <Button onClick={() => setShowForm(false)} >取消</Button>
               </Form>
             )
-              : <Button type="dashed" onClick={() => setShowForm(true)} block icon={<PlusOutlined />}>添加具体专业培养目标</Button>
+              : <Button type="dashed" onClick={add} block icon={<PlusOutlined />}>添加具体专业培养目标</Button>
           }
         </div>
       </div>
