@@ -2,13 +2,17 @@
 const Service = require('egg').Service;
 class CourseSystemService extends Service {
   async getCourseSystem(params) {
-    const { ctx } = this;
+    const { ctx, app } = this;
+    const mongoose = app.mongoose;
+    let courseType = params.courseType ? {
+      courseType: mongoose.Types.ObjectId(params.courseType)
+    } : {};
+    let grade = params.grade ? {
+      grade: mongoose.Types.ObjectId(params.grade)
+    } : {};
     const result = await ctx.model.CourseSystem
       .find({
-        // $or: [
-        // { courseType: params.courseType },
-        // { grade: params.grade }
-        // ]
+        $and: [courseType, grade]
       })
       .populate('leader', '_id name')
       .populate('course', '_id name')

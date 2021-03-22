@@ -48,8 +48,8 @@ const CourseSystem = () => {
 
   const getCourseSystem = async () => {
     const params = {
-      grade: '',
-      courseType: '',
+      grade: grade,
+      courseType: courseType,
       pageSize: tableSetting.rows,
       page: page,
     }
@@ -94,7 +94,7 @@ const CourseSystem = () => {
 
   useMemo(() => {
     getCourseSystem()
-  }, [page, grade])
+  }, [page, grade, courseType, grade])
 
   useMemo(() => {
     getCourseList()
@@ -209,7 +209,8 @@ const CourseSystem = () => {
         message.error('修改失败');
       }
     }
-
+    setGrade('')
+    setCourseType('')
     setIsModalVisible(false);
   };
 
