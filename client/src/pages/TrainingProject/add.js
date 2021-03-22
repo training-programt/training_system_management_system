@@ -22,17 +22,18 @@ const AddTrainingProject = () => {
   const [acProject, setAcProject] = useState({})
   const [writer, setWriter] = useState(JSON.parse(getSession('userInfo'))._id)
   const [requirementId, setRequirementId] = useState('')
+  const [objectId, setObjectId] = useState('')
 
   const childRef = useRef()
 
   const steps = [
     {
       title: '基础信息',
-      content: <InitPage ref={childRef} />,
+      content: <InitPage ref={childRef} project={acProject._id || ''} />,
     },
     {
       title: '培养目标',
-      content: <TrainObject ref={childRef} />,
+      content: <TrainObject ref={childRef} object={objectId || ''} />,
     },
     {
       title: '毕业要求',
@@ -84,7 +85,6 @@ const AddTrainingProject = () => {
   };
 
   const initProject = async (data) => {
-    if (!acProject) return false;
     const newTime = new Date().getTime()
     const params = {
       ...data,
@@ -92,20 +92,21 @@ const AddTrainingProject = () => {
       newTime,
     }
     const res = await React.$axios.post(api.createProject, params)
-    if(res && res.isSucceed) {
+    if (res && res.isSucceed) {
       setAcProject(res.data)
       setCurrent(current + 1);
     }
   }
 
   const saveObject = async (data) => {
-    if (!acProject) return false;
     const params = {
       ...data,
       _id: acProject._id,
+      objectId,
     }
     const res = await React.$axios.post(api.updateObject, params)
-    if(res && res.isSucceed) {
+    if (res && res.isSucceed) {
+      setObjectId(res.data._id)
       setCurrent(current + 1);
     }
   }
@@ -117,7 +118,7 @@ const AddTrainingProject = () => {
       _id: acProject._id,
     }
     const res = await React.$axios.post(api.updateRequirement, params)
-    if(res && res.isSucceed) {
+    if (res && res.isSucceed) {
       setRequirementId(res.data._id)
       setCurrent(current + 1);
     }

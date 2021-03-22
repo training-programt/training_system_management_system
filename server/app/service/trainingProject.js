@@ -10,6 +10,12 @@ class TrainingProjectService extends Service {
     return res
   }
 
+  async getProjectDetail(params) {
+    const { ctx } = this;
+    const res = await ctx.model.TrainingProject.findOne(params)
+    return res;
+  }
+
   async createProject(params) {
     const { ctx } = this;
     const res = await ctx.model.TrainingProject.create(params)

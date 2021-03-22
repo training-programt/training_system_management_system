@@ -1,7 +1,7 @@
-import React, { useState, useEffect, useImperativeHandle, forwardRef } from 'react'
+import React, { useState, useMemo, useImperativeHandle, forwardRef } from 'react'
 import { Form, Input, Button, List } from 'antd';
 import { PlusOutlined } from '@ant-design/icons';
-import { setSession, getSession } from '@/utils'
+import api from '@/apis/trainingProject'
 
 const data = [
   {
@@ -25,7 +25,6 @@ const data = [
     description: '具有自我获取知识、终身学习的能力，实现素质和能力的自我提升，达到软件工程师或相关工程师的任职资格或能力'
   },
 ];
-
 const layout = {
   labelCol: { span: 3 },
   wrapperCol: { span: 21 },
@@ -41,6 +40,24 @@ const TrainObject = (props, ref) => {
   const [objectList, setObjectList] = useState([])
   const [editObject, setEditObject] = useState(false);
   const [acObject, setAcObject] = useState(0)
+
+  const getObjectData = async () => {
+    const params = {
+      _id: props.object
+    }
+    const res = await React.$axios.post(api.getObjectData, params)
+    if (res && res.isSucceed) {
+      setMajorObject(res.data.professional_training_objectives)
+      setObjectList(res.data.specific_training_objectives)
+      setShowMajorForm(false)
+    }
+  }
+
+  useMemo(() => {
+    if (props.object) {
+      getObjectData();
+    }
+  }, [])
 
   const addMajorObject = () => {
     setMajorObject(form1.getFieldsValue().majorObject);

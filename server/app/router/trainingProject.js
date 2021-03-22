@@ -10,4 +10,6 @@ module.exports = app => {
   router.get('/getRowColData', controller.trainingProject.getRowColData);
   router.get('/getTable2RowCol', controller.trainingProject.getTable2RowCol);
 
+  router.post('/getProjectDetail', controller.trainingProject.getProjectDetail);
+  router.post('/getObjectData', controller.trainingProject.getObjectData);
 };

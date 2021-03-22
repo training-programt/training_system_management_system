@@ -9,7 +9,13 @@ class TrainingObjectiveService extends Service {
 
   async updateObject(params) {
     const { ctx } = this;
-    const res = await ctx.model.TrainingObjective.findOneAndUpdate({_id: params.objectId}, params)
+    const res = await ctx.model.TrainingObjective.findOneAndUpdate({ _id: params.objectId }, params)
+    return res;
+  }
+
+  async getObjectData(params) {
+    const { ctx } = this;
+    const res = await ctx.model.TrainingObjective.findOne(params)
     return res;
   }
 }

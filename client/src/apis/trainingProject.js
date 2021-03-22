@@ -1,6 +1,7 @@
 export default {
   getMajor: '/getMajor',
   createProject: '/createProject',
+  getGradeList: '/getAllGrade',
   getProjectList: '/getProjectList',
   delProject: '/delProject',
   updateObject: '/updateObject',
@@ -14,4 +15,7 @@ export default {
   getCourse: '/getAllCourse',
   addCurrRelationship: '/addCurrRelationship',
   delCurrRelationship: '/delCurrRelationship',
+
+  getProjectDetail: '/getProjectDetail',
+  getObjectData: '/getObjectData',
 }
