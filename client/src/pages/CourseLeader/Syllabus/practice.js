@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import { Table, Input, InputNumber, Popconfirm, Select, Form, Divider, Button, Typography } from 'antd';
+import { useLocation } from "react-router-dom";
+import { Table, Input, InputNumber, Popconfirm, Select, Form,message, Divider, Button, Typography } from 'antd';
 import { PlusOutlined } from '@ant-design/icons';
 const { TextArea } = Input;
 
@@ -46,13 +47,14 @@ const Practice = () => {
   const [editingKey, setEditingKey] = useState('');
   const [practice, setPracticeData] = useState([]);
   const [showForm, setShowForm] = useState(false);
+  let info = useLocation()?.state?.data;
 
   const isEditing = (record) => record.key === editingKey;
   useEffect(() => {
-    const theory = React.$axios.get('/getPractice').then(practice => {
-      console.log(practice)
-      setPracticeData(practice.data)
-    })
+    // const theory = React.$axios.get('/getPractice').then(practice => {
+    //   console.log(practice)
+    //   setPracticeData(practice.data)
+    // })
   }, [])
 
   const edit = (record) => {
@@ -167,16 +169,42 @@ const Practice = () => {
             </Popconfirm>
           </span>
         ) : (
+          <div>
             <Typography.Link disabled={editingKey !== ''} onClick={() => edit(record)}>
               编辑
             </Typography.Link>
+             <Typography.Link onClick={()=>{del(index)}}>
+             删除
+           </Typography.Link>
+           </div>
           );
       },
     },
   ];
-  const addThory = () => {
-
+  const addPractice = () => {
+    const params = {
+      ...form.getFieldValue(),
   }
+  console.log(params)
+  setPracticeData([...practice,params]);
+  message.info("添加成功")
+  setShowForm(false)
+  form.resetFields();
+  localStorage.setItem("practice",JSON.stringify([...practice,params]))
+  }
+  const del = (index)=>{
+    let newPractice = [...practice]
+    newPractice.splice(index,1)
+    setPracticeData(newPractice)
+    localStorage.setItem("practice",JSON.stringify(newPractice))
+  }
+  useEffect(() => {
+    if(info){
+      setPracticeData(info.theory)
+    }else{
+      setPracticeData(JSON.parse(localStorage.getItem('practice'))||[])
+    }
+}, [])
   const mergedColumns = columns.map((col) => {
     if (!col.editable) {
       return col;
@@ -275,7 +303,7 @@ const Practice = () => {
                 >
                   <Input/>
                 </Form.Item>
-                <Button onClick={addThory} >添加</Button>
+                <Button onClick={addPractice} >添加</Button>
                 <Button onClick={() => setShowForm(false)} >取消</Button>
               </Form>
             )

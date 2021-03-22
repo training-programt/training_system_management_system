@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import { Table, Input, InputNumber, Popconfirm, Select, Form, Divider, Button, Typography } from 'antd';
+import { useLocation } from "react-router-dom";
+import { Table, Input, InputNumber, Popconfirm, Select,message, Form, Divider, Button, Typography } from 'antd';
 import { PlusOutlined } from '@ant-design/icons';
 const { TextArea } = Input;
 
@@ -46,13 +47,13 @@ const Theory = () => {
   const [editingKey, setEditingKey] = useState('');
   const [theory, setTheoryData] = useState([]);
   const [showForm, setShowForm] = useState(false);
+  let info = useLocation()?.state?.data;
 
   const isEditing = (record) => record.key === editingKey;
   useEffect(() => {
-    const theory = React.$axios.get('/getTheory').then(thory => {
-      console.log(thory)
-      setTheoryData(thory.data)
-    })
+    // const theory = React.$axios.get('/getTheory').then(thory => {
+    //   setTheoryData(thory.data)
+    // })
   }, [])
 
   const edit = (record) => {
@@ -110,9 +111,6 @@ const Theory = () => {
       inputType: 'text',
       width: '30%',
       editable: true,
-      // render:(text,record)=>(
-      //   <TextArea placeholder="" autoSize />
-      // )
     },
     {
       title: '教学要求',
@@ -160,7 +158,7 @@ const Theory = () => {
       title: '操作',
       dataIndex: 'operation',
       width: '5%',
-      render: (_, record) => {
+      render: (_, record,index) => {
         const editable = isEditing(record);
         return editable ? (
           <span>
@@ -177,16 +175,43 @@ const Theory = () => {
             </Popconfirm>
           </span>
         ) : (
+          <div>
             <Typography.Link disabled={editingKey !== ''} onClick={() => edit(record)}>
               编辑
             </Typography.Link>
+            <Typography.Link onClick={()=>{del(index)}}>
+              删除
+            </Typography.Link>
+            </div>
           );
+          
       },
     },
   ];
   const addThory = () => {
-
+    const params = {
+      ...form.getFieldValue(),
   }
+  console.log(params)
+  setTheoryData([...theory,params]);
+  message.info("添加成功")
+  setShowForm(false)
+  form.resetFields();
+  localStorage.setItem("theory",JSON.stringify([...theory,params]))
+  }
+  const del = (index)=>{
+    let newTheory = [...theory]
+    newTheory.splice(index,1)
+    setTeachGoalDate(newTheory)
+    localStorage.setItem("theory",JSON.stringify(newTheory))
+  }
+  useEffect(() => {
+    if(info){
+      setTheoryData(info.theory)
+    }else{
+      setTheoryData(JSON.parse(localStorage.getItem('theory'))||[])
+    }
+}, [])
   const mergedColumns = columns.map((col) => {
     if (!col.editable) {
       return col;
@@ -276,7 +301,7 @@ const Theory = () => {
                   name='link'
                   rules={[{ required: true, message: '课外环节不能为空' }]}
                 >
-                  <InputNumber />
+                  <Input />
                 </Form.Item>
                 <Form.Item
                   label="课程目标"

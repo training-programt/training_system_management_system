@@ -6,12 +6,7 @@ module.exports = app => {
   const TeachingGoalSchema = new Schema({
     target_course_name:{type:String},//课程目标
     target_course_describe:{type:String},//目标描述
-    attendance_proportion:[{//课程目标考核方式及占比(％)（未考核项目填“/”）
-      type:Schema.Types.ObjectId,
-      ref:'AttendanceProportion'
-    }
-    ],
-    weight:{type:String}//课程目标权重
+    // weight:{type:String}//课程目标权重
   })
   
   return mongoose.model('TeachingGoal', TeachingGoalSchema, 'teachingGoal');

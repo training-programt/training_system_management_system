@@ -17,6 +17,8 @@ import EditTrainingObject from './TrainingObject/detail';
 import AddTrainingProject from './TrainingProject/add';
 import EditTrainingProject from './TrainingProject/edit';
 import Syllabus from "./CourseLeader/Syllabus";
+import testMethod from './CourseLeader/testMethod';
+import Book from './CourseLeader/Book';
 import SyllabusAdd from './CourseLeader/Syllabus/add';
 import SyllabusShows from './CourseLeader/Syllabus/show';
 import HeaderCourse from "./CourseLeader/HeaderCourse/headerCourse";
@@ -30,12 +32,14 @@ export {
   Home,
   LeaderTeacher,
   LeaderCourse,
+  testMethod,
   Notification,
   LeaderMajor,
   DirectorMajor,
   Grade,
   UserInfo,
   TeachRoom,
+  Book,
   SectionDetails,
   SyllabusShows,
   SyllabusShow,

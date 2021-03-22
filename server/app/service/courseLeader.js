@@ -95,6 +95,21 @@ class CourseLeaderService extends Service {
             .sort('sort');
         return result;
     }
+     async addRelation(params) {
+        const { ctx } = this;
+        const result = await ctx.model.Relation.create(params)
+        return result;
+    }
+     async delRelation(params) {
+        const { ctx } = this;
+        const result = await ctx.model.Relation.remove(params)
+        return result
+    }
+    async findRelation(params) {
+        const { ctx } = this;
+        const result = await ctx.model.Relation.find(params)
+        return result;
+    }
     // 查询全部专业要求
     async getMajorRequirement() {
         const { ctx } = this;

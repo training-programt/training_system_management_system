@@ -5,7 +5,7 @@ class CourseService extends Service {
     // 查询全部课程
     async getCourse() {
         const { ctx } = this;
-        const result = await ctx.model.Course
+        const result = await ctx.model.BasicCourse
             .find({
             })
             .populate('header')
