@@ -21,6 +21,7 @@ const Relation = () => {
       dataIndex: 'major_requirement',
       width: '25%',
       algin: 'center',
+      key:'major_requirement',
       render: (text, record) => {
         return record.major_requirement.name ? record.major_requirement.name : ''
       }
@@ -30,6 +31,7 @@ const Relation = () => {
       dataIndex: 'point',
       width: '15%',
       algin: 'center',
+      key:'point',
       render: (text, record) => {
         return record.point.content ? record.point.content : ''
       }
@@ -40,6 +42,7 @@ const Relation = () => {
       algin: 'center',
       width: '40%',
       className: 'teach',
+      key:'teach_goal',
       render: (text, record) => (
         <>
           {
@@ -135,13 +138,6 @@ const Relation = () => {
       setRelationData(info.relation)
     } else {
       setRelationData(JSON.parse(localStorage.getItem('relation')) || [])
-      // let re = JSON.parse(localStorage.getItem('relation'))
-      // let newArr = []
-      // for(let i = 0;i<re.length;i++){
-      //  newArr.push(re[i].teach_goal)
-      // }
-      // console.log(newArr)
-      // setWeightData([...weight,newArr])
     }
   }, [])
   return (
@@ -154,7 +150,7 @@ const Relation = () => {
             bordered
             dataSource={relation}
             columns={columns}
-            rowKey={record => record._id}
+            // rowKey={(record) => `${record?.requirement?.name} ${index}`}
           />
           <Modal
             visible={visible}

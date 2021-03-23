@@ -16,7 +16,6 @@ const BasicInfo = () => {
     const [butType,setButType] = useState(false);
   const [courseData, setCourseData] = useState([]);
     const data = JSON.parse(getSession("newData"));
-    // const [basic,setBasicData] = useState({});
 
     const layout = {
         labelCol: { span: 5 },

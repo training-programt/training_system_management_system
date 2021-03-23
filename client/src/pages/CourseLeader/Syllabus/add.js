@@ -10,6 +10,8 @@ import Theory from './theory'
 import Practice from './practice'
 import ExamAndApp from './examAndApp'
 import Assessment from './assessment'
+import GoalAndAssessment from './goalAndAssessment'
+import Book from './book'
 const { Step } = Steps;
 const SyllabusAdd = () => {
     const [current, setCurrent] = useState(0);
@@ -40,9 +42,18 @@ const SyllabusAdd = () => {
             content: <Assessment />,
         },
         {
+            title: '课程目标与考核对应关系',
+            content: <GoalAndAssessment />,
+        },
+        {
+            title: '建议教材及教学参考书',
+            content: <Book />,
+        },
+        {
             title: '审批',
             content: <ExamAndApp />,
         },
+        
     ];
 
     const next = () => {
