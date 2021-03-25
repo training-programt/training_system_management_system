@@ -180,6 +180,7 @@ const Relation = () => {
                     allowClear
                     onChange={(value) => { requirementChange(value) }}
                   >
+                    {/* {console.log(req.name)} */}
                     {requirement && requirement.map(item => {
                       return <Select.Option value={item._id} key={item._id}>{item.name}</Select.Option>
                     })}

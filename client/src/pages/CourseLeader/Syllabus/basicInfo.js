@@ -14,8 +14,13 @@ const BasicInfo = () => {
     const [majorData, setMajorData] = useState([]);
     const [header, setHeaderData] = useState([]);
     const [butType,setButType] = useState(false);
-  const [courseData, setCourseData] = useState([]);
+    const [courseData, setCourseData] = useState([]);
     const data = JSON.parse(getSession("newData"));
+    let basicInfo = JSON.parse(localStorage.getItem('basic'))
+
+    const [courseName,setCourseName] = useState({})
+    const [majorName,setMajorName] = useState({});
+    const [unit,setUnitName] = useState({})
 
     const layout = {
         labelCol: { span: 5 },
@@ -37,17 +42,42 @@ const BasicInfo = () => {
     }, [])
     const save = async() => {
         const params = {
+            name:courseName,
+            unit:unit,
+            professional:majorName,
             ...form.getFieldValue(),
         }
+        console.log(params)
         localStorage.setItem("basic",JSON.stringify(params));
         message.info('暂存成功')
+    }
+    const changeCourseName=(value)=>{
+        courseData.map((item) => {
+            if (item._id == value) {
+              setCourseName(item)
+            }
+          })
+    }
+    const changeMajorName=(value)=>{
+        majorData.map((item) => {
+            if (item._id == value) {
+              setMajorName(item)
+            }
+          })
+    }
+    const changeUnitName=(value)=>{
+        college.map((item) => {
+            if (item._id == value) {
+              setUnitName(item)
+            }
+          })
     }
     useEffect(() => {
         console.log(info)
         if(info){
             form.setFieldsValue(info.course_info)
         }else{
-            form.setFieldsValue(JSON.parse(localStorage.getItem('basic'))||{})
+            form.setFieldsValue(basicInfo||{})
         }
     }, [])
     return (
@@ -61,7 +91,7 @@ const BasicInfo = () => {
                     <div className='title'>教学大纲课程基本信息</div>
                     <Form.Item
                         label="课程名字"
-                        name="name"
+                        // name="name"
                         rules={[
                             {
                                 required: true,
@@ -69,7 +99,7 @@ const BasicInfo = () => {
                             },
                         ]}
                     >
-                          <Select placeholder="选择课程名字" allowClear>
+                          <Select placeholder="选择课程名字" value={basicInfo.name.name} allowClear onChange={(value)=>{changeCourseName(value)}}>
                             {
                                 courseData && courseData.map(item => (<Option key={item._id} value={item._id}>{item.name}</Option>))
                             }
@@ -89,7 +119,7 @@ const BasicInfo = () => {
                     </Form.Item>
                     <Form.Item
                         label="开课单位"
-                        name="unit"
+                        // name="unit"
                         rules={[
                             {
                                 required: true,
@@ -97,7 +127,7 @@ const BasicInfo = () => {
                             },
                         ]}
                     >
-                        <Select placeholder="开课单位" allowClear>
+                        <Select placeholder="开课单位" allowClear value={basicInfo.unit.name} onChange={(value)=>{changeUnitName(value)}}>
                             {
                                 college && college.map(item => (<Option key={item._id} value={item._id}>{item.name}</Option>))
                             }
@@ -141,7 +171,7 @@ const BasicInfo = () => {
                     </Form.Item>
                     <Form.Item
                         label="适用专业"
-                        name="professional"
+                        // name="professional"
                         rules={[
                             {
                                 required: true,
@@ -149,7 +179,7 @@ const BasicInfo = () => {
                             },
                         ]}
                     >
-                        <Select placeholder="适用专业" allowClear>
+                        <Select placeholder="适用专业" allowClear value={basicInfo.professional.name}  onChange={(value)=>{changeMajorName(value)}}>
                             {
                                 majorData && majorData.map(item => (<Option key={item._id} value={item._id}>{item.name}</Option>))
                             }

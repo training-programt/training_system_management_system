@@ -58,16 +58,17 @@ const SyllabusAdd = () => {
 
     const next = () => {
         setCurrent(current + 1);
-        console.log(current);
     };
 
     const prev = () => {
         setCurrent(current - 1);
     };
-
+    const changeCurrent=(index)=>{
+        setCurrent(index)
+    }
     return (
         <div className="training-project">
-            <Steps current={current} size="small">
+            <Steps current={current} size="small" onChange={(current)=>changeCurrent(current)}>
                 {steps.map(item => (
                     <Step key={item.title} title={item.title} />
                 ))}
@@ -80,9 +81,9 @@ const SyllabusAdd = () => {
                 {current < steps.length - 1 && (
                     <Button type="primary" icon={<ArrowRightOutlined />} onClick={() => next()}>下一步</Button>
                 )}
-                {current === steps.length - 1 && (
+                {/* {current === steps.length - 1 && (
                     <Button type="primary" onClick={() => message.success('Processing complete!')}>提交审批</Button>
-                )}
+                )} */}
 
                 <Button icon={<RollbackOutlined />} style={{ color: '#000', marginLeft: '8px' }} onClick={()=>{history.push('/syllabus')}}>返回</Button>
             </div>
