@@ -27,7 +27,6 @@ class PointService extends Service {
         }
       },
     )
-
     return res;
   }
 

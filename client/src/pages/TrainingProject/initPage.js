@@ -1,10 +1,12 @@
-import React, { useMemo, useState, useImperativeHandle, forwardRef, createContext } from 'react'
+import React, { useMemo, useState, useImperativeHandle, forwardRef } from 'react'
 import { Form, Input, Select, InputNumber } from 'antd';
 import api from '@/apis/trainingProject'
 
+import withRouterForwardRef from '@/utils/withRouterForwardRef'
+
 const { Option } = Select;
 
-const InitPage = (props, ref) => {
+const InitPage = forwardRef((props, ref) => {
   const [form] = Form.useForm();
   const [majorOption, setMajorOption] = useState([])
   const [gradeList, setGradeList] = useState([])
@@ -30,25 +32,27 @@ const InitPage = (props, ref) => {
 
   const getProjectDetail = async () => {
     const params = {
-      _id: props.project
+      _id: props.match.params.id
     }
     const res = await React.$axios.post(api.getProjectDetail, params)
-    if(res && res.isSucceed) {
+    if (res && res.isSucceed) {
       form.setFieldsValue(res.data)
     }
   }
+
+  useMemo(() => {
+    if (props.match.params.id) {
+      getProjectDetail()
+    }
+
+  }, [])
 
   useMemo(() => {
     getMajorList()
     getGradeList()
   }, [])
 
-  useMemo(() => {
-    if(props.project) {
-      getProjectDetail()
-    }
 
-  }, [])
 
   useImperativeHandle(ref, () => {
     return {
@@ -227,6 +231,15 @@ const InitPage = (props, ref) => {
       </div>
     </div>
   )
-}
+})
 
-export default forwardRef(InitPage)
+// const withRouterForwardRef = Component => {
+//   const WithRouter = withRouter(({ forwardedRef, ...props }) => (
+//     <Component ref={forwardedRef} {...props} />
+//   ));
+//   return forwardRef((props, ref) => (
+//     <WithRouter {...props} forwardedRef={ref} />
+//   ));
+// };
+
+export default withRouterForwardRef(InitPage);

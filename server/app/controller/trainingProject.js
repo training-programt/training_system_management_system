@@ -98,23 +98,44 @@ class TrainingProjectController extends Controller {
       }
     }
   }
+  
+  async getRequirementById() {
+    const {  ctx } = this;
+    const params = ctx.request.body;
+    const res = await ctx.service.graduationRequirement.getRequirementById(params)
+    ctx.body = {
+      total: 0,
+      data: res,
+      code: 200,
+      isSucceed: true,
+    }
+  }
 
   async updateRequirement() {
     const { ctx } = this;
     const params = ctx.request.body;
-    for (let i = 0; i < params.majorRequirement.length; i++) {
-      let point = params.majorRequirement[i].point;
-      if (point.length) {
-        let tempData = await ctx.service.point.addPoint(point)
-        params.majorRequirement[i].point = tempData.map(item => item._id)
-      } else {
-        params.majorRequirement[i].point = []
-      }
-    }
     let res;
     if (params.requirementId) {
+      for (let i = 0; i < params.majorRequirement.length; i++) {
+        let point = params.majorRequirement[i].point;
+        if (point.length) {
+          let tempData = await ctx.service.point.addPoint(point)
+          params.majorRequirement[i].point = tempData.map(item => item._id)
+        } else {
+          params.majorRequirement[i].point = []
+        }
+      }
       res = await ctx.service.graduationRequirement.updateRequirement(params)
     } else {
+      for (let i = 0; i < params.majorRequirement.length; i++) {
+        let point = params.majorRequirement[i].point;
+        if (point.length) {
+          let tempData = await ctx.service.point.addPoint(point)
+          params.majorRequirement[i].point = tempData.map(item => item._id)
+        } else {
+          params.majorRequirement[i].point = []
+        }
+      }
       res = await ctx.service.graduationRequirement.createRequirement(params)
       const data = {
         _id: params._id,

@@ -1,11 +1,10 @@
-import React, { useState, useRef } from 'react'
+import React, { useState, useRef, useMemo } from 'react'
 import { Button, Steps, message } from 'antd'
-import { Link } from 'react-router-dom'
+import { Link, withRouter } from 'react-router-dom'
 import { ArrowLeftOutlined, ArrowRightOutlined, RollbackOutlined, SaveOutlined } from '@ant-design/icons';
 import './index.less'
 import api from '@/apis/trainingProject'
 import { setSession, getSession } from '@/utils'
-
 
 import InitPage from './initPage'
 import TrainObject from './trainObject'
@@ -17,7 +16,7 @@ import Examine from './examine'
 
 const { Step } = Steps;
 
-const AddTrainingProject = () => {
+const AddTrainingProject = (props) => {
   const [current, setCurrent] = useState(0);
   const [acProject, setAcProject] = useState({})
   const [writer, setWriter] = useState(JSON.parse(getSession('userInfo'))._id)
@@ -37,11 +36,11 @@ const AddTrainingProject = () => {
     },
     {
       title: '毕业要求',
-      content: <Requirements ref={childRef} />,
+      content: <Requirements ref={childRef} requirement={requirementId || ''} />,
     },
     {
       title: '课程体系',
-      content: <CurriculumSystem requirementId={requirementId} />
+      content: <CurriculumSystem requirement={requirementId || ''} />
     },
     {
       title: '矩阵关系',
@@ -56,6 +55,22 @@ const AddTrainingProject = () => {
       content: <Examine />,
     },
   ];
+
+  const getProjectDetail = async (id) => {
+    const params = {
+      _id: id
+    }
+    const res = await React.$axios.post(api.getProjectDetail, params);
+    if (res && res.isSucceed) {
+      setAcProject(res.data)
+    }
+  }
+
+  useMemo(() => {
+    if (props.match.params.id) {
+      getProjectDetail(props.match.params.id)
+    }
+  }, [])
 
   const next = () => {
     switch (current) {
@@ -116,6 +131,7 @@ const AddTrainingProject = () => {
     const params = {
       ...data,
       _id: acProject._id,
+      requirementId,
     }
     const res = await React.$axios.post(api.updateRequirement, params)
     if (res && res.isSucceed) {
@@ -151,4 +167,4 @@ const AddTrainingProject = () => {
   )
 }
 
-export default AddTrainingProject
+export default withRouter(AddTrainingProject)
