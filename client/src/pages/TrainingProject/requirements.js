@@ -1,4 +1,4 @@
-import React, { useState, useImperativeHandle, forwardRef } from 'react'
+import React, { useState, useImperativeHandle, forwardRef, useMemo } from 'react'
 
 import { Form, Input, Button, List, Collapse, Space, Modal } from 'antd';
 import { PlusOutlined } from '@ant-design/icons';
@@ -68,6 +68,25 @@ const Requirements = (props, ref) => {
   const [isPointVisible, setIsPointVisible] = useState(false);
   const [acRequirement, setAcRequirement] = useState(0)
   const [editRequirement, setEditRequirement] = useState(false);
+
+  const getRequirementData = async () => {
+    const params = {
+      _id: props.requirement,
+    }
+    const res = await React.$axios.post(api.getRequirementById, params)
+    if (res && res.isSucceed) {
+      console.log(res.data)
+      setShowMajorForm(false)
+      setMajorRequirement(res.data.description);
+      setRequirementList(res.data.majorRequirement)
+    }
+  }
+
+  useMemo(() => {
+    if (props.requirement) {
+      getRequirementData()
+    }
+  }, [])
 
   const formItemLayout = {
     labelCol: { span: 4 },

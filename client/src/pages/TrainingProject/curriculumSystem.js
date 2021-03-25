@@ -1,6 +1,6 @@
-import React, { useContext, useState, useEffect, useRef, useMemo } from 'react';
+import React, { useState, useMemo } from 'react';
 import { Table, Input, Button, Space, Form, Modal, Cascader, Select, message } from 'antd';
-const EditableContext = React.createContext(null);
+// const EditableContext = React.createContext(null);
 import api from '@/apis/trainingProject'
 import { PlusOutlined } from '@ant-design/icons';
 import { mergeCells } from '@/utils'
@@ -8,7 +8,6 @@ import { mergeCells } from '@/utils'
 const { Option } = Select;
 
 const CurriculumSystem = (props) => {
-  const [requirement, setRequirement] = useState(props.requirementId)
   const [form] = Form.useForm();
   const [tableData, setTableData] = useState([])
   const [pointList, setPointList] = useState([])
@@ -45,9 +44,9 @@ const CurriculumSystem = (props) => {
 
   const getTableData = async () => {
     const params = {
-      _id: requirement,
+      _id: props.requirement,
     }
-    const res = await React.$axios.get(api.getAllPoint, params);
+    const res = await React.$axios.post(api.getRequirementById, params);
     if (res && res.isSucceed) {
       const data = res.data.majorRequirement;
       data.forEach(item => {
@@ -66,8 +65,9 @@ const CurriculumSystem = (props) => {
   }
 
   useMemo(() => {
-    console.log(requirement)
-    getTableData()
+    if (props.requirement) {
+      getTableData()
+    }
     getCourseList()
   }
     , [])
@@ -156,7 +156,7 @@ const CurriculumSystem = (props) => {
       pointId: record.pointId,
     }
     const res = await React.$axios.post(api.delCurrRelationship, params);
-    if(res && res.isSucceed) {
+    if (res && res.isSucceed) {
       message.success('删除成功');
       getTableData();
     }

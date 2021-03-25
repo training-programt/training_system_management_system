@@ -16,10 +16,29 @@ class TrainingProjectController extends Controller {
     }
   }
 
+  async getProjectDetail() {
+    const { ctx } = this;
+    const params = ctx.request.body
+    const res = await ctx.service.trainingProject.getProjectDetail(params)
+    if (res) {
+      ctx.body = {
+        total: 0,
+        data: res,
+        code: 200,
+        isSucceed: true,
+      }
+    }
+  }
+
   async createProject() {
     const { ctx } = this;
     const params = ctx.request.body;
-    const res = await ctx.service.trainingProject.createProject(params)
+    let res;
+    if (params._id) {
+      res = await ctx.service.trainingProject.updateProject(params)
+    } else {
+      res = await ctx.service.trainingProject.createProject(params)
+    }
     if (res) {
       ctx.body = {
         total: 0,
@@ -41,6 +60,18 @@ class TrainingProjectController extends Controller {
         code: 200,
         isSucceed: true,
       }
+    }
+  }
+
+  async getObjectData() {
+    const { ctx } = this;
+    const params = ctx.request.body;
+    const res = await ctx.service.trainingObjective.getObjectData(params);
+    ctx.body = {
+      total: 0,
+      data: res,
+      code: 200,
+      isSucceed: true,
     }
   }
 
@@ -67,24 +98,44 @@ class TrainingProjectController extends Controller {
       }
     }
   }
+  
+  async getRequirementById() {
+    const {  ctx } = this;
+    const params = ctx.request.body;
+    const res = await ctx.service.graduationRequirement.getRequirementById(params)
+    ctx.body = {
+      total: 0,
+      data: res,
+      code: 200,
+      isSucceed: true,
+    }
+  }
 
   async updateRequirement() {
     const { ctx } = this;
     const params = ctx.request.body;
-    console.log(params)
-    for (let i = 0; i < params.majorRequirement.length; i++) {
-      let point = params.majorRequirement[i].point;
-      if (point.length) {
-        let tempData = await ctx.service.point.addPoint(point)
-        params.majorRequirement[i].point = tempData.map(item => item._id)
-      } else {
-        params.majorRequirement[i].point = []
-      }
-    }
     let res;
     if (params.requirementId) {
+      for (let i = 0; i < params.majorRequirement.length; i++) {
+        let point = params.majorRequirement[i].point;
+        if (point.length) {
+          let tempData = await ctx.service.point.addPoint(point)
+          params.majorRequirement[i].point = tempData.map(item => item._id)
+        } else {
+          params.majorRequirement[i].point = []
+        }
+      }
       res = await ctx.service.graduationRequirement.updateRequirement(params)
     } else {
+      for (let i = 0; i < params.majorRequirement.length; i++) {
+        let point = params.majorRequirement[i].point;
+        if (point.length) {
+          let tempData = await ctx.service.point.addPoint(point)
+          params.majorRequirement[i].point = tempData.map(item => item._id)
+        } else {
+          params.majorRequirement[i].point = []
+        }
+      }
       res = await ctx.service.graduationRequirement.createRequirement(params)
       const data = {
         _id: params._id,
@@ -128,14 +179,10 @@ class TrainingProjectController extends Controller {
     const { ctx } = this;
     const params = ctx.request.query;
     const data = await ctx.service.trainingProject.findObjAndReqByProject(params)
-    console.log(data)
     const res = {
       row: data.graduationRequirement,
       col: data.trainingObjective,
     }
-
-    console.log(res)
-
     ctx.body = {
       total: 0,
       data: res,
@@ -149,7 +196,6 @@ class TrainingProjectController extends Controller {
     const params = ctx.request.query;
     const data = await ctx.service.trainingProject.findObjAndReqByProject(params)
     const nationReq = await ctx.service.nationalRequirement.getAllRequirement();
-    console.log(nationReq)
     const res = {
       row: data.graduationRequirement.majorRequirement,
       col: nationReq,

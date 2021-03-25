@@ -2,6 +2,7 @@ import React, { useContext, useState, useEffect, useRef, useMemo } from 'react';
 import { Table, Input, Form, Button, Space } from 'antd';
 import api from '@/apis/trainingProject'
 import { createColumns, createRows } from '@/utils'
+import XLSX from 'xlsx';
 
 const TableOne = (props) => {
   const EditableContext = React.createContext(null);
@@ -170,6 +171,10 @@ const TableOne = (props) => {
     }
     const res = await React.$axios.post(api.saveTableOne, params)
     console.log(res)
+  }
+
+  const downloadData = async () => {
+
   }
 
   return (

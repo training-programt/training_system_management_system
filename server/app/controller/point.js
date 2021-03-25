@@ -14,13 +14,12 @@ class PointController extends Controller {
     }
   }
 
-  async getAllPoint() {
+  async getRequirementById() {
     const { ctx } = this;
-    const params = ctx.request.query;
+    const params = ctx.request.body;
     const res = await ctx.service.graduationRequirement.getAllRequirement(params)
     for (let i = 0; i < res.majorRequirement.length; i++) {
-      const point = await ctx.service.point.getPointByIds(res.majorRequirement[i].point)
-      res.majorRequirement[i].point = point;
+      res.majorRequirement[i].point = await ctx.service.point.getPointByIds(res.majorRequirement[i].point)
     }
     ctx.body = {
       total: 0,

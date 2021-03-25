@@ -1,30 +1,55 @@
-import React, { useEffect, useState, useImperativeHandle, forwardRef } from 'react'
+import React, { useMemo, useState, useImperativeHandle, forwardRef } from 'react'
 import { Form, Input, Select, InputNumber } from 'antd';
 import api from '@/apis/trainingProject'
 
+import withRouterForwardRef from '@/utils/withRouterForwardRef'
+
 const { Option } = Select;
 
-const InitPage = (props, ref) => {
-
+const InitPage = forwardRef((props, ref) => {
   const [form] = Form.useForm();
   const [majorOption, setMajorOption] = useState([])
+  const [gradeList, setGradeList] = useState([])
 
   const layout = {
     labelCol: { span: 5 },
     wrapperCol: { span: 17 },
   };
 
-  useEffect(() => {
-    // const formData = JSON.parse(getSession('training-project-data')) || {}
-    // form.setFieldsValue(formData)
-    const fetch = async () => {
-      const res = await React.$axios.get(api.getMajor)
+  const getMajorList = async () => {
+    const res = await React.$axios.get(api.getMajor)
+    if (res && res.isSucceed) {
       setMajorOption(res.data)
     }
-    fetch()
-    return () => {
-      // setSession('training-project-data', form.getFieldValue())
+  }
+
+  const getGradeList = async () => {
+    const res = await React.$axios.get(api.getGradeList)
+    if (res && res.isSucceed) {
+      setGradeList(res.data);
     }
+  }
+
+  const getProjectDetail = async () => {
+    const params = {
+      _id: props.match.params.id
+    }
+    const res = await React.$axios.post(api.getProjectDetail, params)
+    if (res && res.isSucceed) {
+      form.setFieldsValue(res.data)
+    }
+  }
+
+  useMemo(() => {
+    if (props.match.params.id) {
+      getProjectDetail()
+    }
+
+  }, [])
+
+  useMemo(() => {
+    getMajorList()
+    getGradeList()
   }, [])
 
 
@@ -83,7 +108,7 @@ const InitPage = (props, ref) => {
           </Form.Item>
           <Form.Item
             label="年级"
-            name="year"
+            name="grade"
             rules={[
               {
                 required: true,
@@ -91,7 +116,15 @@ const InitPage = (props, ref) => {
               },
             ]}
           >
-            <Input allowClear placeholder='请输入年级' />
+            <Select
+              placeholder="请选择年级"
+              showSearch
+              allowClear
+            >
+              {
+                gradeList.map(item => <Select.Option key={item._id} value={item._id}>{item.name}</Select.Option>)
+              }
+            </Select>
           </Form.Item>
           <Form.Item
             label="学位"
@@ -198,6 +231,15 @@ const InitPage = (props, ref) => {
       </div>
     </div>
   )
-}
+})
 
-export default forwardRef(InitPage)
+// const withRouterForwardRef = Component => {
+//   const WithRouter = withRouter(({ forwardedRef, ...props }) => (
+//     <Component ref={forwardedRef} {...props} />
+//   ));
+//   return forwardRef((props, ref) => (
+//     <WithRouter {...props} forwardedRef={ref} />
+//   ));
+// };
+
+export default withRouterForwardRef(InitPage);

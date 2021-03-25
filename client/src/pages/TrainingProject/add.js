@@ -1,11 +1,10 @@
-import React, { useState, useRef } from 'react'
+import React, { useState, useRef, useMemo } from 'react'
 import { Button, Steps, message } from 'antd'
-import { Link } from 'react-router-dom'
+import { Link, withRouter } from 'react-router-dom'
 import { ArrowLeftOutlined, ArrowRightOutlined, RollbackOutlined, SaveOutlined } from '@ant-design/icons';
 import './index.less'
 import api from '@/apis/trainingProject'
 import { setSession, getSession } from '@/utils'
-
 
 import InitPage from './initPage'
 import TrainObject from './trainObject'
@@ -17,30 +16,31 @@ import Examine from './examine'
 
 const { Step } = Steps;
 
-const AddTrainingProject = () => {
+const AddTrainingProject = (props) => {
   const [current, setCurrent] = useState(0);
   const [acProject, setAcProject] = useState({})
   const [writer, setWriter] = useState(JSON.parse(getSession('userInfo'))._id)
   const [requirementId, setRequirementId] = useState('')
+  const [objectId, setObjectId] = useState('')
 
   const childRef = useRef()
 
   const steps = [
     {
       title: '基础信息',
-      content: <InitPage ref={childRef} />,
+      content: <InitPage ref={childRef} project={acProject._id || ''} />,
     },
     {
       title: '培养目标',
-      content: <TrainObject ref={childRef} />,
+      content: <TrainObject ref={childRef} object={objectId || ''} />,
     },
     {
       title: '毕业要求',
-      content: <Requirements ref={childRef} />,
+      content: <Requirements ref={childRef} requirement={requirementId || ''} />,
     },
     {
       title: '课程体系',
-      content: <CurriculumSystem requirementId={requirementId} />
+      content: <CurriculumSystem requirement={requirementId || ''} />
     },
     {
       title: '矩阵关系',
@@ -55,6 +55,22 @@ const AddTrainingProject = () => {
       content: <Examine />,
     },
   ];
+
+  const getProjectDetail = async (id) => {
+    const params = {
+      _id: id
+    }
+    const res = await React.$axios.post(api.getProjectDetail, params);
+    if (res && res.isSucceed) {
+      setAcProject(res.data)
+    }
+  }
+
+  useMemo(() => {
+    if (props.match.params.id) {
+      getProjectDetail(props.match.params.id)
+    }
+  }, [])
 
   const next = () => {
     switch (current) {
@@ -84,7 +100,6 @@ const AddTrainingProject = () => {
   };
 
   const initProject = async (data) => {
-    if (!acProject) return false;
     const newTime = new Date().getTime()
     const params = {
       ...data,
@@ -92,20 +107,21 @@ const AddTrainingProject = () => {
       newTime,
     }
     const res = await React.$axios.post(api.createProject, params)
-    if(res && res.isSucceed) {
+    if (res && res.isSucceed) {
       setAcProject(res.data)
       setCurrent(current + 1);
     }
   }
 
   const saveObject = async (data) => {
-    if (!acProject) return false;
     const params = {
       ...data,
       _id: acProject._id,
+      objectId,
     }
     const res = await React.$axios.post(api.updateObject, params)
-    if(res && res.isSucceed) {
+    if (res && res.isSucceed) {
+      setObjectId(res.data._id)
       setCurrent(current + 1);
     }
   }
@@ -115,9 +131,10 @@ const AddTrainingProject = () => {
     const params = {
       ...data,
       _id: acProject._id,
+      requirementId,
     }
     const res = await React.$axios.post(api.updateRequirement, params)
-    if(res && res.isSucceed) {
+    if (res && res.isSucceed) {
       setRequirementId(res.data._id)
       setCurrent(current + 1);
     }
@@ -150,4 +167,4 @@ const AddTrainingProject = () => {
   )
 }
 
-export default AddTrainingProject
+export default withRouter(AddTrainingProject)

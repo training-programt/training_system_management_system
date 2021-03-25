@@ -10,4 +10,7 @@ module.exports = app => {
     router.post('/delSemester', controller.grade.delSemester);
     router.post('/updateSemester', controller.grade.updateSemester);
     router.get('/getCollege', controller.grade.getCollege);
+
+    router.get('/getAllGrade', controller.grade.getAllGrade);
+
 };

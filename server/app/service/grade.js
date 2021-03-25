@@ -45,8 +45,8 @@ class GradeService extends Service {
             .sort('sort');
         return result;
     }
-     //新建
-     async addSemester(params) {
+    //新建
+    async addSemester(params) {
         const { ctx } = this;
         const result = await ctx.model.Semester.create(params)
         return result;
@@ -76,6 +76,12 @@ class GradeService extends Service {
             .find({
             })
             .sort('sort');
+        return result;
+    }
+
+    async getAllGrade() {
+        const { ctx } = this;
+        const result = await ctx.model.Grade.find().sort();
         return result;
     }
 }

@@ -14,7 +14,7 @@ class LoginController extends Controller {
       password: userInfo.password
     }
     const res = await ctx.model.Teacher
-      .findOne({ name: data.name }, { _id: 1, name: 1, role: 1, password: 1, teachRoom: 1})
+      .findOne({ name: data.name })
     if (!res) {
       ctx.body = {
         message: '用户不存在',
@@ -24,15 +24,11 @@ class LoginController extends Controller {
         message: '用户密码错误',
       }
     } else {
+      delete res.password;
       ctx.body = {
         total: 0,
         data: {
-          userInfo: {
-            _id: res._id,
-            name: res.name,
-            role: res.role,
-            teachRoom: res.teachRoom,
-          },
+          userInfo: res,
           token: {
             token_type: 'bearer',
             access_token: '7cc9be26-4ef0-4a14-ae73-afde0639bc1e'

@@ -33,6 +33,7 @@ const BasicLayout = () => {
     siderStyle: {
       height: '100vh',
       backgroundColor: typeColor ? '#fff' : '',
+      overflow: 'auto'
     }
   }
 

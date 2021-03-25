@@ -1,6 +1,7 @@
 export default {
   getMajor: '/getMajor',
   createProject: '/createProject',
+  getGradeList: '/getAllGrade',
   getProjectList: '/getProjectList',
   delProject: '/delProject',
   updateObject: '/updateObject',
@@ -10,8 +11,12 @@ export default {
   saveTableTwo: '/jys/tableTwo',
   getTable1RowCol: '/getRowColData',
   getTable2RowCol: '/getTable2RowCol',
-  getAllPoint: '/getAllPoint',
+  // getAllPoint: '/getAllPoint',
   getCourse: '/getAllCourse',
   addCurrRelationship: '/addCurrRelationship',
   delCurrRelationship: '/delCurrRelationship',
+
+  getProjectDetail: '/getProjectDetail',
+  getObjectData: '/getObjectData',
+  getRequirementById: '/getRequirementById',
 }

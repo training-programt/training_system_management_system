@@ -7,15 +7,15 @@ export default [
     component: TrainingProject,
   },
   {
-    path: '/trainingProject/add',
-    name: '新增培养方案',
+    path: '/trainingProject/details/:id',
+    name: '培养方案详情',
     icon: 'icon-teacher',
     component: AddTrainingProject,
   },
   {
-    path: '/trainingProject/edit',
-    name: '编辑培养方案',
+    path: '/trainingProject/add',
+    name: '新增培养方案',
     icon: 'icon-teacher',
-    component: EditTrainingProject,
+    component: AddTrainingProject,
   },
 ]
