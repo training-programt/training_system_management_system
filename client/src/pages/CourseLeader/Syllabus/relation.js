@@ -74,9 +74,6 @@ const Relation = () => {
     },
   ];
   useEffect(() => {
-    // const Rel = React.$axios.get('/getRelation').then((rel) => {
-    //   setRelationData(rel.data)
-    // })
     const MajorRequirement = React.$axios.get('/getMajorRequirement').then((ma) => {
       setRequirementData(ma.data)
     })

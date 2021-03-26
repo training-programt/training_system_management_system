@@ -55,8 +55,8 @@ const Syllabus = () => {
       _id: teacher._id
     }
     // const res = React.$axios.post('/getSyllabus', params).then((syllabusData) => {
-    //   // console.log(syllabusData)
-    //   setSyllabusData(syllabusData.data[0].course)
+    //   console.log(syllabusData)
+    //   // setSyllabusData(syllabusData.data[0].course)
     // })
     const res = React.$axios.post('/findTeacher', params).then((data) => {
       setCourseData(data.data.course)

@@ -55,8 +55,17 @@ const BasicInfo = () => {
         courseData.map((item) => {
             if (item._id == value) {
               setCourseName(item)
+              form.setFieldsValue({
+                  code:item.code,
+                  credits:item.credits,
+                  within:item.within,
+                  outside:item.outside,
+                  computer:item.computer,
+                  all:item.all,
+              })
             }
           })
+        
     }
     const changeMajorName=(value)=>{
         majorData.map((item) => {
@@ -99,7 +108,7 @@ const BasicInfo = () => {
                             },
                         ]}
                     >
-                          <Select placeholder="选择课程名字" value={basicInfo.name.name} allowClear onChange={(value)=>{changeCourseName(value)}}>
+                          <Select placeholder="选择课程名字" value={basicInfo?.name?.name} allowClear onChange={(value)=>{changeCourseName(value)}}>
                             {
                                 courseData && courseData.map(item => (<Option key={item._id} value={item._id}>{item.name}</Option>))
                             }
@@ -127,7 +136,7 @@ const BasicInfo = () => {
                             },
                         ]}
                     >
-                        <Select placeholder="开课单位" allowClear value={basicInfo.unit.name} onChange={(value)=>{changeUnitName(value)}}>
+                        <Select placeholder="开课单位" allowClear value={basicInfo?.unit?.name} onChange={(value)=>{changeUnitName(value)}}>
                             {
                                 college && college.map(item => (<Option key={item._id} value={item._id}>{item.name}</Option>))
                             }
@@ -179,7 +188,7 @@ const BasicInfo = () => {
                             },
                         ]}
                     >
-                        <Select placeholder="适用专业" allowClear value={basicInfo.professional.name}  onChange={(value)=>{changeMajorName(value)}}>
+                        <Select placeholder="适用专业" allowClear value={basicInfo?.professional?.name}  onChange={(value)=>{changeMajorName(value)}}>
                             {
                                 majorData && majorData.map(item => (<Option key={item._id} value={item._id}>{item.name}</Option>))
                             }

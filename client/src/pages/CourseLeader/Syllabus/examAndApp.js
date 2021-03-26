@@ -20,9 +20,9 @@ const ExamAndApp = () => {
   let leftList = JSON.parse(localStorage.getItem('leftList'));
   const userInfo = JSON.parse(getSession('userInfo'));
   const modifyPerson = userInfo.name;
-  let nowDate = new Date().toLocaleString();
+  let nowDate = Date.now()
   const [teacher, setTeacher] = useState([])
-  const [reviewer, setReviewer] = useState([])
+  const [reviewer, setReviewer] = useState('')
   const [instr, setInstructions] = useState('')
   let goalAndAssessment = JSON.parse(localStorage.getItem('goalAndAssessment'));
   // let printRef
@@ -45,7 +45,6 @@ const ExamAndApp = () => {
     }
   }, [])
   const print = () => {
-    console.log("print")
     const printDiv = document.getElementById('printDiv');
     const iframe = document.createElement('IFRAME');
     let doc = null;
@@ -55,8 +54,10 @@ const ExamAndApp = () => {
     doc = iframe.contentWindow.document;
     // 打印时去掉页眉页脚
     doc.write(`
-    <script src="../../../../node_modules/antd/dist/antd.js"></script>
     <link href="../../../../node_modules/antd/dist/antd.css" rel="stylesheet"/>
+    <script crossorigin src="https://unpkg.com/react@16/umd/react.development.js"></script>
+    <script crossorigin src="https://unpkg.com/react-dom@16/umd/react-dom.development.js"></script>
+    <script src="../../../../node_modules/antd/dist/antd.js"></script>
     <style media="print">@page 
      .title1{
        font-weight: bold; margin: 15px 0px;
@@ -89,7 +90,37 @@ const ExamAndApp = () => {
     }
   }
   const submit = () => {
-    console.log(tijiap)
+    if(instr && reviewer){
+      const params = {
+        course_info:basic,
+        teaching_goal:teachGoal,
+        relation:relation,
+        theory_teaching:theory,
+        practice_teaching:practice,
+        assessment:leftList,
+        assessmentGoal:goalAndAssessment,
+        reference:bookList,
+        instructions:instr,//教学大纲说明
+        writer:modifyPerson,//执笔人
+        reviewer:reviewer,//审核人
+        modify_data:nowDate,//审核时间
+      }
+      const syllabus = React.$axios.post('/addSyllabus',params).then((ma) => {
+        if(ma.isSucceed){
+          message.success("提交成功，已存入数据")
+          localStorage.removeItem("basic")
+          localStorage.removeItem("teachGoal")
+          localStorage.removeItem("practice")
+          localStorage.removeItem("theory")
+          localStorage.removeItem("relation")
+          localStorage.removeItem("bookList")
+          localStorage.removeItem("leftList")
+          localStorage.removeItem("goalAndAssessment")
+        }
+      })
+    }else{
+      message.error("请填写教学大纲说明并选择审核人！！")
+    }
   }
   return (
     <div className="examine-wrap">
@@ -300,7 +331,7 @@ const ExamAndApp = () => {
               </Select>
             </Col>
             <Col span={8}>执笔人：{modifyPerson}</Col>
-            <Col span={8}>修改时间：{nowDate}</Col>
+            <Col span={8}>修改时间：{new Date(nowDate).toLocaleString()}</Col>
           </Row>
         </Card>
       </div>
