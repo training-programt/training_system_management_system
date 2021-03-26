@@ -9,6 +9,9 @@ import Relation from './relation'
 import Theory from './theory'
 import Practice from './practice'
 import ExamAndApp from './examAndApp'
+import Assessment from './assessment'
+import GoalAndAssessment from './goalAndAssessment'
+import Book from './book'
 const { Step } = Steps;
 const SyllabusAdd = () => {
     const [current, setCurrent] = useState(0);
@@ -35,23 +38,37 @@ const SyllabusAdd = () => {
             content: <Practice />,
         },
         {
+            title: '考核环节设置',
+            content: <Assessment />,
+        },
+        {
+            title: '课程目标与考核对应关系',
+            content: <GoalAndAssessment />,
+        },
+        {
+            title: '建议教材及教学参考书',
+            content: <Book />,
+        },
+        {
             title: '审批',
             content: <ExamAndApp />,
         },
+        
     ];
 
     const next = () => {
         setCurrent(current + 1);
-        console.log(current);
     };
 
     const prev = () => {
         setCurrent(current - 1);
     };
-
+    const changeCurrent=(index)=>{
+        setCurrent(index)
+    }
     return (
         <div className="training-project">
-            <Steps current={current} size="small">
+            <Steps current={current} size="small" onChange={(current)=>changeCurrent(current)}>
                 {steps.map(item => (
                     <Step key={item.title} title={item.title} />
                 ))}
@@ -64,9 +81,9 @@ const SyllabusAdd = () => {
                 {current < steps.length - 1 && (
                     <Button type="primary" icon={<ArrowRightOutlined />} onClick={() => next()}>下一步</Button>
                 )}
-                {current === steps.length - 1 && (
+                {/* {current === steps.length - 1 && (
                     <Button type="primary" onClick={() => message.success('Processing complete!')}>提交审批</Button>
-                )}
+                )} */}
 
                 <Button icon={<RollbackOutlined />} style={{ color: '#000', marginLeft: '8px' }} onClick={()=>{history.push('/syllabus')}}>返回</Button>
             </div>

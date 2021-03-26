@@ -2,7 +2,6 @@ import React, { useState, useEffect } from 'react'
 import { useLocation } from "react-router-dom";
 import { Form, Input, Button, List, Divider, message } from 'antd';
 import { PlusOutlined } from '@ant-design/icons';
-const data1 = []
 const layout = {
     labelCol: { span: 2 },
     wrapperCol: { span: 21 },

@@ -112,12 +112,12 @@ const CourseSystem = () => {
     {
       title: '课程名称',
       dataIndex: 'basicCourse',
-      render: (text, record) => record.course.name
+      render: (text, record) => record.course?.name
     },
     {
       title: '年级',
       dataIndex: 'grade',
-      render: (text, record) => record.grade.name
+      render: (text, record) => record.grade?.name
     },
     {
       title: '开课学期',
@@ -127,17 +127,17 @@ const CourseSystem = () => {
     {
       title: '专业',
       dataIndex: 'major',
-      render: (text, record) => record.major.name
+      render: (text, record) => record.major?.name
     },
     {
       title: '课程类型',
       dataIndex: 'courseType',
-      render: (text, record) => record.courseType.name
+      render: (text, record) => record.courseType?.name
     },
     {
       title: '课程负责人',
       dataIndex: 'leader',
-      render: (text, record) => record.leader.name
+      render: (text, record) => record.leader?.name
     },
     {
       title: '操作',

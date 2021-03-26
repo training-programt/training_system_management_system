@@ -24,18 +24,18 @@ module.exports = app => {
       type: Schema.Types.ObjectId,
       ref: 'PracticeTeach'
     }],//实践教学
-    assessment: {
+    assessment: [{
       type: Schema.Types.ObjectId,
       ref: 'AttendanceProportion'
-    },//考核环节
-    assessmentGoal:{
+    }],//考核环节
+    assessmentGoal:[{
       type:Schema.Types.ObjectId,
       ref:"AssessmentGoal"
-    },//考核环节与课程目标的对应关系
-    reference: { 
+    }],//考核环节与课程目标的对应关系
+    reference: [{ 
       type: Schema.Types.ObjectId,
       ref: 'Book'
-    },//建意教材及教学参考书
+    }],//建意教材及教学参考书
     instructions: { type: String },//大纲执行说明
     writer: { type: String },//执笔人
     reviewer: {
