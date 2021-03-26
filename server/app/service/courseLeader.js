@@ -8,11 +8,49 @@ class CourseLeaderService extends Service {
         const result = await ctx.model.Syllabus
             .find({
             })
-            .populate('course_info')
+            .populate({
+                path: 'course_info',
+                populate: {
+                    path: 'course',//相当于then，在嵌套查询后，进行关联查询
+                }
+            })
+            .populate({
+                path: 'course_info',
+                populate: {
+                    path: 'professional',
+                }
+            })
+            .populate({
+                path: 'course_info',
+                populate: {
+                    path: 'unit',
+                }
+            })
             .populate('teaching_goal')
+            .populate({
+                path: 'relation',
+                populate: { path: "major_requirement" },
+            })
+            .populate({
+                path: 'relation',
+                populate: { path: "point" },
+            })
+            .populate({
+                path: 'relation',
+                populate: { path: "teach_goal" },
+            })
             .populate('theory_teaching')
             .populate('practice_teaching')
             .populate('assessment')
+            .populate({
+                path:'assessmentGoal',
+                populate:{path:"major_requirement"}
+            })
+            .populate({
+                path:'assessmentGoal',
+                populate:{path:"assessment"}
+            })
+            .populate('reference')
             .populate('reviewer')
             .sort('sort');
         return result;
@@ -24,33 +62,33 @@ class CourseLeaderService extends Service {
         return result
     }
     //修改课程大纲
-    async updataSyllabus(params){
+    async updataSyllabus(params) {
         const { ctx } = this;
         const result = await ctx.model.Syllabus.findByIdAndUpdate(params)
         return result
     }
     //增加课程大纲
-    async addSyllabus(params){
-        const {ctx} = this;
+    async addSyllabus(params) {
+        const { ctx } = this;
         const result = await ctx.model.Syllabus.insertMany(params);
         return result;
     }
-     //增加课程大纲
-     async createSyllabus(params){
-        const {ctx} = this;
+    //增加课程大纲
+    async createSyllabus(params) {
+        const { ctx } = this;
         const result = await ctx.model.Syllabus.create(params);
         return result;
     }
     //查找课程大纲
-    async findSyllabus(params){
-        const {ctx} = this;
+    async findSyllabus(params) {
+        const { ctx } = this;
         const result = await ctx.model.Syllabus.find(params);
         return result;
     }
 
 
-     // 查询全部课程教学目标
-     async getTeachGoal() {
+    // 查询全部课程教学目标
+    async getTeachGoal() {
         const { ctx } = this;
         const result = await ctx.model.TeachingGoal
             .find({
@@ -71,14 +109,14 @@ class CourseLeaderService extends Service {
         const result = await ctx.model.TeachingGoal.remove(params)
         return result
     }
-     //更新教学目标
-     async updataTeachGoal(params) {
+    //更新教学目标
+    async updataTeachGoal(params) {
         const { ctx } = this;
         const result = await ctx.model.TeachingGoal.findByIdAndUpdate(params)
         return result
     }
-     //条件查询教学目标
-     async findTeachGoal(params) {
+    //条件查询教学目标
+    async findTeachGoal(params) {
         const { ctx } = this;
         const result = await ctx.model.TeachingGoal.find(params)
         return result;
@@ -95,12 +133,12 @@ class CourseLeaderService extends Service {
             .sort('sort');
         return result;
     }
-     async addRelation(params) {
+    async addRelation(params) {
         const { ctx } = this;
         const result = await ctx.model.Relation.create(params)
         return result;
     }
-     async delRelation(params) {
+    async delRelation(params) {
         const { ctx } = this;
         const result = await ctx.model.Relation.remove(params)
         return result
@@ -132,8 +170,8 @@ class CourseLeaderService extends Service {
             .sort('sort');
         return result;
     }
-     // 查询 全部理论
-     async getTheory() {
+    // 查询 全部理论
+    async getTheory() {
         const { ctx } = this;
         const result = await ctx.model.TheoryTeach
             .find({
@@ -141,8 +179,8 @@ class CourseLeaderService extends Service {
             .sort('sort');
         return result;
     }
-     // 查询 全部实践
-     async getPractice() {
+    // 查询 全部实践
+    async getPractice() {
         const { ctx } = this;
         const result = await ctx.model.PracticeTeach
             .find({
