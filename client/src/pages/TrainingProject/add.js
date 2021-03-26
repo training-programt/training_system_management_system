@@ -44,12 +44,12 @@ const AddTrainingProject = (props) => {
     },
     {
       title: '矩阵关系',
-      content: <MatrixRelation project={acProject._id} />,
+      content: <MatrixRelation project={acProject} />,
     },
-    {
-      title: '课程修读计划',
-      content: <StudyProgramme />,
-    },
+    // {
+    //   title: '课程修读计划',
+    //   content: <StudyProgramme />,
+    // },
     {
       title: '审批',
       content: <Examine />,
@@ -89,6 +89,11 @@ const AddTrainingProject = (props) => {
         saveRequirement(data)
         break;
       }
+      case 4: {
+        getProjectDetail(acProject._id);
+        setCurrent(current + 1);
+        break;
+      }
       default: {
         setCurrent(current + 1);
       }
@@ -96,6 +101,9 @@ const AddTrainingProject = (props) => {
   };
 
   const prev = () => {
+    if(current == 5) {
+      getProjectDetail(acProject._id)
+    }
     setCurrent(current - 1);
   };
 

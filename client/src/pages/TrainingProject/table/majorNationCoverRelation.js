@@ -95,7 +95,7 @@ const TableOne = (props) => {
   // 获取行列数据
   const getRowColData = async () => {
     const params = {
-      _id: projectId,
+      _id: projectId._id,
     }
     const res = await React.$axios.get(api.getTable2RowCol, params)
     if (res && res.isSucceed) {
@@ -103,9 +103,10 @@ const TableOne = (props) => {
     }
   }
 
-  useMemo(() =>
+  useMemo(() => {
+    console.log(props.project, '3')
     getRowColData()
-    , [])
+  }, [])
 
   const formatData = (row, col) => {
     let rowData = row.map((item, index) => {
