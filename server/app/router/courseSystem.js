@@ -7,4 +7,5 @@ module.exports = app => {
   router.post('/updateCourseSystem', controller.courseSystem.updateCourseSystem);
   router.post('/delCourseSystem', controller.courseSystem.delCourseSystem);
   router.post('/delMoreCourseSystem', controller.courseSystem.delMoreCourseSystem);
+  router.post('/findCourseSystem', controller.courseSystem.findCourseSystem);
 };

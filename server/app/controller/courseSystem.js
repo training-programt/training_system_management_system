@@ -14,6 +14,19 @@ class CourseSystemController extends Controller {
       isSucceed: true,
     };
   }
+  async findCourseSystem() {
+    const { ctx } = this;
+    const params = ctx.request.body;
+    console.log(params)
+    const data = await ctx.model.CourseSystem.find({leader:params._id})
+    .populate('course')
+    ctx.body = {
+      total: data.length,
+      data: data,
+      code: 200,
+      isSucceed: true,
+    };
+  }
 
   async addCourseSystem() {
     const { ctx } = this;

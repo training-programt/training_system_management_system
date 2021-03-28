@@ -15,6 +15,7 @@ const BasicInfo = () => {
     const [header, setHeaderData] = useState([]);
     const [butType,setButType] = useState(false);
     const [courseData, setCourseData] = useState([]);
+    const [courseSystem,setCourseSystemData] = useState([])
     const data = JSON.parse(getSession("newData"));
     let basicInfo = JSON.parse(localStorage.getItem('basic'))
 
@@ -27,7 +28,18 @@ const BasicInfo = () => {
         wrapperCol: { span: 17 },
     };
     useEffect(() => {
-        const courses = React.$axios.get('/getCollege').then((res) => {
+        const teacher = JSON.parse(getSession('userInfo'));
+        const params = {
+          _id: teacher._id
+        }
+        const courseSystem = React.$axios.post('/findCourseSystem', params).then((sys) => {
+            let arr=[];
+            for(let i = 0;i<sys.data.length;i++){
+                arr.push(sys.data[i].course)
+            }
+            setCourseData(arr)
+          })
+        const college = React.$axios.get('/getCollege').then((res) => {
             setCollegeData(res.data)
         })
         const major = React.$axios.get('/getMajor').then((res) => {
@@ -36,9 +48,9 @@ const BasicInfo = () => {
         const res1 = React.$axios.get('/getTeacher').then((teacherData) => {
             setHeaderData(teacherData.data)
           })
-          const res = React.$axios.get('/getCourse').then((courseData) => {
-            setCourseData(courseData.data)
-          })
+        //   const res = React.$axios.get('/getCourse').then((courseData) => {
+        //     setCourseData(courseData.data)
+        //   })
     }, [])
     const save = async() => {
         const params = {
@@ -65,7 +77,6 @@ const BasicInfo = () => {
               })
             }
           })
-        
     }
     const changeMajorName=(value)=>{
         majorData.map((item) => {
@@ -84,7 +95,21 @@ const BasicInfo = () => {
     useEffect(() => {
         console.log(info)
         if(info){
-            form.setFieldsValue(info.course_info)
+            form.setFieldsValue(
+                {
+                englishName:info.course_info?.englishName,
+                credits:info.course_info?.course?.credits,
+                code:info.course_info?.course?.code,
+                type:info.course_info?.category,
+                within:info.course_info?.course?.within,
+                outside:info.course_info?.course?.outside,
+                course_ap:info.course_info?.course_ap,
+                introduce:info.course_info?.introduce
+            })
+            setCourseName(info.course_info?.course)
+            setMajorName(info.course_info?.professional)
+            setUnitName(info.course_info?.unit)
+
         }else{
             form.setFieldsValue(basicInfo||{})
         }
@@ -108,7 +133,7 @@ const BasicInfo = () => {
                             },
                         ]}
                     >
-                          <Select placeholder="选择课程名字" value={basicInfo?.name?.name} allowClear onChange={(value)=>{changeCourseName(value)}}>
+                          <Select placeholder="选择课程名字" value={info?info.course_info?.course?.name:basicInfo?.name?.name} allowClear onChange={(value)=>{changeCourseName(value)}}>
                             {
                                 courseData && courseData.map(item => (<Option key={item._id} value={item._id}>{item.name}</Option>))
                             }
@@ -136,7 +161,7 @@ const BasicInfo = () => {
                             },
                         ]}
                     >
-                        <Select placeholder="开课单位" allowClear value={basicInfo?.unit?.name} onChange={(value)=>{changeUnitName(value)}}>
+                        <Select placeholder="开课单位" allowClear value={info?info.course_info?.unit?.name:basicInfo?.unit?.name} onChange={(value)=>{changeUnitName(value)}}>
                             {
                                 college && college.map(item => (<Option key={item._id} value={item._id}>{item.name}</Option>))
                             }
@@ -188,7 +213,7 @@ const BasicInfo = () => {
                             },
                         ]}
                     >
-                        <Select placeholder="适用专业" allowClear value={basicInfo?.professional?.name}  onChange={(value)=>{changeMajorName(value)}}>
+                        <Select placeholder="适用专业" allowClear value={info?info.course_info?.professional?.name:basicInfo?.professional?.name}  onChange={(value)=>{changeMajorName(value)}}>
                             {
                                 majorData && majorData.map(item => (<Option key={item._id} value={item._id}>{item.name}</Option>))
                             }
