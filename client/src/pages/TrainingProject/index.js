@@ -46,7 +46,7 @@ const TrainingProject = () => {
     {
       title: '编写者',
       dataIndex: 'writer',
-      render: (text, record) => text.name || ''
+      render: (text, record) => text ? text.name : ''
     },
     {
       title: '专业',
