@@ -1,6 +1,6 @@
 import React, { useState, useMemo, useEffect } from 'react'
 import HeaderComponent from '@/components/header'
-import { Table, Input, Button, Popconfirm, Divider, List ,Space} from 'antd';
+import { Table, Input, Button, Popconfirm, Divider, List ,message,Space} from 'antd';
 import { PlusOutlined, DeleteOutlined, EditOutlined } from '@ant-design/icons';
 import { getSession, setSession } from '../../../utils';
 import { Link, useLocation, useHistory, BrowserRouter as Router, Route, Switch } from 'react-router-dom'
@@ -9,6 +9,7 @@ import { Link, useLocation, useHistory, BrowserRouter as Router, Route, Switch }
 const Syllabus = () => {
   const [loading, setLoading] = useState(false);
   const [syllabusData, setSyllabusData] = useState([]);
+  const [butType,setButType] = useState(false);
   const [courseData, setCourseData] = useState([]);
   let history = useHistory();
   const professColumns = [
@@ -82,6 +83,16 @@ const Syllabus = () => {
     console.log(record)
     history.push('/syllabus/show')
   }
+  const addSyllabus=(e)=>{
+    let editInfo =JSON.parse(localStorage.getItem('basic'))
+    if(editInfo){
+      message.error("正处于编辑流程中，请先完成编辑")
+      e.preventDefault();
+      return false
+    }else{
+      history.push('/syllabus/add')
+    }
+  }
   return (
     <div className="page-container">
       <HeaderComponent title="教学大纲管理" />
@@ -105,7 +116,7 @@ const Syllabus = () => {
 
         <div className="table-wrap">
           <Divider plain orientation="left">请为上述课程新增编辑教学大纲</Divider>
-            <Link to={{ pathname: "/syllabus/add" }} ><Button size="big" type="primary" style={{marginBottom:"15px"}}>新增课程大纲</Button></Link>
+            <Link to={{ pathname: "/syllabus/add" }} ><Button size="big" type="primary" style={{marginBottom:"15px"}} onClick={addSyllabus}>新增课程大纲</Button></Link>
             <Table
               dataSource={syllabusData}
               columns={professColumns}

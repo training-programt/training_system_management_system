@@ -18,20 +18,19 @@ class CourseLeaderController extends Controller {
   async addSyllabus() {
     const { ctx } = this;
     const params = ctx.request.body;
+    console.log(params)
     const detailCourse = await ctx.model.DetailCourse.create({
       course: params.course_info.name._id,
       englishName: params.course_info.englishName,
       unit: params.course_info.unit._id,
       header: params.writer,
       category: params.course_info.type,
-      professional: params.course_info.professional._id,
+      professional: params.professional,
       course_ap: params.course_info.course_ap,
       introduce: params.course_info.introduce
     })
-    // console.log(detailCourse)
-    // console.log(params.relation)
     const teachGoal = await ctx.model.TeachingGoal.insertMany(params.teaching_goal)
-    // console.log(teachGoal)
+    console.log(teachGoal)
     let newArr = [];
     params.relation.forEach((relation) => {
       teachGoal.forEach((item,index) => {
@@ -44,16 +43,21 @@ class CourseLeaderController extends Controller {
       })
     })
     const relation = await ctx.model.Relation.insertMany(newArr)
-    console.log(relation)
     const theory = await ctx.model.TheoryTeach.insertMany(params.theory_teaching)
-    console.log(theory)
     const pratice = await ctx.model.PracticeTeach.insertMany(params.practice_teaching)
-    console.log(pratice)
     let assessmentArr=[];
+    console.log(params.assessmentGoal)
     params.assessmentGoal.forEach((ass) => {
+      let teachId;
+      teachGoal.map(item=>{
+        if(item.target_course_name==ass.teaching_goal.target_course_name)
+        {
+          teachId = item._id
+        }
+      })
       params.assessment.forEach((item,index) => {
         assessmentArr.push({
-          teaching_goal: ass.teaching_goal._id,
+          teaching_goal:teachId,
           major_requirement: ass.major_requirement._id,
           assessment: item._id,
           status:ass.assessment[index]
@@ -61,7 +65,6 @@ class CourseLeaderController extends Controller {
       })
     })
     const assessmentGoal = await ctx.model.AssessmentGoal.insertMany(assessmentArr)
-    console.log(assessmentGoal)
     const data = await ctx.service.courseLeader.createSyllabus({
       course_info:detailCourse._id,
       teaching_goal: teachGoal.map(item => item._id),
@@ -76,7 +79,6 @@ class CourseLeaderController extends Controller {
       reviewer:params.reviewer,
       modify_data:new Date(params.modify_data)
     })
-    console.log(data)
     ctx.body = {
       total: data.length,
       data: data,
@@ -85,6 +87,12 @@ class CourseLeaderController extends Controller {
     }
 
   }
+  async updateSyllabus(){
+    const { ctx } = this;
+    const params = ctx.request.body;
+    console.log(params)
+  }
+
   //查找对应的课程大纲
   async findSyllabus() {
     const { ctx } = this;

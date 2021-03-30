@@ -1,17 +1,20 @@
 import React, { useState, useEffect } from 'react';
 import { useLocation } from "react-router-dom";
-import { Table, Input, Button, Space, Modal, InputNumber, message, Select, Row, Col, Popconfirm, Form, Typography } from 'antd';
+import { Table, Input, Button, Space, Modal, InputNumber, message, Select, Row, Col, Popconfirm, Form, Typography, Divider } from 'antd';
+import { SaveOutlined } from '@ant-design/icons';
 import "./index.less"
 
 const Relation = () => {
   const [relation, setRelationData] = useState([]);
+  let rel = JSON.parse(localStorage.getItem('relation'))
   let info = useLocation()?.state?.data;
   const [visible, setVisible] = useState(false);
   const [loading, setLoading] = useState(false);
   const [confirmLoading, setConfirmLoading] = useState(false);
   const [requirement, setRequirementData] = useState([]);
   const [point, setPointData] = useState([]);
-  const goal = JSON.parse(localStorage.getItem('teachGoal'));
+  let teachGoal = JSON.parse(localStorage.getItem('teachGoal'))
+  const [goal, setGoal] = useState([]);
   const [req, setReqData] = useState([]);
   const [pointSecond, setPointSecond] = useState({})
   const [weight, setWeightData] = useState([])
@@ -21,9 +24,9 @@ const Relation = () => {
       dataIndex: 'major_requirement',
       width: '25%',
       algin: 'center',
-      key:'major_requirement',
+      key: 'major_requirement',
       render: (text, record) => {
-        return record.major_requirement.name ? record.major_requirement.name : ''
+        return record.major_requirement?.name
       }
     },
     {
@@ -31,9 +34,9 @@ const Relation = () => {
       dataIndex: 'point',
       width: '15%',
       algin: 'center',
-      key:'point',
+      key: 'point',
       render: (text, record) => {
-        return record.point.content ? record.point.content : ''
+        return record.point?.content
       }
     },
     {
@@ -42,7 +45,7 @@ const Relation = () => {
       algin: 'center',
       width: '40%',
       className: 'teach',
-      key:'teach_goal',
+      key: 'teach_goal',
       render: (text, record) => (
         <>
           {
@@ -94,8 +97,6 @@ const Relation = () => {
       point: pointSecond,
       teach_goal: weight,
     }
-    console.log(params)
-    console.log([...relation, params])
     setRelationData([...relation, params]);
     message.success("添加成功")
     localStorage.setItem("relation", JSON.stringify([...relation, params]))
@@ -131,23 +132,55 @@ const Relation = () => {
     })
   }
   useEffect(() => {
+    // console.log(teachGoal)
+    // console.log(relation)
+    // console.log(info)
     if (info) {
-      setRelationData(info.relation)
+      if (teachGoal) {
+        setGoal(teachGoal)
+        setRelationData(JSON.parse(localStorage.getItem('relation')) || [])
+      } else {
+        let arr = []
+        let obj = {}
+        info.relation.forEach(item => {
+          if (obj?.major_requirement?._id === item.major_requirement._id) {
+            obj['teach_goal'] = [...obj['teach_goal'], item?.weight]
+          } else {
+            if (Object.keys(obj).length !== 0) {
+              arr.push(obj)
+            }
+            obj = { ...item, teach_goal: [item?.weight] }
+          }
+        })
+        arr.push(obj)
+        setRelationData(arr)
+        setGoal(info.teaching_goal)
+      }
     } else {
+      setGoal(teachGoal)
       setRelationData(JSON.parse(localStorage.getItem('relation')) || [])
     }
   }, [])
+  const save = () => {
+    localStorage.setItem("relation", JSON.stringify(relation));
+    message.info('暂存成功');
+  }
   return (
     <div className="train-object">
       <div className="object-left">
         <div className="title">课程教学目标与毕业要求的对应关系</div>
         <div className="content-wrap">
-          <Button type="primary" onClick={showAdd}>新增对应关系</Button>
+          <Space direction="horizontal">
+            <Button type="primary" onClick={showAdd}>新增对应关系</Button>
+            {
+              info ? (<Button icon={<SaveOutlined />} onClick={save} type="primary">暂存修改信息</Button>) : ''
+            }
+          </Space>
           <Table
             bordered
             dataSource={relation}
             columns={columns}
-            // rowKey={(record) => `${record?.requirement?.name} ${index}`}
+          // rowKey={(record) => `${record?.requirement?.name} ${index}`}
           />
           <Modal
             visible={visible}
@@ -165,7 +198,7 @@ const Relation = () => {
               </Button>
             ]}
           >
-            <Space direction="vertical" size="large" style={{display: 'flex', justifyContent: 'center'}}>
+            <Space direction="vertical" size="large" style={{ display: 'flex', justifyContent: 'center' }}>
               <Row>
                 <Col span={4}>
                   <span>毕业要求</span>
@@ -177,7 +210,6 @@ const Relation = () => {
                     allowClear
                     onChange={(value) => { requirementChange(value) }}
                   >
-                    {/* {console.log(req.name)} */}
                     {requirement && requirement.map(item => {
                       return <Select.Option value={item._id} key={item._id}>{item.name}</Select.Option>
                     })}
@@ -201,6 +233,7 @@ const Relation = () => {
                   </Select>
                 </Col>
               </Row>
+              <Divider plain>指标点相加必须为1，例如：0.3+0.5+0.2</Divider>
               {goal && goal.map((item, index) =>
                 <Row key={index}>
                   <Col span={4}><label>权重{index + 1}</label></Col>

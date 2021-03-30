@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useLocation } from "react-router-dom";
 import { Table, Input, Button, Space, Modal, Radio, message, Select, Row, Col, Popconfirm, Form, Typography } from 'antd';
+import { SaveOutlined } from '@ant-design/icons';
 
 const GoalAndAssessment = () => {
     const [goalAndAssessment, setGoalAndAssessmentData] = useState([]);
@@ -9,8 +10,9 @@ const GoalAndAssessment = () => {
     const [loading, setLoading] = useState(false);
     const [confirmLoading, setConfirmLoading] = useState(false);
     const [requirement, setRequirementData] = useState([]);
-    const goal = JSON.parse(localStorage.getItem('teachGoal'));
-    const evaluation = JSON.parse(localStorage.getItem('leftList'));
+    const [goal, setGoal] = useState([]);
+    const goaledit = JSON.parse(localStorage.getItem('teachGoal'))
+    const [evaluation, setEvaluation] = useState(JSON.parse(localStorage.getItem('leftList')))
     const [teachGoal, setTeachGoalData] = useState({});
     const [req, setReqData] = useState({});
     const [assessment, setAssessmentData] = useState({})
@@ -28,7 +30,7 @@ const GoalAndAssessment = () => {
             width: '25%',
             algin: 'center',
             render: (text, record) => {
-                return record.teaching_goal.target_course_name ? record.teaching_goal.target_course_name : ''
+                return record.teaching_goal?.target_course_name
             }
         },
         {
@@ -37,7 +39,7 @@ const GoalAndAssessment = () => {
             width: '25%',
             algin: 'center',
             render: (text, record) => {
-                return record.major_requirement.name ? record.major_requirement.name : ''
+                return record.major_requirement?.name
             }
         },
         {
@@ -125,18 +127,51 @@ const GoalAndAssessment = () => {
         setStatus(arr)
     };
     useEffect(() => {
+        // console.log(goaledit)
         if (info) {
-            setGoalAndAssessmentData(info.assessmentGoal)
+            if(goaledit){
+                setGoal(goaledit)
+                setGoalAndAssessmentData(JSON.parse(localStorage.getItem('goalAndAssessment')) || [])
+            }else{
+                let arr = []
+                let obj = {}
+                console.log(info.assessmentGoal)
+                info.assessmentGoal.forEach(item => {
+                    if (obj?.major_requirement?._id === item.major_requirement._id) {
+                        obj['assessment'] = [...obj['assessment'], item?.status]
+                    } else {
+                        if (Object.keys(obj).length !== 0) {
+                            arr.push(obj)
+                        }
+                        obj = { ...item, assessment: [item?.status] }
+                    }
+                })
+                arr.push(obj)
+                setGoalAndAssessmentData(arr)
+                console.log(arr)
+                setEvaluation(info.assessment)
+                setGoal(info.teaching_goal)
+            }
         } else {
+            setGoal(goaledit)
             setGoalAndAssessmentData(JSON.parse(localStorage.getItem('goalAndAssessment')) || [])
         }
     }, [])
+    const save = () => {
+        localStorage.setItem("goalAndAssessment", JSON.stringify(goalAndAssessment));
+        message.info('暂存成功');
+      }
     return (
         <div className="train-object">
             <div className="object-left">
                 <div className="title">课程目标与考核对应关系</div>
                 <div className="content-wrap">
-                    <Button type="primary" onClick={showAdd}>新增对应关系</Button>
+                    <Space direction="horizontal">
+                        <Button type="primary" onClick={showAdd}>新增对应关系</Button>
+                        {
+                            info ? (<Button icon={<SaveOutlined />} onClick={save} type="primary">暂存修改信息</Button>) : ''
+                        }
+                    </Space>
                     <Table
                         bordered
                         dataSource={goalAndAssessment}
@@ -198,7 +233,6 @@ const GoalAndAssessment = () => {
                                 <Row key={index}>
                                     <Col span={8}><label>{item.name + ':' + item.content}</label></Col>
                                     <Col span={16}>
-                                        {/* <Input onChange={e => { inputChange(index, e.target.value) }} /> */}
                                         <Radio.Group onChange={e => { changeRadio(index, e.target.value) }}>
                                             <Radio value="√">√</Radio>
                                             <Radio value="×">×</Radio>

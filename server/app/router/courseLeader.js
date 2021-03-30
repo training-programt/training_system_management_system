@@ -4,6 +4,7 @@ module.exports = app => {
     router.get('/getSyllabus', controller.courseLeader.getSyllabus);
     router.post('/findSyllabus', controller.courseLeader.findSyllabus);
     router.post('/addSyllabus', controller.courseLeader.addSyllabus);
+    router.post('/updateSyllabus', controller.courseLeader.updateSyllabus);
     //教学目标
     router.get('/getTeachGoal', controller.courseLeader.getTeachGoal);
     router.post('/addTeachGoal', controller.courseLeader.addTeachGoal);
