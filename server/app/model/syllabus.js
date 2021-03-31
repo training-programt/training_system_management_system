@@ -43,6 +43,7 @@ module.exports = app => {
       ref: 'Teacher'
     },//审核人
     modify_data: { type: Date },//修改时间
+    status:{type:Number,default:0},//提交状态
   })
 
   return mongoose.model('Syllabus', SyllabusSchema, 'syllabus');

@@ -6,7 +6,7 @@ import { SaveOutlined} from '@ant-design/icons';
 const Assessment = () => {
     const [leftList, setLeftList] = useState([]);
     const [rightTest, setRightTestData] = useState([]);
-    let assessment = JSON.parse(localStorage.getItem('assessment'));
+    let assessment = JSON.parse(localStorage.getItem('leftList'));
     let info = useLocation()?.state?.data;
     useEffect(() => {
         const res = React.$axios.get('/getTestMethod').then((testData) => {

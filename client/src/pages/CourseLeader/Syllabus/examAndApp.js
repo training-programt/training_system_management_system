@@ -8,7 +8,7 @@ import ReactToPrint from 'react-to-print'
 
 const ExamAndApp = () => {
   const [loading, setLoading] = useState(false)
-  let info = useLocation()?.state?.data;
+  let info = useLocation()?.state?.data || {};
   // let printRef;
   const [syllabus, setSyllabus] = useState([]);
   let basic = JSON.parse(localStorage.getItem('basic'));
@@ -97,11 +97,11 @@ const ExamAndApp = () => {
         writer: modifyPerson,//执笔人
         reviewer: reviewer,//审核人
         modify_data: nowDate,//审核时间
+        status: 0,//已提交
       };
       console.log(info)
-      if (info) {
-        console.log(1111)
-        const syllabusUpdate = React.$axios.post('/updateSyllabus', params).then((ma1) => {
+      if (Object.keys(info).length) {
+        const syllabusUpdate = React.$axios.post('/updateSyllabus', { ...params, _id: info._id }).then((ma1) => {
           if (ma1.isSucceed) {
             message.success("提交成功，已成功修改数据")
             localStorage.removeItem("basic")
@@ -112,6 +112,8 @@ const ExamAndApp = () => {
             localStorage.removeItem("bookList")
             localStorage.removeItem("leftList")
             localStorage.removeItem("goalAndAssessment")
+          } else {
+            message.error("修改失败")
           }
         })
       } else {
@@ -126,6 +128,8 @@ const ExamAndApp = () => {
             localStorage.removeItem("bookList")
             localStorage.removeItem("leftList")
             localStorage.removeItem("goalAndAssessment")
+          } else {
+            message.error("新增失败")
           }
         })
       }
