@@ -17,10 +17,7 @@ class PointController extends Controller {
   async getRequirementById() {
     const { ctx } = this;
     const params = ctx.request.body;
-    const res = await ctx.service.graduationRequirement.getAllRequirement(params)
-    for (let i = 0; i < res.majorRequirement.length; i++) {
-      res.majorRequirement[i].point = await ctx.service.point.getPointByIds(res.majorRequirement[i].point)
-    }
+    const res = await ctx.service.graduationRequirement.getRequirementById(params)
     ctx.body = {
       total: 0,
       data: res,

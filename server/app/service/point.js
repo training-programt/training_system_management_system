@@ -9,7 +9,7 @@ class PointService extends Service {
 
   async getPointByIds(params) {
     const { ctx } = this;
-    const res = await ctx.model.Point.find({ _id: { $in: params } })
+    const res = await ctx.model.Point.find({ _id: { $in: params } }).populate('course.name', 'name')
     return res;
   }
 

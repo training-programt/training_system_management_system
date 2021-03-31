@@ -19,4 +19,15 @@ export default {
   getProjectDetail: '/getProjectDetail',
   getObjectData: '/getObjectData',
   getRequirementById: '/getRequirementById',
+
+  getMajorObjReqRelationData: '/jys/getMajorObjReqRelation',
+  getMajorNationCoverRelationData: '/jys/getMajorNationCoverRelation',
+
+  getAllCourseType: '/getAllCourseType',
+  getCreditStructure: '/getCreditStructure',
+  saveCreditStructure: '/saveCreditStructure',
+  getCreditStructure: '/getCreditStructure',
+
+  getLeaderList: '/getLeaderList',
+  updateProject: '/updateProject'
 }

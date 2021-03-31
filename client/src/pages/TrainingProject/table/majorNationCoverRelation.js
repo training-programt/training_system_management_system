@@ -103,8 +103,20 @@ const TableOne = (props) => {
     }
   }
 
+  const getTableData = async () => {
+    const params = {
+      _id: props.project.majorNationCoverRelation
+    }
+    const res = await React.$axios.post(api.getMajorNationCoverRelationData, params);
+    if (res && res.isSucceed) {
+      setTableData(res.data.relation)
+    }
+  }
+
   useMemo(() => {
-    console.log(props.project, '3')
+    if (props.project.majorNationCoverRelation) {
+      getTableData()
+    }
     getRowColData()
   }, [])
 
@@ -121,13 +133,15 @@ const TableOne = (props) => {
         editable: true,
       }
     })
-    const defaultData = []
-    const arr = new Array(colData.length).fill('-')
-    const obj = { ...arr }
-    for (let i = 0; i < rowData.length; i++) {
-      defaultData.push(obj)
+    if (!props.project.majorNationCoverRelation) {
+      const defaultData = []
+      const arr = new Array(colData.length).fill('-')
+      const obj = { ...arr }
+      for (let i = 0; i < rowData.length; i++) {
+        defaultData.push(obj)
+      }
+      setTableData(defaultData)
     }
-    setTableData(defaultData)
     setFirstRow(rowData)
     setColumnsTable(colData)
   }
