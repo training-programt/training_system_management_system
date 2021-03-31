@@ -1,36 +1,45 @@
 import React, { useState, useEffect } from 'react'
-import {Button, List,Card,Divider,message} from 'antd';
+import { Button, List, Card, Divider, message } from 'antd';
 import { useLocation } from "react-router-dom";
-
+import { SaveOutlined } from '@ant-design/icons';
 const Book = () => {
     const [leftList, setLeftList] = useState([]);
     const [rightTest, setRightTestData] = useState([]);
+    let book = JSON.parse(localStorage.getItem('bookList'));
     let info = useLocation()?.state?.data;
     useEffect(() => {
         const res = React.$axios.get('/getBook').then((testData) => {
             setRightTestData(testData.data)
-          })
+        })
     }, [])
 
     const useListItem = (item) => {
-        setLeftList([...leftList,item])
+        setLeftList([...leftList, item])
         message.success("应用成功")
-        localStorage.setItem("bookList",JSON.stringify([...leftList,item]))
+        localStorage.setItem("bookList", JSON.stringify([...leftList, item]))
     }
-    const del=(index)=>{
+    const del = (index) => {
         let newLeftList = [...leftList]
-        newLeftList.splice(index,1)
+        newLeftList.splice(index, 1)
         setLeftList(newLeftList)
         message.success("删除成功")
-        localStorage.setItem("bookList",JSON.stringify(newLeftList))
+        localStorage.setItem("bookList", JSON.stringify(newLeftList))
     }
     useEffect(() => {
-        if(info){
-            setLeftList(info.reference)
-        }else{
-            setLeftList(JSON.parse(localStorage.getItem('bookList'))||[])
+        if (info) {
+            if(book){
+                setLeftList(JSON.parse(localStorage.getItem('bookList')) || [])
+            }else{
+                setLeftList(info.reference)
+            }
+        } else {
+            setLeftList(JSON.parse(localStorage.getItem('bookList')) || [])
         }
     }, [])
+    const save = () => {
+        localStorage.setItem("bookList", JSON.stringify(leftList));
+        message.info('暂存成功');
+    }
     return (
         <div className="train-object">
             <div className="object-left">
@@ -40,23 +49,26 @@ const Book = () => {
                         <div>建议教材及教学参考书设置：</div>
                     </div>
                     <Divider>点击右侧应用添加参考文献</Divider>
+                    {
+                        info ? (<Button icon={<SaveOutlined />} onClick={save} type="primary">暂存修改信息</Button>) : ''
+                    }
                     <Card>
-                    <List
-                        itemLayout="horizontal"
-                        dataSource={leftList}
-                        renderItem={(item, index) => (
-                            <List.Item
-                                actions={[<Button type="link" onClick={() => del(index)}>删除</Button>]}
-                            >
-                                <List.Item.Meta
-                                    title={'参考文献'+(index + 1)}
-                                    description={'['+(index+1)+']'+item.name}
-                                />
-                            </List.Item>
-                        )}
-                    />
+                        <List
+                            itemLayout="horizontal"
+                            dataSource={leftList}
+                            renderItem={(item, index) => (
+                                <List.Item
+                                    actions={[<Button type="link" onClick={() => del(index)}>删除</Button>]}
+                                >
+                                    <List.Item.Meta
+                                        title={'参考文献' + (index + 1)}
+                                        description={'[' + (index + 1) + ']' + item.name}
+                                    />
+                                </List.Item>
+                            )}
+                        />
                     </Card>
-                   
+
                 </div>
             </div>
             <div className="object-right">
@@ -74,7 +86,7 @@ const Book = () => {
                                 actions={[<Button type="link" onClick={() => useListItem(item)}>应用</Button>]}
                             >
                                 <List.Item.Meta
-                                    title={'参考文献'+(index + 1)}
+                                    title={'参考文献' + (index + 1)}
                                     description={item.name}
                                 />
                             </List.Item>

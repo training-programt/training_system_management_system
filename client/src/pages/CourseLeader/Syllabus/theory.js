@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useLocation } from "react-router-dom";
 import { Table, Input, InputNumber, Popconfirm, Select, message, Form, Divider, Button, Typography } from 'antd';
-import { PlusOutlined } from '@ant-design/icons';
+import { PlusOutlined,SaveOutlined } from '@ant-design/icons';
 const { TextArea } = Input;
 const layout = {
   labelCol: { span: 4 },
@@ -10,19 +10,10 @@ const layout = {
 const Theory = () => {
   const [form] = Form.useForm();
   const [isEdit, setEditData] = useState(false);
-  const [theory, setTheoryData] = useState([]);
+  const [theory, setTheoryData] = useState(JSON.parse(localStorage.getItem('theory')));
   const [showForm, setShowForm] = useState(false);
   const [updateindex, setUpdateIndex] = useState(0)
   let info = useLocation()?.state?.data;
-
-  useEffect(() => {
-    // const theory = React.$axios.get('/getTheory').then(thory => {
-    //   setTheoryData(thory.data)
-    // })
-  }, [])
-
-
-
   const columns = [
     {
       title: '序号',
@@ -147,16 +138,28 @@ const Theory = () => {
     setEditData(false)
   }
   useEffect(() => {
+    // console.log(theory)
     if (info) {
-      setTheoryData(info.theory)
+      if(theory!==null){
+        setTheoryData(JSON.parse(localStorage.getItem('theory')) || [])
+      }else{
+        setTheoryData(info.theory_teaching)
+      }
     } else {
       setTheoryData(JSON.parse(localStorage.getItem('theory')) || [])
     }
   }, [])
+  const save=()=>{
+    localStorage.setItem("theory",JSON.stringify(theory));
+    message.info('暂存成功');
+  }
   return (
     <div className="train-object">
       <div className="object-left">
         <div className="title">课程理论教学内容及学时分配</div>
+        {
+          info?(<Button icon={<SaveOutlined />} onClick={save} type="primary">暂存修改信息</Button>):''
+        }
         <div className="content-wrap">
           <Form form={form} component={false}>
             <Table

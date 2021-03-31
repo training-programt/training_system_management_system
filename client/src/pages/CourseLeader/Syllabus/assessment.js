@@ -1,10 +1,12 @@
 import React, { useState, useEffect } from 'react'
 import {Button, List,Card,Divider,message} from 'antd';
 import { useLocation } from "react-router-dom";
+import { SaveOutlined} from '@ant-design/icons';
 
 const Assessment = () => {
     const [leftList, setLeftList] = useState([]);
     const [rightTest, setRightTestData] = useState([]);
+    let assessment = JSON.parse(localStorage.getItem('leftList'));
     let info = useLocation()?.state?.data;
     useEffect(() => {
         const res = React.$axios.get('/getTestMethod').then((testData) => {
@@ -26,11 +28,19 @@ const Assessment = () => {
     }
     useEffect(() => {
         if(info){
+            if(assessment){
+            setLeftList(JSON.parse(localStorage.getItem('leftList'))||[])
+            }else{
             setLeftList(info.assessment)
+            }
         }else{
             setLeftList(JSON.parse(localStorage.getItem('leftList'))||[])
         }
     }, [])
+    const save=()=>{
+        localStorage.setItem("leftList",JSON.stringify(leftList));
+        message.info('暂存成功');
+      }
     return (
         <div className="train-object">
             <div className="object-left">
@@ -41,6 +51,9 @@ const Assessment = () => {
                         <div>考核方式：可选择闭卷、设计作品评分或上机考核。</div>
                     </div>
                     <Divider>点击右侧应用添加评价环节</Divider>
+                    {
+          info?(<Button icon={<SaveOutlined />} onClick={save} type="primary">暂存修改信息</Button>):''
+        }
                     <Card>
                     <List
                         itemLayout="horizontal"

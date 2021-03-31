@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import { useLocation } from "react-router-dom";
 import { Form, Input, Button, List, Divider, message } from 'antd';
-import { PlusOutlined } from '@ant-design/icons';
+import { PlusOutlined ,SaveOutlined} from '@ant-design/icons';
 const layout = {
     labelCol: { span: 2 },
     wrapperCol: { span: 21 },
@@ -12,6 +12,8 @@ const TeachGoal = () => {
     const [form] = Form.useForm();
     let info = useLocation()?.state?.data;
     const [showForm, setShowForm] = useState(false);
+    let teach = JSON.parse(localStorage.getItem('teachGoal'));
+    // console.log(teach)
     const [teachGoal, setTeachGoalDate] = useState([]);
     useEffect(() => {
         // const TeachGoal = React.$axios.get('/getTeachGoal').then((goal) => {
@@ -22,29 +24,40 @@ const TeachGoal = () => {
         const params = {
             ...form.getFieldValue(),
         }
-        setTeachGoalDate([...teachGoal,params]);
-            message.info("添加成功")
-            setShowForm(false)
-            form.resetFields();
-            localStorage.setItem("teachGoal",JSON.stringify([...teachGoal,params]))
+        setTeachGoalDate([...teachGoal, params]);
+        message.info("添加成功")
+        setShowForm(false)
+        form.resetFields();
+        localStorage.setItem("teachGoal", JSON.stringify([...teachGoal, params]))
     }
-    const delTeachGoal=async(index)=>{
+    const delTeachGoal = async (index) => {
         let newTeachGoal = [...teachGoal]
-        newTeachGoal.splice(index,1)
+        newTeachGoal.splice(index, 1)
         setTeachGoalDate(newTeachGoal)
-        localStorage.setItem("teachGoal",JSON.stringify(newTeachGoal))
+        localStorage.setItem("teachGoal", JSON.stringify(newTeachGoal))
     }
     useEffect(() => {
-        if(info){
-            setTeachGoalDate(info.teaching_goal)
-        }else{
-            setTeachGoalDate(JSON.parse(localStorage.getItem('teachGoal'))||[])
+        if (info) {
+            if (teach) {
+                setTeachGoalDate(JSON.parse(localStorage.getItem('teachGoal')) || [])
+            } else {
+                setTeachGoalDate(info.teaching_goal)
+            }
+        } else {
+            setTeachGoalDate(JSON.parse(localStorage.getItem('teachGoal')) || [])
         }
     }, [])
+    const save = ()=>{
+        localStorage.setItem("teachGoal",JSON.stringify(teachGoal));
+        message.info('暂存成功');
+    }
     return (
         <div className="train-object">
             <div className="object-left">
                 <div className="title">培养目标管理</div>
+                {
+                    info ? (<Button icon={<SaveOutlined />} onClick={save} type="primary">暂存修改信息</Button>) : ''
+                }
                 <div className="content-wrap">
                     <List
                         itemLayout="horizontal"
@@ -52,7 +65,7 @@ const TeachGoal = () => {
                         renderItem={(item, index) => (
                             <List.Item
                                 actions={[
-                                    <Button type="link" size='small' onClick={()=>delTeachGoal(index)}>删除</Button>
+                                    <Button type="link" size='small' onClick={() => delTeachGoal(index)}>删除</Button>
                                 ]}
                             >
                                 <List.Item.Meta

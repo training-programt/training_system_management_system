@@ -48,9 +48,6 @@ const BasicInfo = () => {
         const res1 = React.$axios.get('/getTeacher').then((teacherData) => {
             setHeaderData(teacherData.data)
           })
-        //   const res = React.$axios.get('/getCourse').then((courseData) => {
-        //     setCourseData(courseData.data)
-        //   })
     }, [])
     const save = async() => {
         const params = {
@@ -59,7 +56,6 @@ const BasicInfo = () => {
             professional:majorName,
             ...form.getFieldValue(),
         }
-        console.log(params)
         localStorage.setItem("basic",JSON.stringify(params));
         message.info('暂存成功')
     }
@@ -79,11 +75,18 @@ const BasicInfo = () => {
           })
     }
     const changeMajorName=(value)=>{
+        console.log(value)
+        let arr=[];
+        console.log(majorData)
         majorData.map((item) => {
-            if (item._id == value) {
-              setMajorName(item)
-            }
+            value.map((val)=>{
+                if (item._id == val) {
+                    arr.push(item)
+                  }
+            })
+           
           })
+          setMajorName(arr)
     }
     const changeUnitName=(value)=>{
         college.map((item) => {
@@ -93,23 +96,26 @@ const BasicInfo = () => {
           })
     }
     useEffect(() => {
-        console.log(info)
         if(info){
-            form.setFieldsValue(
-                {
-                englishName:info.course_info?.englishName,
-                credits:info.course_info?.course?.credits,
-                code:info.course_info?.course?.code,
-                type:info.course_info?.category,
-                within:info.course_info?.course?.within,
-                outside:info.course_info?.course?.outside,
-                course_ap:info.course_info?.course_ap,
-                introduce:info.course_info?.introduce
-            })
-            setCourseName(info.course_info?.course)
-            setMajorName(info.course_info?.professional)
-            setUnitName(info.course_info?.unit)
-
+            if(basicInfo){
+                form.setFieldsValue(basicInfo||{})
+            }else{
+                form.setFieldsValue(
+                    {
+                    englishName:info.course_info?.englishName,
+                    credits:info.course_info?.course?.credits,
+                    code:info.course_info?.course?.code,
+                    type:info.course_info?.category,
+                    within:info.course_info?.course?.within,
+                    outside:info.course_info?.course?.outside,
+                    course_ap:info.course_info?.course_ap,
+                    introduce:info.course_info?.introduce
+                })
+                setCourseName(info.course_info?.course)
+                setMajorName(info.course_info?.professional)
+                setUnitName(info.course_info?.unit)
+    
+            }
         }else{
             form.setFieldsValue(basicInfo||{})
         }
@@ -213,7 +219,7 @@ const BasicInfo = () => {
                             },
                         ]}
                     >
-                        <Select placeholder="适用专业" allowClear value={info?info.course_info?.professional?.name:basicInfo?.professional?.name}  onChange={(value)=>{changeMajorName(value)}}>
+                        <Select placeholder="适用专业" mode="multiple" allowClear value={info?info?.course_info?.professional?.map(item=>item._id):basicInfo?.professional?.map(item=>item._id)}  onChange={(value)=>{changeMajorName(value)}}>
                             {
                                 majorData && majorData.map(item => (<Option key={item._id} value={item._id}>{item.name}</Option>))
                             }
@@ -272,7 +278,7 @@ const BasicInfo = () => {
                     </Form.Item>
                 </div>
             </Form>
-            <Button icon={<SaveOutlined />} onClick={save} type="primary" disabled={butType}>暂存信息</Button>
+            <Button icon={<SaveOutlined />} onClick={save} type="primary">暂存信息</Button>
         </div>
 
     )

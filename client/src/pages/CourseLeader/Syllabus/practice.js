@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useLocation } from "react-router-dom";
 import { Table, Input, InputNumber, Popconfirm, Select, Form, message, Divider, Button, Typography } from 'antd';
-import { PlusOutlined } from '@ant-design/icons';
+import { PlusOutlined,SaveOutlined} from '@ant-design/icons';
 const { TextArea } = Input;
 const layout = {
   labelCol: { span: 4 },
@@ -9,21 +9,13 @@ const layout = {
 };
 const Practice = () => {
   const [form] = Form.useForm();
-  const [practice, setPracticeData] = useState([]);
+  const [practice, setPracticeData] = useState(JSON.parse(localStorage.getItem('practice')));
   const [isEdit, setEditData] = useState(false);
   const [showForm, setShowForm] = useState(false);
   const [updateindex, setUpdateIndex] = useState(0)
   let info = useLocation()?.state?.data;
 
-  useEffect(() => {
-    // const theory = React.$axios.get('/getPractice').then(practice => {
-    //   console.log(practice)
-    //   setPracticeData(practice.data)
-    // })
-  }, [])
-
   const edit = (record, index) => {
-    console.log(index)
     setUpdateIndex(index)
     form.resetFields()
     setEditData(true)
@@ -143,15 +135,27 @@ const Practice = () => {
   }
   useEffect(() => {
     if (info) {
-      setPracticeData(info.practice)
+      if(practice!==null){
+        setPracticeData(JSON.parse(localStorage.getItem('practice')) || [])
+      }else{
+        setPracticeData(info.practice_teaching)
+      }
     } else {
       setPracticeData(JSON.parse(localStorage.getItem('practice')) || [])
     }
   }, [])
+  const save=()=>{
+    localStorage.setItem("practice",JSON.stringify(practice));
+    message.info('暂存成功');
+  }
   return (
     <div className="train-object">
       <div className="object-left">
         <div className="title">课程实验（实践）教学内容及学时分配</div>
+        {
+          info?(<Button icon={<SaveOutlined />} onClick={save} type="primary">暂存修改信息</Button>):''
+        }
+        
         <div className="content-wrap">
           <Form form={form} component={false}>
             <Table

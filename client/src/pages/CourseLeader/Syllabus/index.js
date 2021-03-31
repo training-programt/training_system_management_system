@@ -1,6 +1,6 @@
 import React, { useState, useMemo, useEffect } from 'react'
 import HeaderComponent from '@/components/header'
-import { Table, Input, Button, Popconfirm, Divider, List ,Space} from 'antd';
+import { Table, Input, Button, Popconfirm, Divider, List, message, Space } from 'antd';
 import { PlusOutlined, DeleteOutlined, EditOutlined } from '@ant-design/icons';
 import { getSession, setSession } from '../../../utils';
 import { Link, useLocation, useHistory, BrowserRouter as Router, Route, Switch } from 'react-router-dom'
@@ -9,7 +9,9 @@ import { Link, useLocation, useHistory, BrowserRouter as Router, Route, Switch }
 const Syllabus = () => {
   const [loading, setLoading] = useState(false);
   const [syllabusData, setSyllabusData] = useState([]);
+  const [butType, setButType] = useState(false);
   const [courseData, setCourseData] = useState([]);
+  let editInfo = JSON.parse(localStorage.getItem('basic'))
   let history = useHistory();
   const professColumns = [
     { title: '序号', align: 'center', render: (text, record, index) => `${index + 1}` },
@@ -46,15 +48,27 @@ const Syllabus = () => {
       }
     },
     {
+      title: '状态',
+      dataIndex: 'status',
+      key: 'status',
+      render: (text, record) => {
+        if(record.status===-1){
+          return <div style={{color:"red"}}>未编写完成</div>
+        }else if(record.status===0){
+          return <div style={{color:"orange"}}>已提交审批</div>
+        }else if(record.status===1){
+          return <div style={{color:"green"}}>已审批</div>
+        }
+      }
+    },
+    {
       title: '操作',
       dataIndex: 'operation',
       key: 'operation',
       render: (text, record) => (
         <div>
           <Link to={{ pathname: "/syllabus/edit", state: { data: record } }}><Button size="small" type="link" onClick={() => { add(record) }}>编辑课程大纲</Button></Link>
-          <Popconfirm title="确定删除？" okText="确定" cancelText="取消">
-            <Button type="link">删除课程大纲</Button>
-          </Popconfirm>
+          <Button type="link" onClick={() => { del(record._id) }}>删除课程大纲</Button>
           <Button type="link" onClick={() => { showSyllabus(record) }}>查看课程大纲</Button>
         </div>
       ),
@@ -78,9 +92,43 @@ const Syllabus = () => {
     console.log(record)
     setSession("newData", JSON.stringify(record));
   }
+  const del = async (id) => {
+    // console.log(id)
+    const dell = React.$axios.post('/delSyllabus', { _id: id }).then(delData=>{
+      if (delData.isSucceed) {
+        message.success("删除成功");
+        const newSyllabus = React.$axios.get(
+          '/getSyllabus'
+        )
+        setSyllabusData(newSyllabus.data);
+        if (editInfo) {
+          localStorage.removeItem("basic")
+          localStorage.removeItem("teachGoal")
+          localStorage.removeItem("practice")
+          localStorage.removeItem("theory")
+          localStorage.removeItem("relation")
+          localStorage.removeItem("bookList")
+          localStorage.removeItem("leftList")
+          localStorage.removeItem("goalAndAssessment")
+        }
+      } else {
+        message.error("删除失败");
+      }
+    })
+ 
+  }
   const showSyllabus = (record) => {
     console.log(record)
     history.push('/syllabus/show')
+  }
+  const addSyllabus = (e) => {
+    if (editInfo) {
+      message.error("正处于编辑流程中，请先完成编辑")
+      e.preventDefault();
+      return false
+    } else {
+      history.push('/syllabus/add')
+    }
   }
   return (
     <div className="page-container">
@@ -105,15 +153,15 @@ const Syllabus = () => {
 
         <div className="table-wrap">
           <Divider plain orientation="left">请为上述课程新增编辑教学大纲</Divider>
-            <Link to={{ pathname: "/syllabus/add" }} ><Button size="big" type="primary" style={{marginBottom:"15px"}}>新增课程大纲</Button></Link>
-            <Table
-              dataSource={syllabusData}
-              columns={professColumns}
-              loading={loading}
-              bordered
-              rowKey={(record) => record._id}
-            >
-            </Table>
+          <Link to={{ pathname: "/syllabus/add" }} ><Button size="big" type="primary" style={{ marginBottom: "15px" }} onClick={addSyllabus}>新增课程大纲</Button></Link>
+          <Table
+            dataSource={syllabusData}
+            columns={professColumns}
+            loading={loading}
+            bordered
+            rowKey={(record) => record._id}
+          >
+          </Table>
         </div>
       </div>
     </div>

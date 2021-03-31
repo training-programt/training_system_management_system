@@ -44,6 +44,10 @@ class CourseLeaderService extends Service {
             .populate('assessment')
             .populate({
                 path:'assessmentGoal',
+                populate:{path:"teaching_goal"}
+            })
+            .populate({
+                path:'assessmentGoal',
                 populate:{path:"major_requirement"}
             })
             .populate({

@@ -8,7 +8,7 @@ import ReactToPrint from 'react-to-print'
 
 const ExamAndApp = () => {
   const [loading, setLoading] = useState(false)
-  let info = useLocation()?.state?.data;
+  let info = useLocation()?.state?.data || {};
   // let printRef;
   const [syllabus, setSyllabus] = useState([]);
   let basic = JSON.parse(localStorage.getItem('basic'));
@@ -37,13 +37,6 @@ const ExamAndApp = () => {
   const review = (value) => {
     setReviewer(value)
   }
-  useEffect(() => {
-    if (info) {
-      setSyllabus(info)
-    } else {
-      // setTeachGoalDate(JSON.parse(localStorage.getItem('teachGoal'))||[])
-    }
-  }, [])
   const print = () => {
     const printDiv = document.getElementById('printDiv');
     const iframe = document.createElement('IFRAME');
@@ -90,35 +83,57 @@ const ExamAndApp = () => {
     }
   }
   const submit = () => {
-    if(instr && reviewer){
+    if (instr && reviewer) {
       const params = {
-        course_info:basic,
-        teaching_goal:teachGoal,
-        relation:relation,
-        theory_teaching:theory,
-        practice_teaching:practice,
-        assessment:leftList,
-        assessmentGoal:goalAndAssessment,
-        reference:bookList,
-        instructions:instr,//教学大纲说明
-        writer:modifyPerson,//执笔人
-        reviewer:reviewer,//审核人
-        modify_data:nowDate,//审核时间
+        course_info: basic,
+        teaching_goal: teachGoal,
+        relation: relation,
+        theory_teaching: theory,
+        practice_teaching: practice,
+        assessment: leftList,
+        assessmentGoal: goalAndAssessment,
+        reference: bookList,
+        instructions: instr,//教学大纲说明
+        writer: modifyPerson,//执笔人
+        reviewer: reviewer,//审核人
+        modify_data: nowDate,//审核时间
+        status: 0,//已提交
+      };
+      console.log(info)
+      if (Object.keys(info).length) {
+        const syllabusUpdate = React.$axios.post('/updateSyllabus', { ...params, _id: info._id }).then((ma1) => {
+          if (ma1.isSucceed) {
+            message.success("提交成功，已成功修改数据")
+            localStorage.removeItem("basic")
+            localStorage.removeItem("teachGoal")
+            localStorage.removeItem("practice")
+            localStorage.removeItem("theory")
+            localStorage.removeItem("relation")
+            localStorage.removeItem("bookList")
+            localStorage.removeItem("leftList")
+            localStorage.removeItem("goalAndAssessment")
+          } else {
+            message.error("修改失败")
+          }
+        })
+      } else {
+        const syllabusAdd = React.$axios.post('/addSyllabus', params).then((ma) => {
+          if (ma.isSucceed) {
+            message.success("提交成功，已存入数据")
+            localStorage.removeItem("basic")
+            localStorage.removeItem("teachGoal")
+            localStorage.removeItem("practice")
+            localStorage.removeItem("theory")
+            localStorage.removeItem("relation")
+            localStorage.removeItem("bookList")
+            localStorage.removeItem("leftList")
+            localStorage.removeItem("goalAndAssessment")
+          } else {
+            message.error("新增失败")
+          }
+        })
       }
-      const syllabus = React.$axios.post('/addSyllabus',params).then((ma) => {
-        if(ma.isSucceed){
-          message.success("提交成功，已存入数据")
-          localStorage.removeItem("basic")
-          localStorage.removeItem("teachGoal")
-          localStorage.removeItem("practice")
-          localStorage.removeItem("theory")
-          localStorage.removeItem("relation")
-          localStorage.removeItem("bookList")
-          localStorage.removeItem("leftList")
-          localStorage.removeItem("goalAndAssessment")
-        }
-      })
-    }else{
+    } else {
       message.error("请填写教学大纲说明并选择审核人！！")
     }
   }
@@ -132,41 +147,41 @@ const ExamAndApp = () => {
         </Row>
           <Row>
             <Col span={4}>课程名称</Col>
-            <Col span={8}>{basic.name.name}</Col>
+            <Col span={8}>{basic?.name?.name}</Col>
             <Col span={4}>英文名称</Col>
-            <Col span={8}>{basic.englishName}</Col>
+            <Col span={8}>{basic?.englishName}</Col>
           </Row>
           <Row>
             <Col span={4}>开课单位</Col>
-            <Col span={8}>{basic.unit.name}</Col>
+            <Col span={8}>{basic?.unit?.name}</Col>
             <Col span={4}>课程负责人</Col>
             <Col span={8}>{modifyPerson}</Col>
           </Row>
           <Row>
             <Col span={4}>课程代码</Col>
-            <Col span={8}>{basic.code}</Col>
+            <Col span={8}>{basic?.code}</Col>
             <Col span={4}>学分</Col>
-            <Col span={8}>{basic.credits}</Col>
+            <Col span={8}>{basic?.credits}</Col>
           </Row>
           <Row>
             <Col span={4}>课程类别</Col>
-            <Col span={8}>{basic.type}</Col>
+            <Col span={8}>{basic?.type}</Col>
             <Col span={4}>适用专业</Col>
-            <Col span={8}>{basic.professional.name}</Col>
+            <Col span={8}>{basic?.professional?.name}</Col>
           </Row>
           <Row>
             <Col span={4}>课内学时</Col>
-            <Col span={8}>{basic.within}</Col>
+            <Col span={8}>{basic?.within}</Col>
             <Col span={4}>课外学时</Col>
-            <Col span={8}>{basic.outside}</Col>
+            <Col span={8}>{basic?.outside}</Col>
           </Row>
           <Row>
             <Col span={4}>先修课程</Col>
-            <Col span={20}>{basic.course_ap}</Col>
+            <Col span={20}>{basic?.course_ap}</Col>
           </Row>
           <Row>
             <Col span={4}>课程简介</Col>
-            <Col span={20}>{basic.introduce}</Col>
+            <Col span={20}>{basic?.introduce}</Col>
           </Row>
           <Row className="title1">
             二、课程教学目标
