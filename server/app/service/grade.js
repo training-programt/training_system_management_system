@@ -13,7 +13,6 @@ class GradeService extends Service {
         const result = await ctx.model.Grade
             .find({
             })
-            .populate('studentNumber')
             .sort('sort');
         return result;
     }
@@ -31,9 +30,9 @@ class GradeService extends Service {
         return result
     }
     //更新
-    async updataGrade(params) {
+    async updateGrade(params) {
         const { ctx } = this;
-        const result = await ctx.model.Grade.findByIdAndUpdate(params)
+        const result = await ctx.model.Grade.findByIdAndUpdate(params._id, params)
         return result
     }
     // 查询全部学期
@@ -64,20 +63,20 @@ class GradeService extends Service {
         return result
     }
     //更新
-    async updataSemester(params) {
+    async updateSemester(params) {
         const { ctx } = this;
-        const result = await ctx.model.Semester.findByIdAndUpdate(params)
+        const result = await ctx.model.Semester.findByIdAndUpdate(params._id, params)
         return result
     }
     // 查询全部学院
-    async getCollege() {
-        const { ctx } = this;
-        const result = await ctx.model.College
-            .find({
-            })
-            .sort('sort');
-        return result;
-    }
+    // async getCollege() {
+    //     const { ctx } = this;
+    //     const result = await ctx.model.College
+    //         .find({
+    //         })
+    //         .sort('sort');
+    //     return result;
+    // }
 
     async getAllGrade() {
         const { ctx } = this;

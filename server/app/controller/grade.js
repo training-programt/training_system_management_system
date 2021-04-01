@@ -69,18 +69,20 @@ class GradeController extends Controller {
   async updateGrade() {
     const { ctx } = this;
     const params = ctx.request.body;
-    const res = await ctx.model.Grade.update(
-      { _id: params._id },
-      {
-        $set: {
-          _id: params._id,
-          studentNumber: params.studentNumber,
-        }
-      }
-    )
-    if (res.ok == 1) {
+    const res = await ctx.service.grade.updateGrade(params)
+    // const res = await ctx.model.Grade.update(
+    //   { _id: params._id },
+    //   {
+    //     $set: {
+    //       _id: params._id,
+    //       studentNumber: params.studentNumber,
+    //     }
+    //   }
+    // )
+    // if (res.ok == 1) {
+    if (res) {
       ctx.body = {
-        total: res.length,
+        total: 1,
         message: '修改成功',
         data: res,
         code: 200,
@@ -160,18 +162,20 @@ class GradeController extends Controller {
   async updateSemester() {
     const { ctx } = this;
     const params = ctx.request.body;
-    const res = await ctx.model.Semester.update(
-      { _id: params._id },
-      {
-        $set: {
-          _id: params._id,
-          semesterName: params.semesterName,
-        }
-      }
-    )
-    if (res.ok == 1) {
+    const res = await ctx.service.grade.updateSemester(params)
+    // const res = await ctx.model.Semester.update(
+    //   { _id: params._id },
+    //   {
+    //     $set: {
+    //       _id: params._id,
+    //       semesterName: params.semesterName,
+    //     }
+    //   }
+    // )
+    // if (res.ok == 1) {
+    if (res) {
       ctx.body = {
-        total: res.length,
+        total: 1,
         message: '修改成功',
         data: res,
         code: 200,
