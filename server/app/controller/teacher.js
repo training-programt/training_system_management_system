@@ -290,6 +290,18 @@ class TeacherController extends Controller {
       isSucceed: true,
     }
   }
+
+  async getLeaderList() {
+    const { ctx } = this;
+    const res = await ctx.service.teacher.getLeaderList()
+    ctx.body = {
+      total: res.length,
+      code: 200,
+      data: res,
+      isSucceed: true,
+    }
+  
+  }
 }
 
 module.exports = TeacherController;

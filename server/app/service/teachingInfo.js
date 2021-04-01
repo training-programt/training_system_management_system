@@ -24,10 +24,11 @@ class TeachingInfoService extends Service {
   async addTeachingInfo(params) {
     const { ctx } = this;
     const result = await ctx.model.TeachingInfo.create(params);
-    if (result) {
+    const role = await ctx.model.Role.findOne({roleName: '授课教师'})
+    if (result && role) {
       const data = {
         teacher: params.teacher,
-        role: ['6004f464120f362f90f32e72']
+        role: [role._id]
       }
       await this.updateTeacherRole(data)
       return result

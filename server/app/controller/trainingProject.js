@@ -98,6 +98,42 @@ class TrainingProjectController extends Controller {
       }
     }
   }
+
+  async getCreditStructure() {
+    const { ctx } = this;
+    const params = ctx.request.body;
+    const res = await ctx.service.creditStructure.getCreditStructure(params);
+    ctx.body = {
+      total: 0,
+      data: res,
+      code: 200,
+      isSucceed: true,
+    }
+  }
+
+  async saveCreditStructure() {
+    const { ctx } = this;
+    const params = ctx.request.body;
+    let res;
+    if(params.creditStructureId) {
+      res = await ctx.service.creditStructure.updateCreditStructure(params)
+    } else {
+      res = await ctx.service.creditStructure.createCreditStructure(params)
+      const data = {
+        _id: params._id,
+        credits_required: res._id
+      }
+      await ctx.service.trainingProject.updateProject(data)
+    }
+    if(res) {
+      ctx.body = {
+        total: 0,
+        data: res,
+        code: 200,
+        isSucceed: true
+      }
+    }
+  }
   
   async getRequirementById() {
     const {  ctx } = this;

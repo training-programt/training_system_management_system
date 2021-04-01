@@ -96,7 +96,7 @@ const TableOne = (props) => {
   // 获取行列数据
   const getRowColData = async () => {
     const params = {
-      _id: projectId,
+      _id: projectId._id,
     }
     const res = await React.$axios.get(api.getTable1RowCol, params)
     if (res && res.isSucceed) {
@@ -104,9 +104,24 @@ const TableOne = (props) => {
     }
   }
 
-  useMemo(() =>
+  const getTableData = async () => {
+    const params = {
+      _id: props.project.majorObjReqRelation
+    }
+    const res = await React.$axios.post(api.getMajorObjReqRelationData, params);
+    if (res && res.isSucceed) {
+      console.log(res.data.relation)
+      setTableData(res.data.relation)
+    }
+  }
+
+  useMemo(() => {
+    console.log(props.project.majorObjReqRelation)
+    if (props.project.majorObjReqRelation) {
+      getTableData()
+    }
     getRowColData()
-    , [])
+  }, [])
 
   const formatData = (row, col) => {
     let rowData = row.majorRequirement.map((item, index) => {
@@ -121,13 +136,16 @@ const TableOne = (props) => {
         editable: true,
       }
     })
-    const defaultData = []
-    const arr = new Array(colData.length).fill('-')
-    const obj = { ...arr }
-    for (let i = 0; i < rowData.length; i++) {
-      defaultData.push(obj)
+    if (!props.project.majorObjReqRelation) {
+      const defaultData = []
+      const arr = new Array(colData.length).fill('-')
+      const obj = { ...arr }
+      for (let i = 0; i < rowData.length; i++) {
+        defaultData.push(obj)
+      }
+      setTableData(defaultData)
     }
-    setTableData(defaultData)
+
     setFirstRow(rowData)
     setColumnsTable(colData)
   }

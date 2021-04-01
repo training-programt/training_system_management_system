@@ -27,9 +27,20 @@ class TableController extends Controller {
         isSucceed: false,
       }
     }
-
   }
 
+  async getMajorObjReqRelation() {
+    const { ctx } = this;
+    const params = ctx.request.body;
+    const res = await ctx.service.table.getMajorObjReqRelation(params);
+
+    ctx.body = {
+      total: 0,
+      data: res,
+      code: 200,
+      isSucceed: true,
+    }
+  }
 
   async majorNationCoverRelation() {
     const { ctx } = this;
@@ -57,6 +68,19 @@ class TableController extends Controller {
       }
     }
 
+  }
+
+  async getMajorNationCoverRelation() {
+    const { ctx } = this;
+    const params = ctx.request.body;
+    const res = await ctx.service.table.getMajorNationCoverRelation(params);
+
+    ctx.body = {
+      total: 0,
+      data: res,
+      code: 200,
+      isSucceed: true,
+    }
   }
 
 

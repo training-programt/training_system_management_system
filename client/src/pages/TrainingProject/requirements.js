@@ -63,7 +63,7 @@ const Requirements = (props, ref) => {
   const [formPoint] = Form.useForm();
   const [showMajorForm, setShowMajorForm] = useState(true)
   const [showForm, setShowForm] = useState(false);
-  const [majorRequirement, setMajorRequirement] = useState('');
+  const [description, setDescription] = useState('');
   const [requirementList, setRequirementList] = useState([])
   const [isPointVisible, setIsPointVisible] = useState(false);
   const [acRequirement, setAcRequirement] = useState(0)
@@ -77,7 +77,7 @@ const Requirements = (props, ref) => {
     if (res && res.isSucceed) {
       console.log(res.data)
       setShowMajorForm(false)
-      setMajorRequirement(res.data.description);
+      setDescription(res.data.description);
       setRequirementList(res.data.majorRequirement)
     }
   }
@@ -94,7 +94,7 @@ const Requirements = (props, ref) => {
   };
 
   const addMajorRequirement = () => {
-    setMajorRequirement(form1.getFieldsValue().description);
+    setDescription(form1.getFieldsValue().description);
     setShowMajorForm(false)
   }
 
@@ -127,7 +127,7 @@ const Requirements = (props, ref) => {
     return {
       saveProject() {
         return {
-          description: majorRequirement,
+          description: description,
           majorRequirement: requirementList,
         }
       }
@@ -214,7 +214,7 @@ const Requirements = (props, ref) => {
               !showMajorForm
                 ? (
                   <>
-                    <div>{majorRequirement}</div>
+                    <div>{description}</div>
                     <div className="major-object-edit"><Button type="link" size="small" onClick={() => setShowMajorForm(true)}>编辑</Button></div>
                   </>
                 )

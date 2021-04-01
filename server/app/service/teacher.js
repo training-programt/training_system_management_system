@@ -85,5 +85,14 @@ class TeacherService extends Service {
         // .sort('sort');
         return result;
     }
+
+    async getLeaderList() {
+        const { ctx } = this;
+        const res = await ctx.model.Role.findOne({roleName: '教学领导'});
+        if(res) {
+            const result = await ctx.model.Teacher.find({role: res._id}, { name: true, _id: true})
+            return result
+        }
+    }
 }
 module.exports = TeacherService;

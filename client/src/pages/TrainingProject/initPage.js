@@ -233,13 +233,4 @@ const InitPage = forwardRef((props, ref) => {
   )
 })
 
-// const withRouterForwardRef = Component => {
-//   const WithRouter = withRouter(({ forwardedRef, ...props }) => (
-//     <Component ref={forwardedRef} {...props} />
-//   ));
-//   return forwardRef((props, ref) => (
-//     <WithRouter {...props} forwardedRef={ref} />
-//   ));
-// };
-
 export default withRouterForwardRef(InitPage);

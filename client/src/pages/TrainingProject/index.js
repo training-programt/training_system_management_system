@@ -46,12 +46,12 @@ const TrainingProject = () => {
     {
       title: '编写者',
       dataIndex: 'writer',
-      render: (text, record) => text.name || ''
+      render: (text, record) => text ? text.name : ''
     },
     {
       title: '专业',
       dataIndex: 'major',
-      // render: (text, record) => text.name || ''
+      render: (text, record) => text ? text.name : ''
     },
     {
       title: '学位',
@@ -67,7 +67,7 @@ const TrainingProject = () => {
     },
     {
       title: '状态',
-      dataIndex: 'status',
+      dataIndex: 'state',
       render: (text, record) => {
         return text ? '已完成' : '未完成'
       }

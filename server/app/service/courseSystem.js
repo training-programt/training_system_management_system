@@ -28,10 +28,11 @@ class CourseSystemService extends Service {
   async addCourseSystem(params) {
     const { ctx } = this;
     const result = await ctx.model.CourseSystem.create(params);
-    if (result) {
+    const role = await ctx.model.Role.findOne({roleName: '课程负责人'})
+    if (result && role) {
       const data = {
         teacher: params.leader,
-        role: ['6004f464120f362f90f32e71']
+        role: [role._id]
       }
       await this.updateTeacherRole(data)
       return result

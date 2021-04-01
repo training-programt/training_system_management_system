@@ -95,7 +95,7 @@ const TableOne = (props) => {
   // 获取行列数据
   const getRowColData = async () => {
     const params = {
-      _id: projectId,
+      _id: projectId._id,
     }
     const res = await React.$axios.get(api.getTable2RowCol, params)
     if (res && res.isSucceed) {
@@ -103,9 +103,22 @@ const TableOne = (props) => {
     }
   }
 
-  useMemo(() =>
+  const getTableData = async () => {
+    const params = {
+      _id: props.project.majorNationCoverRelation
+    }
+    const res = await React.$axios.post(api.getMajorNationCoverRelationData, params);
+    if (res && res.isSucceed) {
+      setTableData(res.data.relation)
+    }
+  }
+
+  useMemo(() => {
+    if (props.project.majorNationCoverRelation) {
+      getTableData()
+    }
     getRowColData()
-    , [])
+  }, [])
 
   const formatData = (row, col) => {
     let rowData = row.map((item, index) => {
@@ -120,13 +133,15 @@ const TableOne = (props) => {
         editable: true,
       }
     })
-    const defaultData = []
-    const arr = new Array(colData.length).fill('-')
-    const obj = { ...arr }
-    for (let i = 0; i < rowData.length; i++) {
-      defaultData.push(obj)
+    if (!props.project.majorNationCoverRelation) {
+      const defaultData = []
+      const arr = new Array(colData.length).fill('-')
+      const obj = { ...arr }
+      for (let i = 0; i < rowData.length; i++) {
+        defaultData.push(obj)
+      }
+      setTableData(defaultData)
     }
-    setTableData(defaultData)
     setFirstRow(rowData)
     setColumnsTable(colData)
   }

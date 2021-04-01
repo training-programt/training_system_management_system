@@ -7,9 +7,21 @@ class TableService extends Service {
     return res;
   }
 
+  async getMajorObjReqRelation(params) {
+    const { ctx } = this;
+    const res = await ctx.model.MajorObjReqRelation.findById(params._id)
+    return res;
+  }
+
   async createMajorNationCoverRelation(params) {
     const { ctx } = this;
     const res = await ctx.model.MajorNationCoverRelation.create(params)
+    return res;
+  }
+
+  async getMajorNationCoverRelation(params) {
+    const { ctx } = this;
+    const res = await ctx.model.MajorNationCoverRelation.findById(params._id)
     return res;
   }
 }

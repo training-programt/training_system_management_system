@@ -11,7 +11,8 @@ import TrainObject from './trainObject'
 import Requirements from './requirements'
 import CurriculumSystem from './curriculumSystem'
 import MatrixRelation from './matrixRelation'
-import StudyProgramme from './studyProgramme'
+// import StudyProgramme from './studyProgramme'
+import CreditStructure from './creditStructure'
 import Examine from './examine'
 
 const { Step } = Steps;
@@ -22,6 +23,7 @@ const AddTrainingProject = (props) => {
   const [writer, setWriter] = useState(JSON.parse(getSession('userInfo'))._id)
   const [requirementId, setRequirementId] = useState('')
   const [objectId, setObjectId] = useState('')
+  const [creditStructureId, setCreditStructureId] = useState('')
 
   const childRef = useRef()
 
@@ -44,15 +46,15 @@ const AddTrainingProject = (props) => {
     },
     {
       title: '矩阵关系',
-      content: <MatrixRelation project={acProject._id} />,
+      content: <MatrixRelation project={acProject} />,
     },
     {
-      title: '课程修读计划',
-      content: <StudyProgramme />,
+      title: '学分结构',
+      content: <CreditStructure ref={childRef} project={acProject} />,
     },
     {
       title: '审批',
-      content: <Examine />,
+      content: <Examine project={acProject._id || ''}/>,
     },
   ];
 
@@ -63,6 +65,9 @@ const AddTrainingProject = (props) => {
     const res = await React.$axios.post(api.getProjectDetail, params);
     if (res && res.isSucceed) {
       setAcProject(res.data)
+      setObjectId(res.data.trainingObjective || '')
+      setRequirementId(res.data.graduationRequirement || '')
+      setCreditStructureId(res.data.credits_required || '')
     }
   }
 
@@ -89,6 +94,16 @@ const AddTrainingProject = (props) => {
         saveRequirement(data)
         break;
       }
+      case 4: {
+        getProjectDetail(acProject._id);
+        setCurrent(current + 1);
+        break;
+      }
+      case 5: {
+        const data = childRef.current.saveProject()
+        saveCreditStructure(data)
+        break;
+      }
       default: {
         setCurrent(current + 1);
       }
@@ -96,6 +111,9 @@ const AddTrainingProject = (props) => {
   };
 
   const prev = () => {
+    if(current == 5) {
+      getProjectDetail(acProject._id)
+    }
     setCurrent(current - 1);
   };
 
@@ -127,7 +145,6 @@ const AddTrainingProject = (props) => {
   }
 
   const saveRequirement = async (data) => {
-    if (!acProject) return false;
     const params = {
       ...data,
       _id: acProject._id,
@@ -136,6 +153,19 @@ const AddTrainingProject = (props) => {
     const res = await React.$axios.post(api.updateRequirement, params)
     if (res && res.isSucceed) {
       setRequirementId(res.data._id)
+      setCurrent(current + 1);
+    }
+  }
+
+  const saveCreditStructure = async (data) => {
+    const params = {
+      ...data,
+      _id: acProject._id,
+      creditStructureId,
+    }
+    const res = await React.$axios.post(api.saveCreditStructure, params)
+    if (res && res.isSucceed) {
+      setCreditStructureId(res.data._id)
       setCurrent(current + 1);
     }
   }
@@ -155,10 +185,6 @@ const AddTrainingProject = (props) => {
         {current < steps.length - 1 && (
           <Button type="primary" icon={<ArrowRightOutlined />} onClick={() => next()}>下一步</Button>
         )}
-        {current === steps.length - 1 && (
-          <Button type="primary" onClick={() => message.success('Processing complete!')}>提交审批</Button>
-        )}
-
         <Button icon={<SaveOutlined />}>暂存</Button>
         <Link to="/trainingProject" style={{ color: '#000', marginLeft: '8px' }}><Button icon={<RollbackOutlined />}>返回</Button></Link>
       </div>
