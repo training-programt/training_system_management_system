@@ -27,10 +27,12 @@ import TeachingRecord from './TeachingRecord';
 import CourseAssessment from './CourseAssessment';
 import AddCourseAssessment from './CourseAssessment/add';
 
-import Audit from "./AuditApproval/audit";
-import Approval from "./AuditApproval/approval";
-import ApprovalDetail from "./AuditApproval/approvalDetail";
-import AuditDetail from "./AuditApproval/auditDetail";
+import Audit from "./TeachingTeacher/AuditApproval/audit";
+import Approval from "./TeachingTeacher/AuditApproval/approval";
+import ApprovalDetail from "./TeachingTeacher/AuditApproval/approvalDetail";
+import AuditDetail from "./TeachingTeacher/AuditApproval/auditDetail";
+import TeachingList from "./TeachingTeacher/TeachingList";
+
 
 export {
   Login,
@@ -41,6 +43,7 @@ export {
   Notification,
   LeaderMajor,
   DirectorMajor,
+  TeachingList,
   Grade,
   UserInfo,
   TeachRoom,
