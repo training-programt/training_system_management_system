@@ -51,6 +51,7 @@ const CurriculumSystem = (props) => {
       const data = res.data.majorRequirement;
       data.forEach(item => {
         item.content = item.name
+        item.createTime = new Date(item.createTime).toLocaleString()
       });
       formatData(data)
       setPointList(data)

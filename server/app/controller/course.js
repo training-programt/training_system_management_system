@@ -109,94 +109,96 @@ class CourseController extends Controller {
   async updateCourse() {
     const { ctx } = this;
     const params = ctx.request.body;
+    const res = await ctx.service.course.updateCourse(params)
     // console.log(params)
-    const find  = await ctx.service.course.findCourse({_id:params._id})
-    // console.log(find)
-    if(params.unit!==find[0].unit){
-      const collegeChange = await ctx.model.College.update(
-        { _id: find[0].unit },
-        {
-          $pull: {
-            courseList: params._id
-          }
-        },
-      )
-      const newChange = await ctx.model.College.update(
-        { _id: params.unit },
-        {
-          $push: {
-            courseList: params._id
-          }
-        },
-      )
-    }
-    if(params.header!==find[0].header){
-      const teacherChange = await ctx.model.Teacher.update(
-        { _id: find[0].header },
-        {
-          $pull: {
-            course: params._id
-          }
-        },
-      )
-      const newChange = await ctx.model.Teacher.update(
-        { _id: params.header },
-        {
-          $push: {
-            course: params._id
-          }
-        },
-      )
-    }
-    if(params.system!==find[0].system){
-      const sysChange = await ctx.model.CourseSystem.update(
-        { _id: find[0].system },
-        {
-          $pull: {
-            courses: params._id
-          }
-        },
-      )
-      const newChange = await ctx.model.CourseSystem.update(
-        { _id: params.system },
-        {
-          $push: {
-            courses: params._id
-          }
-        },
-      )
-    }
-    const res = await ctx.model.Course.update(
-      { _id: params._id },
-      {
-        $set: {
-          _id: params._id,
-          name: params.name,
-          code: params.code,
-          header: params.header,
-          unit: params.unit,
-          type: params.type,
-          semester: params.semester,
-          weekly_hours: params.weekly_hours,
-          within: params.within,
-          outside: params.outside,
-          computer: params.computer,
-          other: params.other,
-          nature: params.nature,
-          attribute: params.attribute,
-          category: params.category,
-          degree: params.degree,
-          direction: params.direction,
-          system:params.system,
-          course_selection_group: params.course_selection_group,
-          assessment_method: params.assessment_method,
-          flag_fuse: params.flag_fuse
-        }
-      }
-    )
-    if (res.n == 1) {
+    // const find  = await ctx.service.course.findCourse({_id:params._id})
+    // // console.log(find)
+    // if(params.unit!==find[0].unit){
+    //   const collegeChange = await ctx.model.College.update(
+    //     { _id: find[0].unit },
+    //     {
+    //       $pull: {
+    //         courseList: params._id
+    //       }
+    //     },
+    //   )
+    //   const newChange = await ctx.model.College.update(
+    //     { _id: params.unit },
+    //     {
+    //       $push: {
+    //         courseList: params._id
+    //       }
+    //     },
+    //   )
+    // }
+    // if(params.header!==find[0].header){
+    //   const teacherChange = await ctx.model.Teacher.update(
+    //     { _id: find[0].header },
+    //     {
+    //       $pull: {
+    //         course: params._id
+    //       }
+    //     },
+    //   )
+    //   const newChange = await ctx.model.Teacher.update(
+    //     { _id: params.header },
+    //     {
+    //       $push: {
+    //         course: params._id
+    //       }
+    //     },
+    //   )
+    // }
+    // if(params.system!==find[0].system){
+    //   const sysChange = await ctx.model.CourseSystem.update(
+    //     { _id: find[0].system },
+    //     {
+    //       $pull: {
+    //         courses: params._id
+    //       }
+    //     },
+    //   )
+    //   const newChange = await ctx.model.CourseSystem.update(
+    //     { _id: params.system },
+    //     {
+    //       $push: {
+    //         courses: params._id
+    //       }
+    //     },
+    //   )
+    // }
+    // const res = await ctx.model.Course.update(
+    //   { _id: params._id },
+    //   {
+    //     $set: {
+    //       _id: params._id,
+    //       name: params.name,
+    //       code: params.code,
+    //       header: params.header,
+    //       unit: params.unit,
+    //       type: params.type,
+    //       semester: params.semester,
+    //       weekly_hours: params.weekly_hours,
+    //       within: params.within,
+    //       outside: params.outside,
+    //       computer: params.computer,
+    //       other: params.other,
+    //       nature: params.nature,
+    //       attribute: params.attribute,
+    //       category: params.category,
+    //       degree: params.degree,
+    //       direction: params.direction,
+    //       system:params.system,
+    //       course_selection_group: params.course_selection_group,
+    //       assessment_method: params.assessment_method,
+    //       flag_fuse: params.flag_fuse
+    //     }
+    //   }
+    // )
+    // if (res.n == 1) {
+    if (res) {
       ctx.body = {
-        total: res.length,
+        total: 1,
         message: '修改成功',
         data: res,
         code: 200,
@@ -275,35 +277,35 @@ class CourseController extends Controller {
     const {ctx} = this;
     const params = ctx.request.body;
     const deleteMany = await ctx.service.course.delCourse({_id:{$in:params}})
-   for(let i = 0;i<params.length;i++){
-    const coll = await ctx.model.College.update(
-      { _id: params[i].unit._id },
-      {
-        $pull:{
-          courseList:params[i]._id
-        }
-      },
-      { multi: true }
-    )
-    const cs = await ctx.model.CourseSystem.update(
-      { _id: params[i].system._id },
-      {
-        $pull: {
-          courses: params[i]._id
-        }
-      },
-      { multi: true }
-    )
-    const major = await ctx.model.Teacher.update(
-      { _id: params[i].header._id },
-      {
-        $pull: {
-          course: params[i]._id
-        }
-      },
-      { multi: true }
-    )
-   }
+  //  for(let i = 0;i<params.length;i++){
+  //   const coll = await ctx.model.College.update(
+  //     { _id: params[i].unit._id },
+  //     {
+  //       $pull:{
+  //         courseList:params[i]._id
+  //       }
+  //     },
+  //     { multi: true }
+  //   )
+  //   const cs = await ctx.model.CourseSystem.update(
+  //     { _id: params[i].system._id },
+  //     {
+  //       $pull: {
+  //         courses: params[i]._id
+  //       }
+  //     },
+  //     { multi: true }
+  //   )
+  //   const major = await ctx.model.Teacher.update(
+  //     { _id: params[i].header._id },
+  //     {
+  //       $pull: {
+  //         course: params[i]._id
+  //       }
+  //     },
+  //     { multi: true }
+  //   )
+  //  }
     
     if(deleteMany.ok==1){
       ctx.body = {

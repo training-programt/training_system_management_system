@@ -6,14 +6,14 @@ import HeaderComponent from '../../../components/header'
 import './index.less'
 
 const Course = () => {
-  const [name, setName] = useState('');
-  const [code, setCode] = useState('');
+  // const [name, setName] = useState('');
+  // const [code, setCode] = useState('');
   const [courseData, setCourseData] = useState([]);
   const [total, setTotal] = useState(0);
   const [loading, setLoading] = useState(false);
   const [visible, setVisible] = useState(false);//弹窗新增和编辑
-  const [drawerVisible, setDrawerVisible] = useState(false);
-  const [drawerData, setDrawerData] = useState({});
+  // const [drawerVisible, setDrawerVisible] = useState(false);
+  // const [drawerData, setDrawerData] = useState({});
   const [pageSize, setPageSize] = useState(12)
   const [confirmLoading, setConfirmLoading] = useState(false);
   const [showSizeChanger, setShowSizeChanger] = useState(true);
@@ -21,14 +21,14 @@ const Course = () => {
   const [selectedRowKeys, setSelectedRowKeys] = useState([]);
   const [isEdit, setIsEdit] = useState(false);
   const [form] = Form.useForm();
-  const [header, setHeaderData] = useState([]);
-  const [semester, setSemesterData] = useState([]);
-  const [attrValue, setAttrValue] = useState("必修")
-  const [cateValue, setCateValue] = useState("理论课");
-  const [college, setCollegeData] = useState([]);
-  const [system, setSystemData] = useState([]);
+  // const [header, setHeaderData] = useState([]);
+  // const [semester, setSemesterData] = useState([]);
+  // const [attrValue, setAttrValue] = useState("必修")
+  // const [cateValue, setCateValue] = useState("理论课");
+  // const [college, setCollegeData] = useState([]);
+  // const [system, setSystemData] = useState([]);
   const formLayout = {
-    labelCol: { span: 8 },
+    labelCol: { span: 4 },
     wrapperCol: { span: 20 },
   }
   const courseColumns = [
@@ -44,44 +44,29 @@ const Course = () => {
       align: 'center',
     },
     {
-      title: '课程负责人',
-      dataIndex: 'header',
+      title: '学分',
+      dataIndex: 'credits',
       align: 'center',
-      render: (text, record) => {
-        return record.header ? record.header.name : ''
-      }
     },
     {
-      title: '开课单位',
-      dataIndex: 'unit',
+      title: '总学时',
+      dataIndex: 'all',
       align: 'center',
-      render: (text, record) => {
-        return record.unit ? record.unit.name : ''
-      }
     },
     {
-      title: '开课学期',
-      dataIndex: 'semester',
+      title: '理论学时',
+      dataIndex: 'within',
       align: 'center',
-      render: (text, record) => {
-        return record.semester ? record.semester.semesterName : ''
-      }
     },
     {
-      title: '是否产教融合课程',
-      dataIndex: 'flag_fuse',
+      title: '实践学时',
+      dataIndex: 'outside',
       align: 'center',
-      render: text => text == true ? '是' : '否'
     },
     {
-      title: '课程大纲',
-      dataIndex: 'syllabus',
+      title: '课外学时',
+      dataIndex: 'computer',
       align: 'center',
-      render: (text, record) => (
-        <div>
-          <Button type="link">课程大纲查看</Button>
-        </div>
-      )
     },
     {
       title: '操作',
@@ -89,9 +74,9 @@ const Course = () => {
       key: 'operation',
       render: (text, record) => (
         <div>
-          <Button type="link" onClick={()=>{edit(record)}}>编辑</Button>
+          <Button type="link" onClick={() => { edit(record) }}>编辑</Button>
           <Button type="link" onClick={() => { del(record) }}>删除</Button>
-          <Button type="link" onClick={() => { showDrawer(record) }}>详情查看</Button>
+          {/* <Button type="link" onClick={() => { showDrawer(record) }}>详情查看</Button> */}
         </div>
       ),
     },
@@ -132,63 +117,64 @@ const Course = () => {
     setVisible(true);
     form.resetFields()
     let data = {
-      _id: record._id,
-      name: record.name,
-      code: record.code,
-      // header: record.header?record.header.name:"",
-      // unit: record.unit?record.unit.name:"",
-      type: record.type,
-      // semester: record.semester?record.semester.semesterName:"",
-      weekly_hours: record.weekly_hours,
-      within: record.within,
-      credits: record.credits,
-      outside: record.outside,
-      computer: record.computer,
-      other: record.other,
-      nature: record.nature,
-      attribute: record.attribute,
-      category: record.category,
-      degree: record.degree,
-      direction: record.direction,
-      introduce: record.introduce,
-      // system:record.system?record.system.name:"",
-      course_selection_group: record.course_selection_group,
-      assessment_method: record.assessment_method,
-      flag_fuse: record.flag_fuse
+      ...record
+      // _id: record._id,
+      // name: record.name,
+      // code: record.code,
+      // // header: record.header?record.header.name:"",
+      // // unit: record.unit?record.unit.name:"",
+      // type: record.type,
+      // // semester: record.semester?record.semester.semesterName:"",
+      // weekly_hours: record.weekly_hours,
+      // within: record.within,
+      // credits: record.credits,
+      // outside: record.outside,
+      // computer: record.computer,
+      // other: record.other,
+      // nature: record.nature,
+      // attribute: record.attribute,
+      // category: record.category,
+      // degree: record.degree,
+      // direction: record.direction,
+      // introduce: record.introduce,
+      // // system:record.system?record.system.name:"",
+      // course_selection_group: record.course_selection_group,
+      // assessment_method: record.assessment_method,
+      // flag_fuse: record.flag_fuse
     }
     form.setFieldsValue(data)
   };
   //详情查看
-  const showDrawer = (record) => {
-    console.log(record)
-    setDrawerData({
-      _id: record._id,
-      name: record.name,
-      code: record.code,
-      header: record.header?record.header.name:"",
-      unit: record.unit?record.unit.name:"",
-      type: record.type,
-      semester: record.semester ? record.semester.semesterName : "",
-      weekly_hours: record.weekly_hours,
-      within: record.within,
-      outside: record.outside,
-      computer: record.computer,
-      other: record.other,
-      nature: record.nature,
-      attribute: record.attribute,
-      category: record.category,
-      degree: record.degree,
-      direction: record.direction,
-      introduce: record.introduce,
-      system:record.system?record.system.name:"",
-      course_selection_group: record.course_selection_group,
-      assessment_method: record.assessment_method,
-      flag_fuse: record.flag_fuse
-    })
-    setDrawerVisible(true)
-  };
-  const manyDelete = async()=>{
-    const res = await React.$axios.post('/delMany',selectedRowKeys);
+  // const showDrawer = (record) => {
+  //   console.log(record)
+  //   setDrawerData({
+  //     _id: record._id,
+  //     name: record.name,
+  //     code: record.code,
+  //     header: record.header ? record.header.name : "",
+  //     unit: record.unit ? record.unit.name : "",
+  //     type: record.type,
+  //     semester: record.semester ? record.semester.semesterName : "",
+  //     weekly_hours: record.weekly_hours,
+  //     within: record.within,
+  //     outside: record.outside,
+  //     computer: record.computer,
+  //     other: record.other,
+  //     nature: record.nature,
+  //     attribute: record.attribute,
+  //     category: record.category,
+  //     degree: record.degree,
+  //     direction: record.direction,
+  //     introduce: record.introduce,
+  //     system: record.system ? record.system.name : "",
+  //     course_selection_group: record.course_selection_group,
+  //     assessment_method: record.assessment_method,
+  //     flag_fuse: record.flag_fuse
+  //   })
+  //   setDrawerVisible(true)
+  // };
+  const manyDelete = async () => {
+    const res = await React.$axios.post('/delMany', selectedRowKeys);
     console.log(res)
     if (res.isSucceed) {
       message.success('批量删除成功');
@@ -201,9 +187,9 @@ const Course = () => {
       message.error('批量删除失败');
     }
   }
-  const onClose = () => {
-    setDrawerVisible(false)
-  };
+  // const onClose = () => {
+  //   setDrawerVisible(false)
+  // };
   //删除
   const del = async (record) => {
     const params = {
@@ -268,27 +254,27 @@ const Course = () => {
       setCourseData(courseData.data)
       setTotal(courseData.total)
     })
-    const res1 = React.$axios.get('/getTeacher').then((teacherData) => {
-      setHeaderData(teacherData.data)
-    })
-    const newSem = React.$axios.get('/getSemester').then((newSemester) => {
-      setSemesterData(newSemester.data);
-    })
-    const newCollege = React.$axios.get('/getCollege').then((newCollege) => {
-      setCollegeData(newCollege.data);
-    })
-    const newCollegeSystem = React.$axios.get('/getCourseSystem').then((system) => {
-      setSystemData(system.data);
-    })
+    // const res1 = React.$axios.get('/getTeacher').then((teacherData) => {
+    //   setHeaderData(teacherData.data)
+    // })
+    // const newSem = React.$axios.get('/getSemester').then((newSemester) => {
+    //   setSemesterData(newSemester.data);
+    // })
+    // const newCollege = React.$axios.get('/getCollege').then((newCollege) => {
+    //   setCollegeData(newCollege.data);
+    // })
+    // const newCollegeSystem = React.$axios.get('/getCourseSystem').then((system) => {
+    //   setSystemData(system.data);
+    // })
     setLoading(false)
   }, [])
 
-  const DescriptionItem = ({ title, content }) => (
-    <div className="site-description-item-profile-wrapper">
-      <p className="site-description-item-profile-p-label">{title}:</p>
-      {content}
-    </div>
-  );
+  // const DescriptionItem = ({ title, content }) => (
+  //   <div className="site-description-item-profile-wrapper">
+  //     <p className="site-description-item-profile-p-label">{title}:</p>
+  //     {content}
+  //   </div>
+  // );
   return (
     <div className="courseInsLeader">
       <HeaderComponent title="课程管理" />
@@ -297,7 +283,7 @@ const Course = () => {
           <div className="inputContent">
             <Input placeholder="请输入课程名" />
             <Input placeholder="请输入课程编码" />
-            <Input placeholder="请输入任课教师" />
+            {/* <Input placeholder="请输入任课教师" /> */}
           </div>
           <Button type="primary" icon={<SearchOutlined />} >查询</Button>
           <Button type="primary" icon={<PlusOutlined />} onClick={showAdd}>新增</Button>
@@ -313,7 +299,7 @@ const Course = () => {
           onCancel={handleCancel}
           getContainer={false}
           destroyOnClose
-          width={1000}
+          width={600}
           footer={[
             <Button key="back" onClick={handleCancel}>
               取消
@@ -323,232 +309,59 @@ const Course = () => {
               </Button>
           ]}
         >
-          <Form layout="vertical" hideRequiredMark form={form} {...formLayout} >
-            <Row gutter={16}>
-              <Col span={12}>
-                <Form.Item
-                  name="name"
-                  label="课程名字"
-                  rules={[{ required: true, message: '请输入名字!' }]}
-                >
-                  <Input placeholder="请输入课程名字" />
-                </Form.Item>
-              </Col>
-              <Col span={12}>
-                <Form.Item name="code" label="课程代码" rules={[{ required: true, message: '请输入课程代码!' }]}>
-                  <Input placeholder="请输入课程代码" />
-                </Form.Item>
-              </Col>
-            </Row>
-            <Row gutter={16}>
-              <Col span={12}>
-                <Form.Item
-                  name="semester"
-                  label="开课学期"
-                >
-                  <Select
-                    placeholder="请选择开课学期"
-                  >
-                    {
-                      semester && semester.map((item, index) => {
-                        return <Select.Option key={index} value={item._id}>{item.semesterName}</Select.Option>
-                      })
-                    }
-                  </Select>
-                </Form.Item>
-
-              </Col>
-              <Col span={12}>
-                <Form.Item
-                  name="unit"
-                  label="所属学院"
-                >
-                  <Select
-                    placeholder="请选择学院"
-                  >
-                    {
-                      college && college.map((item, index) => {
-                        return <Select.Option key={index} value={item._id}>{item.name}</Select.Option>
-                      })
-                    }
-                  </Select>
-                </Form.Item>
-              </Col>
-            </Row>
-            <Row gutter={16}>
-              <Col span={12}>
-                <Row gutter={8}>
-                  <Col span={12}>
-                    <Form.Item name="type" label="课程类型">
-                      <Input placeholder="请输入课程类型" />
-                    </Form.Item>
-                  </Col>
-                  <Col span={12}>
-                    <Form.Item name="header" label="课程负责人" rules={[{ required: true, message: '请选择课程负责人!' }]}>
-                      <Select
-                        placeholder="请选择课程负责人"
-                        showSearch
-                        optionFilterProp="children"
-                      >
-                        {
-                          header && header.map((item, index) => {
-                            return <Select.Option key={index} value={item._id}>{item.name}</Select.Option>
-                          })
-                        }
-                      </Select>
-                    </Form.Item>
-                  </Col>
-                </Row>
-              </Col>
-              <Col span={12}>
-                <Row>
-                  <Col span={12}>
-                    <Form.Item
-                      name="weekly_hours"
-                      label="参考周学时"
-                    >
-                      <InputNumber />
-                    </Form.Item>
-                  </Col>
-                  <Col span={12}>
-                    <Form.Item
-                      name="within"
-                      label="课内学时"
-                    >
-                      <InputNumber />
-                    </Form.Item>
-                  </Col>
-
-                </Row>
-              </Col>
-            </Row>
-            <Row gutter={16}>
-              <Col span={12}>
-                <Row>
-                  <Col span={12}>
-                    <Form.Item
-                      name="computer"
-                      label="上机学时"
-                    >
-                      <InputNumber />
-                    </Form.Item>
-                  </Col>
-                  <Col span={12}>
-                    <Form.Item
-                      name="outside"
-                      label="课外学时"
-                    >
-                      <InputNumber />
-                    </Form.Item>
-                  </Col>
-                </Row>
-
-              </Col>
-              <Col span={12}>
-                <Row>
-                  <Col span={12}>
-                    <Form.Item
-                      name="other"
-                      label="其他学时"
-                    >
-                      <InputNumber />
-                    </Form.Item>
-                  </Col>
-                  <Col span={12}>
-
-                    <Form.Item
-                      name="category"
-                      label="课程类别"
-                    >
-                      <Radio.Group value={cateValue}>
-                        <Radio value='理论课'>理论课</Radio>
-                        <Radio value='实践课'>实验课</Radio>
-                      </Radio.Group>
-                    </Form.Item>
-                  </Col>
-                </Row>
-              </Col>
-            </Row>
-            <Row gutter={16}>
-              <Col span={12}>
-                <Row>
-                  <Col span={12}>
-                    <Form.Item
-                      name="credits"
-                      label="学分"
-                    >
-                      <Input placeholder="请输入课程学分" />
-                    </Form.Item>
-                  </Col>
-                  <Col span={12}>
-                    <Form.Item
-                      name="degree"
-                      label="是否学位课"
-                    >
-                      <Input />
-                    </Form.Item>
-                  </Col>
-                </Row>
-              </Col>
-              <Col span={12}>
-                <Row>
-                  <Col span={12}>
-                    <Form.Item
-                      name="nature"
-                      label="课程性质"
-                    >
-                      <Input placeholder="请输入课程性质" />
-                    </Form.Item>
-                  </Col>
-                  <Col span={12}>
-                    <Form.Item
-                      name="system"
-                      label="课程体系"
-                    >
-                      <Select
-                        placeholder="请选择课程体系"
-                      >
-                        {
-                          system && system.map((item, index) => {
-                            return <Select.Option key={index} value={item._id}>{item.name}</Select.Option>
-                          })
-                        }
-                      </Select>
-                    </Form.Item>
-                  </Col>
-                </Row>
-              </Col>
-            </Row>
-            <Row gutter={16}>
-              <Col span={12}>
-                <Form.Item
-                  name="course_selection_group"
-                  label="分配选课组"
-                >
-                  <Input />
-                </Form.Item>
-              </Col>
-              <Col span={12}>
-                <Form.Item
-                  name="direction"
-                  label="所属方向"
-                >
-                  <Input />
-                </Form.Item>
-              </Col>
-              <Col span={12}>
-                <Form.Item
-                  name="attribute"
-                  label="课程属性"
-                >
-                  <Radio.Group value={attrValue}>
-                    <Radio value='选修'>选修</Radio>
-                    <Radio value='必修'>必修</Radio>
-                    <Radio value='限选'>限选</Radio>
-                  </Radio.Group>
-                </Form.Item>
-              </Col>
-            </Row>
+          <Form hideRequiredMark form={form} {...formLayout} >
+            <Form.Item
+              name="name"
+              label="课程名字"
+              rules={[{ required: true, message: '请输入名字!' }]}
+            >
+              <Input placeholder="请输入课程名字" />
+            </Form.Item>
+            <Form.Item name="code" label="课程代码" rules={[{ required: true, message: '请输入课程代码!' }]}>
+              <Input placeholder="请输入课程代码" />
+            </Form.Item>
+            <Form.Item
+              name="credits"
+              label="学分"
+            >
+              <Input placeholder="请输入课程学分" />
+            </Form.Item>
+            <Form.Item
+              name="all"
+              label="总学时"
+            >
+              <InputNumber 
+                min={0}
+                style={{width: '200px'}}
+              />
+            </Form.Item>
+            <Form.Item
+              name="within"
+              label="理论学时"
+            >
+              <InputNumber 
+                min={0}
+                style={{width: '200px'}}
+              />
+            </Form.Item>
+            <Form.Item
+              name="computer"
+              label="课外学时"
+            >
+              <InputNumber 
+                min={0}
+                style={{width: '200px'}}
+              />
+            </Form.Item>
+            <Form.Item
+              name="outside"
+              label="实践学时"
+            >
+              <InputNumber 
+                min={0}
+                style={{width: '200px'}}
+              />
+            </Form.Item>
           </Form>
         </Modal>
         <Table
@@ -560,7 +373,7 @@ const Course = () => {
           rowSelection={rowSelection}
         >
         </Table>
-        <Drawer
+        {/* <Drawer
           width={640}
           title="课程详细信息"
           placement="right"
@@ -662,6 +475,7 @@ const Course = () => {
             </Col>
           </Row>
         </Drawer>
+       */}
       </div>
     </div>
   )

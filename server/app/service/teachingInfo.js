@@ -85,7 +85,7 @@ class TeachingInfoService extends Service {
       )
       .populate("major", '_id name')
       .populate('semester', '_id semesterName')
-      .populate('basicCourse', '_id name')
+      .populate('course', '_id name')
       .limit(parseInt(params.pageSize))
       .skip(parseInt(params.pageSize) * (parseInt(params.page) - 1))
       .sort();

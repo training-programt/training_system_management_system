@@ -75,7 +75,6 @@ const Requirements = (props, ref) => {
     }
     const res = await React.$axios.post(api.getRequirementById, params)
     if (res && res.isSucceed) {
-      console.log(res.data)
       setShowMajorForm(false)
       setDescription(res.data.description);
       setRequirementList(res.data.majorRequirement)
@@ -117,12 +116,6 @@ const Requirements = (props, ref) => {
     form2.resetFields()
   }
 
-  // const delRequirementItem = (index) => {
-  //   console.log(index)
-  //   requirementList.splice(index + 1, 1);
-  // }
-
-
   useImperativeHandle(ref, () => {
     return {
       saveProject() {
@@ -150,12 +143,9 @@ const Requirements = (props, ref) => {
 
   const handlePointOk = async () => {
     let tempList = [...requirementList];
-
     tempList[acRequirement].point.push(formPoint.getFieldValue())
     setRequirementList(tempList)
-    // }
     console.log(requirementList)
-    // getRequirement()
     setIsPointVisible(false);
   }
 
@@ -165,7 +155,6 @@ const Requirements = (props, ref) => {
   }
 
   const useRequirementItem = (item) => {
-    console.log(item)
     const obj = {
       ...item,
       point: [],
