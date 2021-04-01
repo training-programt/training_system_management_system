@@ -6,52 +6,42 @@ class CourseService extends Service {
     async getCourse() {
         const { ctx } = this;
         const result = await ctx.model.BasicCourse
-            .find({
-            })
-            .populate('header')
-            .populate('syllabus')
-            .populate('system')
-            .populate('point')
-            .populate('semester')
-            .populate('unit')
-            .populate('assessment')
-            .populate('professional')
-            .populate('major')
-            .sort('sort');
+            .find()
+            .sort();
         return result;
     }
     // 删除
     async delCourse(params) {
         const { ctx } = this;
-        const result = await ctx.model.Course.remove(params)
+        const result = await ctx.model.BasicCourse.remove(params)
         return result
     }
-      //条件查询
-      async findCourse(params) {
+    //条件查询
+    async findCourse(params) {
         const { ctx } = this;
-        const result = await ctx.model.Course.find(params)
+        const result = await ctx.model.BasicCourse.find(params)
         return result;
     }
     //修改
-    async updataCourse(params){
+    async updateCourse(params) {
         const { ctx } = this;
-        const result = await ctx.model.Course.findByIdAndUpdate(params)
+        const result = await ctx.model.BasicCourse.findByIdAndUpdate(params._id, params)
         return result
     }
-      //新建
-      async addCourse(params) {
+    //新建
+    async addCourse(params) {
         const { ctx } = this;
-        const result = await ctx.model.Course.create(params)
+        const result = await ctx.model.BasicCourse.create(params)
         return result;
     }
     //增加
-    async addCourse(params){
-        const {ctx} = this;
-        const result = await ctx.model.Course.insertMany(params);
+    async addCourse(params) {
+        const { ctx } = this;
+        const result = await ctx.model.BasicCourse.insertMany(params);
         return result;
     }
-     // 查询全部课程体系
-     async getCourseSystem() {
+    // 查询全部课程体系
+    async getCourseSystem() {
         const { ctx } = this;
         const result = await ctx.model.CourseSystem
             .find({
@@ -64,7 +54,7 @@ class CourseService extends Service {
 
     async getAllCourse() {
         const { ctx } = this;
-        const result = await ctx.model.BasicCourse.find({}, {_id: true, name: true}).sort();
+        const result = await ctx.model.BasicCourse.find({}, { _id: true, name: true }).sort();
         return result;
     }
 }
