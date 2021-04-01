@@ -49,6 +49,10 @@ module.exports = app => {
     approver: { // 审批人
       type: Schema.Types.ObjectId,
       ref: 'Teacher'
+    },
+    createTime: {
+      type: Date,
+      default: new Date().getTime(),
     }
   })
 

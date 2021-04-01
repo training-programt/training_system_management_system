@@ -72,7 +72,7 @@ const AddTrainingProject = (props) => {
   }
 
   useMemo(() => {
-    if (props.match.params.id) {
+    if (props.match.params.id) {  
       getProjectDetail(props.match.params.id)
     }
   }, [])
@@ -152,6 +152,7 @@ const AddTrainingProject = (props) => {
     }
     const res = await React.$axios.post(api.updateRequirement, params)
     if (res && res.isSucceed) {
+      console.log(res.data)
       setRequirementId(res.data._id)
       setCurrent(current + 1);
     }

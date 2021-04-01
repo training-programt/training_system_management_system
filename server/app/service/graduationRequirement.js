@@ -21,5 +21,15 @@ class GraduationRequirementService extends Service {
     const res = await ctx.model.GraduationRequirement.findOneAndUpdate({ _id: params.requirementId }, params)
     return res;
   }
+
+  async delRequirementAndPoint(params) {
+    const { ctx } = this;
+    const requirement = await ctx.service.graduationRequirement.getRequirementById(params)
+    if (requirement) {
+      await ctx.service.point.delMorePoint(requirement.point)
+    }
+    const res = await ctx.model.GraduationRequirement.deleteOne(params)
+    return res;
+  }
 }
 module.exports = GraduationRequirementService;

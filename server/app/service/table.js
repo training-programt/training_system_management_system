@@ -13,6 +13,12 @@ class TableService extends Service {
     return res;
   }
 
+  async delMajorObjReqRelation(params) {
+    const { ctx } = this;
+    const res = await ctx.model.MajorObjReqRelation.deleteOne(params) 
+    return res;
+  }
+
   async createMajorNationCoverRelation(params) {
     const { ctx } = this;
     const res = await ctx.model.MajorNationCoverRelation.create(params)
@@ -22,6 +28,12 @@ class TableService extends Service {
   async getMajorNationCoverRelation(params) {
     const { ctx } = this;
     const res = await ctx.model.MajorNationCoverRelation.findById(params._id)
+    return res;
+  }
+
+  async delMajorNationCoverRelation(params) {
+    const { ctx } = this;
+    const res = await ctx.model.MajorNationCoverRelation.deleteOne(params) 
     return res;
   }
 }

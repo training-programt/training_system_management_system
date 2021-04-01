@@ -152,6 +152,12 @@ class TrainingProjectController extends Controller {
     const params = ctx.request.body;
     let res;
     if (params.requirementId) {
+      const requirement = await ctx.service.graduationRequirement.getRequirementById({_id: params.requirementId})
+      if(requirement) {
+        for(let i = 0; i < requirement.majorRequirement.length; i++) {
+          await ctx.service.point.delMorePoint(requirement.majorRequirement[i].point)
+        }
+      }
       for (let i = 0; i < params.majorRequirement.length; i++) {
         let point = params.majorRequirement[i].point;
         if (point.length) {
@@ -192,6 +198,14 @@ class TrainingProjectController extends Controller {
   async delProject() {
     const { ctx } = this;
     const params = ctx.request.body;
+    const project = await ctx.service.trainingProject.getProjectDetail(params);
+    if(project) {
+      project.trainingObjective ? await ctx.service.trainingObjective.delObject({_id: project.trainingObjective}) : '';
+      project.graduationRequirement ? await ctx.service.graduationRequirement.delRequirementAndPoint({_id: project.graduationRequirement}) : '';
+      project.majorObjReqRelation ? await ctx.service.table.delMajorObjReqRelation({_id: project.majorObjReqRelation}) : '';
+      project.majorNationCoverRelation ? await ctx.service.table.delMajorNationCoverRelation({_id: project.majorNationCoverRelation}) : '';
+      project.credits_required ? await ctx.service.creditStructure.delCreditStructure({_id: project.credits_required}) : '';
+    }
     const res = await ctx.service.trainingProject.delProject({ _id: params._id })
     if (res) {
       ctx.body = {

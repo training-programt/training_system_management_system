@@ -30,7 +30,7 @@ class TrainingProjectService extends Service {
 
   async delProject(params) {
     const { ctx } = this;
-    const res = await ctx.model.TrainingProject.remove(params)
+    const res = await ctx.model.TrainingProject.deleteOne(params)
     return res
   }
 

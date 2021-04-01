@@ -20,5 +20,12 @@ class CreditStructureService extends Service {
       .populate('content.courseType', 'name')
     return res;
   }
+
+  async delCreditStructure(params) {
+    const { ctx } = this;
+    const res = await ctx.model.CreditStructure.deleteOne(params)
+    return res;
+  }
+  
 }
 module.exports = CreditStructureService;
