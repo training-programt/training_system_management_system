@@ -210,8 +210,8 @@ const Relation = () => {
                     allowClear
                     onChange={(value) => { requirementChange(value) }}
                   >
-                    {requirement && requirement.map(item => {
-                      return <Select.Option value={item._id} key={item._id}>{item.name}</Select.Option>
+                    {requirement && requirement.map((item,index) => {
+                      return <Select.Option value={item._id} key={index}>{item.name}</Select.Option>
                     })}
                   </Select>
                 </Col>
@@ -227,8 +227,8 @@ const Relation = () => {
                     allowClear
                     onChange={(value) => { pointChange(value) }}
                   >
-                    {point && point.map(item => {
-                      return <Select.Option value={item._id} key={item._id}>{item.content}</Select.Option>
+                    {point && point.map((item,index) => {
+                      return <Select.Option value={item._id} key={index}>{item.content}</Select.Option>
                     })}
                   </Select>
                 </Col>

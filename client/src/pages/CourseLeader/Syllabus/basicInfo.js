@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react';
-import { Form, Input, Select, Button,message } from 'antd';
+import { Form, Input, Select, Button,message,Modal } from 'antd';
 import { useLocation } from "react-router-dom";
 import { SpaceContext } from 'antd/lib/space';
-import { ArrowLeftOutlined, ArrowRightOutlined, RollbackOutlined, SaveOutlined } from '@ant-design/icons';
+import {  SaveOutlined } from '@ant-design/icons';
 import { getSession,setSession } from '../../../utils';
 
 const { Option } = Select;
@@ -98,7 +98,16 @@ const BasicInfo = () => {
     useEffect(() => {
         if(info){
             if(basicInfo){
-                form.setFieldsValue(basicInfo||{})
+                form.setFieldsValue(basicInfo||{});
+                Modal.warning({
+                    title: '编辑提示',
+                    content: (
+                        <div>
+                            <p>1.请每次编辑一个页面之后进行信息暂存，确保每个页面信息暂存好之后进行修改的提交申请</p>
+                            <p>2.</p>
+                        </div>
+                    )
+                  });
             }else{
                 form.setFieldsValue(
                     {

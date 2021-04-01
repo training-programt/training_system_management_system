@@ -93,7 +93,6 @@ const Syllabus = () => {
     setSession("newData", JSON.stringify(record));
   }
   const del = async (id) => {
-    // console.log(id)
     const dell = React.$axios.post('/delSyllabus', { _id: id }).then(delData=>{
       if (delData.isSucceed) {
         message.success("删除成功");
@@ -118,8 +117,7 @@ const Syllabus = () => {
  
   }
   const showSyllabus = (record) => {
-    console.log(record)
-    history.push('/syllabus/show')
+    history.push(`/syllabus/show?id=${record._id}`);
   }
   const addSyllabus = (e) => {
     if (editInfo) {

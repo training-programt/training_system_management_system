@@ -3,6 +3,7 @@ module.exports = app => {
     const { router, controller } = app;
     router.get('/getSyllabus', controller.courseLeader.getSyllabus);
     router.post('/findSyllabus', controller.courseLeader.findSyllabus);
+    router.post('/findSyllabusById', controller.courseLeader.findSyllabusById);
     router.post('/addSyllabus', controller.courseLeader.addSyllabus);
     router.post('/updateSyllabus', controller.courseLeader.updateSyllabus);
     router.post('/delSyllabus', controller.courseLeader.delSyllabus);
