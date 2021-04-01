@@ -179,7 +179,6 @@ const Audit = () => {
             <Input.Search placeholder="请输入审核名称" allowClear enterButton onSearch={value => setQuery(value)} />
           </div>
           <div className="operation-wrap">
-            <Link to="/auditApproval/auditDetail"><Button type="primary" icon={<PlusOutlined />}>新增审批</Button></Link>
             <Button type="primary" icon={<DeleteOutlined />} onClick={delMoreAudit}>批量删除</Button>
           </div>
         </div>

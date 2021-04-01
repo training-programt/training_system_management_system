@@ -1,8 +1,10 @@
 import React, { useState, useMemo } from 'react'
-import { Input, Select } from 'antd';
+import { Input, Select,Button } from 'antd';
+import { Link } from 'react-router-dom';
 import HeaderComponent from '@/components/header'
 import PaginationComponent from '@/components/pagination'
 import TableComponent from "@/components/table";
+import { PlusOutlined, DeleteOutlined } from '@ant-design/icons';
 import api from '@/apis/teachingList'
 import { getSession } from '@/utils'
 
@@ -84,7 +86,17 @@ const TeachingList = () => {
       dataIndex: 'class',
       align: 'center'
     },
-
+    {
+      title: '操作',
+      dataIndex: 'operation',
+      key: 'operation',
+      render: (text, record) => (
+        <div>
+          <Link to="/auditApproval/auditDetail"><Button type="link" icon={<PlusOutlined />}>新增审核表</Button></Link>
+          <Link to="/auditApproval/approvalDetail"><Button type="link" icon={<PlusOutlined />}>新增审表</Button></Link>
+        </div>
+      ),
+    },
   ];
 
   return (
