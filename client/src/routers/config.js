@@ -15,8 +15,8 @@ import teachingManagement from './teachingManagement'
 import courseType from './courseType';
 import courseSystem from './courseSystem';
 import teachingInfo from './teachingInfo';
-import teachingList from './teachingList';
-import auditApproval from './auditApproval';
+import teachingList from './teachingTeacher/teachingList';
+import auditApproval from './teachingTeacher/auditApproval';
 
 const routesConfig = [
   // 子路由

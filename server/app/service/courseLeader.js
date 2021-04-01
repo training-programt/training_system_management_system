@@ -86,7 +86,56 @@ class CourseLeaderService extends Service {
     //查找课程大纲
     async findSyllabus(params) {
         const { ctx } = this;
-        const result = await ctx.model.Syllabus.find(params);
+        const result = await ctx.model.Syllabus.find(params)
+        .populate({
+            path: 'course_info',
+            populate: {
+                path: 'course',//相当于then，在嵌套查询后，进行关联查询
+            }
+        })
+        .populate({
+            path: 'course_info',
+            populate: {
+                path: 'professional',
+            }
+        })
+        .populate({
+            path: 'course_info',
+            populate: {
+                path: 'unit',
+            }
+        })
+        .populate('teaching_goal')
+        .populate({
+            path: 'relation',
+            populate: { path: "major_requirement" },
+        })
+        .populate({
+            path: 'relation',
+            populate: { path: "point" },
+        })
+        .populate({
+            path: 'relation',
+            populate: { path: "teach_goal" },
+        })
+        .populate('theory_teaching')
+        .populate('practice_teaching')
+        .populate('assessment')
+        .populate({
+            path:'assessmentGoal',
+            populate:{path:"teaching_goal"}
+        })
+        .populate({
+            path:'assessmentGoal',
+            populate:{path:"major_requirement"}
+        })
+        .populate({
+            path:'assessmentGoal',
+            populate:{path:"assessment"}
+        })
+        .populate('reference')
+        .populate('reviewer')
+        .sort('sort');
         return result;
     }
 

@@ -7,10 +7,6 @@ module.exports = app => {
     name: { type: String },
     code: { type: String },
     introduce: { type: String },
-    // count: [{ 
-    //   type: Schema.Types.ObjectId,
-    //   ref: 'Student',
-    // }],
   })
 
   return mongoose.model('Major', MajorSchema, 'major');

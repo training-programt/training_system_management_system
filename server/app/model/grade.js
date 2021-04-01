@@ -5,10 +5,6 @@ module.exports = app => {
   const Schema = mongoose.Schema;
   const GradeSchema = new Schema({
     name: { type: String },
-    // studentNumber: [{ 
-    //   type: Schema.Types.ObjectId,
-    //   ref:'Student'
-    // }],
   })
   return mongoose.model('Grade', GradeSchema, 'grade');
 }

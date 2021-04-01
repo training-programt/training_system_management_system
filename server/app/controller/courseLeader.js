@@ -238,6 +238,26 @@ class CourseLeaderController extends Controller {
     }
 
   }
+  async findSyllabusById(){
+    const { ctx } = this;
+    let params = await ctx.request.body;
+    const data = await ctx.service.courseLeader.findSyllabus({_id:params._id})
+    console.log(data)
+    if(data){
+      ctx.body = {
+        total: data.length,
+        data: data,
+        code: 200,
+        isSucceed: true,
+      }
+    }else{
+      ctx.body = {
+        message:'不存在该教学大纲',
+        code: 500,
+        isSucceed: false,
+      }
+    }
+  }
   //得到课程教学目标
   async getTeachGoal() {
     const { ctx } = this;
