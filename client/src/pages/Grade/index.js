@@ -24,18 +24,18 @@ const Grade = () => {
       dataIndex: 'name',
       align: 'center',
     },
-    {
-      title: '年级人数',
-      dataIndex: 'studentNumber',
-      align: 'center',
-      render: (text, record) => {
-        let count = 0;
-        for (let i = 0; i < record.studentNumber.length; i++) {
-          count += record.studentNumber[i].count
-        }
-        return count
-      }
-    },
+    // {
+    //   title: '年级人数',
+    //   dataIndex: 'studentNumber',
+    //   align: 'center',
+    //   render: (text, record) => {
+    //     let count = 0;
+    //     for (let i = 0; i < record.studentNumber.length; i++) {
+    //       count += record.studentNumber[i].count
+    //     }
+    //     return count
+    //   }
+    // },
     {
       title: '操作',
       dataIndex: 'operation',
@@ -74,9 +74,6 @@ const Grade = () => {
     })
     const res1 = React.$axios.get('/getSemester').then((semesterData) => {
       setSemesterData(semesterData.data);
-    })
-    const major = React.$axios.get('/getMajor').then((res) => {
-      setMajorData(res.data)
     })
     setLoading(false)
   }, [])
@@ -178,7 +175,7 @@ const Grade = () => {
         }
       } else {
         const addSemester = await React.$axios.post(
-          '/updateSemester',
+          '/addSemester',
           params1,
         );
         if (addSemester.isSucceed) {
@@ -192,7 +189,8 @@ const Grade = () => {
         }
       }
       setVisible(false);
-    } else {
+      
+    } else if (tab === 2) {
       if (tab === 1) {
         const res = await React.$axios.post(
           '/updateGrade',
@@ -224,6 +222,9 @@ const Grade = () => {
       }
     }
     setVisible(false);
+    setIsEdit(false)
+    form.resetFields()
+    form1.resetFields()
   };
 
   const handleCancel = () => {
@@ -282,7 +283,7 @@ const Grade = () => {
                 <Form.Item name="name" label="年级名字" rules={[{ required: true, message: '请输入年级名!' }]}>
                   <Input placeholder="年级名字" />
                 </Form.Item>
-                <Form.Item
+                {/* <Form.Item
                   name="studentNumber"
                   label="包含专业"
                   rules={[{ required: true, message: '请选择包含专业!' }]}
@@ -292,7 +293,7 @@ const Grade = () => {
                       majorData && majorData.map(item => (<Select.Option key={item._id} value={item._id}>{item.name}</Select.Option>))
                     }
                   </Select>
-                </Form.Item>
+                </Form.Item> */}
               </Form>
               :
               <Form form={form1}>
