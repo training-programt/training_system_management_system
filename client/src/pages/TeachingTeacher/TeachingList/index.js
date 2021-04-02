@@ -92,8 +92,8 @@ const TeachingList = () => {
       key: 'operation',
       render: (text, record) => (
         <div>
-          <Link to="/auditApproval/auditDetail"><Button type="link" icon={<PlusOutlined />}>新增审核表</Button></Link>
-          <Link to="/auditApproval/approvalDetail"><Button type="link" icon={<PlusOutlined />}>新增审表</Button></Link>
+          <Button type="link">查看审核表</Button>
+        <Button type="link">查看审批表</Button>
         </div>
       ),
     },
@@ -104,12 +104,13 @@ const TeachingList = () => {
       <HeaderComponent title="授课记录管理" />
       <div className="body-wrap">
         <div className="header-wrap">
-          <div className="select-box">
-            {/* <Input.Search placeholder="请输入课程名称" allowClear enterButton onSearch={value => setQuery(value)} /> */}
+          <div className="select-box" style={{height:"40px",lineHeight:"40px"}}>
+            <label style={{fontSize:"14px"}}>请根据学期进行筛选：</label>
             <Select
               placeholder="请选择学期"
               showSearch
               allowClear
+              width={200}
               onChange={value => setSemester(value)}
             >
               {

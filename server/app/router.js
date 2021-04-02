@@ -24,6 +24,6 @@ module.exports = app => {
   require('./router/table')(app)
   require('./router/teachingRecord')(app)
   require('./router/majorObjective')(app)
-  require('./router/approval')(app)
-  require('./router/audit')(app)
+  
+  require('./router/teachingTeacher')(app)
 };

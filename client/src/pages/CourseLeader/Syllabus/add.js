@@ -81,10 +81,6 @@ const SyllabusAdd = () => {
                 {current < steps.length - 1 && (
                     <Button type="primary" icon={<ArrowRightOutlined />} onClick={() => next()}>下一步</Button>
                 )}
-                {/* {current === steps.length - 1 && (
-                    <Button type="primary" onClick={() => message.success('Processing complete!')}>提交审批</Button>
-                )} */}
-
                 <Button icon={<RollbackOutlined />} style={{ color: '#000', marginLeft: '8px' }} onClick={()=>{history.push('/syllabus')}}>返回</Button>
             </div>
 

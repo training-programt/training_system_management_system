@@ -24,47 +24,35 @@
 
   }
 
-  .body-wrap {
-    padding: 16px * @height 24px * @width;
-    display: flex;
-    justify-content: space-between;
-
-    .body-left,
-    .body-right {
-      flex: 1;
+  .content-wrap {
+    .title {
+        font-weight: bold;
+        margin: 15px 0px;
+        font-size: 14px;
     }
 
-    .body-left {
-      margin-right: 16px * @width;
-    }
+    // .title2 {
+    //     font-weight: 500;
+    //     margin: 10px 0px;
+    //     text-indent: 20px;
+    // }
 
-    .box-wrap {
-      width: 100%;
+    // .title3,
+    // .title4 {
+    //     text-indent: 40px;
+    // }
 
-      .title {
+    .ant-col {
+        min-height: 35px;
+        // border: 1px solid #ccc;
+        line-height: 35px;
         text-align: center;
-        font-weight: 600;
-        font-size: 16px * @width;
-        margin-bottom: 6px * @width;
-      }
     }
 
-    .opinion-wrap {
-      padding: 10px * @height 36px * @width;
-
-      &>div:first-child {
-        font-size: 14px * @width;
-        font-weight: 700;
-      }
-
-      &>div:nth-child(2) {
-        text-indent: 2em;
-      }
-
-      &>div:nth-child(3),
-      &>div:last-child {
-        text-align: right;
-      }
+    .ant-space-align-center {
+        float: right;
+        margin-bottom: 10px;
+        margin-right: 10px;
     }
-  }
+}
 }
