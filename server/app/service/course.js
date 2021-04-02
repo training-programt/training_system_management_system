@@ -3,13 +3,25 @@ const Service = require('egg').Service;
 class CourseService extends Service {
 
     // 查询全部课程
-    async getCourse() {
+    async getCourse(params) {
         const { ctx } = this;
+        const regName = new RegExp(params.queryName, 'i')
+        const regCode = new RegExp(params.queryCode, 'i')
         const result = await ctx.model.BasicCourse
-            .find()
+            .find({
+                $and: [{ name: { $regex: regName } }, { code: { $regex: regCode } }]
+            })
+            .limit(parseInt(params.pageSize))
+            .skip(parseInt(params.pageSize) * (parseInt(params.page) - 1))
             .sort();
         return result;
     }
+    async getCount() {
+        const { ctx } = this;
+        const count = await ctx.model.BasicCourse.find().count();
+        return count;
+    }
+
     // 删除
     async delCourse(params) {
         const { ctx } = this;
