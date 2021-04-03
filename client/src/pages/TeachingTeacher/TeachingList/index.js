@@ -1,8 +1,10 @@
 import React, { useState, useMemo } from 'react'
-import { Input, Select } from 'antd';
+import { Input, Select,Button } from 'antd';
+import { Link } from 'react-router-dom';
 import HeaderComponent from '@/components/header'
 import PaginationComponent from '@/components/pagination'
 import TableComponent from "@/components/table";
+import { PlusOutlined, DeleteOutlined } from '@ant-design/icons';
 import api from '@/apis/teachingList'
 import { getSession } from '@/utils'
 
@@ -84,7 +86,17 @@ const TeachingList = () => {
       dataIndex: 'class',
       align: 'center'
     },
-
+    {
+      title: '操作',
+      dataIndex: 'operation',
+      key: 'operation',
+      render: (text, record) => (
+        <div>
+          <Button type="link">查看审核表</Button>
+        <Button type="link">查看审批表</Button>
+        </div>
+      ),
+    },
   ];
 
   return (
@@ -92,12 +104,13 @@ const TeachingList = () => {
       <HeaderComponent title="授课记录管理" />
       <div className="body-wrap">
         <div className="header-wrap">
-          <div className="select-box">
-            {/* <Input.Search placeholder="请输入课程名称" allowClear enterButton onSearch={value => setQuery(value)} /> */}
+          <div className="select-box" style={{height:"40px",lineHeight:"40px"}}>
+            <label style={{fontSize:"14px"}}>请根据学期进行筛选：</label>
             <Select
               placeholder="请选择学期"
               showSearch
               allowClear
+              width={200}
               onChange={value => setSemester(value)}
             >
               {

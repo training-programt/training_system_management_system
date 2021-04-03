@@ -6,19 +6,19 @@ module.exports = app => {
   const ApprovalSchema = new Schema({
     course: {
       type: Schema.Types.ObjectId,
-      ref: 'BasicCourse',
+      ref: 'CourseSystem',
     },
-    object: { type: String },
-    form: { type: String },
+    inspectionObject: { type: String },
+    inspectionForm: { type: String },
     studentNum: { type: Number },
     estimatePassRate: { type: String },
     estimateAverage: { type: String },
     opinion: { type: String },
-    state: { type: Number, default: 0 },
-    assessmentRelationship: {
+    state: { type: Number, default: 0 },//0未审核，1已审核
+    standard: [{
       type: Schema.Types.ObjectId,
-      ref: 'AssessmentRelationship',
-    }
+      ref: 'Standard',
+    }]
   })
 
   return mongoose.model('Approval', ApprovalSchema, 'approval');

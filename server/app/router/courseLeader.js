@@ -22,6 +22,8 @@ module.exports = app => {
     router.get('/getTheory', controller.courseLeader.getTheory);
     //实践表
     router.get('/getPractice', controller.courseLeader.getPractice);
+    //对应关系
+    router.get('/getGoalAndAssessment', controller.courseLeader.getGoalAndAssessment);
 
 
 };

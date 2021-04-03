@@ -409,6 +409,22 @@ class CourseLeaderController extends Controller {
     }
 
   }
+  //得到对应关系
+  async getGoalAndAssessment(){
+    const { ctx } = this;
+    const data = await ctx.model.AssessmentGoal.find({status:"√"})
+    .populate('teaching_goal')
+    .populate('major_requirement')
+    .populate('assessment')
+    .sort({"major_requirement":1,"teaching_goal":1})
+    ctx.body = {
+      total: data.length,
+      data: data,
+      code: 200,
+      isSucceed: true,
+    }
+
+  }
 }
 
 module.exports = CourseLeaderController;
