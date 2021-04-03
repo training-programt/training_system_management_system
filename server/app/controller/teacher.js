@@ -2,6 +2,20 @@
 const Controller = require('egg').Controller;
 
 class TeacherController extends Controller {
+
+  async getTeacherList() {
+    const { ctx } = this;
+    const params = ctx.request.query;
+    const res = await ctx.service.teacher.getTeacherList(params)
+    const count = await ctx.service.teacher.getCount()
+    ctx.body = {
+      total: count,
+      data: res,
+      code: 200,
+      isSucceed: true,
+    }
+  }
+
   async getTeacher() {
     const { ctx } = this;
     const data = await ctx.service.teacher.getTeacher()

@@ -1,6 +1,7 @@
 module.exports = app => {
     // 教师
     const { router, controller } = app;
+    router.get('/getTeacherList', controller.teacher.getTeacherList);
     router.get('/getTeacher', controller.teacher.getTeacher);
     router.get('/getAllTeacher', controller.teacher.getAllTeacher);
     router.post('/addTeacher', controller.teacher.addTeacher);
