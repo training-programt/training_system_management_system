@@ -21,7 +21,7 @@ const LeaderTeacher = () => {
   const [isEdit, setIsEdit] = useState(false);
   const [teachRoomData, setTeachRoomData] = useState([])
   const [majorData, setMajorData] = useState([])
-  const [selectedRowKeys, setSelectedRowKeys] = useState([])
+  const [selectedRows, setSelectedRow] = useState([])
 
   const teacherColumns = [
     {
@@ -36,6 +36,12 @@ const LeaderTeacher = () => {
         return record.teachRoom ? record.teachRoom.name : ''
       }
     },
+    {
+      title: '所属专业', dataIndex: 'major', align: 'center',
+      render: (text, record) => {
+        return record.major ? record.major.name : ''
+      }
+    },
     { title: '专职/兼职', dataIndex: 'job', algin: 'center' },
     { title: '职务', dataIndex: 'position', algin: 'center' },
     { title: '学历', dataIndex: 'lastInfo', algin: 'center' },
@@ -43,7 +49,7 @@ const LeaderTeacher = () => {
       title: '操作', key: 'action', fixed: 'right',
       render: (text, record) => (
         <Space size="middle">
-          <Button size="small" type="link" onClick={() => showDrawer(record)}>信息修改</Button>
+          <Button size="small" type="link" onClick={() => showDrawer(record)}>详情</Button>
           {/* <Popconfirm title='您确定删除当前数据吗？' onConfirm={() => delTeacher(record)}> */}
           <Popconfirm title='您确定删除当前数据吗？' onConfirm={() => delTeacher(record)}>
             <Button size="small" type="link" >删除</Button>
@@ -59,9 +65,8 @@ const LeaderTeacher = () => {
     isMultiple: true,
     rowSelection: {
       type: 'checkbox',
-      onChange: (selectedRowKeys) => {
-        console.log(selectedRowKeys)
-        setSelectedRowKeys(selectedRowKeys)
+      onChange: (selectedRowKeys, selectedRows) => {
+        setSelectedRow(selectedRows)
       },
     }
   };
@@ -107,28 +112,13 @@ const LeaderTeacher = () => {
 
   useMemo(() => {
     getTeacherData()
-  }, [teachName, job, page])
+  }, [teachName, job, page, teachRoom])
 
   useMemo(() => {
     getTeachRoom()
     getMajorData()
   }, [])
 
-
-  // const manyDelete = async () => {
-  //   const res = await React.$axios.post('/manyDelete', selectedRowKeys);
-  //   console.log(res)
-  //   if (res && res.isSucceed) {
-  //     message.success('批量删除成功');
-  //     const res = await React.$axios.get(
-  //       '/getTeacher',
-  //     )
-  //     setTableData(res.data);
-  //     setTotal(res.total)
-  //   } else {
-  //     message.error('批量删除失败');
-  //   }
-  // }
   const onCloseDrawer = () => {
     setDrawerVisible(false)
     form.resetFields()
@@ -171,17 +161,17 @@ const LeaderTeacher = () => {
     setIsEdit(true)
     let data = {
       ...record,
-      teachRoom: record.teachRoom ? record.teachRoom._id : ''
+      teachRoom: record.teachRoom ? record.teachRoom._id : '',
+      major: record.major ? record.major._id : ''
     }
-    console.log(data)
     form.setFieldsValue(data)
   }
 
   const delTeacher = async (record) => {
-    const params = {
-      _id: record._id
-    }
-    const res = await React.$axios.post(api.delTeacher, params)
+    // const params = {
+    //   _id: record._id
+    // }
+    const res = await React.$axios.post(api.delTeacher, record)
     if (res && res.isSucceed) {
       message.success('删除成功');
       getTeacherData()
@@ -191,11 +181,11 @@ const LeaderTeacher = () => {
   }
 
   const delMore = async () => {
-    if (!selectedRowKeys.length) {
+    if (!selectedRows.length) {
       message.error('请选择项！')
       return false;
     }
-    const res = await React.$axios.post(api.manyDelete, selectedRowKeys)
+    const res = await React.$axios.post(api.manyDelete, selectedRows)
     if (res && res.isSucceed) {
       message.success('删除成功');
       getTeacherData()
@@ -267,7 +257,7 @@ const LeaderTeacher = () => {
               取消
               </Button>
             <Button onClick={handleOk} type="primary">
-              新增
+              {isEdit ? '保存' : '新增'}
               </Button>
           </div>
         }
@@ -321,6 +311,24 @@ const LeaderTeacher = () => {
                 </Col>
               </Row>
             </Col>
+            <Col span={12}>
+              <Form.Item
+                name="position"
+                label="职务"
+              >
+                <Select placeholder="请选择职务" allowClear>
+                  <Select.Option value='教授'>教授</Select.Option>
+                  <Select.Option value='副教授'>副教授</Select.Option>
+                  <Select.Option value='讲师'>讲师</Select.Option>
+                  <Select.Option value='助教'>助教</Select.Option>
+                  <Select.Option value='其他正高级'>其他正高级</Select.Option>
+                  <Select.Option value='其他副高级'>其他副高级</Select.Option>
+                  <Select.Option value='其他中级'>其他中级</Select.Option>
+                  <Select.Option value='其他初级'>其他初级</Select.Option>
+                  <Select.Option value='未评级'>未评级</Select.Option>
+                </Select>
+              </Form.Item>
+            </Col>
           </Row>
           <Row gutter={16}>
             <Col span={12}>
@@ -331,6 +339,18 @@ const LeaderTeacher = () => {
                 <Select placeholder="请选择所属教研室" allowClear>
                   {
                     teachRoomData.map(item => (<Select.Option key={item._id} value={item._id}>{item.name}</Select.Option>))
+                  }
+                </Select>
+              </Form.Item>
+            </Col>
+            <Col span={12}>
+              <Form.Item
+                name="major"
+                label="所属专业"
+              >
+                <Select placeholder="请选择所属专业" allowClear>
+                  {
+                    majorData.map(item => (<Select.Option key={item._id} value={item._id}>{item.name}</Select.Option>))
                   }
                 </Select>
               </Form.Item>

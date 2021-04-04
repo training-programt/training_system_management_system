@@ -4,7 +4,6 @@ class TeacherService extends Service {
 
     async getTeacherList(params) {
         const { ctx } = this
-        console.log(params)
         const teachName = new RegExp(params.teachName, 'i')
         const jobReg = new RegExp(params.job, 'i')
         const result = await ctx.model.Teacher
@@ -15,6 +14,7 @@ class TeacherService extends Service {
                 ],
             })
             .populate('teachRoom', 'name')
+            .populate('major', 'name')
             .limit(parseInt(params.pageSize))
             .skip(parseInt(params.pageSize) * (parseInt(params.page) - 1))
             .sort();

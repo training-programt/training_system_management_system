@@ -57,17 +57,8 @@ class TeacherController extends Controller {
     let params = await ctx.request.body;
     console.log(params)
     const teachers = await ctx.service.teacher.addTeacher(params)
-    const teachRoom = await ctx.model.TeachRoom.update(
+    const teachRoom = await ctx.model.TeachRoom.findByIdAndUpdate(
       { _id: params.teachRoom },
-      {
-        $push: {
-          teachers: teachers[0]._id
-        }
-      },
-      { multi: true }
-    )
-    const major = await ctx.model.Major.update(
-      { _id: params.major },
       {
         $push: {
           teachers: teachers[0]._id
@@ -97,9 +88,10 @@ class TeacherController extends Controller {
   async delTeacher() {
     const { ctx } = this;
     const params = ctx.request.body;
+    console.log(params)
     const res = await ctx.service.teacher.delTeacher(params)
-    const teachRoom = await ctx.model.TeachRoom.update(
-      { _id: params.teachRoom },
+    const teachRoom = await ctx.model.TeachRoom.findByIdAndUpdate(
+      { _id: params.teachRoom._id },
       {
         $pull: {
           teachers: params._id
@@ -107,16 +99,6 @@ class TeacherController extends Controller {
       },
       { multi: true }
     )
-    const major = await ctx.model.Major.update(
-      { _id: params.major },
-      {
-        $pull: {
-          teachers: params._id
-        }
-      },
-      { multi: true }
-    )
-    console.log(res)
     if (res.ok == 1) {
       ctx.body = {
         code: 200,
@@ -206,7 +188,6 @@ class TeacherController extends Controller {
   async updataTeacher1() {
     const { ctx } = this;
     const params = ctx.request.body;
-    console.log(params)
     const data = await ctx.model.Teacher.findByIdAndUpdate(
       { _id: params._id },
       {
@@ -250,23 +231,15 @@ class TeacherController extends Controller {
   async manyDelete() {
     const { ctx } = this;
     const params = ctx.request.body;
-    const deleteMany = await ctx.service.teacher.delTeacher({ _id: { $in: params } })
+    const ids = params.map(item => item._id)
+    const deleteMany = await ctx.service.teacher.delTeacher({ _id: { $in: ids } })
     for (let i = 0; i < params.length; i++) {
-      const teachRoom = await ctx.model.TeachRoom.update(
+      const teachRoom = await ctx.model.TeachRoom.findByIdAndUpdate(
         { _id: params[i].teachRoom._id },
         {
           // $pull: {
           //   teachers:  {$each: params}
           // }
-          $pull: {
-            teachers: params[i]._id
-          }
-        },
-        { multi: true }
-      )
-      const major = await ctx.model.Major.update(
-        { _id: params[i].major._id },
-        {
           $pull: {
             teachers: params[i]._id
           }
