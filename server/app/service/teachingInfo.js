@@ -12,9 +12,9 @@ class TeachingInfoService extends Service {
         $and: [semester]
       })
       .populate("major", '_id name')
-      .populate('teacher', '_id name')
+      .populate('teacher')
       .populate('semester', '_id semesterName')
-      .populate('course', '_id name')
+      .populate('course')
       .limit(parseInt(params.pageSize))
       .skip(parseInt(params.pageSize) * (parseInt(params.page) - 1))
       .sort();
@@ -85,7 +85,7 @@ class TeachingInfoService extends Service {
       )
       .populate("major", '_id name')
       .populate('semester', '_id semesterName')
-      .populate('course', '_id name')
+      .populate('course')
       .limit(parseInt(params.pageSize))
       .skip(parseInt(params.pageSize) * (parseInt(params.page) - 1))
       .sort();

@@ -1,4 +1,4 @@
-import React, { useState, useMemo } from 'react'
+import React, { useState, useEffect } from 'react'
 import { Button, Modal, message, Form, Input, Popconfirm } from 'antd';
 import { Link } from 'react-router-dom';
 import HeaderComponent from '@/components/header'
@@ -41,41 +41,39 @@ const Approval = () => {
     labelCol: { span: 5 },
     wrapperCol: { span: 16 },
   };
-
-  const getApprovalList = async () => {
-    const params = {
-      query: query,
-      pageSize: pageSize,
-      page: page,
-    }
+useEffect(() => {
     setLoading(true)
-    const res = await React.$axios.get(
-      `${api.getApprovalList}?${React.$qs.stringify(params)}`
-    )
-    setLoading(false)
-    if (res && res.isSucceed) {
-      setTableData(res.data);
-      setTotal(res.total)
-    }
-  }
-
-  useMemo(() => {
-    getApprovalList()
-  }, [page, query])
-
+    const res =React.$axios.get('/getApproval').then(appro=>{
+      setLoading(false)
+      if (appro.isSucceed) {
+        setTableData(appro.data);
+      }
+    })
+   
+}, [])
   const columns = [
+    {
+      title:'序号',
+      dataIndex:'index',
+      render:(text,record,index)=>{
+        return index+1
+      }
+    },
     {
       title: '课程名称',
       dataIndex: 'course',
-      align: 'center'
+      align: 'center',
+      render:(text,record)=>{
+        return record?.course?.name
+      }
     },
     {
       title: '考核对象',
-      dataIndex: 'object',
+      dataIndex: 'inspectionObject',
     },
     {
       title: '考核形式',
-      dataIndex: 'form',
+      dataIndex: 'inspectionForm',
     },
     {
       title: '考核学生数',

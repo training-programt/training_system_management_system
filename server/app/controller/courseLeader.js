@@ -413,10 +413,13 @@ class CourseLeaderController extends Controller {
   async getGoalAndAssessment(){
     const { ctx } = this;
     const data = await ctx.model.AssessmentGoal.find({status:"√"})
-    .populate('teaching_goal')
+    
     .populate('major_requirement')
+    .sort({'major_requirement':1})
+    .populate('teaching_goal')
+    .sort({'teaching_goal':1})
     .populate('assessment')
-    .sort({"major_requirement":1,"teaching_goal":1})
+    // .sort({"major_requirement":1,"teaching_goal":1})
     ctx.body = {
       total: data.length,
       data: data,

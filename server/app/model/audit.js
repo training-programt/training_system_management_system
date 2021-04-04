@@ -12,20 +12,17 @@ module.exports = app => {
       type: Schema.Types.ObjectId,
       ref: 'Achievement',
     },
-    //评价质量标准
-    standard: { 
-      level:{type:Number},
-      details:{type:String}
-    },
-    teachRoomOpinion: {
+    //课程培养目标说明
+    description: { type:String},
+    teachRoomOpinion: {//教研室意见
       content: { type: String },
       createtime: { type: Date }
     },
-    collegeOpinion: {
+    collegeOpinion: {//学院意见
       content: { type: String },
       createtime: { type: Date }
     },
-
+    isAchievement:{type:String,default:0},//是否达成
   })
 
   return mongoose.model('Audit', AuditSchema, 'audit');

@@ -6,8 +6,7 @@ class TeachingTeacherService extends Service {
     async getApproval(params) {
         const { ctx } = this;
         const result = await ctx.model.Approval
-            .find({
-            })
+            .find(params)
             .populate('course')
             .populate('standard')
             .sort('sort')

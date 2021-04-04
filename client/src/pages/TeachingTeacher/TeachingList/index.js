@@ -50,6 +50,7 @@ const TeachingList = () => {
     )
     setLoading(false)
     if (res && res.isSucceed) {
+      console.log(res)
       setTableData(res.data);
       setTotal(res.total)
     }

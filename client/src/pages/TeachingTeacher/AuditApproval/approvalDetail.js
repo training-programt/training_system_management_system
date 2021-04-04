@@ -18,7 +18,9 @@ const ApprovalDetail = () => {
   const [confirmLoading, setConfirmLoading] = useState(false);
   const [editIndex, setEditIndex] = useState(0);
   const [standard,setStandard] = useState([]);
-  const [titleName,setTitleName] = useState('XXXXXX')
+  const [titleName,setTitleName] = useState('XXXXXX');
+  const [rowSpans, setRowSpans] = useState({})
+
   useEffect(() => {
     const params = {
       teacher: JSON.parse(getSession('userInfo'))._id,
@@ -31,6 +33,22 @@ const ApprovalDetail = () => {
     })
     const goalRelation = React.$axios.get('/getGoalAndAssessment').then(goal => {
       // console.log(goal.data)
+      let requirement = {}
+      goal.data.forEach(item => {
+        if (!requirement[item.major_requirement._id]) {
+          requirement[item.major_requirement._id] = {
+            span: 0,
+            targets: {}
+          }
+        }
+        if (!requirement[item.major_requirement._id].targets[item.teaching_goal._id]) {
+          requirement[item.major_requirement._id].targets[item.teaching_goal._id] = 1
+        } else {
+          requirement[item.major_requirement._id].targets[item.teaching_goal._id]++
+        }
+        requirement[item.major_requirement._id].span++
+      })
+      setRowSpans(requirement)
       setTableData(goal.data)
       setStandard(goal.data)
     })
@@ -46,15 +64,36 @@ const ApprovalDetail = () => {
       title: '毕业要求',
       dataIndex: 'major_requirement',
       width: '10%',
-      render: (text, record) => {
-        return record?.major_requirement?.name
+      render: (text, record, index) => {
+        const obj = {
+          children: record?.major_requirement?.name,
+          props: {
+            rowSpan: 0
+          },
+        }
+        if (index === 0) {
+          obj.props.rowSpan = rowSpans[record?.major_requirement?._id]?.span || 0
+        } else if (table[index]?.major_requirement?._id !== table[index - 1]?.major_requirement?._id) {
+          obj.props.rowSpan = rowSpans[record?.major_requirement?._id]?.span
+        }
+        return obj
       }
     },
     {
       title: '课程目标',
       dataIndex: 'teaching_goal',
-      render: (text, record) => {
-        return record?.teaching_goal?.target_course_name
+      render: (text, record, index) => {
+        const obj = {
+          children: record?.teaching_goal?.target_course_name,
+          props: {
+            rowSpan: rowSpans[record?.major_requirement?._id].targets[record?.teaching_goal._id]
+          },
+        }
+        if(index !== 0 && table[index]?.teaching_goal._id === table[index - 1]?.teaching_goal?._id) {
+          obj.props.rowSpan = 0
+        }
+
+        return obj
       }
     },
     {
@@ -159,9 +198,6 @@ const ApprovalDetail = () => {
       console.log(app)
       if(app.isSucceed){
         message.success("数据已提交审核并存入数据库")
-        // setTimeout(function(){
-        //   history.push('/auditApproval/approval')
-        // },1000)
         form.resetFields();
         setTableData(standard);
         setTitleName("XXXXXX")
