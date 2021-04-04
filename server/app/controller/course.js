@@ -4,9 +4,12 @@ const Controller = require('egg').Controller;
 class CourseController extends Controller {
   async getCourse() {
     const { ctx } = this;
-    const data = await ctx.service.course.getCourse()
+    const params = ctx.request.query;
+    const data = await ctx.service.course.getCourse(params)
+    const count = await ctx.service.course.getCount();
+
     ctx.body = {
-      total: data.length,
+      total: count,
       data: data,
       code: 200,
       isSucceed: true,
@@ -216,11 +219,11 @@ class CourseController extends Controller {
     const { ctx } = this;
     const params = ctx.request.body;
     console.log(params)
-    const createSyllabus = await ctx.service.courseLeader.createSyllabus({course_info:params.name})
+    const createSyllabus = await ctx.service.courseLeader.createSyllabus({ course_info: params.name })
     console.log(createSyllabus)
-    const find  = await ctx.service.course.findCourse({_id:params.name})
+    const find = await ctx.service.course.findCourse({ _id: params.name })
     console.log(find)
-    if(params.unit!==find[0].unit){
+    if (params.unit !== find[0].unit) {
       const collegeChange = await ctx.model.College.update(
         { _id: find[0].unit },
         {
@@ -249,11 +252,11 @@ class CourseController extends Controller {
           type: params.type,
           within: params.within,
           outside: params.outside,
-          introduce:params.introduce,
-          englishName:params.englishName,
-          professional:params.professional,
-          credits:params.credits,
-          system:createSyllabus._id,
+          introduce: params.introduce,
+          englishName: params.englishName,
+          professional: params.professional,
+          credits: params.credits,
+          system: createSyllabus._id,
         }
       }
     )
@@ -273,51 +276,51 @@ class CourseController extends Controller {
       };
     }
   }
-  async delMany(){
-    const {ctx} = this;
+  async delMany() {
+    const { ctx } = this;
     const params = ctx.request.body;
-    const deleteMany = await ctx.service.course.delCourse({_id:{$in:params}})
-  //  for(let i = 0;i<params.length;i++){
-  //   const coll = await ctx.model.College.update(
-  //     { _id: params[i].unit._id },
-  //     {
-  //       $pull:{
-  //         courseList:params[i]._id
-  //       }
-  //     },
-  //     { multi: true }
-  //   )
-  //   const cs = await ctx.model.CourseSystem.update(
-  //     { _id: params[i].system._id },
-  //     {
-  //       $pull: {
-  //         courses: params[i]._id
-  //       }
-  //     },
-  //     { multi: true }
-  //   )
-  //   const major = await ctx.model.Teacher.update(
-  //     { _id: params[i].header._id },
-  //     {
-  //       $pull: {
-  //         course: params[i]._id
-  //       }
-  //     },
-  //     { multi: true }
-  //   )
-  //  }
-    
-    if(deleteMany.ok==1){
+    const deleteMany = await ctx.service.course.delCourse({ _id: { $in: params } })
+    //  for(let i = 0;i<params.length;i++){
+    //   const coll = await ctx.model.College.update(
+    //     { _id: params[i].unit._id },
+    //     {
+    //       $pull:{
+    //         courseList:params[i]._id
+    //       }
+    //     },
+    //     { multi: true }
+    //   )
+    //   const cs = await ctx.model.CourseSystem.update(
+    //     { _id: params[i].system._id },
+    //     {
+    //       $pull: {
+    //         courses: params[i]._id
+    //       }
+    //     },
+    //     { multi: true }
+    //   )
+    //   const major = await ctx.model.Teacher.update(
+    //     { _id: params[i].header._id },
+    //     {
+    //       $pull: {
+    //         course: params[i]._id
+    //       }
+    //     },
+    //     { multi: true }
+    //   )
+    //  }
+
+    if (deleteMany.ok == 1) {
       ctx.body = {
         total: deleteMany.length,
         data: deleteMany,
         code: 200,
         isSucceed: true,
-        message: '删除成功'+deleteMany.deletedCount+'条数据',
+        message: '删除成功' + deleteMany.deletedCount + '条数据',
       };
-    }else{
+    } else {
       ctx.body = {
-        code:500,
+        code: 500,
         isSucceed: true,
         message: '批量删除失败',
       };

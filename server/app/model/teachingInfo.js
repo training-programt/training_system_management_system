@@ -7,6 +7,10 @@ module.exports = app => {
       type:Schema.Types.ObjectId,
       ref:'Semester',
     },
+    grade: {
+      type:Schema.Types.ObjectId,
+      ref:'Grade',
+    },
     major: {
       type:Schema.Types.ObjectId,
       ref:'Major'
@@ -18,7 +22,7 @@ module.exports = app => {
     },
     course: {
       type:Schema.Types.ObjectId,
-      ref:'BasicCourse'
+      ref:'CourseSystem'
     }
   })
 

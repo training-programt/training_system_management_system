@@ -101,6 +101,18 @@ class CourseSystemController extends Controller {
       isSucceed: true,
     }
   }
+
+  async getCourseBySemester() {
+    const { ctx} = this;
+    const params = ctx.request.body;
+    const res = await ctx.service.courseSystem.getCourseBySemester(params)
+    ctx.body = {
+      total: res.length,
+      data: res,
+      code: 200,
+      isSucceed: true,
+    }
+  }
 }
 
 module.exports = CourseSystemController;

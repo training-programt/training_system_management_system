@@ -15,7 +15,7 @@ module.exports = app => {
   require('./router/testMethod')(app)
   require('./router/book')(app)
   require('./router/course')(app)
-  // require('./router/teachRoom')(app)
+  require('./router/teachRoom')(app)
   require('./router/grade')(app)
   require('./router/nationalRequirement')(app)
   require('./router/courseLeader')(app)

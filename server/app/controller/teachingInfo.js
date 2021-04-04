@@ -19,14 +19,14 @@ class TeachingInfoController extends Controller {
     const { ctx } = this;
     const params = ctx.request.body;
     const res = await ctx.service.teachingInfo.addTeachingInfo(params)
-    if(res) {
+    if (res) {
       const count = await ctx.service.teachingInfo.getCount();
       ctx.body = {
-      total: count,
-      data: res,
-      code: 200,
-      isSucceed: true,
-    };
+        total: count,
+        data: res,
+        code: 200,
+        isSucceed: true,
+      };
     } else {
       ctx.body = {
         total: 0,

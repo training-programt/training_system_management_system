@@ -45,11 +45,6 @@ useEffect(()=>{
       ellipsis: true,
     },
     {
-      title: '专业人数',
-      dataIndex: 'count',
-      key: 'count',
-    },
-    {
       title: '操作',
       dataIndex: 'operation',
       key: 'operation',
@@ -81,7 +76,6 @@ useEffect(()=>{
       name: record.name,
       code: record.code,
       introduce: record.introduce,
-      count: record.count,
     }
     form.setFieldsValue(data)
   };
@@ -213,9 +207,6 @@ useEffect(()=>{
               </Form.Item>
               <Form.Item name="introduce" label="专业介绍" rules={[{ required: true, message: '请输入专业介绍!' }]}>
                 <Input.TextArea />
-              </Form.Item>
-              <Form.Item name="count" label="专业人数" rules={[{ required: true, type: 'number', min: 0, max: 1000 }]}>
-                <InputNumber />
               </Form.Item>
             </Form>
           </Modal>

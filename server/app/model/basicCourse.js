@@ -6,11 +6,11 @@ module.exports = app => {
   const BasicCourseSchema = new Schema({
     name: { type: String },
     code: { type: String },//课程代码
-    credits: { type: String },//学分
-    within: { type: Number },//理论
-    outside: { type: Number },//实践
-    computer: { type: Number },//课外
-    all: { type: Number },//总学时
+    credits: { type: String, default: 0 },//学分
+    within: { type: Number, default: 0 },//理论
+    outside: { type: Number, default: 0 },//实践
+    computer: { type: Number, default: 0 },//课外
+    all: { type: Number, default: 0 },//总学时
   })
   return mongoose.model('BasicCourse', BasicCourseSchema, 'basicCourse');
 }

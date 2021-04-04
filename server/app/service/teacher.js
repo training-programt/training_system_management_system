@@ -1,6 +1,26 @@
 'use strict';
 const Service = require('egg').Service;
 class TeacherService extends Service {
+
+    async getTeacherList(params) {
+        const { ctx } = this
+        const teachName = new RegExp(params.teachName, 'i')
+        const jobReg = new RegExp(params.job, 'i')
+        const result = await ctx.model.Teacher
+            .find({
+                $and: [
+                    { $or: [{ name: { $regex: teachName } }] },
+                    { $or: [{ job: { $regex: jobReg } }] }
+                ],
+            })
+            .populate('teachRoom', 'name')
+            .populate('major', 'name')
+            .limit(parseInt(params.pageSize))
+            .skip(parseInt(params.pageSize) * (parseInt(params.page) - 1))
+            .sort();
+        return result;
+    }
+
     async getTeacherDetail(params) {
         const { ctx } = this;
         const res = ctx.model.Teacher.findOne({ _id: params._id }).populate('teachRoom').populate('major')
@@ -88,11 +108,17 @@ class TeacherService extends Service {
 
     async getLeaderList() {
         const { ctx } = this;
-        const res = await ctx.model.Role.findOne({roleName: '教学领导'});
-        if(res) {
-            const result = await ctx.model.Teacher.find({role: res._id}, { name: true, _id: true})
+        const res = await ctx.model.Role.findOne({ roleName: '教学领导' });
+        if (res) {
+            const result = await ctx.model.Teacher.find({ role: res._id }, { name: true, _id: true })
             return result
         }
+    }
+
+    async getCount() {
+        const { ctx } = this;
+        const count = await ctx.model.Teacher.find().count()
+        return count;
     }
 }
 module.exports = TeacherService;

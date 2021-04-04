@@ -23,7 +23,17 @@
       font-size: 16px * @width;
 
       .search-box {
-        width: 300px * @width;
+        // width: 300px * @width;
+        display: flex;
+        justify-content: space-around;
+
+        &>span {
+          width: 360px * @width;
+        }
+
+        &>span:nth-child(even) {
+          margin: 0 12px * @width;
+        }
       }
 
       .select-box {

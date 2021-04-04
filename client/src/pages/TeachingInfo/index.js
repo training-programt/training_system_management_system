@@ -20,6 +20,7 @@ const TeachingInfo = () => {
   const [query, setQuery] = useState('')
   const [semester, setSemester] = useState('')
   const [semesterList, setSemesterList] = useState([])
+  const [gradeList, setGradeList] = useState([])
   const [courseList, setCourseList] = useState([])
   const [teacherList, setTeacherList] = useState([])
 
@@ -64,18 +65,33 @@ const TeachingInfo = () => {
     }
   }
 
-  const getCourseList = async (record) => { // 根据学期筛选
-    console.log(record)
-    const res = await React.$axios.get(api.getCourseList)
+  const getCourseList = async (grade, semes) => { // 根据学期筛选
+    let semester = getTeachSemester(grade, semes);
+    const params = {
+      semester
+    }
+    const res = await React.$axios.post(api.getCourseBySemester, params)
     if (res && res.isSucceed) {
       setCourseList(res.data);
     }
   }
 
+  const handleSemesterChange = () => {
+    getCourseList()
+  }
+
+
   const getSemesterList = async () => {
     const res = await React.$axios.get(api.getSemesterList)
     if (res && res.isSucceed) {
       setSemesterList(res.data);
+    }
+  }
+
+  const getGradeList = async () => {
+    const res = await React.$axios.get(api.getGradeList)
+    if (res && res.isSucceed) {
+      setGradeList(res.data);
     }
   }
 
@@ -93,8 +109,14 @@ const TeachingInfo = () => {
   useMemo(() => {
     getSemesterList()
     getTeacherList()
-
+    getGradeList()
   }, [])
+
+  const getTeachSemester = (g, s) => {
+    let grade = gradeList[gradeList.findIndex(item => item._id == (g || form.getFieldsValue().grade))].name;
+    let semester = semesterList[semesterList.findIndex(item => item._id == (s || form.getFieldsValue().semester))].semesterName.split('-');
+    return (parseInt(semester[0]) - parseInt(grade)) * 2 + parseInt(semester[2])
+  }
 
   const columns = [
     {
@@ -105,7 +127,7 @@ const TeachingInfo = () => {
     {
       title: '课程',
       dataIndex: 'basicCourse',
-      render: (text, record) => record.course ? record.course.name : ''
+      render: (text, record) => record.course.course ? record.course.course.name : ''
     },
     {
       title: '学期',
@@ -151,16 +173,16 @@ const TeachingInfo = () => {
   };
 
   const showEditModal = (record) => {
-    getCourseList()
+    setIsEdit(true)
     setIsModalVisible(true);
     form.resetFields()
-    setIsEdit(true)
     let temp = {
       ...record,
-      course: record.course,
+      course: record.course._id,
       teacher: record.teacher._id,
       semester: record.semester._id,
     }
+    getCourseList(record.grade, record.semester._id)
     form.setFieldsValue(temp)
   }
 
@@ -284,24 +306,35 @@ const TeachingInfo = () => {
         ]}
       >
         <Form {...layout} form={form} name="control-hooks">
+          <Form.Item name="grade" label="年级" rules={[{ required: true }]}>
+            <Select
+              placeholder="请选择年级"
+              showSearch
+            >
+              {
+                gradeList.map(item => <Select.Option key={item._id} value={item._id}>{item.name}</Select.Option>)
+              }
+            </Select>
+          </Form.Item>
           <Form.Item name="semester" label="学期" rules={[{ required: true }]}>
             <Select
               placeholder="请选择学期"
               showSearch
-              onSelect={getCourseList}
+              onSelect={handleSemesterChange}
             >
               {
                 semesterList.map(item => <Select.Option key={item._id} value={item._id}>{item.semesterName}</Select.Option>)
               }
             </Select>
           </Form.Item>
+
           <Form.Item name="course" label="课程" rules={[{ required: true, message: '请选择课程!' }]}>
             <Select
               placeholder="请选择课程"
               showSearch
             >
               {
-                courseList.map(item => <Select.Option key={item._id} value={item._id}>{item.name}</Select.Option>)
+                courseList.map(item => <Select.Option key={item.course._id} value={item._id}>{item.course.name}</Select.Option>)
               }
             </Select>
           </Form.Item>
@@ -311,7 +344,7 @@ const TeachingInfo = () => {
           <Form.Item name="teacher" label="授课教师" rules={[{ required: true }]}>
             <Select
               placeholder="请选择课程负责人"
-              showSearch={getCourseList}
+              showSearch
             >
               {
                 teacherList.map(item => <Select.Option key={item._id} value={item._id}>{item.name}</Select.Option>)
