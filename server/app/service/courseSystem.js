@@ -28,7 +28,7 @@ class CourseSystemService extends Service {
   async addCourseSystem(params) {
     const { ctx } = this;
     const result = await ctx.model.CourseSystem.create(params);
-    const role = await ctx.model.Role.findOne({roleName: '课程负责人'})
+    const role = await ctx.model.Role.findOne({ roleName: '课程负责人' })
     if (result && role) {
       const data = {
         teacher: params.leader,
@@ -76,6 +76,20 @@ class CourseSystemService extends Service {
     const { ctx } = this;
     const count = await ctx.model.CourseSystem.find().count();
     return count;
+  }
+
+  async getCourseBySemester(params) {
+    const { ctx } = this;
+    const res = await ctx.model.CourseSystem
+      .find({
+        semester: params.semester
+      }, {
+        _id: true, name: true
+      })
+      .populate('course', 'name')
+      .sort()
+
+    return res;
   }
 }
 module.exports = CourseSystemService;

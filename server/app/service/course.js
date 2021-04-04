@@ -69,5 +69,12 @@ class CourseService extends Service {
         const result = await ctx.model.BasicCourse.find({}, { _id: true, name: true }).sort();
         return result;
     }
+
+    async getCourseById(params) {
+        const { ctx } = this;
+        console.log(params)
+        const res = await ctx.model.BasicCourse.findById(params, { _id: true, name: true })
+        return res;
+    }
 }
 module.exports = CourseService;

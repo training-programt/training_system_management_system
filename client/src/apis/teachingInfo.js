@@ -7,5 +7,6 @@ export default {
 
   getSemesterList: '/getSemester',
   getTeacherList: '/getAllTeacher',
-  getCourseList: '/getAllCourse', // 改：根据学期筛选
+  getCourseBySemester: '/getCourseBySemester', // 改：根据学期筛选
+  getGradeList: '/getAllGrade',
 }

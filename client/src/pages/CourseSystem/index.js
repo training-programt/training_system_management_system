@@ -1,5 +1,5 @@
 import React, { useState, useMemo } from 'react'
-import { Button, Modal, message, Form,  Popconfirm, Radio, Select } from 'antd';
+import { Button, Modal, message, Form, Popconfirm, Radio, Select } from 'antd';
 import HeaderComponent from '@/components/header'
 import PaginationComponent from '@/components/pagination'
 import TableComponent from "@/components/table";
@@ -179,13 +179,13 @@ const CourseSystem = () => {
 
   const handleOk = async (e) => {
     e.preventDefault();
-
+    let grade = gradeList.findIndex(item => item._id == form.getFieldValue().grade)
+    let semester = getTeachSemester(grade);
     const params = {
       ...form.getFieldValue(),
       major: JSON.parse(getSession('userInfo')).major,
-      semester: 1,
+      semester,
     }
-    console.log(params)
     if (!isEdit) {
       const res = await React.$axios.post(
         api.addCourseSystem,
@@ -246,6 +246,22 @@ const CourseSystem = () => {
     } else {
       message.error('删除失败');
     }
+  }
+
+  const getNowSemester = () => {
+    let semester = '';
+    let nowTime = new Date().toLocaleDateString().split('/');
+    if (nowTime[1] >= 2 && nowTime[1] <= 6) {
+      semester = (nowTime[0] - 1) + '-' + nowTime[0] + "-2";
+    } else {
+      semester = nowTime[0] == 1 ? (nowTime[0] - 1) + '-' + nowTime[0] + "-1" : nowTime[0] + '-' + (parseInt(nowTime[0]) + 1) + "-1";
+    }
+    return semester
+  }
+
+  const getTeachSemester = (grade) => {
+    let semester = getNowSemester().split('-');
+    return (parseInt(semester[0]) - parseInt(gradeList[grade].name)) * 2 + parseInt(semester[2])
   }
 
   return (

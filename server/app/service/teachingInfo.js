@@ -11,20 +11,27 @@ class TeachingInfoService extends Service {
       .find({
         $and: [semester]
       })
+      .populate('course', '_id course')
       .populate("major", '_id name')
       .populate('teacher', '_id name')
       .populate('semester', '_id semesterName')
-      .populate('course', '_id name')
       .limit(parseInt(params.pageSize))
       .skip(parseInt(params.pageSize) * (parseInt(params.page) - 1))
       .sort();
+    console.log(result)
+    if (result) {
+      for (let i = 0; i < result.length; i++) {
+        result[i].course.course = await ctx.service.course.getCourseById(result[i].course.course)
+      }
+    }
+
     return result
   }
 
   async addTeachingInfo(params) {
     const { ctx } = this;
     const result = await ctx.model.TeachingInfo.create(params);
-    const role = await ctx.model.Role.findOne({roleName: '授课教师'})
+    const role = await ctx.model.Role.findOne({ roleName: '授课教师' })
     if (result && role) {
       const data = {
         teacher: params.teacher,
