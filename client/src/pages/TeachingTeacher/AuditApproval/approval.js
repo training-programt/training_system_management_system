@@ -64,7 +64,7 @@ useEffect(() => {
       dataIndex: 'course',
       align: 'center',
       render:(text,record)=>{
-        return record?.course?.name
+        return record?.course?.course?.name
       }
     },
     {
@@ -122,43 +122,6 @@ useEffect(() => {
     form.setFieldsValue(record)
   }
 
-  // const handleOk = async (e) => {
-  //   e.preventDefault();
-
-  //   const params = {
-  //     ...form.getFieldValue(),
-  //   }
-  //   if (!isEdit) {
-  //     const res = await React.$axios.post(
-  //       api.addApproval,
-  //       params,
-  //     );
-  //     if (res && res.isSucceed) {
-  //       message.success('新增成功');
-  //       getApprovalList()
-  //     } else {
-  //       message.error('新增失败');
-  //     }
-  //   } else {
-  //     const res = await React.$axios.post(
-  //       api.updateApproval,
-  //       params,
-  //     );
-  //     if (res.isSucceed) {
-  //       message.success('修改成功');
-  //       getApprovalList()
-  //     } else {
-  //       message.error('修改失败');
-  //     }
-  //   }
-
-  //   setIsModalVisible(false);
-  // };
-
-  // const handleCancel = () => {
-  //   setIsModalVisible(false);
-  // };
-
   const delApproval = async (record) => {
     const params = {
       _id: record._id
@@ -211,32 +174,7 @@ useEffect(() => {
           />
         </div>
         <PaginationComponent pageparams={pageparams} handlePage={v => setPage(v)} />
-      </div>
-      {/* <Modal
-        visible={isModalVisible}
-        width={550}
-        title={isEdit ? '编辑审批' : '新增审批'}
-        centered
-        maskClosable={false}
-        destroyOnClose
-        onOk={handleOk}
-        onCancel={handleCancel}
-        footer={[
-          <Button key="back" onClick={handleCancel}>
-            取消
-          </Button>,
-          <Button key="submit" type="primary" loading={loading} onClick={handleOk}>
-            确定
-          </Button>
-        ]}
-      >
-        <Form {...layout} form={form} name="control-hooks">
-          <Form.Item name="name" label="审批" rules={[{ required: true }]}>
-            <Input />
-          </Form.Item>
-        </Form>
-      </Modal> */}
-      
+      </div>      
     </div>
   )
 }

@@ -15,6 +15,7 @@ const ApprovalDetail = () => {
   const [table, setTableData] = useState([])
   const [show, setShow] = useState(false);
   const [courseData, setCourseData] = useState([]);
+  const [courseData1, setCourseData1] = useState([]);
   const [confirmLoading, setConfirmLoading] = useState(false);
   const [editIndex, setEditIndex] = useState(0);
   const [standard,setStandard] = useState([]);
@@ -27,8 +28,11 @@ const ApprovalDetail = () => {
     }
     const res = React.$axios.get(`${api.getTeachingInfo}?${React.$qs.stringify(params)}`).then(data => {
       if (data.isSucceed) {
-        // console.log(data.data)
-        setCourseData(data.data);
+        let arr=data.data.map(item=>{
+          return item.course
+        })
+        setCourseData(arr);
+        setCourseData1(data.data)
       }
     })
     const goalRelation = React.$axios.get('/getGoalAndAssessment').then(goal => {
@@ -172,7 +176,7 @@ const ApprovalDetail = () => {
     console.log(value)
     courseData.map(item=>{
       if(item._id==value){
-        setTitleName(item.course.name)
+        setTitleName(item?.course?.name)
       }
     })
   }
@@ -195,7 +199,7 @@ const ApprovalDetail = () => {
     }
     console.log(params)
     const res = React.$axios.post("/addApproval",params).then((app)=>{
-      console.log(app)
+      // console.log(app)
       if(app.isSucceed){
         message.success("数据已提交审核并存入数据库")
         form.resetFields();
@@ -244,7 +248,7 @@ const ApprovalDetail = () => {
                     onChange={(value)=>{changeCourseName(value)}}
                   >
                     {
-                      courseData.map(item => <Select.Option key={item._id} value={item._id} >{item.course.name}</Select.Option>)
+                      courseData.map(item => <Select.Option key={item._id} value={item._id} >{item?.course?.name}</Select.Option>)
                     }
                   </Select>
                 </Form.Item>

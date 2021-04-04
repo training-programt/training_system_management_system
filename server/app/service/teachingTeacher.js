@@ -7,7 +7,12 @@ class TeachingTeacherService extends Service {
         const { ctx } = this;
         const result = await ctx.model.Approval
             .find(params)
-            .populate('course')
+            .populate({
+                path: 'course',
+                populate: {
+                  path: 'course',
+                }
+              })
             .populate('standard')
             .sort('sort')
         return result;
@@ -30,12 +35,17 @@ class TeachingTeacherService extends Service {
         const result = await ctx.model.Approval.create(params);
         return result;
     }
-     // 查询审核表
-     async getAudit(params) {
+    // 查询审核表
+    async getAudit(params) {
         const { ctx } = this;
         const result = await ctx.model.Audit
-            .find({
-            })
+            .find(params)
+            // .populate({
+            //     path: 'course',
+            //     populate: {
+            //       path: 'course',
+            //     }
+            //   })
             .populate('course')
             .populate('achievement')
             .sort('sort')
@@ -57,6 +67,21 @@ class TeachingTeacherService extends Service {
     async addAudit(params) {
         const { ctx } = this;
         const result = await ctx.model.Audit.create(params);
+        return result;
+    }
+     // 查询审核表
+     async getAudit(params) {
+        const { ctx } = this;
+        const result = await ctx.model.Audit
+            .find(params)
+            .populate({
+                path: 'course',
+                populate: {
+                  path: 'course',
+                }
+              })
+            .populate('achievement')
+            .sort('sort')
         return result;
     }
 }
