@@ -1,5 +1,5 @@
 import React, { useState, useMemo } from 'react'
-import { Input, Select,Button } from 'antd';
+import { Input, Select, Button } from 'antd';
 import { Link } from 'react-router-dom';
 import HeaderComponent from '@/components/header'
 import PaginationComponent from '@/components/pagination'
@@ -75,12 +75,14 @@ const TeachingList = () => {
     {
       title: '课程',
       dataIndex: 'basicCourse',
-      render: (text, record) => record.course ? record.course.name : ''
+      render: (text, record) => {
+        return record.course?.course?.name
+      }
     },
     {
       title: '专业',
       dataIndex: 'major',
-      render: (text, record) => record.major ? record.major.name : ''
+      render: (text, record) => record?.major?.name
     },
     {
       title: '班级',
@@ -94,7 +96,7 @@ const TeachingList = () => {
       render: (text, record) => (
         <div>
           <Button type="link">查看审核表</Button>
-        <Button type="link">查看审批表</Button>
+          <Button type="link">查看审批表</Button>
         </div>
       ),
     },
@@ -105,8 +107,8 @@ const TeachingList = () => {
       <HeaderComponent title="授课记录管理" />
       <div className="body-wrap">
         <div className="header-wrap">
-          <div className="select-box" style={{height:"40px",lineHeight:"40px"}}>
-            <label style={{fontSize:"14px"}}>请根据学期进行筛选：</label>
+          <div className="select-box" style={{ height: "40px", lineHeight: "40px" }}>
+            <label style={{ fontSize: "14px" }}>请根据学期进行筛选：</label>
             <Select
               placeholder="请选择学期"
               showSearch

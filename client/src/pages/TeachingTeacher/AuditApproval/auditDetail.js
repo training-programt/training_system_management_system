@@ -1,7 +1,7 @@
 import React, { useEffect, useState, useMemo } from 'react'
-import { Form, Input, Steps, Select, Radio, Table, message, Modal, Button, InputNumber, Space, Divider, Card, Row, Col } from 'antd';
+import { Form, Input, Steps, Select, Radio, Table, message, Modal, Button, Alert, Space, Divider, Card, Row, Col } from 'antd';
 import { Link } from 'react-router-dom'
-import { RollbackOutlined, SaveOutlined } from '@ant-design/icons';
+import { RollbackOutlined, SaveOutlined ,QuestionCircleOutlined} from '@ant-design/icons';
 import api from '@/apis/teachingList'
 import { getSession } from '@/utils'
 const { Step } = Steps;
@@ -15,22 +15,32 @@ const AuditDetail = () => {
   const [table, setTableData] = useState([])
   const [show, setShow] = useState(false);
   const [courseData, setCourseData] = useState([]);
+  const [courseData1, setCourseData1] = useState([]);
   const [confirmLoading, setConfirmLoading] = useState(false);
   const [editIndex, setEditIndex] = useState(0);
   const [standard, setStandard] = useState([]);
   const [titleName, setTitleName] = useState('XXXXXX');
-  // const [achievement, setAchievement] = useState('');
-  const [rowSpans, setRowSpans] = useState({})
+  const [isAchieve, setIsAchieve] = useState(0);//是否达成
+  const [courseId, setCourseId] = useState('')
+  const [rowSpans, setRowSpans] = useState({});
+  const [description, setDescription] = useState('')//课程培养目标说明
+
   useEffect(() => {
     const params = {
       teacher: JSON.parse(getSession('userInfo'))._id,
     }
-    const res = React.$axios.get(`${api.getTeachingInfo}?${React.$qs.stringify(params)}`).then(data => {
-      if (data.isSucceed) {
-        // console.log(data.data)
-        setCourseData(data.data);
-      }
-    })
+    React.$axios.get(`${api.getTeachingInfo}?${React.$qs.stringify(params)}`)
+      .then(teach => {
+        if (teach.isSucceed) {
+          // console.log(teach.data)
+          let arr=teach.data.map(item=>{
+            return item.course
+          })
+          // console.log(arr)
+          setCourseData(arr);
+          setCourseData1(teach.data)
+        }
+      })
     const goalRelation = React.$axios.get('/getGoalAndAssessment').then(goal => {
       // console.log(goal.data)
       let requirement = {}
@@ -89,7 +99,7 @@ const AuditDetail = () => {
             rowSpan: rowSpans[record?.major_requirement?._id].targets[record?.teaching_goal._id]
           },
         }
-        if(index !== 0 && table[index]?.teaching_goal._id === table[index - 1]?.teaching_goal?._id) {
+        if (index !== 0 && table[index]?.teaching_goal._id === table[index - 1]?.teaching_goal?._id) {
           obj.props.rowSpan = 0
         }
 
@@ -158,34 +168,49 @@ const AuditDetail = () => {
   };
   const handleOk = async (e) => {
     e.preventDefault();
+    // setAchieveResult(form1.getFieldValue("averageScore")/form1.getFieldValue("targetScore"))
     const params = {
+      // achieveResult:achieveResult,
       ...form1.getFieldValue(),
     }
+    console.log(params)
     let arr = [...table];
     arr[editIndex] = { ...params, ...arr[editIndex] };
     setTableData(arr)
     setShow(false);
-    let result = form1.getFieldValue("averageScore")/form1.getFieldValue("targetScore")
-    // console.log(form1.setFields())
-    // form1.setFieldsValue({achieveResult:result})
   };
   const changeCourseName = (value) => {
-    // console.log(value)
+    console.log(value)
+    setCourseId(value)
     let data = {};
+    let sem;
+    console.log(courseData)
+    console.log(courseData1)
     courseData.map(item => {
       if (item._id == value) {
-        setTitleName(item.course.name)
+        setTitleName(item?.course?.name)
         data = item;
+      }
+    })
+    courseData1.map(item=>{
+      if(item.course._id==value){
+        sem = item.semester.semesterName
       }
     })
     // console.log(data)
     form.setFieldsValue(
       {
         code: data?.course?.code,
-        semester: data?.semester?.semesterName,
+        semester: sem,
         credits: data?.course?.credits
       }
     )
+  }
+  const onChange=(e)=>{
+    setIsAchieve(e.target.value)
+  }
+  const changeDescription=(e)=>{
+    setDescription(e.target.value)
   }
   const submit = () => {
     let arr = table.map(item => {
@@ -201,21 +226,39 @@ const AuditDetail = () => {
       }
     })
     const params = {
-      ...form.getFieldValue(),
+      _id: courseId,
+      description: description,
+      isAchievement:isAchieve,
       arr
     }
     console.log(params)
-    // const res = React.$axios.post("/addAudit",params).then((audit)=>{
-    //   console.log(audit)
-    //   if(audit.isSucceed){
-    //     message.success("数据已提交审核并存入数据库")
-    //     form.resetFields();
-    //     setTableData(standard);
-    //     setTitleName("XXXXXX")
-    //   }else{
-    //     message.error("提交失败")
-    //   }
-    // })
+    const res = React.$axios.post("/addAudit",params).then((audit)=>{
+      console.log(audit)
+      if(audit.isSucceed){
+        message.success("数据已提交审核并存入数据库")
+        form.resetFields();
+        setTableData(standard);
+        setTitleName("XXXXXX");
+        setDescription('');
+        setIsAchieve(0)
+      }else{
+        message.error("提交失败")
+      }
+    })
+  }
+  const detail=()=>{
+    Modal.info({
+      title: '评价质量标准',
+      content: (
+          <div>
+              <p>等级一：所有考核环节成绩执行与大纲相符，计算环节准确和达标</p>
+              <p>等级二：所有考核环节未覆盖全专业，实际执行与大纲相符，计算环节较准确和达标</p>
+              <p>等级三：考核环节采用合理统计抽样数据，实际执行与大纲基本相符，计算环节较准确</p>
+              <p>等级四：考核环节采用小样本统计抽样数据，实际执行与大纲存在少量不一致，计算环节基本准确</p>
+              <p>等级五：考核环节抽样数据与毕业产出统计无意义，实际执行与大纲存在较多差异，计算环节有一定问题</p>
+          </div>
+      )
+    });
   }
   return (
     <div className="detail-container">
@@ -225,14 +268,26 @@ const AuditDetail = () => {
         </div>
         <div className="header-right">
           <Space size='small'>
-            <Link to="/auditApproval/approval" style={{ color: '#000', marginLeft: '8px' }}><Button icon={<RollbackOutlined />}>返回</Button></Link>
+            <Link to="/auditApproval/audit" style={{ color: '#000', marginLeft: '8px' }}><Button icon={<RollbackOutlined />}>返回</Button></Link>
             <Button type='primary' icon={<SaveOutlined />} onClick={submit}>保存内容并提交审核</Button>
           </Space>
         </div>
       </div>
-
+      <Alert
+      message="填写要求"
+      description={
+        <div>
+          <p>1.平均得分/目标分值=达成结果</p>
+          <p>2.每个课程目标的权重系数之和必须为1</p>
+          <p>3.保证编写完成之后进行提交审核</p>
+        </div>
+      }
+      type="info"
+      showIcon
+      closable
+    />
       <div className='content-wrap'>
-        <Card title={<div style={{ textAlign: "center" }}>《{titleName}》 课程考核合理性审批表</div>} bordered >
+        <Card title={<div style={{ textAlign: "center" }}>《{titleName}》 课程目标定量达成评价表</div>} bordered >
           <Row className="title">
             一、课程基本信息
       </Row>
@@ -255,7 +310,7 @@ const AuditDetail = () => {
                     onChange={(value) => { changeCourseName(value) }}
                   >
                     {
-                      courseData.map(item => <Select.Option key={item._id} value={item._id} >{item.course.name}</Select.Option>)
+                      courseData.map(item => <Select.Option key={item._id} value={item._id} >{item?.course?.name}</Select.Option>)
                     }
                   </Select>
                 </Form.Item>
@@ -299,11 +354,11 @@ const AuditDetail = () => {
             columns={columns}
           />
           <Modal
+            getContainer={false}
             title="新增评价标准"
             visible={show}
             onOk={handleOk}
             confirmLoading={confirmLoading}
-            getContainer={false}
             onCancel={handleCancel}
             footer={[
               <Button key="back" onClick={handleCancel}>
@@ -355,14 +410,22 @@ const AuditDetail = () => {
                 label="达成结果"
                 name="achieveResult"
               >
-                <Input disabled />
+                <Input placeholder="平均得分/目标分值" />
               </Form.Item>
             </Form>
           </Modal>
           <Divider></Divider>
           <Row className="title">三、评价审批与反馈</Row>
-          <Row>课程培养目标说明</Row>
-          <Row><Input.TextArea rows={5} /></Row>
+          <Row><span>课程培养目标说明</span><Button icon={<QuestionCircleOutlined />} type="link" onClick={detail}>评价详情</Button></Row>
+          <Row><Input.TextArea rows={5} onChange={(value) => { changeDescription(value) }} /></Row>
+          <Divider></Divider>
+          <Row className="title">四、是否达成</Row>
+          <Row>
+            <Radio.Group onChange={onChange} value={isAchieve}>
+              <Radio value={0}>未达成</Radio>
+              <Radio value={1}>已达成</Radio>
+            </Radio.Group>
+          </Row>
         </Card>
       </div>
     </div>

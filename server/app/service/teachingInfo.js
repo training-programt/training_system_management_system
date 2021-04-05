@@ -92,8 +92,20 @@ class TeachingInfoService extends Service {
         { $and: [semester, { teacher: params.teacher }] }
       )
       .populate("major", '_id name')
-      .populate('semester', '_id semesterName')
-      .populate('course')
+      .populate('grade', '_id name')
+      .populate({
+        path: 'course',
+        populate: {
+          path: 'course',
+        }
+      })
+      .populate({
+        path: 'course',
+        populate: {
+          path: 'major',
+        }
+      })
+      .populate('semester','_id semesterName')
       .limit(parseInt(params.pageSize))
       .skip(parseInt(params.pageSize) * (parseInt(params.page) - 1))
       .sort();

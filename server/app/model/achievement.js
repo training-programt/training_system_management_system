@@ -12,7 +12,6 @@ module.exports = app => {
     targetScore:{type:String},//目标分值
     weightCoefficient:{type:String},//权重系数
     achieveResult:{type:String},//达成结果
-    // achieveResult1:{type:String},
   })
 
   return mongoose.model('Achievement', AchievementSchema, 'achievement');
