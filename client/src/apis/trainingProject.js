@@ -17,6 +17,7 @@ export default {
   delCurrRelationship: '/delCurrRelationship',
 
   getProjectDetail: '/getProjectDetail',
+  getProjectDetails: '/getProjectDetails',
   getObjectData: '/getObjectData',
   getRequirementById: '/getRequirementById',
 

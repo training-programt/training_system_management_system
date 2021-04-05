@@ -40,7 +40,10 @@ module.exports = app => {
     core_disciplines: { type: String },//主干学科
     core_curriculum: { type: String },//专业核心课程、一段画？？多选框勾选出来合并成一段话
     practical_teaching_link: { type: String },//主要实践性教学环节
-    credits_required: { type: Schema.Types.ObjectId, ref: 'CreditsRequired' },//学分要求表
+    credits_required: { //学分要求表
+      type: Schema.Types.ObjectId, 
+      ref: 'CreditStructure' 
+    },
     remark: { type: String }, // 备注
     state: { // 状态
       type: Number,

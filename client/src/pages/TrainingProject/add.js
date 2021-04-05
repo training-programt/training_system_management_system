@@ -54,7 +54,7 @@ const AddTrainingProject = (props) => {
     },
     {
       title: '审批',
-      content: <Examine approver={acProject.approver || ''} />,
+      content: <Examine project={acProject._id || ''} />,
     },
   ];
 
@@ -185,7 +185,7 @@ const AddTrainingProject = (props) => {
         {current < steps.length - 1 && (
           <Button type="primary" icon={<ArrowRightOutlined />} onClick={() => next()}>下一步</Button>
         )}
-        <Button icon={<SaveOutlined />}>暂存</Button>
+        <Link to="/trainingProject"><Button icon={<SaveOutlined />}>暂存</Button></Link>
         <Link to="/trainingProject" style={{ color: '#000', marginLeft: '8px' }}><Button icon={<RollbackOutlined />}>返回</Button></Link>
       </div>
 

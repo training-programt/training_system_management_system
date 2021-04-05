@@ -44,5 +44,21 @@ class TrainingProjectService extends Service {
   }
 
 
+  async getProjectDetails(params) {
+    const { ctx } = this;
+    const res = await ctx.model.TrainingProject
+      .findOne(params)
+      .populate('grade', 'name')
+      .populate('major', 'name')
+      .populate('writer', 'name')
+      .populate('graduationRequirement')
+      .populate('trainingObjective')
+      .populate('majorObjReqRelation')
+      .populate('majorNationCoverRelation')
+      .populate('credits_required')
+      .populate('approver', 'name');
+    return res;
+  }
+
 }
 module.exports = TrainingProjectService;

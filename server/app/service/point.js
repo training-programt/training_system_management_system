@@ -48,7 +48,6 @@ class PointService extends Service {
 
   async delMorePoint(params) {
     const { ctx } = this;
-    console.log(params, '-----')
     const res = await ctx.model.Point.remove({_id: {$in: params}})
     return res;
   }

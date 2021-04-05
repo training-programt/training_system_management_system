@@ -16,6 +16,7 @@ module.exports = app => {
   router.get('/getTable2RowCol', controller.trainingProject.getTable2RowCol);
 
   router.post('/getProjectDetail', controller.trainingProject.getProjectDetail);
+  router.post('/getProjectDetails', controller.trainingProject.getProjectDetails);
   router.post('/getObjectData', controller.trainingProject.getObjectData);
 
   router.post('/getLeaderList', controller.teacher.getLeaderList);
