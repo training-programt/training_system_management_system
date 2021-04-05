@@ -20,7 +20,7 @@ const Syllabus = () => {
       dataIndex: 'name',
       key: 'name',
       render: (text, record) => {
-        return record.course_info?.course?.name
+        return record.course_info?.course?.course?.name
       }
     },
     {
@@ -28,7 +28,7 @@ const Syllabus = () => {
       dataIndex: 'code',
       key: 'code',
       render: (text, record) => {
-        return record.course_info?.course?.code
+        return record.course_info?.course?.course?.code
       }
     },
     {
@@ -36,7 +36,7 @@ const Syllabus = () => {
       dataIndex: 'credits',
       key: 'credits',
       render: (text, record) => {
-        return record.course_info?.course?.credits
+        return record.course_info?.course?.course?.credits
       }
     },
     {
@@ -81,9 +81,11 @@ const Syllabus = () => {
       _id: teacher._id
     }
     const courseSystem = React.$axios.post('/findCourseSystem', params).then((data) => {
+      console.log(data)
       setCourseData(data.data)
     })
     const res1 = React.$axios.get('/getSyllabus').then((syllabusData) => {
+      console.log(syllabusData)
       setSyllabusData(syllabusData.data)
     })
     setLoading(false)

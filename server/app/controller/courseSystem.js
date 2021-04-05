@@ -20,6 +20,9 @@ class CourseSystemController extends Controller {
     console.log(params)
     const data = await ctx.model.CourseSystem.find({leader:params._id})
     .populate('course')
+    .populate('major')
+    .populate('grade')
+
     ctx.body = {
       total: data.length,
       data: data,
