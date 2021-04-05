@@ -1,6 +1,6 @@
 import React, { useState, useMemo } from 'react';
 import { Tabs } from 'antd';
-import api from '@/apis/trainingProject'
+// import api from '@/apis/trainingProject'
 
 import MajorObjReqRelation from './table/majorObjReqRelation'
 import MajorNationCoverRelation from './table/majorNationCoverRelation'
@@ -10,9 +10,9 @@ const { TabPane } = Tabs;
 const MatrixRelation = (props) => {
   const [projectId, setProjectId] = useState(props.project)
 
-  useMemo(() => {
-    console.log(props.project, '1')
-  }, [])
+  // useMemo(() => {
+  //   console.log(props.project, '1')
+  // }, [])
 
   return (
     <div>

@@ -1,5 +1,5 @@
 import React, { useContext, useState, useEffect, useRef, useMemo } from 'react';
-import { Table, Input, Form, Button, Space } from 'antd';
+import { Table, Input, Form, Button, Space, message } from 'antd';
 import api from '@/apis/trainingProject'
 import { createColumns, createRows } from '@/utils'
 import XLSX from 'xlsx';
@@ -110,13 +110,11 @@ const TableOne = (props) => {
     }
     const res = await React.$axios.post(api.getMajorObjReqRelationData, params);
     if (res && res.isSucceed) {
-      console.log(res.data.relation)
       setTableData(res.data.relation)
     }
   }
 
   useMemo(() => {
-    console.log(props.project.majorObjReqRelation)
     if (props.project.majorObjReqRelation) {
       getTableData()
     }
@@ -188,7 +186,9 @@ const TableOne = (props) => {
       explain: explain,
     }
     const res = await React.$axios.post(api.saveTableOne, params)
-    console.log(res)
+    if(res && res.isSucceed) {
+      message.success('保存成功')
+    }
   }
 
   const downloadData = async () => {
