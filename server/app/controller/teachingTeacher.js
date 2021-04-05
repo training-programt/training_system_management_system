@@ -48,6 +48,39 @@ class TeachingTeacherController extends Controller {
       isSucceed: true,
     }
   }
+  async findApproval() {
+    const { ctx } = this;
+    const params = ctx.request.body
+    const app = await ctx.service.teachingTeacher.findApproval({course:params._id});
+    // console.log(audit)
+    ctx.body = {
+      data: app,
+      code: 200,
+      isSucceed: true,
+    }
+  }
+  async delApproval() {
+    const { ctx } = this;
+    const params = ctx.request.body
+    console.log(params)
+    const app = await ctx.service.teachingTeacher.delApproval({_id:params.data._id});
+    console.log(app)
+    const delStandard = await ctx.model.Standard.deleteMany({_id:{$in:params.data.standard}});
+    console.log(app)
+    if(app.n===1){
+      ctx.body = {
+        data: app,
+        code: 200,
+        isSucceed: true,
+      }
+    }else{
+      ctx.body = {
+        code: 500,
+        isSucceed: false,
+      }
+    }
+   
+  }
    //添加审核表
    async addAudit() {
     const { ctx } = this;
@@ -90,7 +123,39 @@ class TeachingTeacherController extends Controller {
       isSucceed: true,
     }
   }
-  
+  async findAudit() {
+    const { ctx } = this;
+    const params = ctx.request.body
+    const audit = await ctx.service.teachingTeacher.findAudit({course:params._id});
+    // console.log(audit)
+    ctx.body = {
+      data: audit,
+      code: 200,
+      isSucceed: true,
+    }
+  }
+  async delAudit() {
+    const { ctx } = this;
+    const params = ctx.request.body
+    // console.log(params)
+    const audit = await ctx.service.teachingTeacher.delAudit({_id:params.data._id});
+    console.log(audit)
+    const delAchievement = await ctx.model.Achievement.deleteMany({_id:{$in:params.data.achievement}});
+    console.log(delAchievement)
+    if(audit.n===1){
+      ctx.body = {
+        data: audit,
+        code: 200,
+        isSucceed: true,
+      }
+    }else{
+      ctx.body = {
+        code: 500,
+        isSucceed: false,
+      }
+    }
+   
+  }
 }
 
 module.exports = TeachingTeacherController;

@@ -32,7 +32,8 @@ import Approval from "./TeachingTeacher/AuditApproval/approval";
 import ApprovalDetail from "./TeachingTeacher/AuditApproval/approvalDetail";
 import AuditDetail from "./TeachingTeacher/AuditApproval/auditDetail";
 import TeachingList from "./TeachingTeacher/TeachingList";
-
+import ShowApproval from "./TeachingTeacher/TeachingList/approvalShow";
+import ShowAudit from "./TeachingTeacher/TeachingList/auditShow";
 
 export {
   Login,
@@ -42,6 +43,8 @@ export {
   testMethod,
   Notification,
   LeaderMajor,
+  ShowApproval,
+  ShowAudit,
   DirectorMajor,
   TeachingList,
   Grade,

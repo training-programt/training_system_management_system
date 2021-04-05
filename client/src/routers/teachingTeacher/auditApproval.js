@@ -11,13 +11,24 @@ export default [
     component: AuditDetail,
   },
   {
+    path: '/auditApproval/auditEdit',
+    name: '审核编辑',
+    component: AuditDetail,
+  },
+  {
     path: '/auditApproval/approval',
     name: '审批',
     component: Approval,
   },
+
   {
     path: '/auditApproval/approvalDetail',
     name: '审批详情',
+    component: ApprovalDetail,
+  },
+  {
+    path: '/auditApproval/approvalEdit',
+    name: '审批编辑',
     component: ApprovalDetail,
   },
 ]
