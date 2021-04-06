@@ -18,12 +18,12 @@ module.exports = app => {
       content: { type: String },
       createtime: { type: Date }
     },
-    teachRoomState:{type:Number,default:0},//0未审核，1已审核
+    teachRoomState:{type:Number,default:0},//0未审核，1已审核, -1未通过
     collegeOpinion: {//学院意见
       content: { type: String },
       createtime: { type: Date }
     },
-    collegeState:{type:Number,default:0},//0未审核，1已审核
+    collegeState:{type:Number,default:0},//0未审核，1已审核， -1未通过
     isAchievement:{type:Number,default:0},//是否达成 0未达成 1已达成
   })
 

@@ -156,6 +156,31 @@ class TeachingTeacherController extends Controller {
     }
    
   }
+
+  async updateApprovalOpinion() {
+    const { ctx } = this;
+    const params = ctx.request.body;
+    console.log(params)
+    const data = await ctx.service.teachingTeacher.updateApprovalOpinion(params);
+    ctx.body = {
+      total: 1,
+      data: data,
+      code: 200,
+      isSucceed: true,
+    }
+  }
+  async updateAuditOpinion() {
+    const { ctx } = this;
+    const params = ctx.request.body;
+    console.log(params)
+    const data = await ctx.service.teachingTeacher.updateAuditOpinion(params);
+    ctx.body = {
+      total: 1,
+      data: data,
+      code: 200,
+      isSucceed: true,
+    }
+  }
 }
 
 module.exports = TeachingTeacherController;

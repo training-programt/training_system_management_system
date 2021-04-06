@@ -1,22 +1,21 @@
-import React, { useState, useMemo } from 'react'
+import React, { useState, useMemo,useEffect } from 'react'
 import { Button, Modal, message, Form, Input, Popconfirm } from 'antd';
 import HeaderComponent from '@/components/header'
 import PaginationComponent from '@/components/pagination'
 import TableComponent from "@/components/table";
 import { PlusOutlined, DeleteOutlined } from '@ant-design/icons';
-import api from '@/apis/courseType'
+import api from '@/apis/auditApproval'
+import { Link,useHistory } from 'react-router-dom';
 
-const Examine = () => {
+const Audit = () => {
+  let history = useHistory();
   const [form] = Form.useForm();
-  const [isModalVisible, setIsModalVisible] = useState(false);
-  const [loading, setLoading] = useState(false);
   const [tableData, setTableData] = useState([]);
   const [total, setTotal] = useState(0);
   const [page, setPage] = useState(1);
   const [isEdit, setIsEdit] = useState(false);
   const [pageSize, setPageSize] = useState(12)
   const [selectedRowKeys, setSelectedRowKeys] = useState([])
-  const [query, setQuery] = useState('')
 
   const tableSetting = {
     page: page,
@@ -29,54 +28,82 @@ const Examine = () => {
       },
     }
   };
-
   const pageparams = {
     page: page,
     pageSize: pageSize,
     total: total,
   }
-
-  const layout = {
-    labelCol: { span: 5 },
-    wrapperCol: { span: 16 },
-  };
-
-  const getCourseType = async () => {
-    const params = {
-      query: query,
-      pageSize: pageSize,
-      page: page,
-    }
-    setLoading(true)
-    const res = await React.$axios.get(
-      `${api.getCourseType}?${React.$qs.stringify(params)}`
-    )
-    setLoading(false)
-    if (res && res.isSucceed) {
-      setTableData(res.data);
-      setTotal(res.total)
-    }
-  }
-
-  useMemo(() => {
-    getCourseType()
-  }, [page, query])
-
+  useEffect(() => {
+    const res =React.$axios.get('/getAudit').then(au=>{
+      if (au.isSucceed) {
+        // console.log(au.data)
+        setTableData(au.data);
+      }
+    })
+}, [])
   const columns = [
     {
-      width: 50,
-      render: (text, record, index) =>
-        `${index + 1 + (tableSetting.page - 1) * tableSetting.rows}`,
+      title:'序号',
+      dataIndex:'index',
+      render:(text,record,index)=>{
+        return index+1
+      }
     },
     {
-      title: 'ID',
-      dataIndex: '_id',
-      align: 'center'
+      title: '课程名称',
+      dataIndex: 'course',
+      align: 'center',
+      render:(text,record)=>{
+        return record?.course?.course?.name
+      }
     },
     {
-      title: '审核名称',
-      dataIndex: 'name',
-      align: 'center'
+      title: '课程编码',
+      dataIndex: 'code',
+      render:(text,record)=>{
+        return record?.course?.course?.code
+      }
+    },
+    {
+      title: '开课学期',
+      dataIndex: 'semester',
+      render:(text,record)=>{
+        return record?.course?.semester
+      }
+    },
+    {
+      title: '课程学分',
+      dataIndex: 'credits',
+      render:(text,record)=>{
+        return record?.course?.course?.credits
+      }
+    },
+    {
+      title: '是否达成',
+      dataIndex: 'isAchievement',
+      render:(text,record)=>{
+        if(record.isAchievement==0){
+          return <div style={{color:"red"}}>未达成</div>
+        }else{
+          return <div style={{color:"green"}}>已达成</div>
+        }
+      }
+    },
+    {
+      title: '状态',
+      dataIndex: 'teachRoomState',
+      align: 'center',
+      render: (text, record) => {
+        if (record.teachRoomState === 0) {
+          return <div style={{ color: "red" }}>未审核</div>
+        }
+        if (record.teachRoomState === 1) {
+          return <div style={{ color: "green" }}>通过</div>
+        }
+        if (record.teachRoomState === -1) {
+          return <div style={{ color: "red" }}>驳回</div>
+        }
+      }
     },
     {
       title: '操作',
@@ -85,94 +112,15 @@ const Examine = () => {
       width: '20%',
       render: (text, record) => (
         <div style={{ textAlign: 'center' }}>
-          <Button type="link" onClick={() => showEditModal(record)}>编辑</Button>
-          &emsp;
-          <Popconfirm title='您确定删除当前数据吗？' onConfirm={() => delCourseType(record)}>
-            <Button type="link">删除</Button>
-          </Popconfirm>
+          {/* <Button type="link">编辑</Button>
+          &emsp; */}
+          <Button type="link" onClick={()=>{showAudit(record)}}>审核</Button>
         </div>
       )
     },
   ];
-
-  const showModal = () => {
-    form.resetFields()
-    setIsModalVisible(true);
-    setIsEdit(false)
-  };
-
-  const showEditModal = (record) => {
-    setIsModalVisible(true);
-    form.resetFields()
-    setIsEdit(true)
-    form.setFieldsValue(record)
-  }
-
-  const handleOk = async (e) => {
-    e.preventDefault();
-
-    const params = {
-      ...form.getFieldValue(),
-    }
-    if (!isEdit) {
-      const res = await React.$axios.post(
-        api.addCourseType,
-        params,
-      );
-      if (res && res.isSucceed) {
-        message.success('新增成功');
-        getCourseType()
-      } else {
-        message.error('新增失败');
-      }
-    } else {
-      const res = await React.$axios.post(
-        api.updateCourseType,
-        params,
-      );
-      if (res.isSucceed) {
-        message.success('修改成功');
-        getCourseType()
-      } else {
-        message.error('修改失败');
-      }
-    }
-
-    setIsModalVisible(false);
-  };
-
-  const handleCancel = () => {
-    setIsModalVisible(false);
-  };
-
-  const delCourseType = async (record) => {
-    const params = {
-      _id: record._id
-    }
-    const res = await React.$axios.post(api.delCourseType, params)
-    if (res && res.isSucceed) {
-      message.success('删除成功');
-      getCourseType()
-    } else {
-      message.error('删除失败');
-    }
-  }
-
-  const delMoreCourseType = async () => {
-    if (!selectedRowKeys.length) {
-      message.error('请选择项！')
-      return false;
-    }
-    const params = {
-      ids: selectedRowKeys.join(','),
-    }
-    const res = await React.$axios.post(api.delMoreCourseType, params)
-    if (res && res.isSucceed) {
-      message.success('删除成功');
-      getCourseType()
-    } else {
-      message.error('删除失败');
-    }
+  const showAudit=(record)=>{
+    history.push(`/progress/examine/showExamine?id=${record._id}`)
   }
 
   return (
@@ -181,11 +129,7 @@ const Examine = () => {
       <div className="body-wrap">
         <div className="header-wrap">
           <div className="search-box">
-            <Input.Search placeholder="请输入审核名称" allowClear enterButton onSearch={value => setQuery(value)} />
-          </div>
-          <div className="operation-wrap">
-            <Button type="primary" icon={<PlusOutlined />} onClick={showModal}>新增审核</Button>
-            <Button type="primary" icon={<DeleteOutlined />} onClick={delMoreCourseType}>批量删除</Button>
+            {/* <Input.Search placeholder="请输入课程名称" allowClear enterButton onSearch={value => setQuery(value)} /> */}
           </div>
         </div>
         <div className="table-container">
@@ -193,37 +137,12 @@ const Examine = () => {
             data={tableData}
             column={columns}
             settings={tableSetting}
-            loading={loading}
           />
         </div>
         <PaginationComponent pageparams={pageparams} handlePage={v => setPage(v)} />
       </div>
-      <Modal
-        visible={isModalVisible}
-        width={550}
-        title={isEdit ? '编辑审核' : '新增审核'}
-        centered
-        maskClosable={false}
-        destroyOnClose
-        onOk={handleOk}
-        onCancel={handleCancel}
-        footer={[
-          <Button key="back" onClick={handleCancel}>
-            取消
-          </Button>,
-          <Button key="submit" type="primary" loading={loading} onClick={handleOk}>
-            确定
-          </Button>
-        ]}
-      >
-        <Form {...layout} form={form} name="control-hooks">
-          <Form.Item name="name" label="审核" rules={[{ required: true }]}>
-            <Input />
-          </Form.Item>
-        </Form>
-      </Modal>
     </div>
   )
 }
 
-export default Examine
+export default Audit
