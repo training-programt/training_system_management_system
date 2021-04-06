@@ -1,6 +1,6 @@
 import React, { useState, useMemo, useEffect } from 'react'
-import { Input, Select, Button, Card, Row, Col, Divider, message } from 'antd';
-import { Link, useLocation } from 'react-router-dom';
+import { Input, Select, Button, Table, Card, Row, Col, Divider, Space } from 'antd';
+import { useLocation,useHistory } from 'react-router-dom';
 import HeaderComponent from '@/components/header'
 import PaginationComponent from '@/components/pagination'
 import TableComponent from "@/components/table";
@@ -9,16 +9,107 @@ import './index.less'
 
 const ShowApproval = () => {
   let id = useLocation().search.slice(4);
+  let history = useHistory();
   const [appInfo, setAppInfo] = useState({})
   const [standard, setStandard] = useState([])
+  const [rowSpans, setRowSpans] = useState({})
+
+  let requirement = {}
   useEffect(() => {
     React.$axios.get('/getApproval', { _id: id }).then((app) => {
       if (app.isSucceed) {
-        console.log(app.data[0])
         setAppInfo(app.data[0])
+        app.data[0].standard.forEach(item => {
+          if (!requirement[item.major_requirement]) {
+            requirement[item.major_requirement] = {
+              span: 0,
+              targets: {}
+            }
+          }
+          if (!requirement[item.major_requirement].targets[item.teaching_goal]) {
+            requirement[item.major_requirement].targets[item.teaching_goal] = 1
+          } else {
+            requirement[item.major_requirement].targets[item.teaching_goal]++
+          }
+          requirement[item.major_requirement].span++
+        })
+        console.log(requirement)
+        setRowSpans(requirement)
       }
     })
+
   }, [])
+  const columns =useMemo(()=> [
+    {
+      title: '序号',
+      align: 'center',
+      fixed: 'center',
+      render: (text, record, index) => `${index + 1}`
+    },
+    {
+      title: '毕业要求',
+      dataIndex: 'major_requirement',
+      width: '10%',
+      render: (text, record, index) => {
+        const obj = {
+          children: record?.major_requirement,
+          props: {
+            rowSpan: 0
+          },
+        }
+        if (index === 0) {
+          obj.props.rowSpan =  rowSpans[record?.major_requirement]?.span || 0
+          console.log(obj.props.rowSpan)
+        } else if (appInfo.standard[index]?.major_requirement !== appInfo.standard[index-1]?.major_requirement) {
+          obj.props.rowSpan = rowSpans[record?.major_requirement]?.span
+          console.log(obj.props.rowSpan)
+        }
+        return obj
+      }
+    },
+    {
+      title: '课程目标',
+      dataIndex: 'teaching_goal',
+      render: (text, record, index) => {
+        const obj = {
+          children: record?.teaching_goal,
+          props: {
+            rowSpan: rowSpans[record?.major_requirement]?.targets[record?.teaching_goal]
+          },
+        }
+        if(index !== 0 && appInfo.standard[index]?.teaching_goal === appInfo.standard[index - 1]?.teaching_goal) {
+          obj.props.rowSpan = 0
+        }
+
+        return obj
+      }
+    },
+    {
+      title: '评价环节',
+      dataIndex: 'assessment',
+    },
+    {
+      title: '评价标准',
+      children: [
+        {
+          title: '优（90-100）',
+          dataIndex: 'optimal',
+        },
+        {
+          title: '良（75-89）',
+          dataIndex: 'fine',
+        },
+        {
+          title: '中（60-74）',
+          dataIndex: 'middle',
+        },
+        {
+          title: '不及格（0-59）',
+          dataIndex: 'fail',
+        },
+      ]
+    },
+  ],[rowSpans,appInfo]);
   const print = () => {
     const printDiv = document.getElementById('printDiv');
     const iframe = document.createElement('IFRAME');
@@ -73,8 +164,8 @@ const ShowApproval = () => {
                 </Col>
                 <Col span={12}>
                   <Row>
-                  <Col span={12}>预计及格率</Col>
-                  <Col span={12}>{appInfo.estimatePassRate}</Col></Row>
+                    <Col span={12}>预计及格率</Col>
+                    <Col span={12}>{appInfo.estimatePassRate}</Col></Row>
                 </Col>
               </Row>
               <Row>
@@ -86,67 +177,46 @@ const ShowApproval = () => {
                 </Col>
                 <Col span={12}>
                   <Row>
-                  <Col span={12}>预计平均分</Col>
-                  <Col span={12}>{appInfo.estimateAverage}</Col> </Row>
+                    <Col span={12}>预计平均分</Col>
+                    <Col span={12}>{appInfo.estimateAverage}</Col> </Row>
                 </Col>
               </Row>
               <Row>
-              <Col span={4}>考核学生数</Col>
-              <Col span={20}>{appInfo.studentNum}</Col>
+                <Col span={4}>考核学生数</Col>
+                <Col span={20}>{appInfo.studentNum}</Col>
               </Row>
             </Col>
           </Row>
           <Row className="title1">
             一、评价标准
            </Row>
-          <Row>
-            <Col span={4}>毕业要求指标点</Col>
-            <Col span={4}>课程目标</Col>
-            <Col span={4}>考核环节</Col>
-            <Col span={12}>
-              评价标准
-              <Row>
-                <Col span={6}>优(90-100)</Col>
-                <Col span={6}>良(75-89)</Col>
-                <Col span={6}>中(60-74)</Col>
-                <Col span={6}>不及格(0-59)</Col>
-              </Row>
-            </Col>
-          </Row>
-          {appInfo?.standard?.map((item, index) => {
-            return <Row key={index}>
-              <Col span={4}>{item.major_requirement}
-              </Col>
-              <Col span={4}>{item.teaching_goal}
-              </Col>
-              <Col span={4}>{item.assessment}
-              </Col>
-              <Col span={3}>{item.optimal}
-              </Col>
-              <Col span={3}>{item.fine}
-              </Col>
-              <Col span={3}>{item.middle}
-              </Col>
-              <Col span={3}>{item.fail}
-              </Col>
-            </Row>
-          })
-
-          }
+          <Table
+            bordered
+            rowKey={record => record._id}
+            dataSource={appInfo.standard}
+            columns={columns}
+            pagination={false}
+          />
           <Row>
             <Col span={4}>审查意见</Col>
             <Col span={20}>
-            <Row>
-            考核内容与课程目标、毕业要求相关性评价
+              <Row>
+                考核内容与课程目标、毕业要求相关性评价
             <Col span={24}>
-              {appInfo.opinion}
+                  {appInfo.opinion}
+                </Col>
+              </Row>
             </Col>
-            </Row>
-            </Col>
-           </Row>
+          </Row>
         </Card>
       </div>
       <Divider>结束预览</Divider>
+      <Row style={{float:"right"}}>
+            <Space direction="horizontal" size="large">
+                <Button type="primary" onClick={()=>history.push('/auditApproval/approval')}>返回</Button>
+                <Button type="primary" onClick={print}>打印</Button>
+                </Space>
+            </Row>
     </div >
   )
 }
