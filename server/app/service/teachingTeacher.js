@@ -23,6 +23,20 @@ class TeachingTeacherService extends Service {
         const result = await ctx.model.Approval.remove(params)
         return result
     }
+     async findApproval(params) {
+        const { ctx } = this;
+        const result = await ctx.model.Approval.find(params)
+        .populate({
+            path: 'course',
+            populate: {
+              path: 'course',
+            }
+          })
+        .populate('standard')
+        // .sort({})
+        .sort('sort')
+        return result
+    }
     //修改
     async updateApproval(params) {
         const { ctx } = this;
@@ -83,6 +97,25 @@ class TeachingTeacherService extends Service {
             .populate('achievement')
             .sort('sort')
         return result;
+    }
+    async findAudit(params) {
+        const { ctx } = this;
+        const result = await ctx.model.Audit.find(params)
+        .populate({
+            path: 'course',
+            populate: {
+              path: 'course',
+            }
+          })
+          .populate({
+            path: 'course',
+            populate: {
+              path: 'major',
+            }
+          })
+        .populate('achievement')
+        .sort('sort')
+        return result
     }
 }
 module.exports = TeachingTeacherService;

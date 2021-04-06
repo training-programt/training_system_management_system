@@ -56,8 +56,8 @@ const GoalAndAssessment = () => {
                             const wid = 100 / count + '%';
                             return (
                                 <div key={index} style={{ width: wid, height: '11vh' }}>
-                                    <div className="target">{evaluation[index].name}</div>
-                                    <div className="target">{evaluation[index].content}</div>
+                                    <div className="target">{evaluation[index]?.name}</div>
+                                    <div className="target">{evaluation[index]?.content}</div>
                                     <div>{ass}</div>
                                 </div>
                             )
@@ -129,15 +129,15 @@ const GoalAndAssessment = () => {
     useEffect(() => {
         // console.log(goaledit)
         if (info) {
-            if(goaledit){
+            if (goaledit) {
                 setGoal(goaledit)
                 setGoalAndAssessmentData(JSON.parse(localStorage.getItem('goalAndAssessment')) || [])
-            }else{
+            } else {
                 let arr = []
                 let obj = {}
-                console.log(info.assessmentGoal)
+                // console.log(info.assessmentGoal)
                 info.assessmentGoal.forEach(item => {
-                    if (obj?.major_requirement?._id === item.major_requirement._id) {
+                    if (obj?.major_requirement?._id === item?.major_requirement?._id && obj?.teaching_goal?._id === item?.teaching_goal?._id) {
                         obj['assessment'] = [...obj['assessment'], item?.status]
                     } else {
                         if (Object.keys(obj).length !== 0) {
@@ -148,6 +148,7 @@ const GoalAndAssessment = () => {
                 })
                 arr.push(obj)
                 setGoalAndAssessmentData(arr)
+                console.log(info.assessment)
                 setEvaluation(info.assessment)
                 setGoal(info.teaching_goal)
             }
@@ -159,7 +160,7 @@ const GoalAndAssessment = () => {
     const save = () => {
         localStorage.setItem("goalAndAssessment", JSON.stringify(goalAndAssessment));
         message.info('暂存成功');
-      }
+    }
     return (
         <div className="train-object">
             <div className="object-left">

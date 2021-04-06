@@ -39,6 +39,8 @@ import ProcessExamine from "./ResearchTeacher/Progress/examine";
 import ResearchTeacherRequirement from "./ResearchTeacher/Achievement/requirement";
 import ResearchTeacherPoint from "./ResearchTeacher/Achievement/point";
 
+import ShowApproval from "./TeachingTeacher/TeachingList/approvalShow";
+import ShowAudit from "./TeachingTeacher/TeachingList/auditShow";
 
 export {
   Login,
@@ -48,6 +50,8 @@ export {
   testMethod,
   Notification,
   LeaderMajor,
+  ShowApproval,
+  ShowAudit,
   DirectorMajor,
   TeachingList,
   Grade,

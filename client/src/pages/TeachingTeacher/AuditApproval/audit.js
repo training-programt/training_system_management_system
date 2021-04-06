@@ -5,11 +5,11 @@ import PaginationComponent from '@/components/pagination'
 import TableComponent from "@/components/table";
 import { PlusOutlined, DeleteOutlined } from '@ant-design/icons';
 import api from '@/apis/auditApproval'
-import { Link } from 'react-router-dom';
+import { Link,useHistory } from 'react-router-dom';
 
 const Audit = () => {
+  let history = useHistory();
   const [form] = Form.useForm();
-  const [isModalVisible, setIsModalVisible] = useState(false);
   const [tableData, setTableData] = useState([]);
   const [total, setTotal] = useState(0);
   const [page, setPage] = useState(1);
@@ -36,7 +36,7 @@ const Audit = () => {
   useEffect(() => {
     const res =React.$axios.get('/getAudit').then(au=>{
       if (au.isSucceed) {
-        console.log(au.data)
+        // console.log(au.data)
         setTableData(au.data);
       }
     })
@@ -68,7 +68,7 @@ const Audit = () => {
       title: '开课学期',
       dataIndex: 'semester',
       render:(text,record)=>{
-        return record?.course?.course?.semester
+        return record?.course?.semester
       }
     },
     {
@@ -81,11 +81,13 @@ const Audit = () => {
     {
       title: '是否达成',
       dataIndex: 'isAchievement',
-    },
-    {
-      title: '状态',
-      dataIndex: 'state',
-      align: 'center'
+      render:(text,record)=>{
+        if(record.isAchievement==0){
+          return <div style={{color:"red"}}>未达成</div>
+        }else{
+          return <div style={{color:"green"}}>已达成</div>
+        }
+      }
     },
     {
       title: '操作',
@@ -94,17 +96,33 @@ const Audit = () => {
       width: '20%',
       render: (text, record) => (
         <div style={{ textAlign: 'center' }}>
-          <Button type="link">编辑</Button>
-          &emsp;
+          {/* <Button type="link">编辑</Button>
+          &emsp; */}
           <Popconfirm title='您确定删除当前数据吗？' onConfirm={() => delAudit(record)}>
             <Button type="link">删除</Button>
           </Popconfirm>
+          <Button type="link" onClick={()=>{showAudit(record)}}>查看审核表</Button>
         </div>
       )
     },
   ];
-const delAudit=(record)=>{
-
+  const showAudit=(record)=>{
+    history.push(`/teachingList/showAudit?id=${record.course._id}`)
+  }
+const delAudit=async(record)=>{
+ const del = await React.$axios.post('/delAudit', {data:record}).then(res=>{
+    if (res.isSucceed) {
+      message.success('删除成功');
+      React.$axios.get('/getAudit').then(audit=>{
+        if (audit.isSucceed) {
+          setTableData(audit.data);
+        }
+      })
+    } else {
+      message.error('删除失败');
+    }
+  })
+  
 }
   return (
     <div className="page-container">
@@ -112,11 +130,10 @@ const delAudit=(record)=>{
       <div className="body-wrap">
         <div className="header-wrap">
           <div className="search-box">
-            <Input.Search placeholder="请输入审核名称" allowClear enterButton onSearch={value => setQuery(value)} />
+            {/* <Input.Search placeholder="请输入课程名称" allowClear enterButton onSearch={value => setQuery(value)} /> */}
           </div>
           <div className="operation-wrap">
           <Link to="/auditApproval/auditDetail"><Button type="primary" icon={<PlusOutlined />}>新增审核</Button></Link>
-            <Button type="primary" icon={<DeleteOutlined />}>批量删除</Button>
           </div>
         </div>
         <div className="table-container">

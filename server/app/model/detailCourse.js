@@ -6,7 +6,7 @@ module.exports = app => {
   const DetailCourseSchema = new Schema({
       course:{
         type:Schema.Types.ObjectId,
-        ref:'BasicCourse'
+        ref:'CourseSystem'
       },
       englishName: { type: String },//英文名字
       unit: {//所属学院

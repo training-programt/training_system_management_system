@@ -16,6 +16,8 @@ import courseType from './courseType';
 import courseSystem from './courseSystem';
 import teachingInfo from './teachingInfo';
 import teachingList from './teachingTeacher/teachingList';
+// import ShowAudit from './TeachingTeacher/TeachingList/auditShow';
+// import ShowApproval from './teachingTeacher/teachingList';
 import auditApproval from './teachingTeacher/auditApproval';
 import researchTeacher from './researchTeacher';
 

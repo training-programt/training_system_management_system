@@ -33,11 +33,13 @@ const BasicInfo = () => {
             _id: teacher._id
         }
         const courseSystem = React.$axios.post('/findCourseSystem', params).then((sys) => {
-            let arr = [];
-            for (let i = 0; i < sys.data.length; i++) {
-                arr.push(sys.data[i].course)
-            }
-            setCourseData(arr)
+            // console.log(sys)
+            // let arr = [];
+            // for (let i = 0; i < sys.data.length; i++) {
+            //     arr.push(sys.data[i].course)
+            // }
+            // console.log(arr)
+            setCourseData(sys.data)
         })
         const college = React.$axios.get('/getCollege').then((res) => {
             setCollegeData(res.data)
@@ -60,19 +62,22 @@ const BasicInfo = () => {
         message.info('暂存成功')
     }
     const changeCourseName = (value) => {
+        // console.log(value)
+        // console.log(courseData)
         courseData.map((item) => {
             if (item._id == value) {
                 setCourseName(item)
                 form.setFieldsValue({
-                    code: item.code,
-                    credits: item.credits,
-                    within: item.within,
-                    outside: item.outside,
-                    computer: item.computer,
-                    all: item.all,
+                    code: item?.course?.code,
+                    credits: item?.course?.credits,
+                    within: item?.course?.within,
+                    outside: item?.course?.outside,
+                    computer: item?.course?.computer,
+                    all: item?.course?.all,
                 })
             }
         })
+        console.log(courseName)
     }
     const changeMajorName = (value) => {
         console.log(value)
@@ -103,11 +108,11 @@ const BasicInfo = () => {
                 form.setFieldsValue(
                     {
                         englishName: info.course_info?.englishName,
-                        credits: info.course_info?.course?.credits,
-                        code: info.course_info?.course?.code,
+                        credits: info.course_info?.course?.course?.credits,
+                        code: info.course_info?.course?.course?.code,
                         type: info.course_info?.category,
-                        within: info.course_info?.course?.within,
-                        outside: info.course_info?.course?.outside,
+                        within: info.course_info?.course?.course?.within,
+                        outside: info.course_info?.course?.course?.outside,
                         course_ap: info.course_info?.course_ap,
                         introduce: info.course_info?.introduce
                     })
@@ -153,9 +158,9 @@ const BasicInfo = () => {
                             },
                         ]}
                     >
-                        <Select placeholder="选择课程名字" value={info ? info.course_info?.course?.name : basicInfo?.name?.name} allowClear onChange={(value) => { changeCourseName(value) }}>
+                        <Select placeholder="选择课程名字" value={info ? info.course_info?.course?.course?.name : basicInfo?.name?.name} allowClear onChange={(value) => { changeCourseName(value) }}>
                             {
-                                courseData && courseData.map(item => (<Option key={item._id} value={item._id}>{item.name}</Option>))
+                                courseData && courseData.map(item => (<Option key={item._id} value={item._id}>{item?.course?.name}</Option>))
                             }
                         </Select>
                     </Form.Item>

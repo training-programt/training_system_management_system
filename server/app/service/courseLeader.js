@@ -11,9 +11,33 @@ class CourseLeaderService extends Service {
             .populate({
                 path: 'course_info',
                 populate: {
-                    path: 'course',//相当于then，在嵌套查询后，进行关联查询
+                    path: 'course',
+                    //相当于then，在嵌套查询后，进行关联查询
+                    populate:{
+                        path:'course'
+                    }
                 }
             })
+            .populate({
+                path: 'course_info',
+                populate: {
+                    path: 'course',
+                    populate:{
+                        path:'grade'
+                    }
+                }
+            })
+            .populate({
+                path: 'course_info',
+                populate: {
+                    path: 'course',
+                    populate:{
+                        path:'major'
+                    }
+                }
+            })
+
+
             .populate({
                 path: 'course_info',
                 populate: {

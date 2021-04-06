@@ -4,7 +4,6 @@ import { useLocation } from "react-router-dom";
 import { Form, Input, Card, Row, Col, Select, Table, Button, List, Divider, message, Space } from 'antd';
 import { PlusOutlined } from '@ant-design/icons';
 import { getSession, setSession } from '../../../utils';
-import ReactToPrint from 'react-to-print'
 
 const SyllabusShows = () => {
     let id = useLocation().search.slice(4);
@@ -25,7 +24,7 @@ const SyllabusShows = () => {
       const [reviewer, setReviewer] = useState('')
       const [instr, setInstructions] = useState('')
     useEffect(() => {
-        const syll = React.$axios.post('/findSyllabusById', { _id: id }).then((syllabusData) => {
+        React.$axios.post('/findSyllabusById', { _id: id }).then((syllabusData) => {
             console.log(syllabusData.data[0])
             setBasic(syllabusData.data[0].course_info)
             setTeachGoal(syllabusData.data[0].teaching_goal)

@@ -1,12 +1,12 @@
 import React, { useState, useMemo } from 'react'
 import { Input, Select, Button } from 'antd';
-import { Link } from 'react-router-dom';
 import HeaderComponent from '@/components/header'
 import PaginationComponent from '@/components/pagination'
 import TableComponent from "@/components/table";
 import { PlusOutlined, DeleteOutlined } from '@ant-design/icons';
 import api from '@/apis/teachingList'
 import { getSession } from '@/utils'
+import { Link,useHistory } from 'react-router-dom';
 
 const TeachingList = () => {
   const [loading, setLoading] = useState(false);
@@ -17,6 +17,7 @@ const TeachingList = () => {
   const [pageSize, setPageSize] = useState(12)
   const [semester, setSemester] = useState('')
   const [semesterList, setSemesterList] = useState([])
+  let history = useHistory();
 
   const tableSetting = {
     page: page,
@@ -50,7 +51,6 @@ const TeachingList = () => {
     )
     setLoading(false)
     if (res && res.isSucceed) {
-      console.log(res)
       setTableData(res.data);
       setTotal(res.total)
     }
@@ -95,13 +95,18 @@ const TeachingList = () => {
       key: 'operation',
       render: (text, record) => (
         <div>
-          <Button type="link">查看审核表</Button>
-          <Button type="link">查看审批表</Button>
+          <Button type="link" onClick={()=>{showAudit(record)}}>查看审核表</Button>
+          <Button type="link" onClick={()=>{showApproval(record)}}>查看审批表</Button>
         </div>
       ),
     },
   ];
-
+const showAudit=(record)=>{
+  history.push(`/teachingList/showAudit?id=${record.course._id}`)
+}
+const showApproval=(record)=>{
+history.push(`/teachingList/showApproval?id=${record.course._id}`)
+}
   return (
     <div className="page-container">
       <HeaderComponent title="授课记录管理" />

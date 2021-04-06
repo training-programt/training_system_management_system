@@ -19,78 +19,89 @@ class CourseLeaderController extends Controller {
     const { ctx } = this;
     const params = ctx.request.body;
     // console.log(params)
-    const detailCourse = await ctx.model.DetailCourse.create({
-      course: params.course_info.name._id,
-      englishName: params.course_info.englishName,
-      unit: params.course_info.unit._id,
-      header: params.writer,
-      category: params.course_info.type,
-      professional: params.course_info.professional.map(item=>item._id),
-      course_ap: params.course_info.course_ap,
-      introduce: params.course_info.introduce
-    })
-    const teachGoal = await ctx.model.TeachingGoal.insertMany(params.teaching_goal)
-    // console.log(teachGoal)
-    let newArr = [];
-    params.relation.forEach((relation) => {
-      teachGoal.forEach((item,index) => {
-        newArr.push({
-          major_requirement: relation.major_requirement._id,
-          point: relation.point._id,
-          teach_goal: item._id,
-          weight:relation.teach_goal[index]
-        })
-      })
-    })
-    const relation = await ctx.model.Relation.insertMany(newArr)
-    const theory = await ctx.model.TheoryTeach.insertMany(params.theory_teaching)
-    const pratice = await ctx.model.PracticeTeach.insertMany(params.practice_teaching)
-    let assessmentArr=[];
-    // console.log(params.assessmentGoal)
-    params.assessmentGoal.forEach((ass) => {
-      let teachId;
-      teachGoal.map(item=>{
-        if(item.target_course_name==ass.teaching_goal.target_course_name)
-        {
-          teachId = item._id
-        }
-      })
-      params.assessment.forEach((item,index) => {
-        assessmentArr.push({
-          teaching_goal:teachId,
-          major_requirement: ass.major_requirement._id,
-          assessment: item._id,
-          status:ass.assessment[index]
-        })
-      })
-    })
-    const assessmentGoal = await ctx.model.AssessmentGoal.insertMany(assessmentArr)
-    const data = await ctx.service.courseLeader.createSyllabus({
-      course_info:detailCourse._id,
-      teaching_goal: teachGoal.map(item => item._id),
-      relation:relation.map(item=>item._id),
-      theory_teaching:theory.map(item=>item._id),
-      practice_teaching:pratice.map(item=>item._id),
-      assessment:params.assessment.map(item=>item._id),
-      assessmentGoal:assessmentGoal.map(item=>item._id),
-      reference:params.reference.map(item=>item._id),
-      instructions:params.instructions,
-      writer:params.writer,
-      reviewer:params.reviewer,
-      status:params.status,
-      modify_data:new Date(params.modify_data)
-    })
-    if(data){
+    const findDetailCourse = await ctx.model.DetailCourse.find({course:params.course_info.name._id})
+    if(findDetailCourse.length!=0){
       ctx.body = {
+        message: '新增失败,已经存在相同课程的教学大纲',
         code: 200,
-        isSucceed: true,
-      }
-    }else{
-      ctx.body = {
-        code: 500,
         isSucceed: false,
+      };
+    }else{
+      const detailCourse = await ctx.model.DetailCourse.create({
+        course: params.course_info.name._id,
+        englishName: params.course_info.englishName,
+        unit: params.course_info.unit._id,
+        header: params.writer,
+        category: params.course_info.type,
+        professional: params.course_info.professional.map(item=>item._id),
+        course_ap: params.course_info.course_ap,
+        introduce: params.course_info.introduce
+      })
+      const teachGoal = await ctx.model.TeachingGoal.insertMany(params.teaching_goal)
+      // console.log(teachGoal)
+      let newArr = [];
+      params.relation.forEach((relation) => {
+        teachGoal.forEach((item,index) => {
+          newArr.push({
+            major_requirement: relation.major_requirement._id,
+            point: relation.point._id,
+            teach_goal: item._id,
+            weight:relation.teach_goal[index]
+          })
+        })
+      })
+      const relation = await ctx.model.Relation.insertMany(newArr)
+      const theory = await ctx.model.TheoryTeach.insertMany(params.theory_teaching)
+      const pratice = await ctx.model.PracticeTeach.insertMany(params.practice_teaching)
+      let assessmentArr=[];
+      // console.log(params.assessmentGoal)
+      params.assessmentGoal.forEach((ass) => {
+        let teachId;
+        teachGoal.map(item=>{
+          if(item.target_course_name==ass.teaching_goal.target_course_name)
+          {
+            teachId = item._id
+          }
+        })
+        params.assessment.forEach((item,index) => {
+          assessmentArr.push({
+            teaching_goal:teachId,
+            major_requirement: ass.major_requirement._id,
+            assessment: item._id,
+            status:ass.assessment[index]
+          })
+        })
+      })
+      const assessmentGoal = await ctx.model.AssessmentGoal.insertMany(assessmentArr)
+      const data = await ctx.service.courseLeader.createSyllabus({
+        course_info:detailCourse._id,
+        teaching_goal: teachGoal.map(item => item._id),
+        relation:relation.map(item=>item._id),
+        theory_teaching:theory.map(item=>item._id),
+        practice_teaching:pratice.map(item=>item._id),
+        assessment:params.assessment.map(item=>item._id),
+        assessmentGoal:assessmentGoal.map(item=>item._id),
+        reference:params.reference.map(item=>item._id),
+        instructions:params.instructions,
+        writer:params.writer,
+        reviewer:params.reviewer,
+        status:params.status,
+        modify_data:new Date(params.modify_data)
+      })
+      if(data){
+        ctx.body = {
+          code: 200,
+          isSucceed: true,
+        }
+      }else{
+        ctx.body = {
+          code: 500,
+          isSucceed: false,
+        }
       }
+
     }
+   
    
 
   }

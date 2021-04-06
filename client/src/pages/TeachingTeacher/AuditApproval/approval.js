@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import { Button, Modal, message, Form, Input, Popconfirm } from 'antd';
-import { Link } from 'react-router-dom';
+import { Link ,useHistory} from 'react-router-dom';
 import HeaderComponent from '@/components/header'
 import PaginationComponent from '@/components/pagination'
 import TableComponent from "@/components/table";
@@ -9,6 +9,7 @@ import api from '@/apis/auditApproval'
 
 const Approval = () => {
   const [form] = Form.useForm();
+  let history = useHistory();
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [loading, setLoading] = useState(false);
   const [tableData, setTableData] = useState([]);
@@ -17,7 +18,7 @@ const Approval = () => {
   const [isEdit, setIsEdit] = useState(false);
   const [pageSize, setPageSize] = useState(12)
   const [selectedRowKeys, setSelectedRowKeys] = useState([])
-  const [query, setQuery] = useState('')
+  // const [query, setQuery] = useState('')
 
   const tableSetting = {
     page: page,
@@ -36,11 +37,6 @@ const Approval = () => {
     pageSize: pageSize,
     total: total,
   }
-
-  const layout = {
-    labelCol: { span: 5 },
-    wrapperCol: { span: 16 },
-  };
 useEffect(() => {
     setLoading(true)
     const res =React.$axios.get('/getApproval').then(appro=>{
@@ -90,7 +86,15 @@ useEffect(() => {
     {
       title: '状态',
       dataIndex: 'state',
-      align: 'center'
+      align: 'center',
+      render:(text,record)=>{
+        if(record.state===0){
+          return <div style={{color:"red"}}>未审核</div>
+        }
+        if(record.state===1){
+          return <div style={{color:"green"}}>已审核</div>
+        }
+      }
     },
     {
       title: '操作',
@@ -98,71 +102,50 @@ useEffect(() => {
       align: 'center',
       width: '20%',
       render: (text, record) => (
-        <div style={{ textAlign: 'center' }}>
-          <Button type="link" onClick={() => showEditModal(record)}>编辑</Button>
-          &emsp;
+        <div>
           <Popconfirm title='您确定删除当前数据吗？' onConfirm={() => delApproval(record)}>
             <Button type="link">删除</Button>
           </Popconfirm>
-        </div>
+           <Button type="link" onClick={()=>{showApproval(record)}}>查看审批表</Button>
+      </div>
       )
     },
   ];
 
-  const showModal = () => {
-    form.resetFields()
-    setIsModalVisible(true);
-    setIsEdit(false)
-  };
-
-  const showEditModal = (record) => {
-    setIsModalVisible(true);
-    form.resetFields()
-    setIsEdit(true)
-    form.setFieldsValue(record)
-  }
-
   const delApproval = async (record) => {
-    const params = {
-      _id: record._id
-    }
-    const res = await React.$axios.post(api.delApproval, params)
-    if (res && res.isSucceed) {
-      message.success('删除成功');
-      getApprovalList()
-    } else {
-      message.error('删除失败');
-    }
+    const del = await React.$axios.post('/delApproval', {data:record}).then(res=>{
+      if (res.isSucceed) {
+        message.success('删除成功');
+        React.$axios.get('/getApproval').then(appro=>{
+          if (appro.isSucceed) {
+            setTableData(appro.data);
+          }
+        })
+      } else {
+        message.error('删除失败');
+      }
+    })
+    
   }
-
-  const delMoreApproval = async () => {
-    if (!selectedRowKeys.length) {
-      message.error('请选择项！')
-      return false;
+  const showApproval=(record)=>{
+    history.push(`/teachingList/showApproval?id=${record.course._id}`)
     }
-    const params = {
-      ids: selectedRowKeys.join(','),
-    }
-    const res = await React.$axios.post(api.delMoreApproval, params)
-    if (res && res.isSucceed) {
-      message.success('删除成功');
-      getApprovalList()
-    } else {
-      message.error('删除失败');
-    }
-  }
-
+// const queryApproval=(value)=>{
+// console.log(value)
+// React.$axios.post('/findApproval',value).then(data=>{
+//   setTableData(data.data);
+// })
+// }
   return (
     <div className="page-container">
       <HeaderComponent title="审批管理" />
       <div className="body-wrap">
         <div className="header-wrap">
           <div className="search-box">
-            <Input.Search placeholder="请输入审批名称" allowClear enterButton onSearch={value => setQuery(value)} />
+            {/* <Input.Search placeholder="请输入审批名称" allowClear enterButton onSearch={value => queryApproval(value)} /> */}
           </div>
           <div className="operation-wrap">
             <Link to="/auditApproval/approvalDetail"><Button type="primary" icon={<PlusOutlined />}>新增审批</Button></Link>
-            <Button type="primary" icon={<DeleteOutlined />} onClick={delMoreApproval}>批量删除</Button>
           </div>
         </div>
         <div className="table-container">
