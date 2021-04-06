@@ -228,27 +228,32 @@ class CourseLeaderController extends Controller {
   async findSyllabus() {
     const { ctx } = this;
     let params = await ctx.request.body;
-    const data = await ctx.model.Teacher.find({ _id: params._id })
-      .populate('course')
-      .populate('header')
-      .sort();
-    // console.log(data)
-    // const syllabus = await ctx.model.Syllabus.find({ course_info: data[0].course})
-    // .populate('course_info')
-    // .populate('teaching_goal')
-    // .populate('theory_teaching')
-    // .populate('practice_teaching')
-    // .populate('assessment')
-    // .populate('reviewer')
-    // .sort('sort');
-    ctx.body = {
-      total: data.length,
-      data: data,
-      code: 200,
-      isSucceed: true,
+    // console.log(params)
+    try {
+      const detail = await ctx.model.DetailCourse.find({ course: params.courseSystemId })
+      // console.log(detail[0]._id)
+      const findSyll = await ctx.model.Syllabus.find({ course_info: detail[0]._id })
+      // console.log(findSyll)
+      if(findSyll.length!=0){
+        ctx.body = {
+          total: findSyll.length,
+          data: findSyll,
+          code: 200,
+          isSucceed: true,
+        }
+      }
+    } catch (error) {
+        ctx.body = {
+          code: 200,
+          message:'暂未编辑教学大纲',
+          isSucceed: false,
+      }
     }
+   
+   
 
   }
+  
   async findSyllabusById(){
     const { ctx } = this;
     let params = await ctx.request.body;

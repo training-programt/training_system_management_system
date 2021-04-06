@@ -1,4 +1,4 @@
-import {Syllabus,SyllabusAdd,HeaderCourse,ProjectShow,SyllabusShows,testMethod,Book} from "@/pages";
+import {Syllabus,SyllabusAdd,ShowCourse,HeaderCourse,ProjectShow,SyllabusShows,testMethod,Book} from "@/pages";
 //课程负责人
 export default [
   {
@@ -15,10 +15,17 @@ export default [
   },
   {
     path: '/syllabus',
-    name: '教学大纲',
+    name: '教学大纲管理',
     icon: 'icon-icon-test7',
     component: Syllabus,
   },
+  {
+    path: '/syllabus/management',
+    name: '教学大纲管理',
+    icon: 'icon-icon-test7',
+    component: Syllabus,
+  },
+  
   {
     path: '/syllabus/add',
     name: '新增教学大纲',
@@ -43,5 +50,10 @@ export default [
     path: '/headerCourse',
     name: '课程关系绑定',
     component: HeaderCourse,
+  },
+  {
+    path: '/syllabus/showCourse',
+    name: '指定课程查看',
+    component: ShowCourse,
   },
 ]

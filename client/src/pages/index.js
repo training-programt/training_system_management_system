@@ -16,6 +16,7 @@ import TrainingObject from './TrainingObject';
 import EditTrainingObject from './TrainingObject/detail';
 import AddTrainingProject from './TrainingProject/add';
 import EditTrainingProject from './TrainingProject/edit';
+
 import Syllabus from "./CourseLeader/Syllabus";
 import testMethod from './CourseLeader/testMethod';
 import Book from './CourseLeader/Book';
@@ -23,6 +24,8 @@ import SyllabusAdd from './CourseLeader/Syllabus/add';
 import SyllabusShows from './CourseLeader/Syllabus/show';
 import HeaderCourse from "./CourseLeader/HeaderCourse/headerCourse";
 import ProjectShow from "./CourseLeader/ProjectShow/projectShow"
+import ShowCourse from './CourseLeader/Syllabus/showCourse';
+
 import TeachingRecord from './TeachingRecord';
 import CourseAssessment from './CourseAssessment';
 import AddCourseAssessment from './CourseAssessment/add';
@@ -59,6 +62,7 @@ export {
   TeachRoom,
   Book,
   SectionDetails,
+  ShowCourse,
   SyllabusShows,
   SyllabusShow,
   Syllabus,
