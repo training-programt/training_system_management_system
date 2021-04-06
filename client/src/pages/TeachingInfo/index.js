@@ -80,6 +80,12 @@ const TeachingInfo = () => {
     getCourseList()
   }
 
+  const handleGradeChange = () => {
+    if(form.getFieldsValue().semester) {
+      getCourseList()
+    }
+  }
+
 
   const getSemesterList = async () => {
     const res = await React.$axios.get(api.getSemesterList)
@@ -310,6 +316,7 @@ const TeachingInfo = () => {
             <Select
               placeholder="请选择年级"
               showSearch
+              onSelect={handleGradeChange}
             >
               {
                 gradeList.map(item => <Select.Option key={item._id} value={item._id}>{item.name}</Select.Option>)
@@ -332,6 +339,7 @@ const TeachingInfo = () => {
             <Select
               placeholder="请选择课程"
               showSearch
+              disabled={(form.getFieldsValue().grade && form.getFieldsValue().semester) ? false : true}
             >
               {
                 courseList.map(item => <Select.Option key={item.course._id} value={item._id}>{item.course.name}</Select.Option>)
