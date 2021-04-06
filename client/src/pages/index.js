@@ -33,6 +33,12 @@ import ApprovalDetail from "./TeachingTeacher/AuditApproval/approvalDetail";
 import AuditDetail from "./TeachingTeacher/AuditApproval/auditDetail";
 import TeachingList from "./TeachingTeacher/TeachingList";
 
+import ProcessApproval from './ResearchTeacher/Progress/approval'
+import ProcessExamine from "./ResearchTeacher/Progress/examine";
+
+import ResearchTeacherRequirement from "./ResearchTeacher/Achievement/requirement";
+import ResearchTeacherPoint from "./ResearchTeacher/Achievement/point";
+
 
 export {
   Login,
@@ -68,4 +74,8 @@ export {
   Approval,
   ApprovalDetail,
   AuditDetail,
+  ProcessApproval,
+  ProcessExamine,
+  ResearchTeacherRequirement,
+  ResearchTeacherPoint,
 }

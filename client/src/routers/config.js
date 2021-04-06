@@ -17,6 +17,7 @@ import courseSystem from './courseSystem';
 import teachingInfo from './teachingInfo';
 import teachingList from './teachingTeacher/teachingList';
 import auditApproval from './teachingTeacher/auditApproval';
+import researchTeacher from './researchTeacher';
 
 const routesConfig = [
   // 子路由
@@ -36,6 +37,7 @@ const routesConfig = [
   ...teachingInfo,
   ...teachingList,
   ...auditApproval,
+  ...researchTeacher,
   ...setting,
   ...publish,
   ...exception,
