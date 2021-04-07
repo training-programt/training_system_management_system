@@ -10,4 +10,8 @@ module.exports = app => {
     router.post('/addAudit', controller.teachingTeacher.addAudit);
     router.post('/findAudit', controller.teachingTeacher.findAudit);
     router.post('/delAudit', controller.teachingTeacher.delAudit);
+
+    router.post('/updateApprovalOpinion', controller.teachingTeacher.updateApprovalOpinion);
+    router.post('/updateAuditOpinion', controller.teachingTeacher.updateAuditOpinion);
+
   };
