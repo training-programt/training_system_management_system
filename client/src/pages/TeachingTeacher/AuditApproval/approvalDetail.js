@@ -104,7 +104,7 @@ const ApprovalDetail = () => {
       title: '评价环节',
       dataIndex: 'assessment',
       render: (text, record) => {
-        return record?.assessment?.name
+        return record?.assessment?.name+":"+record?.assessment?.content
       }
     },
     {
@@ -405,14 +405,6 @@ const ApprovalDetail = () => {
             </Form>
           </Modal>
           <Divider></Divider>
-          {/* <Row>
-            <Col span={2} className="title">三、审查意见</Col>
-            <Col span={18}>
-              <Row>考核内容与课程目标、毕业要求相关性评价</Row>
-              <Row><Input.TextArea rows={5} /></Row>
-            </Col>
-          </Row> */}
-
         </Card>
       </div>
     </div>

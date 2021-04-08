@@ -49,7 +49,7 @@ const SyllabusShows = () => {
             let arr1 = []
             let obj1 = {}
             syllabusData.data[0].assessmentGoal.forEach(item => {
-                if (obj1?.major_requirement?._id === item.major_requirement._id) {
+                if (obj1?.major_requirement?._id === item.major_requirement._id && obj1?.teaching_goal?._id === item?.teaching_goal?._id) {
                     obj1['assessment'] = [...obj1['assessment'], item?.status]
                 } else {
                     if (Object.keys(obj1).length !== 0) {
@@ -118,7 +118,7 @@ const SyllabusShows = () => {
                         </Row>
                     <Row>
                         <Col span={4}>课程名称</Col>
-                        <Col span={8}>{basic?.course?.name}</Col>
+                        <Col span={8}>{basic?.course?.course?.name}</Col>
                         <Col span={4}>英文名称</Col>
                         <Col span={8}>{basic?.englishName}</Col>
                     </Row>
@@ -130,21 +130,21 @@ const SyllabusShows = () => {
                     </Row>
                     <Row>
                         <Col span={4}>课程代码</Col>
-                        <Col span={8}>{basic?.course?.code}</Col>
+                        <Col span={8}>{basic?.course?.course?.code}</Col>
                         <Col span={4}>学分</Col>
-                        <Col span={8}>{basic?.course?.credits}</Col>
+                        <Col span={8}>{basic?.course?.course?.credits}</Col>
                     </Row>
                     <Row>
                         <Col span={4}>课程类别</Col>
-                        <Col span={8}>{basic?.course?.category}</Col>
+                        <Col span={8}>{basic?.category}</Col>
                         <Col span={4}>适用专业</Col>
                         <Col span={8}>{basic?.professional?.map(item => item.name + "、")}</Col>
                     </Row>
                     <Row>
                         <Col span={4}>课内学时</Col>
-                        <Col span={8}>{basic?.course?.within}</Col>
+                        <Col span={8}>{basic?.course?.course?.within}</Col>
                         <Col span={4}>课外学时</Col>
-                        <Col span={8}>{basic?.course?.outside}</Col>
+                        <Col span={8}>{basic?.course?.course?.outside}</Col>
                     </Row>
                     <Row>
                         <Col span={4}>先修课程</Col>

@@ -8,6 +8,7 @@ module.exports = app => {
   router.post('/delCourseSystem', controller.courseSystem.delCourseSystem);
   router.post('/delMoreCourseSystem', controller.courseSystem.delMoreCourseSystem);
   router.post('/findCourseSystem', controller.courseSystem.findCourseSystem);
+  router.post('/queryCourseSystem', controller.courseSystem.queryCourseSystem);
   router.post('/getCourseBySemester', controller.courseSystem.getCourseBySemester);
 
 };

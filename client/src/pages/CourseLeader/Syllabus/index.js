@@ -135,7 +135,7 @@ const Syllabus = () => {
       <HeaderComponent title="教学大纲管理" />
       <div className="body-wrap">
         <div className="top-wrap">
-          <Divider plain orientation="left">被指定的课程基本信息</Divider>
+          {/* <Divider plain orientation="left">被指定的课程基本信息</Divider>
           <List
             size="large"
             style={{ textAlign: "left" }}
@@ -148,11 +148,11 @@ const Syllabus = () => {
                 />
               </List.Item>
             )}
-          />,
+          />, */}
         </div>
 
         <div className="table-wrap">
-          <Divider plain orientation="left">请为上述课程新增编辑教学大纲</Divider>
+          <Divider plain orientation="left">请为被指定课程新增编辑教学大纲</Divider>
           <Link to={{ pathname: "/syllabus/add" }} ><Button size="big" type="primary" style={{ marginBottom: "15px" }} onClick={addSyllabus}>新增课程大纲</Button></Link>
           <Table
             dataSource={syllabusData}

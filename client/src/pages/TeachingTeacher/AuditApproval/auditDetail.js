@@ -110,7 +110,7 @@ const AuditDetail = () => {
       title: '考核环节',
       dataIndex: 'assessment',
       render: (text, record) => {
-        return record?.assessment?.name
+        return record?.assessment?.name+":"+record?.assessment?.content
       }
     },
     {

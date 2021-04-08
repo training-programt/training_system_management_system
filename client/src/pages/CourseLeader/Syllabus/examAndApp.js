@@ -352,11 +352,6 @@ const ExamAndApp = () => {
       </div>
       <Divider>结束预览</Divider>
       <Space direction="horizontal" size="large">
-        {/* <ReactToPrint
-        trigger={()=>{<Button type="primary" onClick={print}>打印</Button>}}
-        content={printRef}
-        >
-        </ReactToPrint> */}
         <Button type="primary" onClick={print}>打印</Button>
         <Button type="primary" onClick={submit}>提交审批</Button>
       </Space>

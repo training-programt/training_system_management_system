@@ -18,11 +18,12 @@ class CourseSystemController extends Controller {
     const { ctx } = this;
     const params = ctx.request.body;
     console.log(params)
-    const data = await ctx.model.CourseSystem.find({leader:params._id})
-    .populate('course')
-    .populate('major')
-    .populate('grade')
-
+    const data = await ctx.model.CourseSystem.find({ leader: params._id })
+      .populate('course')
+      .populate('major')
+      .populate('grade')
+      .populate('courseType')
+      .populate('leader')
     ctx.body = {
       total: data.length,
       data: data,
@@ -30,19 +31,43 @@ class CourseSystemController extends Controller {
       isSucceed: true,
     };
   }
-
+  async queryCourseSystem() {
+    const { ctx } = this;
+    const { courseType = null, grade = null } = ctx.request.body;
+    let params = {}
+    if (courseType || grade) {
+      params = {
+        $or: [
+          { courseType },
+          { grade }
+        ]
+      }
+    }
+    const data = await ctx.model.CourseSystem.find(params)
+      .populate('course')
+      .populate('major')
+      .populate('grade')
+      .populate('courseType')
+      .populate('leader')
+    ctx.body = {
+      total: data.length,
+      data: data,
+      code: 200,
+      isSucceed: true,
+    };
+  }
   async addCourseSystem() {
     const { ctx } = this;
     const params = ctx.request.body;
     const res = await ctx.service.courseSystem.addCourseSystem(params)
-    if(res) {
+    if (res) {
       const count = await ctx.service.courseSystem.getCount();
       ctx.body = {
-      total: count,
-      data: res,
-      code: 200,
-      isSucceed: true,
-    };
+        total: count,
+        data: res,
+        code: 200,
+        isSucceed: true,
+      };
     } else {
       ctx.body = {
         total: 0,
@@ -51,7 +76,7 @@ class CourseSystemController extends Controller {
         isSucceed: true,
       }
     }
-    
+
   }
 
   async delCourseSystem() {
@@ -106,7 +131,7 @@ class CourseSystemController extends Controller {
   }
 
   async getCourseBySemester() {
-    const { ctx} = this;
+    const { ctx } = this;
     const params = ctx.request.body;
     const res = await ctx.service.courseSystem.getCourseBySemester(params)
     ctx.body = {
