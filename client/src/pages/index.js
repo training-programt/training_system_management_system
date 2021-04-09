@@ -40,6 +40,8 @@ import ProcessApproval from './ResearchTeacher/Progress/approval'
 import ShowProcessApproval from './ResearchTeacher/Progress/approvalShow'
 import ProcessExamine from "./ResearchTeacher/Progress/examine";
 import ShowProcessExamine  from "./ResearchTeacher/Progress/auditShow";
+import ProcessSyllabus  from "./ResearchTeacher/Progress/syllabus";
+import ShowProcessSyllabus  from "./ResearchTeacher/Progress/showSyllabus";
 
 import ResearchTeacherRequirement from "./ResearchTeacher/Achievement/requirement";
 import ResearchTeacherPoint from "./ResearchTeacher/Achievement/point";
@@ -90,4 +92,6 @@ export {
   ShowProcessExamine,
   ResearchTeacherRequirement,
   ResearchTeacherPoint,
+  ProcessSyllabus,
+  ShowProcessSyllabus,
 }

@@ -14,6 +14,32 @@ class CourseLeaderController extends Controller {
     }
 
   }
+
+  async getAllSyllabus() {
+    const { ctx } = this;
+    const params = ctx.request.query;
+    const data = await ctx.service.courseLeader.getAllSyllabus(params);
+    const count = await ctx.service.courseLeader.getSyllabusCount();
+    ctx.body = {
+      total: count,
+      data,
+      code: 200,
+      isSucceed: true,
+    }
+  }
+
+  async updateSyllabusState() {
+    const { ctx } = this;
+    const params = ctx.request.body;
+    const res = await ctx.service.courseLeader.updateSyllabusState(params);
+    ctx.body = {
+      total: 1,
+      data: res,
+      code: 200,
+      isSucceed: true,
+    }
+  }
+
   //添加课程大纲
   async addSyllabus() {
     const { ctx } = this;

@@ -129,5 +129,78 @@ class TeachingTeacherService extends Service {
     const res = await ctx.model.Audit.findByIdAndUpdate(params._id, params)
     return res;
   }
+
+  async getApprovalWithPage(params) {
+    const { ctx } = this;
+    const res = await ctx.model.Approval
+      .find()
+      .populate({
+        path: 'course',
+        populate: {
+          path: 'course',
+        }
+      })
+      .populate('standard')
+      .limit(parseInt(params.pageSize))
+      .skip(parseInt(params.pageSize) * (parseInt(params.page) - 1))
+      .sort();
+    return res;
+  }
+
+  async getApprovalCount() {
+    const { ctx } = this;
+    const count = await ctx.model.Approval.find().count();
+    return count;
+  }
+
+  async getAuditWithPage(params) {
+    const { ctx } =this;
+    const res = await ctx.model.Audit
+      .find()
+      .populate({
+          path: 'course',
+          populate: {
+            path: 'course',
+          }
+        })
+      .populate('achievement')
+      .limit(parseInt(params.pageSize))
+      .skip(parseInt(params.pageSize) * (parseInt(params.page) - 1))
+      .sort();
+    return res;
+  }
+
+  async getAuditCount() {
+    const { ctx } = this;
+    const count = await ctx.model.Audit.find().count();
+    return count;
+  }
+
+  async getApprovalById(params) {
+    const { ctx } = this;
+    const res = await ctx.model.Approval
+      .findById(params._id)
+      .populate({
+        path: 'course',
+        populate: {
+          path: 'course',
+        }
+      })
+      .populate('standard')
+    return res;
+  }
+  async getAuditById(params) {
+    const { ctx } = this;
+    const res = await ctx.model.Audit
+      .findById(params._id)
+      .populate({
+        path: 'course',
+        populate: {
+          path: 'course',
+        }
+      })
+    .populate('achievement')
+    return res;
+  }
 }
 module.exports = TeachingTeacherService;

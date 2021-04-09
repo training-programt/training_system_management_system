@@ -58,6 +58,8 @@ const Syllabus = () => {
           return <div style={{color:"orange"}}>已提交审批</div>
         }else if(record.status===1){
           return <div style={{color:"green"}}>已审批</div>
+        }else if(record.status===-2){
+          return <div style={{color:"red"}}>未通过</div>
         }
       }
     },
