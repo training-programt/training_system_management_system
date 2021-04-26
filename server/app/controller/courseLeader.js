@@ -92,25 +92,22 @@ class CourseLeaderController extends Controller {
         ctx.body = {
           code: 200,
           isSucceed: true,
+          message:"提交成功，已存入数据"
         }
       }else{
         ctx.body = {
           code: 500,
           isSucceed: false,
+          message:'新增失败'
         }
       }
 
     }
-   
-   
-
   }
   async updateSyllabus() {
     const { ctx } = this;
     const params = ctx.request.body;
-    // console.log(params)
     const find = await ctx.service.courseLeader.findSyllabus({ _id: params._id });
-    // console.log(find)
     const delTeachGoal = await ctx.model.TeachingGoal.remove({ _id: { $in: find[0].teaching_goal } });
     const delRelation = await ctx.model.Relation.remove({ _id: { $in: find[0].relation } });
     const delTheory = await ctx.model.TheoryTeach.remove({ _id: { $in: find[0].theory_teaching } });

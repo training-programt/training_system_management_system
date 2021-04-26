@@ -4,7 +4,6 @@ class RoleController extends Controller {
   //得到账户信息
   async getRole() {
     const { ctx } = this;
-    
     const res = await ctx.service.role.getRole()
     ctx.body = {
       total: res.length,

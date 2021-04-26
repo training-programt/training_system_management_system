@@ -235,14 +235,14 @@ const AuditDetail = () => {
     const res = React.$axios.post("/addAudit",params).then((audit)=>{
       console.log(audit)
       if(audit.isSucceed){
-        message.success("数据已提交审核并存入数据库")
+        message.success(aduit.message)
         form.resetFields();
         setTableData(standard);
         setTitleName("XXXXXX");
         setDescription('');
         setIsAchieve(0)
       }else{
-        message.error("提交失败")
+        message.error(audit.message)
       }
     })
   }

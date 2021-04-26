@@ -201,12 +201,12 @@ const ApprovalDetail = () => {
     const res = React.$axios.post("/addApproval",params).then((app)=>{
       // console.log(app)
       if(app.isSucceed){
-        message.success("数据已提交审核并存入数据库")
+        message.success(app.message)
         form.resetFields();
         setTableData(standard);
         setTitleName("XXXXXX")
       }else{
-        message.error("提交失败")
+        message.error(app.message)
       }
     })
   }
