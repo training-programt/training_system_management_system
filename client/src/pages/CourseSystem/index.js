@@ -177,12 +177,22 @@ const CourseSystem = () => {
     form.setFieldsValue(temp)
   }
 
-  const handleOk = async (e) => {
-    e.preventDefault();
-    let grade = gradeList.findIndex(item => item._id == form.getFieldValue().grade)
+
+  const handleOk = () => {
+    form.validateFields()
+      .then(values => {
+        handleSubmit(values)
+      })
+      .catch((info) => {
+        console.log('Validate Failed:', info);
+      });
+  }
+
+  const handleSubmit = async (values) => {
+    let grade = gradeList.findIndex(item => item._id == values.grade)
     let semester = getTeachSemester(grade);
     const params = {
-      ...form.getFieldValue(),
+      ...values,
       major: JSON.parse(getSession('userInfo')).major,
       semester,
     }
@@ -325,7 +335,7 @@ const CourseSystem = () => {
           </Button>
         ]}
       >
-        <Form hideRequiredMark form={form} {...layout} >
+        <Form form={form} {...layout} >
           <Form.Item
             name="course"
             label="课程"
@@ -334,6 +344,7 @@ const CourseSystem = () => {
             <Select
               placeholder="请选择课程"
               showSearch
+              allowClear
             >
               {
                 courseList.map(item => <Select.Option key={item._id} value={item._id}>{item.name}</Select.Option>)
@@ -348,6 +359,7 @@ const CourseSystem = () => {
             <Select
               placeholder="请选择年级"
               showSearch
+              allowClear
             >
               {
                 gradeList.map(item => <Select.Option key={item._id} value={item._id}>{item.name}</Select.Option>)
@@ -367,10 +379,11 @@ const CourseSystem = () => {
           >
             <Input placeholder="请输入专业" disabled />
           </Form.Item> */}
-          <Form.Item name="courseType" label="课程类型">
+          <Form.Item name="courseType" label="课程类型" rules={[{ required: true, message: '请选择课程类型!' }]}>
             <Select
               placeholder="请选择课程类型"
               showSearch
+              allowClear
             >
               {
                 courseTypeList.map(item => <Select.Option key={item._id} value={item._id}>{item.name}</Select.Option>)
@@ -381,6 +394,7 @@ const CourseSystem = () => {
             <Select
               placeholder="请选择课程负责人"
               showSearch
+              allowClear
             >
               {
                 teacherList.map(item => <Select.Option key={item._id} value={item._id}>{item.name}</Select.Option>)
@@ -390,6 +404,7 @@ const CourseSystem = () => {
           <Form.Item
             name="engineeringCertification"
             label="是否工程认证"
+            rules={[{ required: true, message: '请选择是否工程认证!' }]}
           >
             <Radio.Group >
               <Radio value={1}>是</Radio>
@@ -399,6 +414,7 @@ const CourseSystem = () => {
           <Form.Item
             name="degreeCourses"
             label="是否学位课"
+            rules={[{ required: true, message: '请选择是否学位课!' }]}
           >
             <Radio.Group >
               <Radio value={1}>是</Radio>

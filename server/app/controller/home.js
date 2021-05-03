@@ -37,7 +37,6 @@ class HomeController extends Controller {
     //   },
     // ])
 
-
     const res = await ctx.model.Teacher
       .find()
       .populate('role')

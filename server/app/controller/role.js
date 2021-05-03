@@ -4,14 +4,14 @@ class RoleController extends Controller {
   //得到账户信息
   async getRole() {
     const { ctx } = this;
-    
+
     const res = await ctx.service.role.getRole()
     ctx.body = {
       total: res.length,
       data: res,
       code: 200,
       isSucceed: true,
-      newPrimaryKeys: {}  
+      newPrimaryKeys: {}
     };
   }
   async addRole() {
@@ -24,9 +24,9 @@ class RoleController extends Controller {
       code: 200,
       isSucceed: true,
     };
-}
-async delRole(){
-  const { ctx } = this;
+  }
+  async delRole() {
+    const { ctx } = this;
     const params = ctx.request.body;
     const res = await ctx.service.role.delRole(params)
     ctx.body = {
@@ -35,26 +35,26 @@ async delRole(){
       code: 200,
       isSucceed: true,
     };
-}
-async updateRole(){
-  const { ctx } = this;
-  const params = ctx.request.body;
-  const res = await ctx.model.Role.update(
-    {_id:params._id},
-    {
-      $set:{
-        role:params.role,
-        roleName:params.roleName
+  }
+  async updateRole() {
+    const { ctx } = this;
+    const params = ctx.request.body;
+    const res = await ctx.model.Role.update(
+      { _id: params._id },
+      {
+        $set: {
+          role: params.role,
+          roleName: params.roleName
+        }
       }
-    }
     )
-  // console.log(res)
-  ctx.body = {
-    total: res.length,
-    data: res,
-    code: 200,
-    isSucceed: true,
-  };
-}
+    // console.log(res)
+    ctx.body = {
+      total: res.length,
+      data: res,
+      code: 200,
+      isSucceed: true,
+    };
+  }
 }
 module.exports = RoleController;

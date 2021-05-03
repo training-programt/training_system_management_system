@@ -19,16 +19,8 @@ class CourseController extends Controller {
   async addCourse() {
     const { ctx } = this;
     const params = ctx.request.body;
-    if (params.degree === "是") {
-      params.degree = true
-    } else {
-      params.degree = false
-    }
-    if (params.flag_fuse === "是") {
-      params.flag_fuse = true
-    } else {
-      params.flag_fuse = false
-    }
+    params.degree = params.degree === '是' ? true : false
+    params.flag_fuse = params.flag_fuse === '是' ? true : false
     const findCourse = await ctx.service.course.findCourse(
       { $or: [{ name: params.name }, { code: params.code }] }
     )
@@ -40,28 +32,8 @@ class CourseController extends Controller {
       };
     } else {
       const res = await ctx.service.course.addCourse(params)
-      if (params.header) {
-        const teacherChange = await ctx.model.Teacher.update(
-          { _id: params.header },
-          {
-            $push: {
-              course: res[0]._id
-            }
-          },
-        )
-      }
-      if (params.system) {
-        const sysChange = await ctx.model.CourseSystem.update(
-          { _id: params.system },
-          {
-            $push: {
-              courses: res[0]._id
-            }
-          },
-        )
-      }
       if (params.unit) {
-        const collegeChange = await ctx.model.College.update(
+        await ctx.model.College.update(
           { _id: params.unit },
           {
             $push: {

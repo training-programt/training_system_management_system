@@ -34,35 +34,6 @@ const User = () => {
         }
         fetchData();
     }, [])
-    // const initColumn = [{
-    //     title: '姓名',
-    //     dataIndex: 'name',
-    //     key: 'name',
-    //     className: 'text-monospace',
-    // }, {
-    //     title: '年级',
-    //     dataIndex: 'grade',
-    //     key: 'grade',
-    // }, {
-    //     title: '部门',
-    //     dataIndex: 'department',
-    //     key: 'department',
-    // }];
-
-
-    // let attendanceInfoList = [
-    //     {
-    //         name: "张三",
-    //         grade: "2017级",
-    //         department: "前端部门"
-
-    //     },
-    //     {
-    //         name: "李四",
-    //         grade: "2017级",
-    //         department: "程序部门"
-
-    //     }];
 
     const columns = [
         {
@@ -71,9 +42,15 @@ const User = () => {
             align: 'center'
         },
         {
-            title: '密码',
-            dataIndex: 'password',
-            align: 'center'
+            title: '所属专业',
+            dataIndex: 'major',
+            align: 'center',
+            render: (text, record) => text ? text.name : ''
+        },
+        {
+            title: '职称',
+            dataIndex: 'position',
+            align: 'center',
         },
         {
             title: '角色',
@@ -131,7 +108,8 @@ const User = () => {
         let data = {
             _id: record._id,
             name: record.name,
-            password: record.password,
+            // password: record.password,
+            position: record.position,
             role: record.role.roleName,
         }
         form.setFieldsValue(data)
@@ -231,6 +209,7 @@ const User = () => {
                         columns={columns}
                         pagination={false}
                         dataSource={tableData}
+                        bordered
                         loading={loading}
                         pagination={paginationProps}
                         rowKey={record => record._id}
@@ -274,7 +253,7 @@ const User = () => {
                     <Form.Item name="name" label="名字" rules={[{ required: true }]}>
                         <Input />
                     </Form.Item>
-                    <Form.Item name="password" label="密码" rules={[{ required: true }]}>
+                    <Form.Item name="position" label="职称" rules={[{ required: true }]}>
                         <Input />
                     </Form.Item>
                     <Form.Item
