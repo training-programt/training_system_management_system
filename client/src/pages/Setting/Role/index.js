@@ -12,6 +12,7 @@ const Role = () => {
   const [total, setTotal] = useState(0);
   const [page, setPage] = useState(1);
   const [isEdit, setIsEdit] = useState(false);
+  const [query, setQuery] = useState('')
 
   const pageparams = {
     page: page,
@@ -22,15 +23,20 @@ const Role = () => {
     labelCol: { span: 5 },
     wrapperCol: { span: 16 },
   };
+
+  const getRoleList = async () => {
+    setLoading(true);
+    const res = await React.$axios.get(
+      `/getRole?name=${query}`,
+    )
+    setLoading(false);
+    setTableData(res.data);
+    setTotal(res.total)
+  }
+
   useMemo(() => {
-    const fetchData = async () => {
-      const res = await React.$axios.get(
-        '/getRole',
-      )
-      setTableData(res.data);
-    }
-    fetchData();
-  }, [page, isModalVisible])
+    getRoleList()
+  }, [page, query])
 
   const columns = [
     {
@@ -47,12 +53,12 @@ const Role = () => {
       }
     },
     {
-      title: '账户',
+      title: '角色',
       dataIndex: 'role',
       align: 'center'
     },
     {
-      title: '账户名称',
+      title: '角色名称',
       dataIndex: 'roleName',
       align: 'center'
     },
@@ -102,10 +108,6 @@ const Role = () => {
       );
       if (res && res.isSucceed) {
         message.success('新增成功');
-        const res = await React.$axios.get(
-          '/getRole',
-        )
-        setTableData(res.data);
       } else {
         message.error('新增失败');
       }
@@ -116,15 +118,11 @@ const Role = () => {
       );
       if (res.isSucceed) {
         message.success('修改成功');
-        const res = await React.$axios.get(
-          '/getRole',
-        )
-        setTableData(res.data);
       } else {
         message.error('修改失败');
       }
     }
-
+    getRoleList()
     setIsModalVisible(false);
   };
 
@@ -138,24 +136,21 @@ const Role = () => {
     const res = await React.$axios.post('/delRole', params)
     if (res && res.isSucceed) {
       message.success('删除成功');
-      const res = await React.$axios.get(
-        '/getRole',
-      )
-      setTableData(res.data);
     } else {
       message.error('删除失败');
     }
+    getRoleList()
   }
   return (
     <div className="page-container">
-      <HeaderComponent title="账户管理" />
+      <HeaderComponent title="角色管理" />
       <div className="body-wrap">
         <div className="header-wrap">
           <div className="search-box">
-            <Input.Search placeholder="请输入账户姓名" allowClear enterButton />
+            <Input.Search placeholder="请输入角色姓名" allowClear enterButton onSearch={(value) => setQuery(value)}/>
           </div>
           <div className="operation-wrap">
-            <Button type="primary" icon={<PlusOutlined />} onClick={showModal}>新增账户</Button>
+            <Button type="primary" icon={<PlusOutlined />} onClick={showModal}>新增角色</Button>
             <Button type="primary" icon={<DeleteOutlined />}>批量删除</Button>
           </div>
         </div>
@@ -196,7 +191,7 @@ const Role = () => {
       <Modal
         visible={isModalVisible}
         width={550}
-        title={isEdit ? '编辑账号' : '新增账号'}
+        title={isEdit ? '编辑角色' : '新增角色'}
         centered
         maskClosable={false}
         destroyOnClose
@@ -212,10 +207,10 @@ const Role = () => {
         ]}
       >
         <Form {...layout} form={form} name="control-hooks">
-          <Form.Item name="role" label="账户" rules={[{ required: true }]}>
+          <Form.Item name="role" label="角色" rules={[{ required: true }]}>
             <Input />
           </Form.Item>
-          <Form.Item name="roleName" label="账户名称" rules={[{ required: true }]}>
+          <Form.Item name="roleName" label="角色名称" rules={[{ required: true }]}>
             <Input />
           </Form.Item>
         </Form>

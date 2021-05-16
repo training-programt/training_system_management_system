@@ -18,7 +18,8 @@ class TeacherController extends Controller {
 
   async getTeacher() {
     const { ctx } = this;
-    const data = await ctx.service.teacher.getTeacher()
+    const params = ctx.request.query;
+    const data = await ctx.service.teacher.getTeacher(params)
     // console.log(data)
     ctx.body = {
       total: data.length,

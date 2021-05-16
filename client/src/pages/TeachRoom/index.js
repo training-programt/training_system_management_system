@@ -147,7 +147,7 @@ const TeachRoom = () => {
     let data = {
       _id: record._id,
       name: record.name,
-      major: record.major._id,
+      // major: record.major._id,
       type: record.type,
       director: record.director.name,
       introduce: record.introduce,

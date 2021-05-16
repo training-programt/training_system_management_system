@@ -15,18 +15,24 @@ const User = () => {
     const [pageSize, setPageSize] = useState(12)
     const [roleData, setRoleData] = useState([]);
     const [importData, setImportData] = useState();
+    const [query, setQuery] = useState('')
 
     const [showSizeChanger, setShowSizeChanger] = useState(true);
     const [showQuickJumper, setShowQuickJumper] = useState(true)
+
+    const getTeacherList = async () => {
+        setLoading(true);
+        const res = await React.$axios.get(
+            `/getTeacher?name=${query}`,
+        )
+        setLoading(false);
+        setTableData(res.data);
+        setTotal(res.total);
+    }
+
     useMemo(() => {
-        const fetchData = async () => {
-            const res = await React.$axios.get(
-                '/getTeacher',
-            )
-            setTableData(res.data);
-        }
-        fetchData();
-    }, [pageSize, isModalVisible])
+        getTeacherList()
+    }, [pageSize, query])
     useMemo(() => {
         const fetchData = async () => {
             const res = await React.$axios.get('/getRole')
@@ -121,17 +127,14 @@ const User = () => {
         const res = await React.$axios.post('/delTeacher', params)
         if (res && res.isSucceed) {
             message.success('删除成功');
-            const res = await React.$axios.get(
-                '/getTeacher',
-            )
-            setTableData(res.data);
-            setTotal(res.total);
         } else {
             message.error('删除失败');
         }
+        getTeacherList()
     }
     const handleCancel = () => {
         setIsModalVisible(false);
+        getTeacherList()
     };
     const importHandle = async (data) => {
         var params = []
@@ -153,14 +156,10 @@ const User = () => {
         const res = await React.$axios.post('/addTeacher', params);
         if (res && res.isSucceed) {
             message.success('添加成功');
-            const res = await React.$axios.get(
-                '/getTeacher',
-            )
-            setTableData(res.data);
-            setTotal(res.total);
         } else {
             message.error('添加失败');
         }
+        getTeacherList()
     };
     // const exportHandle= async(data)=>{
     //     const res = await React.$axios.get('/getTeacher');
@@ -178,15 +177,13 @@ const User = () => {
         );
         if (res && res.isSucceed) {
             message.success('修改成功');
-            const res = await React.$axios.get(
-                '/getTeacher',
-            )
-            setTableData(res.data);
-            setTotal(res.total);
+            
+            
         } else {
             message.error('修改失败');
         }
         setIsModalVisible(false);
+        getTeacherList()
     };
 
     return (
@@ -195,7 +192,7 @@ const User = () => {
             <div className="body-wrap">
                 <div className="header-wrap">
                     <div className="search-box">
-                        <Input.Search placeholder="请输入用户姓名" allowClear enterButton />
+                        <Input.Search placeholder="请输入用户姓名" allowClear enterButton onSearch={(value) => setQuery(value)} />
                     </div>
                     <div className="operation-wrap">
                         <ImportExportComponent onImport={(data) => importHandle(data)} />

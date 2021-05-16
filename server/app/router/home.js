@@ -5,4 +5,6 @@ module.exports = app => {
     router.post('/login', controller.login.login)
     router.post('/modifyPwd', controller.login.modifyPwd)
 
+    // router.get('/download', controller.home.download)
+
 };

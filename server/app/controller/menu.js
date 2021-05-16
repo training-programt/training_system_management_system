@@ -17,7 +17,8 @@ class MenuController extends Controller {
 
   async getAllMenu() {
     const { ctx } = this;
-    const res = await ctx.service.menu.getAllMenu()
+    const params = ctx.request.body;
+    const res = await ctx.service.menu.getAllMenu(params)
     ctx.body = {
       total: res.length,
       data: res,

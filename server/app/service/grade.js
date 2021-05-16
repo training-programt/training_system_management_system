@@ -68,7 +68,7 @@ class GradeService extends Service {
         const result = await ctx.model.Semester.findByIdAndUpdate(params._id, params)
         return result
     }
-    查询全部学院
+    // 查询全部学院
     async getCollege() {
         const { ctx } = this;
         const result = await ctx.model.College
