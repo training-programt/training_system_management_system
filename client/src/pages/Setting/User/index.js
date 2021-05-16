@@ -152,7 +152,6 @@ const User = () => {
                 degree: element['最后学历毕业学位']
             })
         })
-        // console.log(params)
         const res = await React.$axios.post('/addTeacher', params);
         if (res && res.isSucceed) {
             message.success('添加成功');
@@ -161,10 +160,6 @@ const User = () => {
         }
         getTeacherList()
     };
-    // const exportHandle= async(data)=>{
-    //     const res = await React.$axios.get('/getTeacher');
-    //     console.log(res)
-    // }
     const handleOk = async (e) => {
         e.preventDefault();
 

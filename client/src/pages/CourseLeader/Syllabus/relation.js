@@ -132,9 +132,6 @@ const Relation = () => {
     })
   }
   useEffect(() => {
-    // console.log(teachGoal)
-    // console.log(relation)
-    // console.log(info)
     if (info) {
       if (teachGoal) {
         setGoal(teachGoal)

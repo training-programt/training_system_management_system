@@ -99,7 +99,7 @@ const ExamAndApp = () => {
         modify_data: nowDate,//审核时间
         status: 0,//已提交
       };
-      console.log(info)
+      // console.log(info)
       if (Object.keys(info).length) {
         const syllabusUpdate = React.$axios.post('/updateSyllabus', { ...params, _id: info._id }).then((ma1) => {
           if (ma1.isSucceed) {
@@ -129,7 +129,7 @@ const ExamAndApp = () => {
             localStorage.removeItem("leftList")
             localStorage.removeItem("goalAndAssessment")
           } else {
-            message.error("新增失败")
+            message.error(ma.message)
           }
         })
       }
