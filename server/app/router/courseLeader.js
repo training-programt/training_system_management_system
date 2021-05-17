@@ -2,6 +2,8 @@ module.exports = app => {
     // 课程大纲
     const { router, controller } = app;
     router.get('/getSyllabus', controller.courseLeader.getSyllabus);
+    router.get('/getAllSyllabus', controller.courseLeader.getAllSyllabus);
+    router.post('/updateSyllabusState', controller.courseLeader.updateSyllabusState);
     router.post('/findSyllabus', controller.courseLeader.findSyllabus);
     router.post('/findSyllabusById', controller.courseLeader.findSyllabusById);
     router.post('/addSyllabus', controller.courseLeader.addSyllabus);
@@ -25,5 +27,5 @@ module.exports = app => {
     //对应关系
     router.get('/getGoalAndAssessment', controller.courseLeader.getGoalAndAssessment);
 
-
+    
 };

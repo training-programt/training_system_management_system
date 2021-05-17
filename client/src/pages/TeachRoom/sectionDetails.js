@@ -54,14 +54,18 @@ const SectionDetails = (props) => {
   useEffect(() => {
     const topEchart = echarts.init(document.getElementById("top-echart"));
     const bottomEchart = echarts.init(document.getElementById("bottom-echart"));
-    const optionData = [
-      { value: 1048, name: "教授" },
-      { value: 735, name: "副教授" },
-      { value: 580, name: "助理" },
-      { value: 484, name: "教师" },
+    const optionData1 = [
+      { value: 2, name: "教授" },
+      { value: 2, name: "副教授" },
+      { value: 0, name: "助理" },
+      { value: 1, name: "教师" },
     ];
-    initEchart(topEchart, optionData);
-    initEchart(bottomEchart, optionData);
+    const optionData2 = [
+      { value: 2, name: "兼职" },
+      { value: 3, name: "专职" },
+    ];
+    initEchart1(topEchart, optionData1);
+    initEchart2(bottomEchart, optionData2);
   }, []);
 
   useMemo(async () => {
@@ -78,7 +82,7 @@ const SectionDetails = (props) => {
 
 
 
-  const initEchart = (dom, optionData) => {
+  const initEchart1 = (dom, optionData) => {
     let color = [
       "#A0D911",
       "#36CFC9",
@@ -138,6 +142,58 @@ const SectionDetails = (props) => {
     dom.setOption(option);
   };
 
+  const initEchart2 = (dom, optionData) => {
+    let color = [
+      "#9254DE",
+      "#F759AB",
+    ];
+
+    let option = {
+      color: color,
+      title: {
+        text: "教师兼职/专职占比",
+        bottom: 20,
+        left: "center",
+      },
+      tooltip: {
+        trigger: "item",
+      },
+      legend: {
+        show: true,
+        right: "20%",
+        align: "left",
+        icon: "circle",
+        itemGap: 10,
+        padding: [20, 0],
+        textStyle: {
+          color: "#333333",
+          fontFamily: "PingFangSC-Regula",
+          fontSize: 12,
+          padding: [0, 30, 0, 0],
+        },
+      },
+
+      series: [
+        {
+          name: "兼职/专职占比",
+          type: "pie",
+          radius: ["35%", "50%"],
+          avoidLabelOverlap: false,
+          label: {
+            show: false,
+            position: "center",
+          },
+          labelLine: {
+            show: false,
+          },
+          data: optionData,
+        },
+      ],
+    };
+
+    dom.setOption(option);
+  };
+
   const columns = [
     {
       width: 50,
@@ -157,10 +213,10 @@ const SectionDetails = (props) => {
       title: "专职/兼职",
       dataIndex: "job",
     },
-    {
-      title: "备注",
-      dataIndex: "note",
-    },
+    // {
+    //   title: "备注",
+    //   dataIndex: "note",
+    // },
     {
       title: "操作",
       key: "active",
@@ -192,10 +248,6 @@ const SectionDetails = (props) => {
     {
       title: "专职/兼职",
       dataIndex: "job",
-    },
-    {
-      title: "备注",
-      dataIndex: "note",
     },
   ];
 
@@ -303,13 +355,13 @@ const SectionDetails = (props) => {
       <HeaderComponent title="教研室详情" />
       <div className="body-wrap">
         <div className="room-detail">
-          <div className="detail-top">
+          {/* <div className="detail-top">
             <div><strong>所属学院：</strong>{roomDetail.college ? roomDetail.college.name : ''}</div>
             <div><strong>教研室主任：</strong>{roomDetail.director ? roomDetail.director.name : ''}</div>
             <div><strong>类型：</strong>{roomDetail.type}</div>
             <div><strong>专业：</strong>{roomDetail.major ?   roomDetail.major.name : ''}</div>
           </div>
-          <div className="detail-bottom"><strong>描述：</strong>{roomDetail.introduce}</div>
+          <div className="detail-bottom"><strong>描述：</strong>{roomDetail.introduce}</div> */}
         </div>
         <div className="header-wrap">
           <div className="search-box">

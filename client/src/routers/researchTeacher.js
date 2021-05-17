@@ -5,6 +5,8 @@ import {
   ShowProcessExamine,
   ResearchTeacherRequirement,
   ResearchTeacherPoint,
+  ProcessSyllabus,
+  ShowProcessSyllabus,
 } from "@/pages";
 export default [
   {
@@ -18,6 +20,11 @@ export default [
     component: ProcessExamine,
   },
   {
+    path: '/progress/syllabus',
+    name: '教学大纲',
+    component: ProcessSyllabus,
+  },
+  {
     path: '/progress/examine/showExamine',
     name: '查看审核表',
     component: ShowProcessExamine,
@@ -26,6 +33,11 @@ export default [
     path: '/progress/approval/showApproval',
     name: '查看审批表',
     component: ShowProcessApproval,
+  },
+  {
+    path: '/progress/syllabus/showSyllabus',
+    name: '查看教学大纲',
+    component: ShowProcessSyllabus,
   },
   {
     path: '/achievement/requirement',

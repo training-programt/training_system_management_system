@@ -1,5 +1,5 @@
-import React, { useState, useMemo, useEffect } from 'react'
-import { Input, Form, Button, Card, Row, Col, Radio, message } from 'antd';
+import React, { useState, useEffect } from 'react'
+import { Input, Form, Button, Card, Row, Col, Radio, message, Space } from 'antd';
 import { Link, useLocation, useHistory } from 'react-router-dom';
 import { RollbackOutlined, SaveOutlined } from '@ant-design/icons';
 import './index.less'
@@ -9,14 +9,18 @@ const ShowApproval = () => {
   const [form] = Form.useForm()
   const history = useHistory();
   const [appInfo, setAppInfo] = useState({})
+  const [state, setState] = useState(1)
   useEffect(() => {
-    React.$axios.get('/getApproval', { _id: id }).then((app) => {
+    const params = {
+      _id: id
+    }
+    React.$axios.post('/getApprovalById', params).then((app) => {
       if (app.isSucceed) {
-        console.log(app.data[0])
-        setAppInfo(app.data[0])
+        setAppInfo(app.data)
+        setState(app.data?.state)
         form.setFieldsValue({
-          opinion: app.data[0].opinion ? app.data[0].opinion : '',
-          state: app.data[0].opinion ? app.data[0].state : 0,
+          opinion: app.data.opinion ? app.dat.opinion : '',
+          state: app.data.opinion ? app.data.state : 0,
         })
       }
     })
@@ -27,7 +31,6 @@ const ShowApproval = () => {
       _id: id,
       ...form.getFieldsValue()
     }
-    console.log(params)
     const res = await React.$axios.post('/updateApprovalOpinion', params)
     if (res && res.isSucceed) {
       message.success('审批成功')
@@ -35,55 +38,53 @@ const ShowApproval = () => {
     }
   }
 
+  const print = () => {
+    const printDiv = document.getElementById('printDiv');
+    const iframe = document.createElement('IFRAME');
+    let doc = null;
+    iframe.setAttribute('style', 'position:absolute;width:0px;height:0px;left:500px;top:500px;')
+    document.body.appendChild(iframe);
 
+    doc = iframe.contentWindow.document;
+    // 打印时去掉页眉页脚
+    doc.write(`
+        <link href="../../../../node_modules/antd/dist/antd.css" rel="stylesheet"/>
+        <script crossorigin src="https://unpkg.com/react@16/umd/react.development.js"></script>
+        <script crossorigin src="https://unpkg.com/react-dom@16/umd/react-dom.development.js"></script>
+        <script src="../../../../node_modules/antd/dist/antd.js"></script>
+        <style media="print">@page 
+         .title1{
+           font-weight: bold; margin: 15px 0px;
+           font-size: 14px;
+          }
+        .ant-card-body .ant-col{
+          min-height: 35px;
+          border: 1px solid #ccc;
+          line-height: 35px;
+          text-align: center;
+        }
+    </style>`);
 
-  // const print = () => {
-  //   const printDiv = document.getElementById('printDiv');
-  //   const iframe = document.createElement('IFRAME');
-  //   let doc = null;
-  //   iframe.setAttribute('style', 'position:absolute;width:0px;height:0px;left:500px;top:500px;')
-  //   document.body.appendChild(iframe);
-
-  //   doc = iframe.contentWindow.document;
-  //   // 打印时去掉页眉页脚
-  //   doc.write(`
-  //       <link href="../../../../node_modules/antd/dist/antd.css" rel="stylesheet"/>
-  //       <script crossorigin src="https://unpkg.com/react@16/umd/react.development.js"></script>
-  //       <script crossorigin src="https://unpkg.com/react-dom@16/umd/react-dom.development.js"></script>
-  //       <script src="../../../../node_modules/antd/dist/antd.js"></script>
-  //       <style media="print">@page 
-  //        .title1{
-  //          font-weight: bold; margin: 15px 0px;
-  //          font-size: 14px;
-  //         }
-  //       .ant-card-body .ant-col{
-  //         min-height: 35px;
-  //         border: 1px solid #ccc;
-  //         line-height: 35px;
-  //         text-align: center;
-  //       }
-  //   </style>`);
-
-  //   doc.write(printDiv.innerHTML);
-  //   doc.close();
-  //   // 获取iframe的焦点，从iframe开始打印
-  //   iframe.contentWindow.focus();
-  //   iframe.contentWindow.print();
-  //   if (navigator.userAgent.indexOf("MSIE") > 0) {
-  //     //打印完删除iframe
-  //     document.body.removeChild(iframe);
-  //   }
-  // }
+    doc.write(printDiv.innerHTML);
+    doc.close();
+    // 获取iframe的焦点，从iframe开始打印
+    iframe.contentWindow.focus();
+    iframe.contentWindow.print();
+    if (navigator.userAgent.indexOf("MSIE") > 0) {
+      //打印完删除iframe
+      document.body.removeChild(iframe);
+    }
+  }
 
   return (
     <div className="page-container">
-      <div id="printDiv" style={{ marginTop: '20px', pageBreakAfter: 'always' }}>
+      <div id="printDiv" style={{ pageBreakAfter: 'always' }}>
         <Card title={<div style={{ textAlign: "center" }}>《{appInfo?.course?.course?.name}》课程考核合理性审批表</div>} bordered
           extra={
-            <>
+            <Space size='large'>
               <Link to="/progress/approval" style={{ color: '#000', marginLeft: '8px' }}><Button icon={<RollbackOutlined />}>返回</Button></Link>
-              {/* <Button type="primary" onClick={print}>打印</Button> */}
-            </>
+              <Button type="primary" onClick={print}>打印</Button>
+            </Space>
           }
           bodyStyle={{ padding: '12px 24px' }}
         >
@@ -207,15 +208,17 @@ const ShowApproval = () => {
           </Row>
         </Card>
       </div>
-      <div className='footer-wrap'>
-        <Form form={form}>
-          <Form.Item>
-            <Button icon={<SaveOutlined />} type="primary" htmlType="submit" onClick={handleSubmit}>
-              保存
-            </Button>
-          </Form.Item>
-        </Form>
-      </div>
+      {
+        (state == 0) ? (
+          <div className='footer-wrap'>
+            <Form form={form}>
+              <Form.Item>
+                <Button icon={<SaveOutlined />} type="primary" htmlType="submit" onClick={handleSubmit}>保存</Button>
+              </Form.Item>
+            </Form>
+          </div>
+        ) : null
+      }
     </div >
   )
 }

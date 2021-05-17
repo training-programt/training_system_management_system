@@ -18,7 +18,8 @@ class TeacherController extends Controller {
 
   async getTeacher() {
     const { ctx } = this;
-    const data = await ctx.service.teacher.getTeacher()
+    const params = ctx.request.query;
+    const data = await ctx.service.teacher.getTeacher(params)
     // console.log(data)
     ctx.body = {
       total: data.length,
@@ -118,11 +119,9 @@ class TeacherController extends Controller {
   async updataTeacher() {
     const { ctx } = this;
     const params = ctx.request.body;
-    console.log(params)
     const find = await ctx.model.Teacher.find({ _id: params._id })
-    console.log(find)
     if (params.major !== find[0].major) {
-      const majorChange = await ctx.model.Major.update(
+      await ctx.model.Major.update(
         { _id: find[0].major },
         {
           $pull: {
@@ -130,7 +129,7 @@ class TeacherController extends Controller {
           }
         },
       )
-      const newChange = await ctx.model.Major.update(
+      await ctx.model.Major.update(
         { _id: params.major },
         {
           $push: {
@@ -140,7 +139,7 @@ class TeacherController extends Controller {
       )
     }
     if (params.teachRoom !== find[0].teachRoom) {
-      const teachRoomChange = await ctx.model.TeachRoom.update(
+      await ctx.model.TeachRoom.update(
         { _id: find[0].teachRoom },
         {
           $pull: {
@@ -148,7 +147,7 @@ class TeacherController extends Controller {
           }
         },
       )
-      const newChange = await ctx.model.TeachRoom.update(
+      await ctx.model.TeachRoom.update(
         { _id: params.teachRoom },
         {
           $push: {
@@ -160,22 +159,7 @@ class TeacherController extends Controller {
     const data = await ctx.model.Teacher.findByIdAndUpdate(
       { _id: params._id },
       {
-        $set: {
-          name: params.name,
-          password: params.password,
-          sex: params.sex,
-          birthday: params.birthday,
-          course: params.course,
-          job: params.job,
-          position: params.position,
-          lastInfo: params.lastInfo,
-          graduateSchool: params.graduateSchool,
-          researchDirection: params.researchDirection,
-          professional: params.professional,
-          degree: params.degree,
-          teachRoom: params.teachRoom,
-          major: params.major
-        }
+        $set: params
       })
     console.log(data)
     ctx.body = {

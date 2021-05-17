@@ -15,18 +15,24 @@ const User = () => {
     const [pageSize, setPageSize] = useState(12)
     const [roleData, setRoleData] = useState([]);
     const [importData, setImportData] = useState();
+    const [query, setQuery] = useState('')
 
     const [showSizeChanger, setShowSizeChanger] = useState(true);
     const [showQuickJumper, setShowQuickJumper] = useState(true)
+
+    const getTeacherList = async () => {
+        setLoading(true);
+        const res = await React.$axios.get(
+            `/getTeacher?name=${query}`,
+        )
+        setLoading(false);
+        setTableData(res.data);
+        setTotal(res.total);
+    }
+
     useMemo(() => {
-        const fetchData = async () => {
-            const res = await React.$axios.get(
-                '/getTeacher',
-            )
-            setTableData(res.data);
-        }
-        fetchData();
-    }, [pageSize, isModalVisible])
+        getTeacherList()
+    }, [pageSize, query])
     useMemo(() => {
         const fetchData = async () => {
             const res = await React.$axios.get('/getRole')
@@ -34,6 +40,7 @@ const User = () => {
         }
         fetchData();
     }, [])
+
     const columns = [
         {
             title: '名字',
@@ -41,9 +48,15 @@ const User = () => {
             align: 'center'
         },
         {
-            title: '密码',
-            dataIndex: 'password',
-            align: 'center'
+            title: '所属专业',
+            dataIndex: 'major',
+            align: 'center',
+            render: (text, record) => text ? text.name : ''
+        },
+        {
+            title: '职称',
+            dataIndex: 'position',
+            align: 'center',
         },
         {
             title: '角色',
@@ -101,7 +114,8 @@ const User = () => {
         let data = {
             _id: record._id,
             name: record.name,
-            password: record.password,
+            // password: record.password,
+            position: record.position,
             role: record.role.roleName,
         }
         form.setFieldsValue(data)
@@ -113,17 +127,14 @@ const User = () => {
         const res = await React.$axios.post('/delTeacher', params)
         if (res && res.isSucceed) {
             message.success('删除成功');
-            const res = await React.$axios.get(
-                '/getTeacher',
-            )
-            setTableData(res.data);
-            setTotal(res.total);
         } else {
             message.error('删除失败');
         }
+        getTeacherList()
     }
     const handleCancel = () => {
         setIsModalVisible(false);
+        getTeacherList()
     };
     const importHandle = async (data) => {
         var params = []
@@ -144,14 +155,10 @@ const User = () => {
         const res = await React.$axios.post('/addTeacher', params);
         if (res && res.isSucceed) {
             message.success('添加成功');
-            const res = await React.$axios.get(
-                '/getTeacher',
-            )
-            setTableData(res.data);
-            setTotal(res.total);
         } else {
             message.error('添加失败');
         }
+        getTeacherList()
     };
     const handleOk = async (e) => {
         e.preventDefault();
@@ -165,15 +172,13 @@ const User = () => {
         );
         if (res && res.isSucceed) {
             message.success('修改成功');
-            const res = await React.$axios.get(
-                '/getTeacher',
-            )
-            setTableData(res.data);
-            setTotal(res.total);
+            
+            
         } else {
             message.error('修改失败');
         }
         setIsModalVisible(false);
+        getTeacherList()
     };
 
     return (
@@ -182,7 +187,7 @@ const User = () => {
             <div className="body-wrap">
                 <div className="header-wrap">
                     <div className="search-box">
-                        <Input.Search placeholder="请输入用户姓名" allowClear enterButton />
+                        <Input.Search placeholder="请输入用户姓名" allowClear enterButton onSearch={(value) => setQuery(value)} />
                     </div>
                     <div className="operation-wrap">
                         <ImportExportComponent onImport={(data) => importHandle(data)} />
@@ -196,6 +201,7 @@ const User = () => {
                         columns={columns}
                         pagination={false}
                         dataSource={tableData}
+                        bordered
                         loading={loading}
                         pagination={paginationProps}
                         rowKey={record => record._id}
@@ -239,7 +245,7 @@ const User = () => {
                     <Form.Item name="name" label="名字" rules={[{ required: true }]}>
                         <Input />
                     </Form.Item>
-                    <Form.Item name="password" label="密码" rules={[{ required: true }]}>
+                    <Form.Item name="position" label="职称" rules={[{ required: true }]}>
                         <Input />
                     </Form.Item>
                     <Form.Item

@@ -1,7 +1,5 @@
 'use strict';
 
-const { rs } = require('qiniu');
-
 const Controller = require('egg').Controller;
 
 class LoginController extends Controller {

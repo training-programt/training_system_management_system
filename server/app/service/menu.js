@@ -8,7 +8,7 @@ class MenuService extends Service {
         const data = ctx.request.query
         console.log(data.role)
         const result = await ctx.model.Menu.find({
-            role: {$in: data.role.split(",")},
+            role: { $in: data.role.split(",") },
             level: 1
         })
             // .populate('menu')
@@ -19,15 +19,17 @@ class MenuService extends Service {
             .sort('sort');
         return result;
     }
-    async getAllMenu() {
+    async getAllMenu(params) {
         const { ctx } = this;
-        const params = ctx.request.query;
         const data = {
             pageSize: parseInt(params.pageSize),
             page: parseInt(params.page) - 1,
         }
+        const name = new RegExp(params.name, 'i')
         const result = await ctx.model.Menu
-            .find({ level: '1' })
+            .find(
+                { level: '1', name: { $regex: name } },
+            )
             .populate('role')
             .populate('children')
             .limit(data.pageSize)
@@ -35,7 +37,7 @@ class MenuService extends Service {
             .sort('sort')
         return result;
     }
-    
+
     //新建
     async addMenu(params) {
         const { ctx } = this;

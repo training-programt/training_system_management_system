@@ -1,7 +1,5 @@
 'use strict';
 
-const { consoleLevel } = require('egg-mock');
-
 const Controller = require('egg').Controller;
 
 class MenuController extends Controller {
@@ -19,7 +17,8 @@ class MenuController extends Controller {
 
   async getAllMenu() {
     const { ctx } = this;
-    const res = await ctx.service.menu.getAllMenu()
+    const params = ctx.request.body;
+    const res = await ctx.service.menu.getAllMenu(params)
     ctx.body = {
       total: res.length,
       data: res,
@@ -27,6 +26,7 @@ class MenuController extends Controller {
       isSucceed: true,
     }
   }
+
   async getMenuByRole() {
     const { ctx } = this;
     const params = ctx.request.body;
@@ -43,12 +43,13 @@ class MenuController extends Controller {
       isSucceed: true,
     }
   }
+
   async delMenu() {
     const { ctx } = this;
     const params = ctx.request.body;
     const res = await ctx.service.menu.delMenu({ _id: params._id });
     if (res.ok == 1) {
-      const delRole = await ctx.model.Role.update(
+      await ctx.model.Role.update(
         { _id: params.role },
         {
           $pull: {
@@ -57,10 +58,7 @@ class MenuController extends Controller {
         }
       )
       if (params.parent) {
-        // const menuInfo = await ctx.service.menu.findMenu({_id:params.parent})
-        // const index = menuInfo[0].children.findIndex(item =>item == params._id)
-        // const newArr = [].concat([...menuInfo[0].children.slice(0,index),...menuInfo[0].children.slice(index+1)])
-        const meunDelete = await ctx.model.Menu.update(
+        await ctx.model.Menu.update(
           { _id: params.parent },
           {
             $pull: {
@@ -119,13 +117,13 @@ class MenuController extends Controller {
 
 
   }
+  
   async updataMenu() {
     const { ctx } = this;
     const params = ctx.request.body;
     const findMenu = await ctx.service.menu.findMenu({ _id: params._id })
-    // console.log(findMenu)
     if (params.parent !== findMenu[0].parent) {
-      const meunDelete = await ctx.model.Menu.update(
+      await ctx.model.Menu.update(
         { _id: findMenu[0].parent },
         {
           $pull: {
@@ -133,9 +131,7 @@ class MenuController extends Controller {
           }
         }
       )
-    // console.log(meunDelete)
-
-      const addMenu = await ctx.model.Menu.update(
+      await ctx.model.Menu.update(
         { _id: params.parent },
         {
           $push: {
@@ -144,9 +140,8 @@ class MenuController extends Controller {
         }
       )
     }
-
     if (params.role !== findMenu[0].role) {
-      const roleDelete = await ctx.model.Role.update(
+      await ctx.model.Role.update(
         { _id: findMenu[0].role },
         {
           $pull: {
@@ -154,7 +149,7 @@ class MenuController extends Controller {
           }
         }
       )
-      const roleAdd = await ctx.model.Role.update(
+      await ctx.model.Role.update(
         { _id: params.role },
         {
           $push: {
@@ -177,7 +172,6 @@ class MenuController extends Controller {
         }
       }
     );
-    // console.log(res)
     if (res.ok == 1) {
       ctx.body = {
         total: 0,

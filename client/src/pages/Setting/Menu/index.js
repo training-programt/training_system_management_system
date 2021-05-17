@@ -11,6 +11,7 @@ const Menu = () => {
   const [loading, setLoading] = useState(false);
   const [tableData, setTableData] = useState([]);
   const [total, setTotal] = useState(0);
+  const [page, setPage] = useState(1)
   const [pageSize, setPageSize] = useState(8)
   const [menuId, setMenuId] = useState('');
   const [level, setLevel] = useState(1);
@@ -19,6 +20,7 @@ const Menu = () => {
   const [menuData, setMenuData] = useState([]);
   const [showSizeChanger, setShowSizeChanger] = useState(true);
   const [showQuickJumper, setShowQuickJumper] = useState(true)
+  const [query, setQuery] = useState('')
 
   const columns = [
     {
@@ -57,7 +59,7 @@ const Menu = () => {
       title: '角色',
       dataIndex: 'role',
       align: 'center',
-      render:(text,record)=>{
+      render: (text, record) => {
         return record.role.roleName
       }
     },
@@ -85,23 +87,25 @@ const Menu = () => {
     marginRight: '12px',
   }
 
-  useMemo(() => {
-    const fetchData = async () => {
-      const params = {
-        // page: page,
-        pageSize: 10,
-      }
-      setLoading(true);
-      const res = await React.$axios.post(
-        '/allMenu',
-        params
-      )
-      setTableData(res.data);
-      setTotal(res.total);
-      setLoading(false);
+  const getMenuList = async () => {
+    const params = {
+      page: page,
+      pageSize: 10,
+      name: query,
     }
-    fetchData();
-  }, [isModalVisible])
+    setLoading(true);
+    const res = await React.$axios.post(
+      `/allMenu`,
+      params
+    )
+    setTableData(res.data);
+    setTotal(res.total);
+    setLoading(false);
+  }
+
+  useMemo(() => {
+    getMenuList()
+  }, [query])
 
   useMemo(() => {
     const fetchData = async () => {
@@ -148,12 +152,6 @@ const Menu = () => {
       );
       if (res && res.isSucceed) {
         message.success('新增成功');
-        const res = await React.$axios.post(
-          '/allMenu',
-          params
-        )
-        setTableData(res.data);
-        setTotal(res.total);
         // await React.$axios.get(`/menu?role=${JSON.parse(getSession('userInfo')).role}`)
       } else {
         message.error('新增失败');
@@ -165,17 +163,12 @@ const Menu = () => {
       );
       if (res && res.isSucceed) {
         message.success('更新成功');
-        const res = await React.$axios.post(
-          '/allMenu',
-          params
-        )
-        setTableData(res.data);
-        setTotal(res.total);
         // await React.$axios.get(`/menu?role=${JSON.parse(getSession('userInfo')).role}`)
       } else {
         message.error('更新失败');
       }
     }
+    getMenuList()
     setIsModalVisible(false);
   };
 
@@ -188,16 +181,11 @@ const Menu = () => {
     const res = await React.$axios.post('/delMenu', params)
     if (res && res.isSucceed) {
       message.success('删除成功');
-      const res = await React.$axios.post(
-        '/allMenu',
-        params
-      )
-      setTableData(res.data);
-      setTotal(res.total);
       // await React.$axios.get(`/menu?role=${JSON.parse(getSession('userInfo')).role}`)
     } else {
       message.error('删除失败');
     }
+    getMenuList()
   }
 
   const handleCancel = () => {
@@ -240,24 +228,24 @@ const Menu = () => {
     wrapperCol: { span: 15 },
   };
 
-//分页设置
-const paginationProps = {
-  showSizeChanger,//设置每页显示数据条数
-  showQuickJumper,
-  pageSize,
-  total,  //数据的总的条数
-  onChange: (current) => changePage(current), //点击当前页码
-  onShowSizeChange: (current, pageSize) => {//设置每页显示数据条数，current表示当前页码，pageSize表示每页展示数据条数
+  //分页设置
+  const paginationProps = {
+    showSizeChanger,//设置每页显示数据条数
+    showQuickJumper,
+    pageSize,
+    total,  //数据的总的条数
+    onChange: (current) => changePage(current), //点击当前页码
+    onShowSizeChange: (current, pageSize) => {//设置每页显示数据条数，current表示当前页码，pageSize表示每页展示数据条数
       onShowSizeChange(current, pageSize)
+    }
   }
-}
-const changePage = (current) => {
-  //current参数表示是点击当前的页码，
-  // this.getData(current) //向后端发送请求
-}
-const onShowSizeChange = (current, pageSize) => {
-  setPageSize(pageSize)
-}
+  const changePage = (current) => {
+    //current参数表示是点击当前的页码，
+    // this.getData(current) //向后端发送请求
+  }
+  const onShowSizeChange = (current, pageSize) => {
+    setPageSize(pageSize)
+  }
   return (
     <div className="page-container">
       <HeaderComponent title="菜单管理" />
@@ -272,12 +260,12 @@ const onShowSizeChange = (current, pageSize) => {
           </div>
         </div>
         <div className="table-wrap">
-          <Table 
-          dataSource={tableData} 
-          rowKey={record => record._id}
-          columns={columns} 
-          loading={loading} 
-          pagination={paginationProps}/>
+          <Table
+            dataSource={tableData}
+            rowKey={record => record._id}
+            columns={columns}
+            loading={loading}
+            pagination={paginationProps} />
         </div>
       </div>
       <Modal

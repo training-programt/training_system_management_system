@@ -27,10 +27,12 @@ class TeacherService extends Service {
         return res
     }
     // 查询全部用户 老师
-    async getTeacher() {
+    async getTeacher(params) {
         const { ctx } = this;
+        const name = new RegExp(params.name, 'i')
         const result = await ctx.model.Teacher
             .find({
+                name: { $regex: name }
             })
             .populate('role')
             .populate('teachRoom')

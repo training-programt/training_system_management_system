@@ -192,11 +192,20 @@ const TeachingInfo = () => {
     form.setFieldsValue(temp)
   }
 
-  const handleOk = async (e) => {
-    e.preventDefault();
 
+  const handleOk = () => {
+    form.validateFields()
+      .then(values => {
+        handleSubmit(values)
+      })
+      .catch((info) => {
+        console.log('Validate Failed:', info);
+      });
+  }
+
+  const handleSubmit = async (values) => {
     const params = {
-      ...form.getFieldValue(),
+      ...values,
       major: JSON.parse(getSession('userInfo')).major,
     }
     if (!isEdit) {
@@ -317,6 +326,7 @@ const TeachingInfo = () => {
               placeholder="请选择年级"
               showSearch
               onSelect={handleGradeChange}
+              allowClear
             >
               {
                 gradeList.map(item => <Select.Option key={item._id} value={item._id}>{item.name}</Select.Option>)
@@ -328,6 +338,7 @@ const TeachingInfo = () => {
               placeholder="请选择学期"
               showSearch
               onSelect={handleSemesterChange}
+              allowClear
             >
               {
                 semesterList.map(item => <Select.Option key={item._id} value={item._id}>{item.semesterName}</Select.Option>)
@@ -339,6 +350,7 @@ const TeachingInfo = () => {
             <Select
               placeholder="请选择课程"
               showSearch
+              allowClear
               disabled={(form.getFieldsValue().grade && form.getFieldsValue().semester) ? false : true}
             >
               {
@@ -353,14 +365,15 @@ const TeachingInfo = () => {
             <Select
               placeholder="请选择课程负责人"
               showSearch
+              allowClear
             >
               {
                 teacherList.map(item => <Select.Option key={item._id} value={item._id}>{item.name}</Select.Option>)
               }
             </Select>
           </Form.Item>
-          <Form.Item name="class" label="班级" rules={[{ required: true }]}>
-            <Input />
+          <Form.Item name="class" label="班级"  rules={[{ required: true }]}>
+            <Input allowClear placeholder='请输入班级'/>
           </Form.Item>
         </Form>
       </Modal>

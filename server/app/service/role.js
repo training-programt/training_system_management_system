@@ -2,10 +2,13 @@
 const Service = require('egg').Service;
 class RoleService extends Service {
     //得到所有的账户信息
-    async getRole() {
+    async getRole(params) {
         const { ctx } = this;
+        const name = new RegExp(params.name, 'i')
         const result = await ctx.model.Role
-            .find()
+            .find({
+                roleName: { $regex: name }
+            })
             .populate('menu')
             .populate('children')
             .sort()

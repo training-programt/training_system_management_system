@@ -13,8 +13,8 @@ class CourseLeaderService extends Service {
                 populate: {
                     path: 'course',
                     //相当于then，在嵌套查询后，进行关联查询
-                    populate:{
-                        path:'course'
+                    populate: {
+                        path: 'course'
                     }
                 }
             })
@@ -22,8 +22,8 @@ class CourseLeaderService extends Service {
                 path: 'course_info',
                 populate: {
                     path: 'course',
-                    populate:{
-                        path:'grade'
+                    populate: {
+                        path: 'grade'
                     }
                 }
             })
@@ -31,8 +31,8 @@ class CourseLeaderService extends Service {
                 path: 'course_info',
                 populate: {
                     path: 'course',
-                    populate:{
-                        path:'major'
+                    populate: {
+                        path: 'major'
                     }
                 }
             })
@@ -65,22 +65,56 @@ class CourseLeaderService extends Service {
             .populate('practice_teaching')
             .populate('assessment')
             .populate({
-                path:'assessmentGoal',
-                populate:{path:"teaching_goal"}
+                path: 'assessmentGoal',
+                populate: { path: "teaching_goal" }
             })
             .populate({
-                path:'assessmentGoal',
-                populate:{path:"major_requirement"}
+                path: 'assessmentGoal',
+                populate: { path: "major_requirement" }
             })
             .populate({
-                path:'assessmentGoal',
-                populate:{path:"assessment"}
+                path: 'assessmentGoal',
+                populate: { path: "assessment" }
             })
             .populate('reference')
             .populate('reviewer')
             .sort('sort');
         return result;
     }
+
+    async getAllSyllabus(params) {
+        const { ctx } = this;
+        const res = await ctx.model.Syllabus
+            .find({
+                reviewer: params.reviewer
+            })
+            .populate({
+                path: 'course_info',
+                populate: {
+                    path: 'course',
+                    populate: {
+                        path: 'course'
+                    }
+                }
+            })
+            .limit(parseInt(params.pageSize))
+            .skip(parseInt(params.pageSize) * (parseInt(params.page) - 1))
+            .sort();
+        return res;
+    }
+
+    async getSyllabusCount() {
+        const { ctx } = this;
+        const count = await ctx.model.Syllabus.find().count();
+        return count;
+    }
+
+    async updateSyllabusState(params) {
+        const { ctx }= this;
+        const res = await ctx.model.Syllabus.findByIdAndUpdate(params._id, params);
+        return res;
+    }
+
     // 删除课程大纲
     async delSyllabus(params) {
         const { ctx } = this;
@@ -109,77 +143,77 @@ class CourseLeaderService extends Service {
     async findSyllabus(params) {
         const { ctx } = this;
         const result = await ctx.model.Syllabus.find(params)
-        .populate({
-            path: 'course_info',
-            populate: {
-                path: 'course',
-                //相当于then，在嵌套查询后，进行关联查询
-                populate:{
-                    path:'course'
+            .populate({
+                path: 'course_info',
+                populate: {
+                    path: 'course',
+                    //相当于then，在嵌套查询后，进行关联查询
+                    populate: {
+                        path: 'course'
+                    }
                 }
-            }
-        })
-        .populate({
-            path: 'course_info',
-            populate: {
-                path: 'course',
-                populate:{
-                    path:'grade'
+            })
+            .populate({
+                path: 'course_info',
+                populate: {
+                    path: 'course',
+                    populate: {
+                        path: 'grade'
+                    }
                 }
-            }
-        })
-        .populate({
-            path: 'course_info',
-            populate: {
-                path: 'course',
-                populate:{
-                    path:'major'
+            })
+            .populate({
+                path: 'course_info',
+                populate: {
+                    path: 'course',
+                    populate: {
+                        path: 'major'
+                    }
                 }
-            }
-        })
-        .populate({
-            path: 'course_info',
-            populate: {
-                path: 'professional',
-            }
-        })
-        .populate({
-            path: 'course_info',
-            populate: {
-                path: 'unit',
-            }
-        })
-        .populate('teaching_goal')
-        .populate({
-            path: 'relation',
-            populate: { path: "major_requirement" },
-        })
-        .populate({
-            path: 'relation',
-            populate: { path: "point" },
-        })
-        .populate({
-            path: 'relation',
-            populate: { path: "teach_goal" },
-        })
-        .populate('theory_teaching')
-        .populate('practice_teaching')
-        .populate('assessment')
-        .populate({
-            path:'assessmentGoal',
-            populate:{path:"teaching_goal"}
-        })
-        .populate({
-            path:'assessmentGoal',
-            populate:{path:"major_requirement"}
-        })
-        .populate({
-            path:'assessmentGoal',
-            populate:{path:"assessment"}
-        })
-        .populate('reference')
-        .populate('reviewer')
-        .sort('sort');
+            })
+            .populate({
+                path: 'course_info',
+                populate: {
+                    path: 'professional',
+                }
+            })
+            .populate({
+                path: 'course_info',
+                populate: {
+                    path: 'unit',
+                }
+            })
+            .populate('teaching_goal')
+            .populate({
+                path: 'relation',
+                populate: { path: "major_requirement" },
+            })
+            .populate({
+                path: 'relation',
+                populate: { path: "point" },
+            })
+            .populate({
+                path: 'relation',
+                populate: { path: "teach_goal" },
+            })
+            .populate('theory_teaching')
+            .populate('practice_teaching')
+            .populate('assessment')
+            .populate({
+                path: 'assessmentGoal',
+                populate: { path: "teaching_goal" }
+            })
+            .populate({
+                path: 'assessmentGoal',
+                populate: { path: "major_requirement" }
+            })
+            .populate({
+                path: 'assessmentGoal',
+                populate: { path: "assessment" }
+            })
+            .populate('reference')
+            .populate('reviewer')
+            .sort('sort');
         return result;
     }
 

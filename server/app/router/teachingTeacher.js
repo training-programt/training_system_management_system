@@ -14,4 +14,10 @@ module.exports = app => {
     router.post('/updateApprovalOpinion', controller.teachingTeacher.updateApprovalOpinion);
     router.post('/updateAuditOpinion', controller.teachingTeacher.updateAuditOpinion);
 
+    router.get('/getApprovalWithPage', controller.teachingTeacher.getApprovalWithPage);
+    router.get('/getAuidtWithPage', controller.teachingTeacher.getAuidtWithPage);
+
+    router.post('/getApprovalById', controller.teachingTeacher.getApprovalById);
+    router.post('/getAuditById', controller.teachingTeacher.getAuditById);
+
   };

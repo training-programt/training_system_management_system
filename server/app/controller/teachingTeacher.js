@@ -53,6 +53,58 @@ class TeachingTeacherController extends Controller {
       isSucceed: true,
     }
   }
+
+  async getApprovalById() {
+    const { ctx } = this;
+    const params = ctx.request.body;
+    const res = await ctx.service.teachingTeacher.getApprovalById(params);
+    ctx.body = {
+      total: 1,
+      data: res,
+      code: 200,
+      isSucceed: true,
+    }
+  }
+
+  async getAuditById() {
+    const { ctx } = this;
+    const params = ctx.request.body;
+    const res = await ctx.service.teachingTeacher.getAuditById(params);
+    ctx.body = {
+      total: 1,
+      data: res,
+      code: 200,
+      isSucceed: true,
+    }
+  }
+
+  async getApprovalWithPage() {
+    const { ctx } = this;
+    const params = ctx.request.query;
+    const res = await ctx.service.teachingTeacher.getApprovalWithPage(params);
+    const count = await ctx.service.teachingTeacher.getApprovalCount();
+    ctx.body = {
+      total: count,
+      data: res,
+      code: 200,
+      isSucceed: true
+    }
+  }
+
+  async getAuidtWithPage() {
+    const { ctx } = this;
+    const params = ctx.request.query;
+    const res = await ctx.service.teachingTeacher.getAuditWithPage(params);
+    const count = await ctx.service.teachingTeacher.getAuditCount();
+    ctx.body = {
+      total: count,
+      data: res,
+      code: 200,
+      isSucceed: true
+    }
+  }
+
+
   async findApproval() {
     const { ctx } = this;
     const params = ctx.request.body

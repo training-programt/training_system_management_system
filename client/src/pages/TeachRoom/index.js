@@ -43,19 +43,12 @@ const TeachRoom = () => {
         `${index + 1 + (tableSetting.page - 1) * tableSetting.rows}`,
     },
     { title: "名称", dataIndex: "name", key: "name" },
-    {
-      title: "专业",
-      dataIndex: "major",
-      key: "major",
-      render: (text, record) => (text ? text.name : ""),
-    },
-    {
-      title: "类型",
-      dataIndex: "type",
-      render: (text) => {
-        return text == 1 ? "专业类" : text == 2 ? "学科类" : "管理类";
-      },
-    },
+    // {
+    //   title: "专业",
+    //   dataIndex: "major",
+    //   key: "major",
+    //   render: (text, record) => (text ? text.name : ""),
+    // },
     {
       title: "教师人数",
       dataIndex: "teacherCount",
@@ -67,10 +60,6 @@ const TeachRoom = () => {
       dataIndex: "director",
       key: "director",
       render: (text, record) => record.director ? record.director.name : ''
-    },
-    {
-      title: "描述",
-      dataIndex: "introduce",
     },
     {
       title: "操作",
@@ -102,12 +91,6 @@ const TeachRoom = () => {
         );
       },
     },
-  ];
-
-  const selectData = [
-    { value: "1", name: "专业类" },
-    { value: "2", name: "管理类" },
-    { value: "3", name: "学科类" },
   ];
 
   const layout = {
@@ -164,7 +147,7 @@ const TeachRoom = () => {
     let data = {
       _id: record._id,
       name: record.name,
-      major: record.major._id,
+      // major: record.major._id,
       type: record.type,
       director: record.director.name,
       introduce: record.introduce,
@@ -204,8 +187,8 @@ const TeachRoom = () => {
   };
 
   const delTeachRoom = async (record) => {
-    if (record.teachers.length != 0) {
-      message.error('教师人数不为零，不能删除')
+    if (record.teachers.length != 1) {
+      message.error('还存在其他教师，不能删除')
       return false;
     }
     const params = {
@@ -238,7 +221,7 @@ const TeachRoom = () => {
       <div className="body-wrap">
         <div className="filter-container">
           <div className="filter-type">
-            <span>教研室分类：</span>
+            {/* <span>教研室分类：</span>
             <Select
               className="select-type"
               defaultValue={type}
@@ -250,7 +233,7 @@ const TeachRoom = () => {
                   {item.name}
                 </Option>
               ))}
-            </Select>
+            </Select> */}
           </div>
           <div className="search-box">
 
@@ -319,15 +302,6 @@ const TeachRoom = () => {
               ))}
             </Select>
           </Form.Item>
-          <Form.Item name="type" label="类型" rules={[{ required: true }]}>
-            <Select className="select-type">
-              {selectData.map((item) => (
-                <Option key={item.value} value={item.value}>
-                  {item.name}
-                </Option>
-              ))}
-            </Select>
-          </Form.Item>
           <Form.Item name="director" label="主任" rules={[{ required: true }]}>
             <Select className="select-type">
               {teacherData.map((item) => (
@@ -336,9 +310,6 @@ const TeachRoom = () => {
                 </Option>
               ))}
             </Select>
-          </Form.Item>
-          <Form.Item name="introduce" label="描述" rules={[{ required: true }]}>
-            <Input.TextArea />
           </Form.Item>
         </Form>
       </Modal>

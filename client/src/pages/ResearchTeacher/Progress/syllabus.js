@@ -1,11 +1,12 @@
-import React, { useState, useMemo } from 'react'
+import React, { useState, useEffect, useMemo } from 'react'
 import { Button } from 'antd';
+import { useHistory } from 'react-router-dom';
 import HeaderComponent from '@/components/header'
 import PaginationComponent from '@/components/pagination'
 import TableComponent from "@/components/table";
-import { useHistory } from 'react-router-dom';
+import { getSession }  from '@/utils'
 
-const Audit = () => {
+const Syllabus = () => {
   let history = useHistory();
   const [loading, setLoading] = useState(false);
   const [tableData, setTableData] = useState([]);
@@ -17,19 +18,21 @@ const Audit = () => {
     page: page,
     rows: pageSize,
   };
+
   const pageparams = {
     page: page,
     pageSize: pageSize,
     total: total,
   }
 
-  const getAuditData = async () => {
+  const getSyllabus = async () => {
     const params = {
+      reviewer: JSON.parse(getSession('userInfo'))._id,
       pageSize: tableSetting.rows,
       page: page,
     }
     setLoading(true)
-    const res = await React.$axios.get(`/getAuidtWithPage?${React.$qs.stringify(params)}`)
+    const res = await React.$axios.get(`/getAllSyllabus?${React.$qs.stringify(params)}`)
     if (res && res.isSucceed) {
       setTableData(res.data);
       setTotal(res.total)
@@ -38,67 +41,57 @@ const Audit = () => {
   }
 
   useMemo(() => {
-    getAuditData()
+    getSyllabus()
   }, [page])
 
   const columns = [
+    { title: '序号', align: 'center', render: (text, record, index) => `${index + 1}` },
     {
-      title: '序号',
-      dataIndex: 'index',
-      render: (text, record, index) => {
-        return index + 1
-      }
-    },
-    {
-      title: '课程名称',
-      dataIndex: 'course',
-      align: 'center',
+      title: '课程名字',
+      dataIndex: 'name',
+      key: 'name',
       render: (text, record) => {
-        return record?.course?.course?.name
+        return record.course_info?.course?.course?.name
       }
     },
     {
       title: '课程编码',
       dataIndex: 'code',
+      key: 'code',
       render: (text, record) => {
-        return record?.course?.course?.code
+        return record.course_info?.course?.course?.code
       }
     },
     {
-      title: '开课学期',
-      dataIndex: 'semester',
-      render: (text, record) => {
-        return record?.course?.semester
-      }
-    },
-    {
-      title: '课程学分',
+      title: '学分',
       dataIndex: 'credits',
+      key: 'credits',
       render: (text, record) => {
-        return record?.course?.course?.credits
+        return record.course_info?.course?.course?.credits
       }
     },
     {
-      title: '是否达成',
-      dataIndex: 'isAchievement',
+      title: '先修课程',
+      dataIndex: 'course_ap',
+      key: 'course_ap',
       render: (text, record) => {
-        if (record.isAchievement == 0) {
-          return <div style={{ color: "red" }}>未达成</div>
-        } else {
-          return <div style={{ color: "green" }}>已达成</div>
-        }
+        return record.course_info?.course_ap
       }
+    },
+    {
+      title: '课程负责人',
+      dataIndex: 'writer',
     },
     {
       title: '状态',
-      dataIndex: 'teachRoomState',
-      align: 'center',
+      dataIndex: 'status',
+      key: 'status',
       render: (text, record) => {
-        if (record.teachRoomState === 0) {
-          return <div style={{ color: "red" }}>未审核</div>
-        } else if (record.teachRoomState === 1) {
-          return <div style={{ color: "green" }}>通过</div>
-        } else if (record.teachRoomState === -1) {
+        if (record.status === 0) {
+          return <div style={{ color: "orange" }}>未审批</div>
+        } else if (record.status === 1) {
+          return <div style={{ color: "green" }}>已审批</div>
+        } else if (record.status === -1) {
           return <div style={{ color: "red" }}>驳回</div>
         }
       }
@@ -109,25 +102,23 @@ const Audit = () => {
       align: 'center',
       width: '20%',
       render: (text, record) => (
-        <div style={{ textAlign: 'center' }}>
-          {/* <Button type="link">编辑</Button>
-          &emsp; */}
-          <Button type="link" onClick={() => { showAudit(record) }}>审核</Button>
+        <div>
+          <Button type="link" onClick={() => { showSyllabus(record) }}>审批</Button>
         </div>
       )
     },
   ];
-  const showAudit = (record) => {
-    history.push(`/progress/examine/showExamine?id=${record._id}`)
+
+  const showSyllabus = (record) => {
+    history.push(`/progress/syllabus/showSyllabus?id=${record._id}`)
   }
 
   return (
     <div className="page-container">
-      <HeaderComponent title="审核管理" />
+      <HeaderComponent title="审批管理" />
       <div className="body-wrap">
         <div className="header-wrap">
           <div className="search-box">
-            {/* <Input.Search placeholder="请输入课程名称" allowClear enterButton onSearch={value => setQuery(value)} /> */}
           </div>
         </div>
         <div className="table-container">
@@ -144,4 +135,4 @@ const Audit = () => {
   )
 }
 
-export default Audit
+export default Syllabus

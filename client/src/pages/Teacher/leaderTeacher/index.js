@@ -46,7 +46,7 @@ const LeaderTeacher = () => {
     { title: '职务', dataIndex: 'position', algin: 'center' },
     { title: '学历', dataIndex: 'lastInfo', algin: 'center' },
     {
-      title: '操作', key: 'action', fixed: 'right',
+      title: '操作', key: 'action', align: 'center',
       render: (text, record) => (
         <Space size="middle">
           <Button size="small" type="link" onClick={() => showDrawer(record)}>详情</Button>
