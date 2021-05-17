@@ -82,15 +82,44 @@ class TeacherController extends Controller {
         message: '新增失败',
       }
     }
-
-
   }
-
+  async addTeacher1() {
+    const { ctx } = this;
+    let params = await ctx.request.body;
+    // console.log(params)
+    const find = await ctx.model.Teacher.find({ name: params.name })
+    if(find.length==0){
+      const teachers = await ctx.service.teacher.addTeacher(params)
+       if (teachers.length >= 0) {
+      ctx.body = {
+        total: teachers.length,
+        data: teachers,
+        code: 200,
+        isSucceed: true,
+        message: '新增成功',
+      }
+    } else {
+      ctx.body = {
+        code: 500,
+        isSucceed: false,
+        message: '新增失败',
+      }
+    }
+    }else{
+      ctx.body = {
+        code: 200,
+        isSucceed: false,
+        message: '已存在该用户',
+      }
+    }
+    
+   
+  }
   async delTeacher() {
     const { ctx } = this;
     const params = ctx.request.body;
     console.log(params)
-    const res = await ctx.service.teacher.delTeacher(params)
+    const res = await ctx.service.teacher.delTeacher({_id:params._id})
     const teachRoom = await ctx.model.TeachRoom.findByIdAndUpdate(
       { _id: params.teachRoom._id },
       {
@@ -100,7 +129,7 @@ class TeacherController extends Controller {
       },
       { multi: true }
     )
-    if (res.ok == 1) {
+    if (res.n == 1) {
       ctx.body = {
         code: 200,
         isSucceed: true,
@@ -108,7 +137,27 @@ class TeacherController extends Controller {
       };
     } else {
       ctx.body = {
-        code: 500,
+        code: 200,
+        isSucceed: false,
+        message: '删除失败'
+      };
+    }
+
+  }
+  async delTeacher1() {
+    const { ctx } = this;
+    const params = ctx.request.body;
+    console.log(params)
+    const res = await ctx.service.teacher.delTeacher({_id:params._id})
+    if (res.n == 1) {
+      ctx.body = {
+        code: 200,
+        isSucceed: true,
+        message: '删除成功'
+      };
+    } else {
+      ctx.body = {
+        code: 200,
         isSucceed: false,
         message: '删除失败'
       };
