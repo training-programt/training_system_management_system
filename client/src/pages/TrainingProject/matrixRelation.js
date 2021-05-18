@@ -23,12 +23,12 @@ const MatrixRelation = (props) => {
         <TabPane tab="本专业毕业要求与认证标准毕业要求覆盖情况" key="2">
           <MajorNationCoverRelation project={projectId} />
         </TabPane>
-        <TabPane tab="专业毕业要求与毕业要求指标点关系矩阵" key="3">
+        {/* <TabPane tab="专业毕业要求与毕业要求指标点关系矩阵" key="3">
           Content of tab 3
         </TabPane>
         <TabPane tab="毕业要求指标点与课程关系矩阵" key="4">
           Content of tab 4
-        </TabPane>
+        </TabPane> */}
       </Tabs>
     </div>
   )

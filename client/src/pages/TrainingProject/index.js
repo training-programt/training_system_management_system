@@ -79,7 +79,7 @@ const TrainingProject = () => {
       render: (text, record) => (
         <div style={{ textAlign: 'center' }}>
           <Space size="small">
-            <Button size="small" type="link" >预览</Button>
+            {/* <Button size="small" type="link" >预览</Button> */}
             <Link to={{ pathname: `/trainingProject/details/${text._id}` }}><Button size="small" type="link">编辑</Button></Link>
             <Button size="small" type="link" onClick={() => delProject(record)}>删除</Button>
           </Space>

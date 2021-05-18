@@ -199,7 +199,7 @@ const TableOne = (props) => {
     <div>
       <Space size='small'>
         <Button type='primary' onClick={saveTableData}>保存表格</Button>
-        <Button type='primary'>导出表格</Button>
+        {/* <Button type='primary'>导出表格</Button> */}
       </Space>
       <Table
         components={components}

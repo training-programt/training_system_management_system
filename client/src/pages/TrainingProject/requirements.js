@@ -145,7 +145,6 @@ const Requirements = (props, ref) => {
     let tempList = [...requirementList];
     tempList[acRequirement].point.push(formPoint.getFieldValue())
     setRequirementList(tempList)
-    console.log(requirementList)
     setIsPointVisible(false);
   }
 
@@ -169,7 +168,6 @@ const Requirements = (props, ref) => {
   }
 
   const editRequirementItem = index => {
-    console.log(index)
     setEditRequirement(true)
     setShowForm(true)
     setAcRequirement(index)
@@ -233,7 +231,7 @@ const Requirements = (props, ref) => {
                       renderItem={(itemList, index) => (
                         <List.Item
                           actions={[
-                            <a key="list-loadmore-edit" style={{ fontSize: '12px' }}>编辑</a>,
+                            // <a key="list-loadmore-edit" style={{ fontSize: '12px' }}>编辑</a>,
                             <a key="list-loadmore-more" style={{ fontSize: '12px' }} onClick={() => delRequirementItem(index)}>删除</a>
                           ]}
                         >

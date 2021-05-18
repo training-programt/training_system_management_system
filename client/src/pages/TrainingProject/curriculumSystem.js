@@ -104,6 +104,9 @@ const CurriculumSystem = (props) => {
       title: '主要课程名称',
       dataIndex: 'courseName',
       key: 'courseName',
+      render: (text, record, index) => {
+        return courseList.find(item => item._id == record._id)?.name
+      }
     },
     {
       title: '权重',
@@ -143,6 +146,8 @@ const CurriculumSystem = (props) => {
       courseName: courseList[obj.courseName].name,
       weight: obj.weight,
     }
+
+    console.log(params)
     const res = await React.$axios.post(api.addCurrRelationship, params)
 
     setIsAddVisible(false)
