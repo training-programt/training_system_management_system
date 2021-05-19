@@ -154,31 +154,41 @@
         font-weight: 700;
       }
     }
-
-    .pg-viewer-wrapper {
-      border: 1px solid #ccc;
-      border-radius: 6px * @width;
-
-      .document-container {
-        width: 100%;
-        display: flex;
-        padding: 16px * @height 16px *@width;
-        flex-direction: column;
-        align-content: center;
-      }
-
-      table {
-        border: 1px solid #ccc;
-      }
-    }
-
-    .content-box {
-      border: 1px solid #ccc;
-      border-radius: 6px * @width;
-    }
+    
   }
 
   .table-description {
     margin-top: 16px * @height;
+  }
+}
+
+
+.show-project {
+  border: 1px solid #ccc;
+  border-radius: 6px * @width;
+  padding: 20px * @height 24px * @width;
+
+  .header-wrap {
+    text-align: center;
+    font-weight: 900;
+  }
+
+  .content-item {
+    p {
+      text-indent: 2em;
+    }
+
+    .item-title {
+      font-weight: 900;
+      font-size: 16px * @width;
+    }
+
+    .box-table {
+      text-align: center;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+
+    }
   }
 }

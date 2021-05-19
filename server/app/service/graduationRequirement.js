@@ -6,7 +6,11 @@ class GraduationRequirementService extends Service {
     const { ctx } = this;
     const res = await ctx.model.GraduationRequirement
       .findById(params._id)
-      .populate('majorRequirement.point')
+      // .populate('majorRequirement.point')
+      .populate({
+        path: 'majorRequirement.point',
+        populate: { path: "course" }
+      })
     return res;
   }
 

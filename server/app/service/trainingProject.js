@@ -56,7 +56,11 @@ class TrainingProjectService extends Service {
       .populate('majorObjReqRelation')
       .populate('majorNationCoverRelation')
       .populate('credits_required')
-      .populate('approver', 'name');
+      .populate('approver', 'name')
+      .populate({
+        path: 'credits_required',
+        populate: { path: "content.courseType" }
+      })
     return res;
   }
 

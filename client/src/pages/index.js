@@ -16,6 +16,7 @@ import TrainingObject from './TrainingObject';
 import EditTrainingObject from './TrainingObject/detail';
 import AddTrainingProject from './TrainingProject/add';
 import EditTrainingProject from './TrainingProject/edit';
+import ShowProject from './TrainingProject/showProject';
 
 import Syllabus from "./CourseLeader/Syllabus";
 import testMethod from './CourseLeader/testMethod';
@@ -94,4 +95,5 @@ export {
   ResearchTeacherPoint,
   ProcessSyllabus,
   ShowProcessSyllabus,
+  ShowProject,
 }

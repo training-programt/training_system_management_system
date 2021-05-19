@@ -1,4 +1,4 @@
-import { TrainingProject, AddTrainingProject, EditTrainingProject } from "@/pages";
+import { TrainingProject, AddTrainingProject, ShowProject } from "@/pages";
 export default [
   {
     path: '/trainingProject',
@@ -17,5 +17,11 @@ export default [
     name: '新增培养方案',
     icon: 'icon-teacher',
     component: AddTrainingProject,
+  },
+  {
+    path: '/trainingProject/show',
+    name: '预览培养方案',
+    icon: 'icon-teacher',
+    component: ShowProject,
   },
 ]

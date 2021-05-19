@@ -1,5 +1,5 @@
 import React, { useState, useMemo } from 'react'
-import { Link } from 'react-router-dom';
+import { Link, useHistory } from 'react-router-dom';
 import { Button, Input, Space, message } from 'antd'
 import HeaderComponent from '@/components/header'
 import TableComponent from '@/components/table'
@@ -11,6 +11,8 @@ import axios from 'axios';
 import { downloadFile } from '@/utils'
 
 const TrainingProject = () => {
+
+  let history = useHistory();
   const [loading, setLoading] = useState(false);
   const [tableData, setTableData] = useState([]);
 
@@ -79,7 +81,7 @@ const TrainingProject = () => {
       render: (text, record) => (
         <div style={{ textAlign: 'center' }}>
           <Space size="small">
-            {/* <Button size="small" type="link" >预览</Button> */}
+            <Button size="small" type="link" onClick={() => { showProject(record) }}>预览</Button>
             <Link to={{ pathname: `/trainingProject/details/${text._id}` }}><Button size="small" type="link">编辑</Button></Link>
             <Button size="small" type="link" onClick={() => delProject(record)}>删除</Button>
           </Space>
@@ -87,6 +89,10 @@ const TrainingProject = () => {
       )
     },
   ]
+
+  const showProject = (record) => {
+    history.push(`/trainingProject/show?id=${record._id}`)
+  }
 
   const delProject = async (record) => {
     const params = {
