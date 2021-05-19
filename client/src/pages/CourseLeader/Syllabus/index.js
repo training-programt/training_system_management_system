@@ -11,6 +11,7 @@ const Syllabus = () => {
   const [syllabusData, setSyllabusData] = useState([]);
   const [butType, setButType] = useState(false);
   const [courseData, setCourseData] = useState([]);
+  const [isEdit,setIsEdit] = useState(false);
   let editInfo = JSON.parse(localStorage.getItem('basic'))
   let history = useHistory();
   const professColumns = [
@@ -69,7 +70,7 @@ const Syllabus = () => {
       key: 'operation',
       render: (text, record) => (
         <div>
-          <Link to={{ pathname: "/syllabus/edit", state: { data: record } }}><Button size="small" type="link" onClick={() => { add(record) }}>编辑课程大纲</Button></Link>
+          <Link to={{ pathname: "/syllabus/edit", state: { data: record } }}><Button size="small" type="link" onClick={(e) => { edit(e,record) }}>编辑课程大纲</Button></Link>
           <Button type="link" onClick={() => { del(record._id) }}>删除课程大纲</Button>
           <Button type="link" onClick={() => { showSyllabus(record) }}>查看课程大纲</Button>
         </div>
@@ -83,19 +84,14 @@ const Syllabus = () => {
       _id: teacher._id
     }
     const courseSystem = React.$axios.post('/findCourseSystem', params).then((data) => {
-      console.log(data)
       setCourseData(data.data)
     })
     const res1 = React.$axios.get('/getSyllabus').then((syllabusData) => {
-      console.log(syllabusData)
       setSyllabusData(syllabusData.data)
     })
     setLoading(false)
   }, [])
-  const add = (record) => {
-    console.log(record)
-    setSession("newData", JSON.stringify(record));
-  }
+
   const del = async (id) => {
     const dell = React.$axios.post('/delSyllabus', { _id: id }).then(delData=>{
       if (delData.isSucceed) {
@@ -123,12 +119,24 @@ const Syllabus = () => {
   const showSyllabus = (record) => {
     history.push(`/syllabus/show?id=${record._id}`);
   }
-  const addSyllabus = (e) => {
-    if (editInfo) {
-      message.error("正处于编辑流程中，请先完成编辑")
+  const edit = (e,record) => {
+    // console.log(record)
+    if(!isEdit && editInfo){
+      message.error("正处于新增流程中，请先完成教学大纲的新增")
       e.preventDefault();
-      return false
+      return false;
+    }else{
+      setIsEdit(true);//编辑
+      setSession("newData", JSON.stringify(record));
+    }
+  }
+  const addSyllabus = (e) => {
+    if (isEdit && editInfo) {
+      message.error("正处于编辑流程中，请先完成教学大纲的编辑")
+      e.preventDefault();
+      return false;
     } else {
+      setIsEdit(true)
       history.push('/syllabus/add')
     }
   }
@@ -136,23 +144,6 @@ const Syllabus = () => {
     <div className="page-container">
       <HeaderComponent title="教学大纲管理" />
       <div className="body-wrap">
-        <div className="top-wrap">
-          {/* <Divider plain orientation="left">被指定的课程基本信息</Divider>
-          <List
-            size="large"
-            style={{ textAlign: "left" }}
-            dataSource={courseData}
-            renderItem={(item, index) => (
-              <List.Item>
-                <List.Item.Meta
-                  title={"课程【" + (index + 1) + "】"}
-                  description={item.course?.name + " " + item.course?.code}
-                />
-              </List.Item>
-            )}
-          />, */}
-        </div>
-
         <div className="table-wrap">
           <Divider plain orientation="left">请为被指定课程新增编辑教学大纲</Divider>
           <Link to={{ pathname: "/syllabus/add" }} ><Button size="big" type="primary" style={{ marginBottom: "15px" }} onClick={addSyllabus}>新增课程大纲</Button></Link>

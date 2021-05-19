@@ -148,7 +148,7 @@ const GoalAndAssessment = () => {
                 })
                 arr.push(obj)
                 setGoalAndAssessmentData(arr)
-                console.log(info.assessment)
+                // console.log(info.assessment)
                 setEvaluation(info.assessment)
                 setGoal(info.teaching_goal)
             }

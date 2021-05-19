@@ -16,18 +16,18 @@ class TeachingTeacherController extends Controller {
         isSucceed: false,
       }
     } else{
-      // const strandard = await ctx.model.Standard.insertMany(params.arr);
-      // const approval = await ctx.service.teachingTeacher.addApproval(
-      //   {
-      //     course: params.course,
-      //     inspectionForm: params.inspectionForm,
-      //     estimatePassRate: params.estimatePassRate,
-      //     inspectionObject: params.inspectionObject,
-      //     studentNum: params.studentNum,
-      //     estimateAverage: params.estimateAverage,
-      //     standard: strandard.map(item => item._id)
-      //   }
-      // );
+      const strandard = await ctx.model.Standard.insertMany(params.arr);
+      const approval = await ctx.service.teachingTeacher.addApproval(
+        {
+          course: params.course,
+          inspectionForm: params.inspectionForm,
+          estimatePassRate: params.estimatePassRate,
+          inspectionObject: params.inspectionObject,
+          studentNum: params.studentNum,
+          estimateAverage: params.estimateAverage,
+          standard: strandard.map(item => item._id)
+        }
+      );
       if (Object.keys(approval).length) {
         ctx.body = {
           data: approval,
@@ -109,7 +109,6 @@ class TeachingTeacherController extends Controller {
     const { ctx } = this;
     const params = ctx.request.body
     const app = await ctx.service.teachingTeacher.findApproval({ course: params._id });
-    // console.log(audit)
     ctx.body = {
       data: app,
       code: 200,

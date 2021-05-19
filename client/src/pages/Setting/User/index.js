@@ -15,6 +15,7 @@ const User = () => {
     const [pageSize, setPageSize] = useState(12)
     const [roleData, setRoleData] = useState([]);
     const [importData, setImportData] = useState();
+    const [isEdit, setIsEdit] = useState(false);
     const [query, setQuery] = useState('')
 
     const [showSizeChanger, setShowSizeChanger] = useState(true);
@@ -46,12 +47,6 @@ const User = () => {
             title: '名字',
             dataIndex: 'name',
             align: 'center'
-        },
-        {
-            title: '所属专业',
-            dataIndex: 'major',
-            align: 'center',
-            render: (text, record) => text ? text.name : ''
         },
         {
             title: '职称',
@@ -109,14 +104,14 @@ const User = () => {
     }
     const showEditModal = (record) => {
         form.resetFields()
-        console.log(record)
         setIsModalVisible(true)
+        setIsEdit(true)
+        // console.log(record)
         let data = {
             _id: record._id,
             name: record.name,
-            // password: record.password,
             position: record.position,
-            role: record.role.roleName,
+            // role: record?.role?.map(item=>{item.roleName+"、"}),
         }
         form.setFieldsValue(data)
     }
@@ -124,11 +119,11 @@ const User = () => {
         const params = {
             _id: record._id
         }
-        const res = await React.$axios.post('/delTeacher', params)
+        const res = await React.$axios.post('/delTeacher1', params)
         if (res && res.isSucceed) {
-            message.success('删除成功');
+            message.success(res.message);
         } else {
-            message.error('删除失败');
+            message.error(res.message);
         }
         getTeacherList()
     }
@@ -165,22 +160,37 @@ const User = () => {
 
         const params = {
             ...form.getFieldValue(),
+            password:'1'
         }
-        const res = await React.$axios.post(
-            '/updataTeacher1',
-            params,
-        );
-        if (res && res.isSucceed) {
-            message.success('修改成功');
-            
-            
-        } else {
-            message.error('修改失败');
+        if(isEdit){
+            const res = await React.$axios.post(
+                '/updataTeacher1',
+                params,
+            );
+            if (res && res.isSucceed) {
+                message.success('修改成功');
+            } else {
+                message.error('修改失败');
+            }
+        }else if(!isEdit){
+            const res = await React.$axios.post(
+                '/addTeacher1',
+                params,
+              );
+              if (res && res.isSucceed) {
+                message.success('新增成功');
+              } else {
+                message.error('新增失败');
+              }
         }
         setIsModalVisible(false);
         getTeacherList()
     };
-
+    const showModal = () => {
+        form.resetFields()
+        setIsModalVisible(true);
+        setIsEdit(false)
+      };
     return (
         <div className="page-container">
             <HeaderComponent title="用户管理" />
@@ -191,8 +201,7 @@ const User = () => {
                     </div>
                     <div className="operation-wrap">
                         <ImportExportComponent onImport={(data) => importHandle(data)} />
-                        <Button type="primary" icon={<PlusOutlined />}>新增用户</Button>
-                        <Button type="primary" icon={<DeleteOutlined />}>批量删除</Button>
+                        <Button type="primary" icon={<PlusOutlined />} onClick={showModal}>新增用户</Button>
                     </div>
                 </div>
 
@@ -209,13 +218,19 @@ const User = () => {
                             <div>
                                 <Descriptions
                                     bordered
-                                    column={{ xxl: 4, xl: 3, lg: 3, md: 3, sm: 2, xs: 1 }}
+                                    column={{ xxl: 4, xl: 4, lg: 4, md: 4, sm: 2, xs: 2 }}
                                 >
-                                    <Descriptions.Item label="信息展示还没写">
+                                    <Descriptions.Item label="最后学历">
                                         {record.lastInfo}
                                     </Descriptions.Item>
-                                    <Descriptions.Item label="信息展示">
-                                        {record.position}
+                                    <Descriptions.Item label="毕业院校">
+                                        {record.graduateSchool}
+                                    </Descriptions.Item>
+                                    <Descriptions.Item label="专业">
+                                        {record.professional}
+                                    </Descriptions.Item>
+                                    <Descriptions.Item label="研究领域">
+                                        {record.researchDirection}
                                     </Descriptions.Item>
                                 </Descriptions>
                             </div>
@@ -226,7 +241,7 @@ const User = () => {
             <Modal
                 visible={isModalVisible}
                 width={550}
-                title='信息编辑'
+                title={isEdit ? '编辑用户信息' : '新建用户信息'}
                 centered
                 maskClosable={false}
                 destroyOnClose

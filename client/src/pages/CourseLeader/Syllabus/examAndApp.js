@@ -147,7 +147,7 @@ const ExamAndApp = () => {
         </Row>
           <Row>
             <Col span={4}>课程名称</Col>
-            <Col span={8}>{basic?.name?.name}</Col>
+            <Col span={8}>{basic?.name?.course?.name}</Col>
             <Col span={4}>英文名称</Col>
             <Col span={8}>{basic?.englishName}</Col>
           </Row>
@@ -167,7 +167,7 @@ const ExamAndApp = () => {
             <Col span={4}>课程类别</Col>
             <Col span={8}>{basic?.type}</Col>
             <Col span={4}>适用专业</Col>
-            <Col span={8}>{basic?.professional?.name}</Col>
+            <Col span={8}>{basic?.professional?.map(item => item.name + "、")}</Col>
           </Row>
           <Row>
             <Col span={4}>课内学时</Col>

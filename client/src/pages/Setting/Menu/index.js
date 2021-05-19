@@ -139,7 +139,6 @@ const Menu = () => {
 
   const handleOk = async (e) => {
     e.preventDefault();
-
     const params = {
       ...form.getFieldValue(),
       level: level,
@@ -152,7 +151,6 @@ const Menu = () => {
       );
       if (res && res.isSucceed) {
         message.success('新增成功');
-        // await React.$axios.get(`/menu?role=${JSON.parse(getSession('userInfo')).role}`)
       } else {
         message.error('新增失败');
       }
@@ -163,7 +161,6 @@ const Menu = () => {
       );
       if (res && res.isSucceed) {
         message.success('更新成功');
-        // await React.$axios.get(`/menu?role=${JSON.parse(getSession('userInfo')).role}`)
       } else {
         message.error('更新失败');
       }

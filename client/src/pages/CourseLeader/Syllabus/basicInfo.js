@@ -47,7 +47,7 @@ const BasicInfo = () => {
         const major = React.$axios.get('/getMajor').then((res) => {
             setMajorData(res.data)
         })
-        const res1 = React.$axios.get('/getTeacher').then((teacherData) => {
+        React.$axios.get('/getTeacher').then((teacherData) => {
             setHeaderData(teacherData.data)
         })
     }, [])
@@ -58,12 +58,19 @@ const BasicInfo = () => {
             professional: majorName,
             ...form.getFieldValue(),
         }
-        localStorage.setItem("basic", JSON.stringify(params));
-        message.info('暂存成功')
+        try {
+            const values = await form.validateFields();
+            if(values){
+                localStorage.setItem("basic", JSON.stringify(params));
+                message.info('暂存成功')
+            }else{
+                message.error('请完整填写详细课程信息')
+            }   
+        } catch (error) {
+            message.error('请完整填写详细课程信息')
+        }
     }
     const changeCourseName = (value) => {
-        // console.log(value)
-        // console.log(courseData)
         courseData.map((item) => {
             if (item._id == value) {
                 setCourseName(item)
@@ -77,12 +84,10 @@ const BasicInfo = () => {
                 })
             }
         })
-        console.log(courseName)
     }
     const changeMajorName = (value) => {
         console.log(value)
         let arr = [];
-        console.log(majorData)
         majorData.map((item) => {
             value.map((val) => {
                 if (item._id == val) {
@@ -158,7 +163,7 @@ const BasicInfo = () => {
                             },
                         ]}
                     >
-                        <Select placeholder="选择课程名字" value={info ? info.course_info?.course?.course?.name : basicInfo?.name?.name} allowClear onChange={(value) => { changeCourseName(value) }}>
+                        <Select placeholder="选择课程名字" value={info ? info.course_info?.course?.course?.name : basicInfo?.name?.course?.name} allowClear onChange={(value) => { changeCourseName(value) }}>
                             {
                                 courseData && courseData.map(item => (<Option key={item._id} value={item._id}>{item?.course?.name}</Option>))
                             }
@@ -296,8 +301,9 @@ const BasicInfo = () => {
                         <Input.TextArea autoSize={{ minRows: 20, maxRows: 25 }} />
                     </Form.Item>
                 </div>
+              
             </Form>
-            <Button icon={<SaveOutlined />} onClick={save} type="primary">暂存信息</Button>
+            <Button icon={<SaveOutlined />} onClick={save} type="primary" htmlType="submit">暂存信息</Button>
         </div>
 
     )
