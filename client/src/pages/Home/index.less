@@ -1,0 +1,35 @@
+@width: 100vw/1920px;
+@height: 100vh/960px;
+@height1: 60px * @height;
+
+.container {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    background-color: #fff;
+    padding: 0 24px * @height 16px * @width ;
+    overflow: hidden;
+    .classRoom{
+        display: flex;
+        justify-content: space-between;
+        font-size: 20px;
+        margin:30px;
+    }
+    .account{
+        display: flex;
+        width:100%;
+        background-color: #fffffb;
+        div{
+            width: 50%;
+            .circle{
+                margin-top: 25px;
+                margin-left:65px;
+               span{
+                   display: flex;
+                   justify-content: center;
+               }
+            }
+        }
+       
+    }
+}
