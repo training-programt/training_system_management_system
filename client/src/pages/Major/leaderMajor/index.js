@@ -54,7 +54,7 @@ useEffect(()=>{
           <Popconfirm title="确定删除？" okText="确定" cancelText="取消">
             <Button type="link" onClick={()=>{del(record)}}>删除</Button>
           </Popconfirm>
-          <Button type="link" onClick={()=>{viewTeacher(record)}}>查看教师名单</Button>
+          {/* <Button type="link" onClick={()=>{viewTeacher(record)}}>查看教师名单</Button> */}
 
         </div>
       ),

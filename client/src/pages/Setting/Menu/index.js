@@ -284,7 +284,7 @@ const Menu = () => {
         ]}
       >
         <Form {...formItemLayout} form={form}>
-          {
+          {/* {
             isEdit ? (
               <Form.Item
                 name="_id"
@@ -296,7 +296,7 @@ const Menu = () => {
                 />
               </Form.Item>
             ) : ''
-          }
+          } */}
           <Form.Item
             label='选择账户'
             name="role"

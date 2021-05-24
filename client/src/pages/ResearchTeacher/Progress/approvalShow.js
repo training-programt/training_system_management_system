@@ -78,14 +78,14 @@ const ShowApproval = () => {
 
   return (
     <div className="page-container">
+      <div style={{ background: '#fff', height: '60px', lineHeight: '60px' }}>
+        <Space size='large'>
+          <Link to="/progress/approval" style={{ color: '#000', marginLeft: '8px' }}><Button icon={<RollbackOutlined />}>返回</Button></Link>
+          <Button type="primary" onClick={print}>打印</Button>
+        </Space>
+      </div>
       <div id="printDiv" style={{ pageBreakAfter: 'always' }}>
         <Card title={<div style={{ textAlign: "center" }}>《{appInfo?.course?.course?.name}》课程考核合理性审批表</div>} bordered
-          extra={
-            <Space size='large'>
-              <Link to="/progress/approval" style={{ color: '#000', marginLeft: '8px' }}><Button icon={<RollbackOutlined />}>返回</Button></Link>
-              <Button type="primary" onClick={print}>打印</Button>
-            </Space>
-          }
           bodyStyle={{ padding: '12px 24px' }}
         >
           <Row>

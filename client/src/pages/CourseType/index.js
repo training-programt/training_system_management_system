@@ -68,11 +68,11 @@ const CourseType = () => {
       render: (text, record, index) =>
         `${index + 1 + (tableSetting.page - 1) * tableSetting.rows}`,
     },
-    {
-      title: 'ID',
-      dataIndex: '_id',
-      align: 'center'
-    },
+    // {
+    //   title: 'ID',
+    //   dataIndex: '_id',
+    //   align: 'center'
+    // },
     {
       title: '课程类别名称',
       dataIndex: 'name',

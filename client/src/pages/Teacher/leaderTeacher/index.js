@@ -227,8 +227,8 @@ const LeaderTeacher = () => {
           <div className="operation-wrap">
             <Button icon={<PlusOutlined />} type="primary" onClick={addTeacherDrawer}>新增教师</Button>
             <Button icon={<DeleteOutlined />} onClick={delMore}>批量删除</Button>
-            <Button icon={<UploadOutlined />}>批量导入</Button>
-            <Button icon={<DownloadOutlined />}>批量导出</Button>
+            {/* <Button icon={<UploadOutlined />}>批量导入</Button>
+            <Button icon={<DownloadOutlined />}>批量导出</Button> */}
           </div>
         </div>
         <div className="table-container">
@@ -274,14 +274,14 @@ const LeaderTeacher = () => {
               </Form.Item>
             </Col>
             <Col span={12}>
-              <Form.Item
+              {/* <Form.Item
                 name="password"
                 label="密码"
               >
                 <Input
                   placeholder="请输入教师密码"
                 />
-              </Form.Item>
+              </Form.Item> */}
             </Col>
           </Row>
           <Row gutter={16}>

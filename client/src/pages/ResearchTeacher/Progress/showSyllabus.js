@@ -129,14 +129,14 @@ const SyllabusShows = () => {
 
   return (
     <div className="page-container">
+      <div style={{ background: '#fff', height: '60px', lineHeight: '60px' }}>
+        <Space size='large'>
+          <Link to="/progress/syllabus" style={{ color: '#000', marginLeft: '8px' }}><Button icon={<RollbackOutlined />}>返回</Button></Link>
+          <Button type="primary" onClick={print}>打印</Button>
+        </Space>
+      </div>
       <div id="printDiv" style={{ pageBreakAfter: 'always' }}>
         <Card title={<div style={{ textAlign: "center" }}>《{basic?.course?.course?.name}》课程教学大纲</div>} bordered
-          extra={
-            <Space size='large'>
-              <Link to="/progress/syllabus" style={{ color: '#000', marginLeft: '8px' }}><Button icon={<RollbackOutlined />}>返回</Button></Link>
-              <Button type="primary" onClick={print}>打印</Button>
-            </Space>
-          }
           bodyStyle={{ padding: '12px 24px' }}
         >
           <Row className="title1">

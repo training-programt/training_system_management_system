@@ -247,9 +247,9 @@ const TeachRoom = () => {
               <Button type="primary" icon={<PlusOutlined />} onClick={showModal}>
                 添加教研室
             </Button>
-              <Button type="primary" icon={<DownloadOutlined />} >
+              {/* <Button type="primary" icon={<DownloadOutlined />} >
                 导出数据
-            </Button>
+            </Button> */}
             </Space>
           </div>
         </div>

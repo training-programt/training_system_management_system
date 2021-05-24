@@ -377,9 +377,9 @@ const SectionDetails = (props) => {
             <Button type="primary" icon={<PlusOutlined />} onClick={showModal}>
               新增教师
             </Button>
-            <Button type="primary" icon={<DownloadOutlined />} onClick={exportTeacher}>
+            {/* <Button type="primary" icon={<DownloadOutlined />} onClick={exportTeacher}>
               导出教师
-            </Button>
+            </Button> */}
           </div>
         </div>
 

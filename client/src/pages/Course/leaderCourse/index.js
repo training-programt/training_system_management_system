@@ -211,8 +211,8 @@ const Course = () => {
           <div className="operation-wrap">
             <Button type="primary" icon={<PlusOutlined />} onClick={showAdd}>新增课程</Button>
             <Button type="primary" icon={<DeleteOutlined />} onClick={manyDelete}>批量删除</Button>
-            <Button icon={<UploadOutlined />}>批量导入</Button>
-            <Button icon={<DownloadOutlined />}>批量导出</Button>
+            {/* <Button icon={<UploadOutlined />}>批量导入</Button>
+            <Button icon={<DownloadOutlined />}>批量导出</Button> */}
           </div>
         </div>
 
@@ -235,6 +235,7 @@ const Course = () => {
         getContainer={false}
         destroyOnClose
         width={600}
+        className='course-modal'
         footer={[
           <Button key="back" onClick={handleCancel}>
             取消
